@@ -1,0 +1,45 @@
+{
+  "short_name": "Gong",
+  "name": "Gong",
+  "icons": [{
+    "src": "favicon.png",
+    "sizes": "64x64 32x32 24x24 16x16",
+    "type": "image/x-icon"
+  }, {
+    "src": "icons/16x16.png",
+    "sizes": "16x16",
+    "type": "image/png"
+  }, {
+    "src": "icons/24x24.png",
+    "sizes": "24x24",
+    "type": "image/png"
+  }, {
+    "src": "icons/32x32.png",
+    "sizes": "32x32",
+    "type": "image/png"
+  }, {
+    "src": "icons/64x64.png",
+    "sizes": "64x64",
+    "type": "image/png"
+  }, {
+    "src": "icons/128x128.png",
+    "sizes": "128x128",
+    "type": "image/png"
+  }, {
+    "src": "icons/256x256.png",
+    "sizes": "256x256",
+    "type": "image/png"
+  }, {
+    "src": "icons/512x512.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }, {
+    "src": "icons/1024x1024.png",
+    "sizes": "1024x1024",
+    "type": "image/png"
+  }],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#F7D600",
+  "background_color": "#222222"
+}
