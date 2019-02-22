@@ -56,7 +56,7 @@ const ITEMS = [
     group: 'Text',
     type: 'Primary',
     color: '',
-    themeKey: 'typography.body1.color',
+    themeKey: 'palette.text.primary',
   },
   {
     group: 'Text',

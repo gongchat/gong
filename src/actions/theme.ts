@@ -37,6 +37,7 @@ const DEFAULT: any = {
   },
 };
 
+// TODO: When material-ui releases v4 remove depreciated props
 const TYPOGRAPHY_PROPS = [
   'body1',
   'body1Next',
@@ -78,11 +79,12 @@ export default class Theme {
     const props = item.themeKey.split('.');
     const lastProp = props[props.length - 1];
 
+    // order matters
     if (lastProp === 'fontFamily') {
       Theme.updateTypographyFontFamily(theme, item.value);
     } else if (lastProp === 'fontSize') {
       Theme.updateTypographyFontSize(theme, item.value);
-    } else if (props[0] === 'typography' && lastProp === 'color') {
+    } else if (item.themeKey === 'palette.text.primary') {
       Theme.updateTypographyColor(theme, item.value);
     } else if (props[0] === 'palette') {
       Theme.updatePalette(theme, props, lastProp, item.value);
@@ -155,6 +157,11 @@ export default class Theme {
   };
 
   private static updateTypographyColor = (theme: any, color: string) => {
+    // update nontypography props
+    theme.palette.text.primary = color;
+    theme.palette.action.active = color;
+    // TODO: bottom border color on text areas are set by type (light vs dark), unable to change from theme properties. may have to figure out if light or dark from backround color (machine learning?)
+
     // update each individually
     TYPOGRAPHY_PROPS.forEach((prop: string) => {
       theme.typography[prop].color = color;
