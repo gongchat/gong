@@ -46,9 +46,17 @@ export default class XmppJsMapper {
     const priority: any = jsXml.children.find(
       (child: any) => child.name === 'priority'
     );
+    const status: any = jsXml.children.find(
+      (child: any) => child.name === 'show'
+    );
     const presence: IPresence = {
       from: jsXml.attrs.from,
-      status: jsXml.attrs.type === undefined ? 'online' : jsXml.attrs.type,
+      status:
+        jsXml.attrs.type === 'unavailable'
+          ? 'offline'
+          : status
+          ? status.children[0]
+          : 'online',
       priority: priority === undefined ? undefined : priority.children[0],
       user: !x
         ? undefined
