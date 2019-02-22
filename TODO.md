@@ -37,34 +37,35 @@ Loosely ordered in priority from top down
 - [x] Really long text without breaks causes right sidebar to shrink
 - [x] Scroll when emoji and user drop downs when navigating items using arrow keys
 - [x] Sort channels alphabetically
+- [x] Does not recognize user mentions if it ends with it
+- [x] Bad recognition of users with spaces in their name
+- [x] React-player with video controls
+- [x] Statuses get weird if there are multiple connections for a single user
+- [x] Handle connection errors (need better support for when auto login fails, like a retry button or auto retry every x seconds)
+- [x] Audio doesn't work in production
+- [x] Customization of text colors is not represented across all elements
 
-- [ ] Handle connection errors (need better support for when auto login fails, like a retry button or auto retry every x seconds)
-
-- [ ] Bad recognition of users with spaces in their name
-- [ ] Does not recognize user mentions if it ends with it
-- [ ] Handle message errors and acknowledgment
 - [ ] Add way to customize the base spacing unit in the settings
 - [ ] Add setting to flash chat when you get a message
 - [ ] The default font value of 15 does not represent the default material ui font sizes for some of the elements
-- [ ] Better styling on badges, something that is more dynamic
-- [ ] Better styling on input (sometimes there is a weird dot at the start that blinks and text gets cut off)
-- [ ] Customization of text colors is not represented across all elements
-- [ ] Use timestamp to identify if historical messages have been read
-- [ ] Statuses get weird if there are multiple connections for a single user
-- [ ] Add option to show users without avatar in both left and right sidebar
-- [ ] Add a new element that specifies at what point in the listing of messages where the new messages begin
 - [ ] Add a way to specify a port on login
 - [ ] Allow navigation of chat with ctrl page up and page down
-- [ ] React-player with video controls
 - [ ] Cannot resize window from top edge
+- [ ] Handle message errors and acknowledgment
+
+- [ ] Better styling on badges, something that is more dynamic
+- [ ] Better styling on input (sometimes there is a weird dot at the start that blinks and text gets cut off)
 
 - [ ] Change nick on /nick
 - [ ] Add way to change nickname on an added channel
 - [ ] Format messages with /me
 
+- [ ] Add a new element that specifies at what point in the listing of messages where the new messages begin
+- [ ] Have setting to load application on startup
 - [ ] Notifications outside App
 - [ ] After x min of inactivity set status to away
 - [ ] Notify user on both ends when someone is typing
+- [ ] Use timestamp to identify if historical messages have been read
 
 - [ ] Figure out why streams aren't closing properly (currently fixed with a bit of a hack, need to look into it some more)
 - [ ] PropTypes on all components
@@ -75,6 +76,8 @@ Alpha
 - [ ] Keep logs of messages
 - [ ] Make rooms sortable
 - [ ] Include options for a compact and cozy layout (compact is the current)
+- [ ] Add option to show users without avatar in both left and right sidebar
+- [ ] Show a users connections in user details
 - [ ] Select colors for theme with hex code
 - [ ] Scheduled messages
 - [ ] Virtualize messages when there is a large number of them
