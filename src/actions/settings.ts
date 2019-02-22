@@ -135,7 +135,7 @@ export default class Settings {
         (s: any) => s.name === state.settings.soundName
       );
       if (sound) {
-        const audio = new Audio(`/audio/${sound.fileName}`);
+        const audio = new Audio(`./audio/${sound.fileName}`);
         audio.volume = 1;
         audio.play();
       }
