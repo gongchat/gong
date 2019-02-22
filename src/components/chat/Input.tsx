@@ -282,7 +282,7 @@ class Input extends React.Component<any, any> {
       if (this.state.channelUsers[index]) {
         newText = `${newText.substring(
           0,
-          newText.length === 0 ? 0 : newText.lastIndexOf(' ') + 1
+          newText.length === 0 ? 0 : newText.lastIndexOf('@')
         )}@${(this.state.channelUsers[index] as IChannelUser).nickname} `;
       }
       ref = this.channelUsersRef;
