@@ -8,7 +8,7 @@
   "build": {
     "nodeVersion": "10.13.0",
     "appId": "com.gong",
-    "icon": "build/app-icons/",
+    "icon": "build/icons/",
     "files": [
       "build/**/*",
       "node_modules/**/*"
@@ -19,7 +19,7 @@
     },
     "win": {
       "target": "NSIS",
-      "icon": "build/app-icons/"
+      "icon": "build/icons/"
     },
     "nsis": {
       "oneClick": false,
