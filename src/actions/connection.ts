@@ -86,18 +86,31 @@ export default class Connection {
 
   // TODO: turn payload into an interface
   public static connected = (state: IState, payload: any): IState => {
-    // TODO: Only save settings on login, not auto connect
-    const settingsSaved: ISettingsSaved = electronStore.get('settings');
-    const settingsNew: ISettingsSaved = {
-      ...settingsSaved,
-      jid: payload.jid,
-      domain: payload.domain,
-      username: payload.username,
-      name: payload.username,
-      resource: payload.jid.split('/')[1],
-      password: payload.password,
-    };
-    electronStore.set('settings', settingsNew);
+    let settingsSaved: ISettingsSaved = electronStore.get('settings');
+
+    // if no saved settings should be first log in. 
+    // save credentials and default settings
+    if (!settingsSaved) {
+      settingsSaved = {
+        jid: payload.jid,
+        domain: payload.domain,
+        username: payload.username,
+        name: payload.username,
+        resource: payload.jid.split('/')[1],
+        password: payload.password,
+        soundName: 'Gong 1',
+        playAudioOnGroupchatMessage: 'never',
+        playAudioOnChatMessage: 'unread',
+        playAudioOnMentionMe: 'always',
+        flashMenuBarOnGroupchatMessage: 'never',
+        flashMenuBarOnGroupchatMessageFrequency: 'never',
+        flashMenuBarOnMentionMe: 'unread',
+        flashMenuBarOnMentionMeFrequency: 'repeat',
+        flashMenuBarOnChatMessage: 'unread',
+        flashMenuBarOnChatMessageFrequency: 'repeat',
+      };
+      electronStore.set('settings', settingsSaved);
+    }
 
     const connection: IConnection = {
       isConnected: true,
@@ -117,7 +130,7 @@ export default class Connection {
     };
 
     const settings: ISettings = Settings.mapSettingsSavedToSettings(
-      settingsNew
+      settingsSaved
     );
 
     ipcRenderer.send('xmpp-roster');
