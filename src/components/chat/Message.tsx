@@ -36,7 +36,7 @@ class Message extends React.Component<any, any> {
         {message.videoUrls &&
           message.videoUrls.map((url: string, index: number) => (
             <div key={index} className={classes.player}>
-              <ReactPlayer url={url} width={256} height={144} />
+              <ReactPlayer url={url} width={256} height={144} controls={true} />
             </div>
           ))}
       </div>
