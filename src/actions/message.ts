@@ -207,7 +207,7 @@ export default class Message {
       }</span>`;
       const regExpWithoutAt = new RegExp(
         // TODO: test@test matches, should not match so emails get generated properly
-        `(?<=[^a-zA-Z0-9@]|\\s|^)${user.nickname}(?=\\W|\\s+|$)(?=[^@])`,
+        `(?<=[^a-zA-Z0-9@]|\\s|^)${user.nickname}(?=\\W|\\s+|$)(?=[^@]|$)`,
         'gi'
       );
 
