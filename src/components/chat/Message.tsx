@@ -102,7 +102,7 @@ const styles: any = (theme: any) => ({
   player: {
     flex: '0 1 100%',
     padding: theme.spacing.unit * 2,
-    paddingLeft: theme.spacing.unit * 5,
+    paddingLeft: theme.spacing.unit * 8,
   },
 });
 
