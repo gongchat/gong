@@ -30,7 +30,7 @@ const DEFAULT: any = {
     dnd: '#d84315',
     offline: '#757575',
   },
-  sidebarWidth: '200px',
+  sidebarWidth: '225px',
   typography: {
     fontFamily: '"Source Sans Pro", sans-serif',
     fontSize: 15,
