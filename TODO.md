@@ -44,18 +44,20 @@ Loosely ordered in priority from top down
 - [x] Handle connection errors (need better support for when auto login fails, like a retry button or auto retry every x seconds)
 - [x] Audio doesn't work in production
 - [x] Customization of text colors is not represented across all elements
+- [x] Add a way to add rooms that are not publicly visible
+- [x] Add support for joining rooms that require a password
+- [x] Add way to customize the base spacing unit in the settings
+- [x] Add option to show users without avatar in both left and right sidebar
+- [x] Better styling on badges, something that is more dynamic
 
-- [ ] Add a way to add rooms that are not publicly visible
-- [ ] Add support for joining rooms that require a password
-- [ ] Add way to customize the base spacing unit in the settings
 - [ ] Add setting to flash chat when you get a message
 - [ ] The default font value of 15 does not represent the default material ui font sizes for some of the elements
+- [ ] Toggling avatars causes other styles to change (maybe font size and related to task above or spacing)
 - [ ] Add a way to specify a port on login
 - [ ] Allow navigation of chat with ctrl page up and page down
 - [ ] Cannot resize window from top edge
 - [ ] Handle message errors and acknowledgment
 
-- [ ] Better styling on badges, something that is more dynamic
 - [ ] Better styling on input (sometimes there is a weird dot at the start that blinks and text gets cut off)
 
 - [ ] Change nick on /nick
@@ -68,6 +70,7 @@ Loosely ordered in priority from top down
 - [ ] After x min of inactivity set status to away
 - [ ] Notify user on both ends when someone is typing
 - [ ] Use timestamp to identify if historical messages have been read
+- [ ] Encrypted channel passwords (not high priority, pidgin doesn't encrypt any passwords)
 
 - [ ] Figure out why streams aren't closing properly (currently fixed with a bit of a hack, need to look into it some more)
 - [ ] PropTypes on all components
@@ -78,7 +81,6 @@ Alpha
 - [ ] Keep logs of messages
 - [ ] Make rooms sortable
 - [ ] Include options for a compact and cozy layout (compact is the current)
-- [ ] Add option to show users without avatar in both left and right sidebar
 - [ ] Show a users connections in user details
 - [ ] Select colors for theme with hex code
 - [ ] Scheduled messages
