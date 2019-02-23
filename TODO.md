@@ -45,6 +45,7 @@ Loosely ordered in priority from top down
 - [x] Audio doesn't work in production
 - [x] Customization of text colors is not represented across all elements
 
+- [ ] Add a way to add rooms that are publicly visible
 - [ ] Add way to customize the base spacing unit in the settings
 - [ ] Add setting to flash chat when you get a message
 - [ ] The default font value of 15 does not represent the default material ui font sizes for some of the elements
