@@ -98,6 +98,13 @@ class Rooms extends React.Component<any, any> {
                   discover. Need to implement a away to check if it comes back
                   empty 
                 */}
+                  <ListItem
+                    button={true}
+                    dense={true}
+                    onClick={this.manuallyAddARoom}
+                  >
+                    <ListItemText>Manually Add a Room</ListItemText>
+                  </ListItem>
                   {subdomains.length === 0 && (
                     <ListItem>
                       <ListItemText>Looking for subdomains...</ListItemText>
@@ -162,7 +169,7 @@ class Rooms extends React.Component<any, any> {
                 value={form.jid}
               />
               <TextField
-                name="Channel"
+                name="channelName"
                 onChange={this.handleOnChange}
                 label="Channel Name"
                 variant="filled"
@@ -184,6 +191,7 @@ class Rooms extends React.Component<any, any> {
                 variant="filled"
                 margin="dense"
                 helperText="Leave empty if no password"
+                type="password"
                 value={form.password}
               />
             </div>
@@ -252,6 +260,18 @@ class Rooms extends React.Component<any, any> {
   private handleOnChange = (event: any) => {
     this.setState({
       form: { ...this.state.form, [event.target.name]: event.target.value },
+    });
+  };
+
+  private manuallyAddARoom = () => {
+    this.setState({
+      tabIndex: 1,
+      form: {
+        jid: '',
+        channelName: '',
+        nickname: this.props.nickname,
+        password: '',
+      },
     });
   };
 }

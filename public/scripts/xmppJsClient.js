@@ -340,14 +340,28 @@ class XmppJsClient {
     this.client.send(xml('presence', {}));
   }
 
-  sendSubscribe(jid, nickname) {
-    this.client.send(
-      xml('presence', {
-        id: makeId(7),
-        to: `${jid}/${nickname}`,
-        from: this.jid,
-      })
-    );
+  sendSubscribe(jid, nickname, password) {
+    if (password) {
+      this.client.send(
+        xml('presence', {
+            id: makeId(7),
+            to: `${jid}/${nickname}`,
+            from: this.jid,
+          },
+          xml('x', {
+              xmlns: 'http://jabber.org/protocol/muc',
+            },
+            xml('password', {}, password)))
+      );
+    } else {
+      this.client.send(
+        xml('presence', {
+          id: makeId(7),
+          to: `${jid}/${nickname}`,
+          from: this.jid,
+        })
+      );
+    }
   }
 
   sendUnsubscribe(jid, nickname) {

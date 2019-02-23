@@ -35,7 +35,7 @@ class IpcMainEvents {
     });
 
     ipcMain.on('xmpp-subscribe-to-room', (event, arg) => {
-      xmppClient.sendSubscribe(arg.jid, arg.nickname);
+      xmppClient.sendSubscribe(arg.jid, arg.nickname, arg.password);
     });
 
     ipcMain.on('xmpp-unsubscribe-to-room', (event, arg) => {

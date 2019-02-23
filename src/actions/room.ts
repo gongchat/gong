@@ -21,7 +21,7 @@ export default class Room {
           jid: channel.jid,
           channelName: channel.name,
           nickname: channel.nickname,
-          password: '',
+          password: channel.password,
         };
         ipcRenderer.send('xmpp-subscribe-to-room', channelJoin);
       });
