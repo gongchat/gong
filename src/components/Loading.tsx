@@ -27,7 +27,6 @@ class Loading extends React.Component<any, any> {
       !nextProps.connection.isConnecting &&
       nextProps.connection.isConnecting !== undefined
     ) {
-      console.log(nextProps.connection);
       if (nextProps.connection.isConnected) {
         this.props.history.push('/main');
       } else if (!nextProps.connection.hasSavedCredentials) {

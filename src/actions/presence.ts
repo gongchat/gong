@@ -97,7 +97,6 @@ export default class Presence {
         isUnableToConnect: false,
       };
 
-      console.log(room.name, presence.from, presence.status);
       if (presence.status === 'offline') {
         // remove user if status is no longer online
         room.users = [
