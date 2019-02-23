@@ -97,7 +97,15 @@ export default class Presence {
         isUnableToConnect: false,
       };
 
-      if (presence.status === 'online') {
+      console.log(room.name, presence.from, presence.status);
+      if (presence.status === 'offline') {
+        // remove user if status is no longer online
+        room.users = [
+          ...room.users.filter(
+            (user: IChannelUser) => user.jid !== presence.user
+          ),
+        ];
+      } else {
         // if user does not exist, add it
         if (
           room.users &&
@@ -112,13 +120,6 @@ export default class Presence {
           };
           room.users = [...room.users, newUser];
         }
-      } else {
-        // remove user if status is no longer online
-        room.users = [
-          ...room.users.filter(
-            (user: IChannelUser) => user.jid !== presence.user
-          ),
-        ];
       }
 
       // if channel is the current one, update it
