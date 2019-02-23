@@ -16,7 +16,7 @@ const {
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
-const xmppClient = new XmppJsClient();
+const xmppJsClient = new XmppJsClient();
 const ipcMainEvents = new IpcMainEvents();
 
 let mainWindow;
@@ -40,8 +40,8 @@ function createWindow() {
   );
 
   mainWindow.on('closed', () => {
-    if (xmppClient.client) {
-      xmppClient.client.stop();
+    if (xmppJsClient.client) {
+      xmppJsClient.client.stop();
     }
     mainWindow = null;
   });
@@ -89,4 +89,4 @@ app.on('activate', () => {
   }
 });
 
-ipcMainEvents.attachEvents(ipcMain, xmppClient);
+ipcMainEvents.attachEvents(ipcMain, xmppJsClient);

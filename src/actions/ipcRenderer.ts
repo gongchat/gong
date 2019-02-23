@@ -15,7 +15,7 @@ import {
   XMPP_CONNECTION_FAILED,
 } from 'src/actions/constants';
 
-export default class IpcRenderActions {
+export default class IpcRenderer {
   public static attachEvents(ipcRenderer: any) {
     ipcRenderer.on('xmpp-connection-failed', (event: any, arg: any) => {
       store.dispatch({ type: XMPP_CONNECTION_FAILED, payload: arg.error });
