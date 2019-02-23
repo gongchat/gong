@@ -118,7 +118,7 @@ const styles: any = (theme: any) => ({
     flexShrink: 0,
   },
   left: {
-    flex: `0 0 ${theme.sidebarWidth}`,
+    flex: `0 0 ${theme.sidebarWidth}px`,
     display: 'flex',
     flexDirection: 'column',
     width: theme.sidebarWidth,
@@ -132,8 +132,9 @@ const styles: any = (theme: any) => ({
     overflowX: 'hidden',
   },
   right: {
-    flex: `0 0 calc(${theme.sidebarWidth} * 0.9)`,
+    flex: `0 0 ${theme.sidebarWidth * 0.9}px`,
     backgroundColor: theme.palette.background.default,
+    overflowX: 'hidden',
   },
 });
 

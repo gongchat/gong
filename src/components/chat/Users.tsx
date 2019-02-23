@@ -1,9 +1,13 @@
 import * as React from 'react';
 
+// redux & actions
+import { connect } from 'react-redux';
+
 // material ui
 import { withStyles } from '@material-ui/core';
 
 // interfaces
+import IStates from 'src/interfaces/IStates';
 import IUser from 'src/interfaces/IUser';
 
 // components
@@ -28,7 +32,7 @@ class Users extends React.Component<any, any> {
   }
 
   public render() {
-    const { classes } = this.props;
+    const { classes, theme } = this.props;
     const { groupedUsers } = this.state;
 
     const totalUnreadMessages = this.props.users.reduce(
@@ -59,6 +63,7 @@ class Users extends React.Component<any, any> {
                     <User
                       key={user.jid}
                       user={user}
+                      showAvatar={theme.sidebarLeftShowAvatar}
                       isSelected={
                         this.props.current &&
                         this.props.current.jid === user.jid
@@ -88,8 +93,15 @@ class Users extends React.Component<any, any> {
   }
 }
 
+const mapStateToProps = (states: IStates) => ({
+  theme: states.gong.theme,
+});
+
 const styles: any = (theme: any) => ({
   root: {},
 });
 
-export default withStyles(styles)(Users);
+export default connect(
+  mapStateToProps,
+  null
+)(withStyles(styles)(Users));

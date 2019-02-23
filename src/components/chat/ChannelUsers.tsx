@@ -1,18 +1,22 @@
 import * as React from 'react';
 
+// redux & actions
+import { connect } from 'react-redux';
+
 // material ui
 import { withStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 
 // interfaces
 import IChannelUser from 'src/interfaces/IChannelUser';
+import IStates from 'src/interfaces/IStates';
 
 // components
 import ChannelUser from './ChannelUser';
 
 class ChannelUsers extends React.Component<any, any> {
   public render() {
-    const { classes, title, users } = this.props;
+    const { classes, title, users, theme } = this.props;
 
     return (
       <div className={classes.root}>
@@ -26,13 +30,21 @@ class ChannelUsers extends React.Component<any, any> {
             )
             .reverse()
             .map((user: IChannelUser) => (
-              <ChannelUser key={user.jid} user={user} />
+              <ChannelUser
+                key={user.jid}
+                user={user}
+                showAvatar={theme.sidebarRightShowAvatar}
+              />
             ))}
         </div>
       </div>
     );
   }
 }
+
+const mapStateToProps = (states: IStates) => ({
+  theme: states.gong.theme,
+});
 
 const styles: any = (theme: any) => ({
   root: {},
@@ -46,4 +58,7 @@ const styles: any = (theme: any) => ({
   },
 });
 
-export default withStyles(styles)(ChannelUsers);
+export default connect(
+  mapStateToProps,
+  null
+)(withStyles(styles)(ChannelUsers));

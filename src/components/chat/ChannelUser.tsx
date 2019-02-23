@@ -14,15 +14,17 @@ import StringUtil from 'src/utils/stringUtils';
 
 class ChannelUser extends React.Component<any, any> {
   public render() {
-    const { classes, user } = this.props;
+    const { classes, user, showAvatar } = this.props;
 
     return (
       <div className={classes.root} onClick={this.handleOnClick}>
-        <div className={classes.avatar}>
-          <Avatar className={classes.img}>
-            {StringUtil.getAbbreviation(user.nickname)}
-          </Avatar>
-        </div>
+        {showAvatar && (
+          <div className={classes.avatar}>
+            <Avatar className={classes.img}>
+              {StringUtil.getAbbreviation(user.nickname)}
+            </Avatar>
+          </div>
+        )}
         <Typography className={classes.title} style={{ color: user.color }}>
           {user.nickname}
         </Typography>
@@ -55,6 +57,8 @@ const styles: any = (theme: any) => ({
   title: {
     fontSize: '16px',
     whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflowX: 'hidden',
   },
   avatar: {
     position: 'relative',

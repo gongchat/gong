@@ -30,7 +30,9 @@ const DEFAULT: any = {
     dnd: '#d84315',
     offline: '#757575',
   },
-  sidebarWidth: '225px',
+  sidebarWidth: 225,
+  sidebarLeftShowAvatar: true,
+  sidebarRightShowAvatar: true,
   typography: {
     fontFamily: '"Source Sans Pro", sans-serif',
     fontSize: 15,
@@ -92,8 +94,10 @@ export default class Theme {
       Theme.updatePrimaryColor(theme, item.value);
     } else if (props[1] === 'secondary') {
       Theme.updateSecondaryColor(theme, item.value);
-    } else if (lastProp === 'sidebarWidth') {
-      theme.sidebarWidth = item.value;
+    } else if (lastProp === 'unit') {
+      theme.spacing.unit = item.value;
+    } else {
+      theme[lastProp] = item.value;
     }
 
     const muiTheme = createMuiTheme(theme);
@@ -108,6 +112,13 @@ export default class Theme {
   public static getTheme = () => {
     const theme = electronStore.get('theme');
     if (theme) {
+      // TODO: remove this once alpha
+      // move all stored units to numbers without units
+      if (typeof theme.sidebarWidth === 'string') {
+        theme.sidebarWidth = parseInt(theme.sidebarWidth.replace('px', ''), 10);
+        electronStore.set('theme', theme);
+      }
+
       return createMuiTheme(theme);
     } else {
       return createMuiTheme(DEFAULT);

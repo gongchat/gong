@@ -79,7 +79,7 @@ const styles: any = (theme: any) => ({
     display: 'flex',
     flexWrap: 'nowrap',
     alignItems: 'center',
-    overflowX: 'hidden',
+    overflow: 'hidden',
   },
   title: {
     whiteSpace: 'nowrap',

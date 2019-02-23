@@ -81,7 +81,7 @@ const mapDispatchToProps = {
 
 const styles: any = (theme: any) => ({
   root: {
-    width: `calc(${theme.sidebarWidth} - ${theme.spacing.unit * 4}px)`,
+    width: theme.sidebarWidth - theme.spacing.unit * 4,
   },
   item: {
     cursor: 'pointer',

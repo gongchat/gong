@@ -156,7 +156,8 @@ const styles: any = (theme: any) => ({
     marginLeft: '5px',
   },
   badge: {
-    marginRight: theme.spacing.unit,
+    width: '20px',
+    marginRight: 8 + theme.spacing.unit * 0.5,
     borderRadius: '5px',
   },
   badgeFlash: {

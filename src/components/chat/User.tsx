@@ -41,21 +41,31 @@ class UserCard extends React.Component<any, any> {
           onContextMenu={this.handleOnContextMenu}
         >
           <div className={classes.avatar}>
-            {user.vCard && user.vCard.photo ? (
-              <Avatar
-                className={classes.img}
-                src={`data:${user.vCard.photoType};base64,${user.vCard.photo}`}
-              />
+            {this.props.showAvatar ? (
+              <div>
+                {user.vCard && user.vCard.photo ? (
+                  <Avatar
+                    className={classes.img}
+                    src={`data:${user.vCard.photoType};base64,${
+                      user.vCard.photo
+                    }`}
+                  />
+                ) : (
+                  <Avatar className={classes.img}>
+                    <Typography>
+                      {StringUtil.getAbbreviation(displayName)}
+                    </Typography>
+                  </Avatar>
+                )}
+                <div className={classes.status}>
+                  <Status status={user.status} />
+                </div>
+              </div>
             ) : (
-              <Avatar className={classes.img}>
-                <Typography>
-                  {StringUtil.getAbbreviation(displayName)}
-                </Typography>
-              </Avatar>
+              <div className={classes.statusOnly}>
+                <Status status={user.status} />
+              </div>
             )}
-            <div className={classes.status}>
-              <Status status={user.status} />
-            </div>
           </div>
           <Typography className={classes.title}>{displayName}</Typography>
           {user.unreadMessages > 0 && (
@@ -131,7 +141,7 @@ const styles: any = (theme: any) => ({
     display: 'flex',
     flexWrap: 'nowrap',
     alignItems: 'center',
-    overflowX: 'hidden',
+    overflow: 'hidden',
     cursor: 'pointer',
     '&:hover': {
       backgroundColor: 'rgba(125,125,125,.2)',
@@ -161,6 +171,9 @@ const styles: any = (theme: any) => ({
     border: '2px solid ' + theme.palette.background.default,
     borderRadius: '50%',
   },
+  statusOnly: {
+    marginRight: theme.spacing.unit,
+  },
   active: {
     background: 'rgba(125,125,125,.4)',
     '&:hover': {
@@ -168,7 +181,8 @@ const styles: any = (theme: any) => ({
     },
   },
   badge: {
-    marginRight: theme.spacing.unit,
+    width: '20px',
+    marginRight: '8px',
     borderRadius: '5px',
   },
 });

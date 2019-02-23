@@ -111,7 +111,8 @@ const styles: any = (theme: any) => ({
     },
   },
   badge: {
-    marginRight: theme.spacing.unit,
+    width: '20px',
+    marginRight: '10px',
     borderRadius: '5px',
   },
   badgeFlash: {
