@@ -43,6 +43,7 @@
   "dependencies": {
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.1",
+    "@material-ui/lab": "^3.0.0-alpha.30",
     "@techempower/react-governor": "^0.1.1",
     "crypto-js": "^3.1.9-1",
     "electron-context-menu": "^0.10.1",
