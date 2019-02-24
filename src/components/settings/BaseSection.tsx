@@ -24,6 +24,7 @@ const styles: any = (theme: any) => ({
     marginBottom: theme.spacing.unit,
     display: 'flex',
     flexDirection: 'column',
+    flexShrink: 0,
     '& > *': {
       marginBottom: theme.spacing.unit * 2,
       width: '500px',

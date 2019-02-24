@@ -18,7 +18,7 @@ import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 import SliderMarkers from './SliderMarkers';
 
-const MIN_SIDEBAR_WIDTH = 200;
+const MIN_SIDEBAR_WIDTH = 150;
 const MAX_SIDEBAR_WIDTH = 250;
 const DEFAULT_SIDEBAR_WIDTH = 225;
 
@@ -38,6 +38,7 @@ class Layout extends React.Component<any, any> {
   private sidebarWidthTimer: any;
 
   public render() {
+    const { classes } = this.props;
     const {
       spacing,
       sidebarWidth,
@@ -48,7 +49,7 @@ class Layout extends React.Component<any, any> {
     return (
       <BasePage title="Layout">
         <BaseSection title="Spacing">
-          <div>
+          <div className={classes.slider}>
             <Slider
               value={spacing === '' ? 0 : parseInt(spacing, 10)}
               min={MIN_SPACING}
@@ -80,7 +81,7 @@ class Layout extends React.Component<any, any> {
           </div>
         </BaseSection>
         <BaseSection title="Sidebar Width">
-          <div>
+        <div className={classes.slider}>
             <Slider
               value={sidebarWidth === '' ? 0 : parseInt(sidebarWidth, 10)}
               min={MIN_SIDEBAR_WIDTH}
@@ -235,7 +236,7 @@ const mapDispatchToProps = {
 };
 
 const styles: any = (theme: any) => ({
-  root: {},
+  slider: { position: 'relative' },
 });
 
 export default connect(

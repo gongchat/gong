@@ -34,6 +34,7 @@ class Font extends React.Component<any, any> {
   private sizeTimer: any;
 
   public render() {
+    const { classes } = this.props;
     const { font, size } = this.state;
 
     return (
@@ -58,7 +59,7 @@ class Font extends React.Component<any, any> {
           </div>
         </BaseSection>
         <BaseSection title="Font Size">
-          <div>
+          <div className={classes.slider}>
             <Slider
               value={size === '' ? 0 : parseInt(size, 10)}
               min={MIN_SIZE}
@@ -178,7 +179,7 @@ const mapDispatchToProps = {
 };
 
 const styles: any = (theme: any) => ({
-  root: {},
+  slider: { position: 'relative' },
 });
 
 export default connect(

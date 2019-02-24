@@ -21,10 +21,12 @@ class BasePage extends React.Component<any, any> {
 const styles: any = (theme: any) => ({
   root: {
     marginTop: theme.spacing.unit,
+    marginLeft: '16px', // leave hard coded for when spacing is set to 0
     padding: theme.spacing.unit * 4,
     display: 'flex',
     flexDirection: 'column',
     overflowX: 'hidden',
+    flexGrow: 1,
   },
   title: {
     paddingBottom: theme.spacing.unit * 2,

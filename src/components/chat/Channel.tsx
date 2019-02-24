@@ -98,7 +98,8 @@ const styles: any = (theme: any) => ({
   },
   name: {
     flexGrow: 1,
-    width: '100px',
+    // TODO: without the 1px width name doesn't overflow properly, not sure why
+    width: '1px',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflowX: 'hidden',
