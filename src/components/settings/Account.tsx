@@ -139,7 +139,7 @@ class Account extends React.Component<any, any> {
                 className={classes.avatar}
               />
             )}
-            <Button onClick={this.handleOnAvatarClick}>Change Avatar</Button>
+            <Button onClick={this.handleOnAvatarClick}>Change</Button>
             <input
               ref={this.fileInput}
               type="file"

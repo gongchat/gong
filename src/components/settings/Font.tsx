@@ -10,8 +10,13 @@ import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
+import Slider from '@material-ui/lab/Slider';
+
 // interfaces
 import IStates from 'src/interfaces/IStates';
+import BasePage from './BasePage';
+import BaseSection from './BaseSection';
+import SliderMarkers from './SliderMarkers';
 
 const MIN_SIZE = 8;
 const MAX_SIZE = 24;
@@ -29,41 +34,63 @@ class Font extends React.Component<any, any> {
   private sizeTimer: any;
 
   public render() {
-    const { classes } = this.props;
     const { font, size } = this.state;
 
     return (
-      <div className={classes.root}>
-        <Typography className={classes.link}>
-          You can use any of the fonts available on{' '}
-          <Link href="https://fonts.google.com/">Google Fonts</Link>
-        </Typography>
-        <TextField
-          name="font"
-          id="filled-number"
-          label="Font"
-          value={font}
-          onChange={this.handleFontChange}
-          onKeyDown={this.handleKeyDown}
-          type="text"
-          margin="normal"
-          variant="filled"
-          className={classes.font}
-        />
-        <TextField
-          name="size"
-          id="filled-number"
-          label="Font Size"
-          value={size}
-          onChange={this.handleSizeChange}
-          onKeyDown={this.handleKeyDown}
-          type="number"
-          margin="normal"
-          variant="filled"
-          inputProps={{ className: classes.size, min: MIN_SIZE, max: MAX_SIZE }}
-          helperText={`From ${MIN_SIZE} to ${MAX_SIZE}`}
-        />
-      </div>
+      <BasePage title="Font">
+        <BaseSection title="Font Name">
+          <div>
+            <Typography variant="body2">
+              You can use any of the fonts available on{' '}
+              <Link href="https://fonts.google.com/">Google Fonts</Link>
+            </Typography>
+            <TextField
+              name="font"
+              id="filled-number"
+              label="Font"
+              value={font}
+              onChange={this.handleFontChange}
+              onKeyDown={this.handleKeyDown}
+              type="text"
+              margin="normal"
+              variant="filled"
+            />
+          </div>
+        </BaseSection>
+        <BaseSection title="Font Size">
+          <div>
+            <Slider
+              value={size === '' ? 0 : parseInt(size, 10)}
+              min={MIN_SIZE}
+              max={MAX_SIZE}
+              step={1}
+              onChange={this.handleSizeChangeSlider}
+            />
+            <SliderMarkers
+              minSize={MIN_SIZE}
+              maxSize={MAX_SIZE}
+              defaultSize={DEFAULT_SIZE}
+            />
+          </div>
+          <div>
+            <TextField
+              name="size"
+              id="filled-number"
+              label="Font Size"
+              value={size}
+              onChange={this.handleSizeChangeInput}
+              onKeyDown={this.handleKeyDown}
+              type="number"
+              margin="normal"
+              variant="filled"
+              inputProps={{
+                min: MIN_SIZE,
+                max: MAX_SIZE,
+              }}
+            />
+          </div>
+        </BaseSection>
+      </BasePage>
     );
   }
 
@@ -112,8 +139,16 @@ class Font extends React.Component<any, any> {
     }, 1000);
   };
 
-  private handleSizeChange = (event: any) => {
-    this.setState({ size: event.target.value });
+  private handleSizeChangeInput = (event: any) => {
+    this.updateSize(event.target.value);
+  };
+
+  private handleSizeChangeSlider = (event: any, value: number) => {
+    this.updateSize(value);
+  };
+
+  private updateSize = (value: any) => {
+    this.setState({ size: value });
     if (this.sizeTimer) {
       clearTimeout(this.sizeTimer);
     }
@@ -126,6 +161,7 @@ class Font extends React.Component<any, any> {
         themeKey: 'typography.fontSize',
         value: size,
       });
+      // need to set again in case size is out of bounds
       this.setState({ size });
     }, 1000);
   };
@@ -142,19 +178,7 @@ const mapDispatchToProps = {
 };
 
 const styles: any = (theme: any) => ({
-  root: {
-    marginTop: theme.spacing.unit,
-    padding: theme.spacing.unit * 4,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
-  size: {
-    textAlign: 'right',
-  },
-  link: {
-    width: '500px',
-  },
+  root: {},
 });
 
 export default connect(

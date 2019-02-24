@@ -10,16 +10,21 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 
+import Slider from '@material-ui/lab/Slider';
+
 // interface
 import IStates from 'src/interfaces/IStates';
+import BasePage from './BasePage';
+import BaseSection from './BaseSection';
+import SliderMarkers from './SliderMarkers';
 
-const MIN_SIDEBAR_SIZE = 200;
-const MAX_SIDEBAR_SIZE = 250;
-const DEFAULT_SIDEBAR_SIZE = 200;
+const MIN_SIDEBAR_WIDTH = 200;
+const MAX_SIDEBAR_WIDTH = 250;
+const DEFAULT_SIDEBAR_WIDTH = 225;
 
-const MIN_SPACING_SIZE = 0;
-const MAX_SPACING_SIZE = 16;
-const DEFAULT_SPACING_SIZE = 8;
+const MIN_SPACING = 0;
+const MAX_SPACING = 16;
+const DEFAULT_SPACING = 8;
 
 class Layout extends React.Component<any, any> {
   public state = {
@@ -33,7 +38,6 @@ class Layout extends React.Component<any, any> {
   private sidebarWidthTimer: any;
 
   public render() {
-    const { classes } = this.props;
     const {
       spacing,
       sidebarWidth,
@@ -42,60 +46,94 @@ class Layout extends React.Component<any, any> {
     } = this.state;
 
     return (
-      <div className={classes.root}>
-        <TextField
-          name="spacing"
-          label="Spacing"
-          value={spacing}
-          onChange={this.handleSpacingChange}
-          onKeyDown={this.handleKeyDown}
-          type="number"
-          margin="normal"
-          variant="filled"
-          inputProps={{
-            className: classes.size,
-            min: MIN_SPACING_SIZE,
-            max: MAX_SPACING_SIZE,
-          }}
-          helperText={`From ${MIN_SPACING_SIZE} to ${MAX_SPACING_SIZE}`}
-        />
-        <TextField
-          name="sidebarWidth"
-          label="Sidebar Width"
-          value={sidebarWidth}
-          onChange={this.handleSidebarWidthChange}
-          onKeyDown={this.handleKeyDown}
-          type="number"
-          margin="normal"
-          variant="filled"
-          inputProps={{
-            className: classes.size,
-            min: MIN_SIDEBAR_SIZE,
-            max: MAX_SIDEBAR_SIZE,
-          }}
-          helperText={`From ${MIN_SIDEBAR_SIZE} to ${MAX_SIDEBAR_SIZE}`}
-        />
-        <FormControlLabel
-          control={
-            <Switch
-              name="sidebarLeftShowAvatar"
-              checked={sidebarLeftShowAvatar}
-              onChange={this.handleSidebarAvatarChange}
+      <BasePage title="Layout">
+        <BaseSection title="Spacing">
+          <div>
+            <Slider
+              value={spacing === '' ? 0 : parseInt(spacing, 10)}
+              min={MIN_SPACING}
+              max={MAX_SPACING}
+              step={1}
+              onChange={this.handleSpacingChangeSlider}
             />
-          }
-          label="Show avatars in the left sidebar"
-        />
-        <FormControlLabel
-          control={
-            <Switch
-              name="sidebarRightShowAvatar"
-              checked={sidebarRightShowAvatar}
-              onChange={this.handleSidebarAvatarChange}
+            <SliderMarkers
+              minSize={MIN_SPACING}
+              maxSize={MAX_SPACING}
+              defaultSize={DEFAULT_SPACING}
             />
-          }
-          label="Show avatars in the right sidebar"
-        />
-      </div>
+          </div>
+          <div>
+            <TextField
+              name="spacing"
+              label="Spacing"
+              value={spacing}
+              onChange={this.handleSpacingChangeInput}
+              onKeyDown={this.handleKeyDown}
+              type="number"
+              margin="normal"
+              variant="filled"
+              inputProps={{
+                min: MIN_SPACING,
+                max: MAX_SPACING,
+              }}
+            />
+          </div>
+        </BaseSection>
+        <BaseSection title="Sidebar Width">
+          <div>
+            <Slider
+              value={sidebarWidth === '' ? 0 : parseInt(sidebarWidth, 10)}
+              min={MIN_SIDEBAR_WIDTH}
+              max={MAX_SIDEBAR_WIDTH}
+              step={1}
+              onChange={this.handleSidebarWidthChangeSlider}
+            />
+            <SliderMarkers
+              minSize={MIN_SIDEBAR_WIDTH}
+              maxSize={MAX_SIDEBAR_WIDTH}
+              defaultSize={DEFAULT_SIDEBAR_WIDTH}
+            />
+          </div>
+          <div>
+            <TextField
+              name="sidebarWidth"
+              label="Sidebar Width"
+              value={sidebarWidth}
+              onChange={this.handleSidebarWidthChangeInput}
+              onKeyDown={this.handleKeyDown}
+              type="number"
+              margin="normal"
+              variant="filled"
+              inputProps={{
+                min: MIN_SIDEBAR_WIDTH,
+                max: MAX_SIDEBAR_WIDTH,
+              }}
+            />
+          </div>
+        </BaseSection>
+        <BaseSection title="Avatars">
+          <FormControlLabel
+            control={
+              <Switch
+                name="sidebarLeftShowAvatar"
+                checked={sidebarLeftShowAvatar}
+                onChange={this.handleSidebarAvatarChange}
+              />
+            }
+            label="Show avatars in the left sidebar"
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                name="sidebarRightShowAvatar"
+                checked={sidebarRightShowAvatar}
+                onChange={this.handleSidebarAvatarChange}
+              />
+            }
+            label="Show avatars in the right sidebar"
+          />
+        </BaseSection>
+      </BasePage>
     );
   }
 
@@ -126,16 +164,23 @@ class Layout extends React.Component<any, any> {
     }
   };
 
-  private handleSpacingChange = (event: any) => {
-    this.setState({ spacing: event.target.value });
+  private handleSpacingChangeSlider = (event: any, value: any) => {
+    this.updateSpacing(value);
+  };
+
+  private handleSpacingChangeInput = (event: any) => {
+    this.updateSpacing(event.target.value);
+  };
+
+  private updateSpacing = (value: any) => {
+    this.setState({ spacing: value });
     if (this.spacingTimer) {
       clearTimeout(this.spacingTimer);
     }
     this.spacingTimer = setTimeout(() => {
       const spacing =
-        this.state.spacing < MIN_SPACING_SIZE ||
-        this.state.spacing > MAX_SPACING_SIZE
-          ? DEFAULT_SPACING_SIZE
+        this.state.spacing < MIN_SPACING || this.state.spacing > MAX_SPACING
+          ? DEFAULT_SPACING
           : this.state.spacing;
       this.props.setTheme({
         themeKey: 'theme.spacing.unit',
@@ -145,16 +190,24 @@ class Layout extends React.Component<any, any> {
     }, 1000);
   };
 
-  private handleSidebarWidthChange = (event: any) => {
-    this.setState({ sidebarWidth: event.target.value });
+  private handleSidebarWidthChangeSlider = (event: any, value: any) => {
+    this.updateSidebarWidth(value);
+  };
+
+  private handleSidebarWidthChangeInput = (event: any) => {
+    this.updateSidebarWidth(event.target.value);
+  };
+
+  private updateSidebarWidth = (value: any) => {
+    this.setState({ sidebarWidth: value });
     if (this.sidebarWidthTimer) {
       clearTimeout(this.sidebarWidthTimer);
     }
     this.sidebarWidthTimer = setTimeout(() => {
       const sidebarWidth =
-        this.state.sidebarWidth < MIN_SIDEBAR_SIZE ||
-        this.state.sidebarWidth > MAX_SIDEBAR_SIZE
-          ? DEFAULT_SIDEBAR_SIZE
+        this.state.sidebarWidth < MIN_SIDEBAR_WIDTH ||
+        this.state.sidebarWidth > MAX_SIDEBAR_WIDTH
+          ? DEFAULT_SIDEBAR_WIDTH
           : this.state.sidebarWidth;
       this.props.setTheme({
         themeKey: 'sidebarWidth',
@@ -182,12 +235,7 @@ const mapDispatchToProps = {
 };
 
 const styles: any = (theme: any) => ({
-  root: {
-    marginTop: theme.spacing.unit,
-    padding: theme.spacing.unit * 4,
-    display: 'flex',
-    flexDirection: 'column',
-  },
+  root: {},
 });
 
 export default connect(

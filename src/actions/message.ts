@@ -20,7 +20,7 @@ import IRoom from 'src/interfaces/IRoom';
 import IState from 'src/interfaces/IState';
 import IUser from 'src/interfaces/IUser';
 
-import Settings from './settings';
+import Notification from './notification';
 
 import ColorUtil from 'src/utils/colorUtil';
 import StringUtil from 'src/utils/stringUtils';
@@ -268,7 +268,7 @@ export default class Message {
       state.current.jid === message.channelName &&
       state.current.type === type
     ) {
-      Settings.playAudio(state, message, type, false);
+      Notification.playAudioOnMessage(state, message, type, false);
       state.current = {
         ...state.current,
         messages: [...state.current.messages, message],
@@ -288,7 +288,7 @@ export default class Message {
           channelUpdated = true;
 
           const isUnread = !state.current || state.current.jid !== channel.jid;
-          Settings.playAudio(state, message, type, isUnread);
+          Notification.playAudioOnMessage(state, message, type, isUnread);
 
           return {
             ...channel,
@@ -308,7 +308,7 @@ export default class Message {
   private static addToOpenChannels(state: IState, message: IMessage) {
     const isUnread =
       !state.current || state.current.jid !== message.channelName;
-    Settings.playAudio(state, message, 'chat', isUnread);
+    Notification.playAudioOnMessage(state, message, 'chat', isUnread);
 
     const newChannel: IChannel = {
       type: 'chat',

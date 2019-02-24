@@ -42,10 +42,10 @@ import IStates from 'src/interfaces/IStates';
 
 const TABS = [
   { name: 'Account', icon: <AccountCircleIcon /> },
-  { name: 'Notifications', icon: <NotificationsIcon /> },
-  { name: 'Font', icon: <FontDownloadIcon /> },
   { name: 'Theme', icon: <PaletteIcon /> },
+  { name: 'Font', icon: <FontDownloadIcon /> },
   { name: 'Layout', icon: <DashboardIcon /> },
+  { name: 'Notifications', icon: <NotificationsIcon /> },
   { name: 'Reset', icon: <FormatColorResetIcon /> },
   { name: 'Log Off', icon: <PowerSettingsNewIcon /> },
 ];
@@ -91,10 +91,10 @@ class Settings extends React.Component<any, any> {
           </div>
           <div className={classes.content}>
             {selectedTab.name === 'Account' && <Account />}
-            {selectedTab.name === 'Notifications' && <Notifications />}
-            {selectedTab.name === 'Font' && <Font />}
             {selectedTab.name === 'Theme' && <Theme />}
+            {selectedTab.name === 'Font' && <Font />}
             {selectedTab.name === 'Layout' && <Layout />}
+            {selectedTab.name === 'Notifications' && <Notifications />}
             {selectedTab.name === 'Reset' && (
               <div className={classes.section}>
                 <Typography>

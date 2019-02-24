@@ -155,16 +155,14 @@ const styles: any = (theme: any) => ({
     fontSize: '9px',
   },
   list: {
-    maxWidth: '200px',
+    maxWidth: '190px',
     overflowY: 'auto',
-    paddingLeft: theme.spacing.unit * 2,
-    paddingTop: theme.spacing.unit * 5,
-    paddingBottom: theme.spacing.unit * 5,
+    padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit}px`,
   },
   picker: {
     flexGrow: 1,
     overflowY: 'auto',
-    padding: theme.spacing.unit * 4,
+    padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit * 2}px`,
   },
   preview: {
     width: theme.spacing.unit * 2,

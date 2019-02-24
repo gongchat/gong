@@ -37,6 +37,7 @@ import Channel from 'src/actions/channel';
 import Connection from 'src/actions/connection';
 import Discover from 'src/actions/discover';
 import Message from 'src/actions/message';
+import Notification from 'src/actions/notification';
 import Presence from 'src/actions/presence';
 import Room from 'src/actions/room';
 import Settings from 'src/actions/settings';
@@ -153,10 +154,11 @@ export default function(state = initialState, action: any) {
 
     case SETTINGS_NOTIFICATIONS_SET:
       return Settings.setSettings(state, action.payload);
+
     case SNACKBAR_NOTIFICATION_REMOVE:
-      return Settings.removeFromSnackbar(state, action.payload);
+      return Notification.removeFromSnackbar(state, action.payload);
     case SNACKBAR_NOTIFICATION_ADD:
-      return Settings.addToSnackbar(state, action.payload);
+      return Notification.addToSnackbar(state, action.payload);
 
     default:
       return state;
