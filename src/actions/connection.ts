@@ -88,7 +88,7 @@ export default class Connection {
   public static connected = (state: IState, payload: any): IState => {
     let settingsSaved: ISettingsSaved = electronStore.get('settings');
 
-    // if no saved settings should be first log in. 
+    // if no saved settings should be first log in.
     // save credentials and default settings
     if (!settingsSaved) {
       settingsSaved = {
@@ -99,6 +99,9 @@ export default class Connection {
         resource: payload.jid.split('/')[1],
         password: payload.password,
         soundName: 'Gong 1',
+        renderVideos: true,
+        renderGetYarn: true,
+        renderImages: true,
         playAudioOnGroupchatMessage: 'never',
         playAudioOnChatMessage: 'unread',
         playAudioOnMentionMe: 'always',

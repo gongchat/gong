@@ -8,9 +8,19 @@ import Typography from '@material-ui/core/Typography';
 // libs
 import ReactPlayer from 'react-player';
 
+// interfaces
+import IMessageUrl from 'src/interfaces/IMessageUrl';
+
 class Message extends React.Component<any, any> {
   public render() {
-    const { classes, message, showTime } = this.props;
+    const {
+      classes,
+      message,
+      showTime,
+      renderVideos,
+      renderGetYarn,
+      renderImages,
+    } = this.props;
 
     return (
       <div className={classes.root}>
@@ -33,12 +43,57 @@ class Message extends React.Component<any, any> {
             />
           </Typography>
         </div>
-        {message.videoUrls &&
-          message.videoUrls.map((url: string, index: number) => (
-            <div key={index} className={classes.player}>
-              <ReactPlayer url={url} width={256} height={144} controls={true} />
-            </div>
-          ))}
+        {message.urls && (
+          <React.Fragment>
+            {renderVideos &&
+              message.urls
+                .filter((url: IMessageUrl) => url.type === 'video')
+                .map((url: IMessageUrl, index: number) => (
+                  <div key={index} className={classes.video}>
+                    <ReactPlayer
+                      url={url.url}
+                      width={300}
+                      height={170}
+                      controls={true}
+                    />
+                  </div>
+                ))}
+            {renderGetYarn &&
+              message.urls
+                .filter((url: IMessageUrl) => url.type === 'getyarn')
+                .map((url: IMessageUrl, index: number) => {
+                  const values = url.url.split('/');
+                  if (values.length >= 3) {
+                    return (
+                      <div key={index} className={classes.getYarn}>
+                        <iframe
+                          width={300}
+                          height={185}
+                          src={`https://getyarn.io/yarn-clip/embed/${
+                            values[2]
+                          }?autoplay=false`}
+                        />
+                      </div>
+                    );
+                  } else {
+                    return '';
+                  }
+                })}
+            {renderImages &&
+              message.urls
+                .filter((url: IMessageUrl) => url.type === 'image')
+                .map((url: IMessageUrl, index: number) => (
+                  <div key={index} className={classes.image}>
+                    <div
+                      style={{
+                        background: `url("${url.url}") no-repeat left top`,
+                        backgroundSize: 'contain',
+                      }}
+                    />
+                  </div>
+                ))}
+          </React.Fragment>
+        )}
       </div>
     );
   }
@@ -99,10 +154,28 @@ const styles: any = (theme: any) => ({
       textDecoration: 'none',
     },
   },
-  player: {
+  video: {
     flex: '0 1 100%',
     padding: theme.spacing.unit * 2,
     paddingLeft: theme.spacing.unit * 8,
+  },
+  getYarn: {
+    flex: '0 1 100%',
+    padding: theme.spacing.unit * 2,
+    paddingLeft: theme.spacing.unit * 8,
+    overflow: 'hidden',
+    '& iframe': {
+      border: 'none',
+    },
+  },
+  image: {
+    flex: '0 1 100%',
+    padding: theme.spacing.unit * 2,
+    paddingLeft: theme.spacing.unit * 8,
+    '& > div': {
+      width: 300,
+      height: 150,
+    },
   },
 });
 

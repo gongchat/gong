@@ -16,6 +16,7 @@ import IChannelUser from 'src/interfaces/IChannelUser';
 import IMessage from 'src/interfaces/IMessage';
 import IMessageReceive from 'src/interfaces/IMessageReceive';
 import IMessageSend from 'src/interfaces/IMessageSend';
+import IMessageUrl from 'src/interfaces/IMessageUrl';
 import IRoom from 'src/interfaces/IRoom';
 import IState from 'src/interfaces/IState';
 import IUser from 'src/interfaces/IUser';
@@ -79,7 +80,7 @@ export default class Message {
         to: messageSend.to,
         from: messageSend.from,
         body: messageSend.body,
-        videoUrls: [],
+        urls: [],
         timestamp: moment(),
         userNickname:
           newState.profile.vCard && newState.profile.vCard.nickname
@@ -89,7 +90,7 @@ export default class Message {
         isHistory: false,
         isMentioningMe: false,
       };
-      Message.processMessage(message, [], '');
+      Message.processMessage(newState, message, [], '');
       Message.addMessage(newState, message, 'chat');
     }
     return newState;
@@ -158,7 +159,7 @@ export default class Message {
       to: newState.settings.jid,
       from: messageReceive.from,
       body: messageReceive.body,
-      videoUrls: [],
+      urls: [],
       timestamp: messageReceive.timestamp,
       isHistory: messageReceive.isHistory,
       isMentioningMe: false,
@@ -166,26 +167,29 @@ export default class Message {
       color,
     };
 
-    Message.processMessage(message, channelUsers, myChannelNickname);
+    Message.processMessage(newState, message, channelUsers, myChannelNickname);
     Message.addMessage(newState, message, messageReceive.type);
 
     return newState;
   };
 
   private static processMessage = (
+    state: IState,
     message: IMessage,
     channelUsers: IChannelUser[],
     myChannelNickname: string
   ) => {
     let formattedMessage = message.body;
 
-    // find youtube videos, regExp from: https://github.com/regexhq/youtube-regex/blob/master/index.js
-    const youtubeRegExp = new RegExp(
-      /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/g
-    );
-    const scannedYoutubeUrls = message.body.match(youtubeRegExp);
-    if (scannedYoutubeUrls) {
-      message.videoUrls = scannedYoutubeUrls;
+    // process urls
+    if (state.settings.renderVideos) {
+      message.urls = [...message.urls, ...Message.getVideoUrls(message.body)];
+    }
+    if (state.settings.renderGetYarn) {
+      message.urls = [...message.urls, ...Message.getGetYarnUrls(message.body)];
+    }
+    if (state.settings.renderImages) {
+      message.urls = [...message.urls, ...Message.getImageUrls(message.body)];
     }
 
     // handle mentions this only applies to IRoom
@@ -248,7 +252,7 @@ export default class Message {
     state: IState,
     message: IMessage,
     type: string
-  ) => {
+  ): IState => {
     // Checks if current, if it is, it will add the message to it
     Message.updateCurrent(state, type, message);
 
@@ -261,6 +265,50 @@ export default class Message {
 
     return { ...state };
   };
+
+  private static getVideoUrls(text: string): IMessageUrl[] {
+    // find youtube videos, regExp from: https://github.com/regexhq/youtube-regex/blob/master/index.js
+    const youtubeRegExp = new RegExp(
+      /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/g
+    );
+    const scannedYoutubeUrls = text.match(youtubeRegExp);
+    if (scannedYoutubeUrls) {
+      return scannedYoutubeUrls.map((url: string) => ({
+        type: 'video',
+        url,
+      }));
+    } else {
+      return [];
+    }
+  }
+
+  private static getGetYarnUrls(text: string): IMessageUrl[] {
+    const getYarnRegExp = new RegExp(
+      /(?:getyarn\.io\/yarn-clip\/)([a-zA-Z0-9_-]{36,36})(\b)/g
+    );
+    const scannedGetYarnUrls = text.match(getYarnRegExp);
+    if (scannedGetYarnUrls) {
+      return scannedGetYarnUrls.map((url: string) => ({
+        type: 'getyarn',
+        url,
+      }));
+    } else {
+      return [];
+    }
+  }
+
+  private static getImageUrls(text: string): IMessageUrl[] {
+    const getImageRegExp = new RegExp(/(https?:\/\/.*\.(?:png|jpg))/gi);
+    const scannedImageUrls = text.match(getImageRegExp);
+    if (scannedImageUrls) {
+      return scannedImageUrls.map((url: string) => ({
+        type: 'image',
+        url,
+      }));
+    } else {
+      return [];
+    }
+  }
 
   private static updateCurrent(state: IState, type: string, message: IMessage) {
     if (

@@ -7,7 +7,10 @@ import IState from 'src/interfaces/IState';
 
 export default class Settings {
   // TODO: interface for payload?
-  public static setSettings = (state: IState, settings: any): IState => {
+  public static setNotificationSettings = (
+    state: IState,
+    settings: any
+  ): IState => {
     let savedSettings: ISettingsSaved = electronStore.get('settings');
     savedSettings = {
       ...savedSettings,
@@ -30,6 +33,31 @@ export default class Settings {
     };
   };
 
+  // TODO: interface for payload?
+  public static setMessagesSettings = (
+    state: IState,
+    settings: any
+  ): IState => {
+    let savedSettings: ISettingsSaved = electronStore.get('settings');
+    savedSettings = {
+      ...savedSettings,
+      renderVideos: settings.renderVideos,
+      renderGetYarn: settings.renderGetYarn,
+      renderImages: settings.renderImages,
+    };
+    electronStore.set('settings', savedSettings);
+
+    return {
+      ...state,
+      settings: {
+        ...state.settings,
+        renderVideos: settings.renderVideos,
+        renderGetYarn: settings.renderGetYarn,
+        renderImages: settings.renderImages,
+      },
+    };
+  };
+
   public static mapSettingsSavedToSettings = (
     settings: ISettingsSaved
   ): ISettings => {
@@ -39,6 +67,9 @@ export default class Settings {
       name: settings.name,
       username: settings.username,
       resource: settings.resource,
+      renderVideos: settings.renderVideos ? settings.renderVideos : true,
+      renderGetYarn: settings.renderGetYarn ? settings.renderGetYarn : true,
+      renderImages: settings.renderImages ? settings.renderImages : true,
       soundName: settings.soundName,
       playAudioOnGroupchatMessage: settings.playAudioOnGroupchatMessage,
       playAudioOnChatMessage: settings.playAudioOnChatMessage,
@@ -66,6 +97,9 @@ export default class Settings {
       name: settings.name,
       username: settings.username,
       resource: settings.resource,
+      renderVideos: settings.renderVideos,
+      renderGetYarn: settings.renderGetYarn,
+      renderImages: settings.renderImages,
       soundName: settings.soundName,
       playAudioOnGroupchatMessage: settings.playAudioOnGroupchatMessage,
       playAudioOnChatMessage: settings.playAudioOnChatMessage,

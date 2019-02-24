@@ -91,7 +91,7 @@ class Messages extends React.Component<any, any> {
   }
 
   public render() {
-    const { classes } = this.props;
+    const { classes, settings } = this.props;
     const { messages } = this.state;
 
     let previousDate = '';
@@ -145,6 +145,9 @@ class Messages extends React.Component<any, any> {
                     key={index}
                     message={message}
                     showTime={previousUserNickname !== message.userNickname}
+                    renderVideos={settings.renderVideos}
+                    renderGetYarn={settings.renderGetYarn}
+                    renderImages={settings.renderImages}
                   />
                 </div>
               </React.Fragment>
@@ -175,6 +178,7 @@ class Messages extends React.Component<any, any> {
 }
 
 const mapStateToProps = (states: IStates) => ({
+  settings: states.gong.settings,
   current: states.gong.current,
 });
 

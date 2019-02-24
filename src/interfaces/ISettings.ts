@@ -5,6 +5,10 @@ export default interface ISettings {
   username: string;
   resource: string;
 
+  renderVideos: boolean;
+  renderGetYarn: boolean;
+  renderImages: boolean;
+
   soundName: string;
   playAudioOnGroupchatMessage: string; // always, unread, never
   playAudioOnChatMessage: string; // always, unread, never

@@ -26,6 +26,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import FontDownloadIcon from '@material-ui/icons/FontDownloadOutlined';
 import FormatColorResetIcon from '@material-ui/icons/FormatColorReset';
+import HorizontalSplitIcon from '@material-ui/icons/HorizontalSplit';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import PaletteIcon from '@material-ui/icons/PaletteOutlined';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
@@ -34,6 +35,7 @@ import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import Account from './Account';
 import Font from './Font';
 import Layout from './Layout';
+import Messages from './Messages';
 import Notifications from './Notifications';
 import Theme from './Theme';
 
@@ -42,6 +44,7 @@ import IStates from 'src/interfaces/IStates';
 
 const TABS = [
   { name: 'Account', icon: <AccountCircleIcon /> },
+  { name: 'Messages', icon: <HorizontalSplitIcon /> },
   { name: 'Theme', icon: <PaletteIcon /> },
   { name: 'Font', icon: <FontDownloadIcon /> },
   { name: 'Layout', icon: <DashboardIcon /> },
@@ -91,6 +94,7 @@ class Settings extends React.Component<any, any> {
           </div>
           <div className={classes.content}>
             {selectedTab.name === 'Account' && <Account />}
+            {selectedTab.name === 'Messages' && <Messages />}
             {selectedTab.name === 'Theme' && <Theme />}
             {selectedTab.name === 'Font' && <Font />}
             {selectedTab.name === 'Layout' && <Layout />}

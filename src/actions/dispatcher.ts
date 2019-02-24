@@ -10,6 +10,7 @@ import {
   MESSAGE_SEND,
   MY_STATUS_SET,
   MY_VCARD_SET,
+  SETTINGS_MESSAGES_SET,
   SETTINGS_NOTIFICATIONS_SET,
   SETTINGS_TOGGLE,
   SNACKBAR_NOTIFICATION_ADD,
@@ -107,4 +108,8 @@ export const addSnackbarNotification = (
 
 export const setNotificationSettings = (settings: any) => (dispatch: any) => {
   dispatch({ type: SETTINGS_NOTIFICATIONS_SET, payload: settings });
+};
+
+export const setMessagesSettings = (settings: any) => (dispatch: any) => {
+  dispatch({ type: SETTINGS_MESSAGES_SET, payload: settings });
 };

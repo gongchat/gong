@@ -50,6 +50,9 @@ Loosely ordered in priority from top down
 - [x] Add option to show users without avatar in both left and right sidebar
 - [x] Better styling on badges, something that is more dynamic
 - [x] Sliders for all number inputs
+- [x] Add support for getyarn links
+- [x] Add support for images links
+- [x] Add settings to disable media content for video, getyarn and image links
 
 - [ ] Add setting to flash chat when you get a message
 - [ ] The default font value of 15 does not represent the default material ui font sizes for some of the elements
