@@ -49,6 +49,7 @@ Loosely ordered in priority from top down
 - [x] Add way to customize the base spacing unit in the settings
 - [x] Add option to show users without avatar in both left and right sidebar
 - [x] Better styling on badges, something that is more dynamic
+- [x] Sliders for all number inputs
 
 - [ ] Add setting to flash chat when you get a message
 - [ ] The default font value of 15 does not represent the default material ui font sizes for some of the elements
@@ -80,7 +81,7 @@ Alpha
 
 - [ ] Keep logs of messages
 - [ ] Make rooms sortable
-- [ ] Include options for a compact and cozy layout (compact is the current)
+- [ ] Include options for a compact and cozy layout for the messages. compact is the current and cozy would include avatars
 - [ ] Show a users connections in user details
 - [ ] Select colors for theme with hex code
 - [ ] Scheduled messages
@@ -94,5 +95,7 @@ Beta
 
 - [ ] Get auto updater working
 - [ ] Put together a website to download etc
+
+- [ ] Tests
 
 Release
