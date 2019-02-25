@@ -52,7 +52,6 @@ class Users extends React.Component<any, any> {
               <Group
                 key={group.name}
                 title={group.name}
-                showAvatars={true}
                 canAdd={false}
                 totalUnreadMessages={totalUnreadMessages}
                 hasUnreadMentionMe={hasUnreadMentionMe}

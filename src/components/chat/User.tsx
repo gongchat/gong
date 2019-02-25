@@ -27,7 +27,7 @@ class UserCard extends React.Component<any, any> {
   };
 
   public render() {
-    const { classes, user, isSelected } = this.props;
+    const { classes, user, isSelected, showAvatar } = this.props;
     const { anchorEl, isDetailsOpen } = this.state;
 
     const displayName =
@@ -41,7 +41,7 @@ class UserCard extends React.Component<any, any> {
           onContextMenu={this.handleOnContextMenu}
         >
           <div className={classes.avatar}>
-            {this.props.showAvatar ? (
+            {showAvatar ? (
               <div>
                 {user.vCard && user.vCard.photo ? (
                   <Avatar

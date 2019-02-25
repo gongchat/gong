@@ -14,10 +14,7 @@ export default class Settings {
     let savedSettings: ISettingsSaved = electronStore.get('settings');
     savedSettings = {
       ...savedSettings,
-      soundName: settings.soundName,
-      playAudioOnGroupchatMessage: settings.playAudioOnGroupchatMessage,
-      playAudioOnChatMessage: settings.playAudioOnChatMessage,
-      playAudioOnMentionMe: settings.playAudioOnMentionMe,
+      ...settings,
     };
     electronStore.set('settings', savedSettings);
 
@@ -25,10 +22,7 @@ export default class Settings {
       ...state,
       settings: {
         ...state.settings,
-        soundName: settings.soundName,
-        playAudioOnGroupchatMessage: settings.playAudioOnGroupchatMessage,
-        playAudioOnChatMessage: settings.playAudioOnChatMessage,
-        playAudioOnMentionMe: settings.playAudioOnMentionMe,
+        ...settings,
       },
     };
   };

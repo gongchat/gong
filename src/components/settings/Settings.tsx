@@ -14,6 +14,7 @@ import { withStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
+import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -44,12 +45,14 @@ import IStates from 'src/interfaces/IStates';
 
 const TABS = [
   { name: 'Account', icon: <AccountCircleIcon /> },
-  { name: 'Messages', icon: <HorizontalSplitIcon /> },
   { name: 'Theme', icon: <PaletteIcon /> },
   { name: 'Font', icon: <FontDownloadIcon /> },
   { name: 'Layout', icon: <DashboardIcon /> },
+  { name: 'Messages', icon: <HorizontalSplitIcon /> },
   { name: 'Notifications', icon: <NotificationsIcon /> },
+  { name: 'divider' },
   { name: 'Reset', icon: <FormatColorResetIcon /> },
+  { name: 'divider' },
   { name: 'Log Off', icon: <PowerSettingsNewIcon /> },
 ];
 
@@ -77,27 +80,33 @@ class Settings extends React.Component<any, any> {
         <DialogContent className={classes.dialogContent}>
           <div className={classes.nav}>
             <List>
-              {TABS.map((tab: any) => (
-                <ListItem
-                  key={tab.name}
-                  button={true}
-                  selected={tab.name === selectedTab.name}
-                  onClick={() => this.handleClickTab(tab)}
-                >
-                  <ListItemIcon className={classes.icon}>
-                    {tab.icon}
-                  </ListItemIcon>
-                  <ListItemText>{tab.name}</ListItemText>
-                </ListItem>
-              ))}
+              {TABS.map((tab: any, index: number) => {
+                if (tab.name === 'divider') {
+                  return <Divider key={index} />;
+                } else {
+                  return (
+                    <ListItem
+                      key={index}
+                      button={true}
+                      selected={tab.name === selectedTab.name}
+                      onClick={() => this.handleClickTab(tab)}
+                    >
+                      <ListItemIcon className={classes.icon}>
+                        {tab.icon}
+                      </ListItemIcon>
+                      <ListItemText>{tab.name}</ListItemText>
+                    </ListItem>
+                  );
+                }
+              })}
             </List>
           </div>
           <div className={classes.content}>
             {selectedTab.name === 'Account' && <Account />}
-            {selectedTab.name === 'Messages' && <Messages />}
             {selectedTab.name === 'Theme' && <Theme />}
             {selectedTab.name === 'Font' && <Font />}
             {selectedTab.name === 'Layout' && <Layout />}
+            {selectedTab.name === 'Messages' && <Messages />}
             {selectedTab.name === 'Notifications' && <Notifications />}
             {selectedTab.name === 'Reset' && (
               <div className={classes.section}>

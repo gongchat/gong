@@ -25,8 +25,8 @@ class Messages extends React.Component<any, any> {
     const { renderVideos, renderGetYarn, renderImages } = this.state;
 
     return (
-      <BasePage title="Layout">
-        <BaseSection title="Avatars">
+      <BasePage title="Messages">
+        <BaseSection title="Display">
           <FormControlLabel
             control={
               <Switch

@@ -54,13 +54,14 @@ Loosely ordered in priority from top down
 - [x] Add support for images links
 - [x] Add settings to disable media content for video, getyarn and image links
 
+- [ ] Add status on channels and show if password has failed
 - [ ] Add setting to flash chat when you get a message
+- [ ] Allow navigation of chat with ctrl page up and page down
+- [ ] Add a way to specify a port on login
 - [ ] The default font value of 15 does not represent the default material ui font sizes for some of the elements
 - [ ] Toggling avatars causes other styles to change (maybe font size and related to task above or spacing)
-- [ ] Add a way to specify a port on login
-- [ ] Allow navigation of chat with ctrl page up and page down
-- [ ] Cannot resize window from top edge
 - [ ] Handle message errors and acknowledgment
+- [ ] Cannot resize window from top edge
 
 - [ ] Better styling on input (sometimes there is a weird dot at the start that blinks and text gets cut off)
 
