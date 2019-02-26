@@ -228,27 +228,29 @@ class Input extends React.Component<any, any> {
     }
 
     // check for users
-    const channelCommandIndex = text.lastIndexOf('@');
-    const channelUserWord = text.substring(channelCommandIndex);
-    if (channelCommandIndex !== -1 && channelUserWord) {
-      const term = channelUserWord.substring(1);
-      const matchingChannelUsers = this.props.current.users.filter(
-        (user: IChannelUser) =>
-          user.nickname.toLowerCase().startsWith(term.toLowerCase()) ||
-          user.nickname.toLowerCase() === term.toLowerCase()
-      );
-      if (matchingChannelUsers.length > 0) {
-        this.setState({
-          lastWord: term,
-          emojisIndex: -1,
-          channelUsersIndex: 0,
-          channelUsers: matchingChannelUsers,
-        });
+    if (this.props.current.type === 'groupchat') {
+      const channelCommandIndex = text.lastIndexOf('@');
+      const channelUserWord = text.substring(channelCommandIndex);
+      if (channelCommandIndex !== -1 && channelUserWord) {
+        const term = channelUserWord.substring(1);
+        const matchingChannelUsers = this.props.current.users.filter(
+          (user: IChannelUser) =>
+            user.nickname.toLowerCase().startsWith(term.toLowerCase()) ||
+            user.nickname.toLowerCase() === term.toLowerCase()
+        );
+        if (matchingChannelUsers.length > 0) {
+          this.setState({
+            lastWord: term,
+            emojisIndex: -1,
+            channelUsersIndex: 0,
+            channelUsers: matchingChannelUsers,
+          });
+        } else {
+          this.setState({ channelUsersIndex: -1 });
+        }
       } else {
         this.setState({ channelUsersIndex: -1 });
       }
-    } else {
-      this.setState({ channelUsersIndex: -1 });
     }
   };
 
