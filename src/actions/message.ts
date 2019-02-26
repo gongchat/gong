@@ -248,24 +248,6 @@ export default class Message {
       .replace(/\n/g, '<br />');
   };
 
-  private static addMessage = (
-    state: IState,
-    message: IMessage,
-    type: string
-  ): IState => {
-    // Checks if current, if it is, it will add the message to it
-    Message.updateCurrent(state, type, message);
-
-    // Looks for channel, if found, it will update it
-    const channelUpdated = Message.updateChannel(state, type, message);
-    if (!channelUpdated) {
-      // if no channel is found add it to the open channels
-      Message.addToOpenChannels(state, message);
-    }
-
-    return { ...state };
-  };
-
   private static getVideoUrls(text: string): IMessageUrl[] {
     // find youtube videos, regExp from: https://github.com/regexhq/youtube-regex/blob/master/index.js
     const youtubeRegExp = new RegExp(
@@ -310,17 +292,40 @@ export default class Message {
     }
   }
 
+  private static addMessage = (
+    state: IState,
+    message: IMessage,
+    type: string
+  ): IState => {
+    // Checks if current, if it is, it will add the message to it
+    Message.updateCurrent(state, type, message);
+
+    // Looks for channel, if found, it will update it
+    const channelUpdated = Message.updateChannel(state, type, message);
+    if (!channelUpdated) {
+      // if no channel is found add it to the open channels
+      Message.addToOpenChannels(state, message);
+    }
+
+    return { ...state };
+  };
+
   private static updateCurrent(state: IState, type: string, message: IMessage) {
     if (
       state.current &&
       state.current.jid === message.channelName &&
       state.current.type === type
     ) {
-      Notification.playAudioOnMessage(state, message, type, false);
       state.current = {
         ...state.current,
         messages: [...state.current.messages, message],
       };
+
+      Notification.playAudioOnMessage(state, message, type, false);
+
+      if (!message.isHistory) {
+        Notification.setMenuBarNotificationOnMessage(state);
+      }
     }
   }
 
@@ -350,13 +355,17 @@ export default class Message {
         return channel;
       }),
     ];
+
+    if (!message.isHistory) {
+      Notification.setMenuBarNotificationOnMessage(state);
+    }
+
     return channelUpdated;
   }
 
   private static addToOpenChannels(state: IState, message: IMessage) {
     const isUnread =
       !state.current || state.current.jid !== message.channelName;
-    Notification.playAudioOnMessage(state, message, 'chat', isUnread);
 
     const newChannel: IChannel = {
       type: 'chat',
@@ -369,5 +378,11 @@ export default class Message {
       scrollPosition: 0,
     };
     state.channels = [...state.channels, newChannel];
+
+    Notification.playAudioOnMessage(state, message, 'chat', isUnread);
+
+    if (message.isHistory) {
+      Notification.setMenuBarNotificationOnMessage(state);
+    }
   }
 }

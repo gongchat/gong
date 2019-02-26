@@ -2,7 +2,7 @@ import * as React from 'react';
 
 // redux & actions
 import { connect } from 'react-redux';
-import { setMessagesSettings } from 'src/actions/dispatcher';
+import { setSettings } from 'src/actions/dispatcher';
 
 // material ui
 import { withStyles } from '@material-ui/core';
@@ -65,7 +65,7 @@ class Messages extends React.Component<any, any> {
   private handleOnChange = (event: any, value: any) => {
     const name = event.target.name;
     this.setState({ [event.target.name]: value });
-    this.props.setMessagesSettings({
+    this.props.setSettings({
       renderVideos: name === 'renderVideos' ? value : this.state.renderVideos,
       renderGetYarn:
         name === 'renderGetYarn' ? value : this.state.renderGetYarn,
@@ -79,7 +79,7 @@ const mapStateToProps = (states: IStates) => ({
 });
 
 const mapDispatchToProps = {
-  setMessagesSettings,
+  setSettings,
 };
 
 const styles: any = (theme: any) => ({

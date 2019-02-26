@@ -1,3 +1,4 @@
+import IChannel from 'src/interfaces/IChannel';
 import IMessage from 'src/interfaces/IMessage';
 import ISnackbarNotification from 'src/interfaces/ISnackbarNotification';
 import IState from 'src/interfaces/IState';
@@ -37,44 +38,124 @@ export default class Notification {
     };
   };
 
-  public static shouldFlashMenuBar = (
-    state: IState,
-    message: IMessage,
-    type: string,
-    isUnread: boolean
-  ): string => {
-    // TODO: This is still in development
-
+  public static setMenuBarNotificationOnMessage = (state: IState) => {
     const settings = state.settings;
-    if (!message.isHistory && state.profile.status !== 'dnd') {
-      if (type === 'groupchat') {
+
+    const groupChatUnreadMessages = state.channels
+      .filter((channel: IChannel) => channel.type === 'groupchat')
+      .reduce((a: number, channel: IChannel) => a + channel.unreadMessages, 0);
+
+    const groupChatHasUnreadMentionMe = state.channels.filter(
+      (channel: IChannel) => channel.hasUnreadMentionMe
+    )
+      ? true
+      : false;
+
+    const chatMessagesUnread = state.channels
+      .filter((channel: IChannel) => channel.type === 'chat')
+      .reduce((a: number, channel: IChannel) => a + channel.unreadMessages, 0);
+
+    if (state.profile.status !== 'dnd') {
+      if (
+        settings.flashMenuBarOnGroupchatMessage !== 'never' &&
+        ((settings.flashMenuBarOnGroupchatMessage === 'unread' &&
+          groupChatUnreadMessages > 0) ||
+          settings.flashMenuBarOnGroupchatMessage === 'always')
+      ) {
+        state.menuBarNotification = `${
+          groupChatUnreadMessages > 0
+            ? settings.flashMenuBarOnGroupchatMessageFrequency
+            : 'once'
+        },${new Date().getTime() + Math.random() + ''}`;
+      }
+      if (
+        groupChatHasUnreadMentionMe &&
+        settings.flashMenuBarOnMentionMe !== 'never' &&
+        ((settings.flashMenuBarOnMentionMe === 'unread' &&
+          groupChatUnreadMessages > 0) ||
+          settings.flashMenuBarOnMentionMe === 'always')
+      ) {
+        state.menuBarNotification = `${
+          groupChatUnreadMessages > 0
+            ? settings.flashMenuBarOnMentionMeFrequency
+            : 'once'
+        },${new Date().getTime() + Math.random() + ''}`;
+      }
+      if (
+        settings.flashMenuBarOnChatMessage !== 'never' &&
+        ((settings.flashMenuBarOnChatMessage === 'unread' &&
+          chatMessagesUnread > 0) ||
+          settings.flashMenuBarOnChatMessage === 'always')
+      ) {
+        state.menuBarNotification = `${
+          chatMessagesUnread > 0
+            ? settings.flashMenuBarOnChatMessageFrequency
+            : 'once'
+        },${new Date().getTime() + Math.random() + ''}`;
+      }
+    }
+  };
+
+  public static setMenuBarNotificationOnChannelSelect = (state: IState) => {
+    const settings = state.settings;
+
+    const groupChatUnread = state.channels
+      .filter((channel: IChannel) => channel.type === 'groupchat')
+      .reduce((a: number, channel: IChannel) => a + channel.unreadMessages, 0);
+
+    const hasUnreadMentionMe =
+      state.channels.filter((channel: IChannel) => channel.hasUnreadMentionMe)
+        .length > 0
+        ? true
+        : false;
+
+    const chatUnread = state.channels
+      .filter((channel: IChannel) => channel.type === 'chat')
+      .reduce((a: number, channel: IChannel) => a + channel.unreadMessages, 0);
+
+    if (groupChatUnread === 0 && chatUnread === 0) {
+      state.menuBarNotification = '';
+    } else {
+      if (state.profile.status !== 'dnd') {
         if (
+          groupChatUnread > 0 &&
+          settings.flashMenuBarOnGroupchatMessageFrequency === 'repeat' &&
           settings.flashMenuBarOnGroupchatMessage !== 'never' &&
-          ((settings.flashMenuBarOnGroupchatMessage === 'unread' && isUnread) ||
+          ((settings.flashMenuBarOnGroupchatMessage === 'unread' &&
+            groupChatUnread > 0) ||
             settings.flashMenuBarOnGroupchatMessage === 'always')
         ) {
-          return settings.flashMenuBarOnGroupchatMessageFrequency;
+          state.menuBarNotification = `${
+            settings.flashMenuBarOnGroupchatMessageFrequency
+          },${new Date().getTime() + Math.random() + ''}`;
         }
         if (
+          groupChatUnread > 0 &&
+          hasUnreadMentionMe &&
+          settings.flashMenuBarOnMentionMeFrequency === 'repeat' &&
           settings.flashMenuBarOnMentionMe !== 'never' &&
-          ((settings.flashMenuBarOnMentionMe === 'unread' && isUnread) ||
+          ((settings.flashMenuBarOnMentionMe === 'unread' &&
+            groupChatUnread > 0) ||
             settings.flashMenuBarOnMentionMe === 'always')
         ) {
-          return settings.flashMenuBarOnChatMessageFrequency;
+          state.menuBarNotification = `${
+            settings.flashMenuBarOnMentionMeFrequency
+          },${new Date().getTime() + Math.random() + ''}`;
         }
-      }
-      if (type === 'chat') {
         if (
+          chatUnread > 0 &&
+          settings.flashMenuBarOnChatMessageFrequency === 'repeat' &&
           settings.flashMenuBarOnChatMessage !== 'never' &&
-          ((settings.flashMenuBarOnChatMessage === 'unread' && isUnread) ||
+          ((settings.flashMenuBarOnChatMessage === 'unread' &&
+            chatUnread > 0) ||
             settings.flashMenuBarOnChatMessage === 'always')
         ) {
-          return settings.flashMenuBarOnChatMessageFrequency;
+          state.menuBarNotification = `${
+            settings.flashMenuBarOnChatMessageFrequency
+          },${new Date().getTime() + Math.random() + ''}`;
         }
       }
     }
-
-    return '';
   };
 
   public static shouldPlayAudio = (
@@ -97,8 +178,8 @@ export default class Notification {
         }
         // on mention
         if (
-          settings.playAudioOnMentionMe !== 'never' &&
           message.isMentioningMe &&
+          settings.playAudioOnMentionMe !== 'never' &&
           ((settings.playAudioOnMentionMe === 'unread' && isUnread) ||
             settings.playAudioOnMentionMe === 'always')
         ) {

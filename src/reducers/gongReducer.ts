@@ -14,8 +14,7 @@ import {
   MY_VCARD_SET,
   PRESENCE_SET,
   ROOMS_SET,
-  SETTINGS_MESSAGES_SET,
-  SETTINGS_NOTIFICATIONS_SET,
+  SETTINGS_SET,
   SETTINGS_TOGGLE,
   SNACKBAR_NOTIFICATION_ADD,
   SNACKBAR_NOTIFICATION_REMOVE,
@@ -89,6 +88,7 @@ export const initialState: IState = {
   rooms: [],
   showSettings: false,
   theme: Theme.getTheme(),
+  menuBarNotification: '',
 };
 
 /*
@@ -156,10 +156,8 @@ export default function(state = initialState, action: any) {
     case ROOMS_SET:
       return Discover.setDiscoverRooms(state, action.payload);
 
-    case SETTINGS_NOTIFICATIONS_SET:
-      return Settings.setNotificationSettings(state, action.payload);
-    case SETTINGS_MESSAGES_SET:
-      return Settings.setMessagesSettings(state, action.payload);
+    case SETTINGS_SET:
+      return Settings.setAndSave(state, action.payload);
 
     case SNACKBAR_NOTIFICATION_REMOVE:
       return Notification.removeFromSnackbar(state, action.payload);

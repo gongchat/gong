@@ -7,6 +7,8 @@ import IRoom from 'src/interfaces/IRoom';
 import IRoomSaved from 'src/interfaces/IRoomSaved';
 import IState from 'src/interfaces/IState';
 
+import Notification from './notification';
+
 export default class Channel {
   public static remove = (state: IState, jid: string): IState => {
     const channel: IChannel | undefined = state.channels.find(
@@ -41,11 +43,13 @@ export default class Channel {
         return channel;
       }
     });
-    return {
+    const newState: IState = {
       ...state,
       current: channels.find((channel: IChannel) => channel.jid === channelJid),
       channels,
     };
+    Notification.setMenuBarNotificationOnChannelSelect(newState);
+    return newState;
   };
 
   public static setScrollPosition = (state: IState, payload: any): IState => {

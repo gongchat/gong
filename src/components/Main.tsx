@@ -60,13 +60,16 @@ class Main extends React.Component<any, any> {
   }
 
   public render() {
-    const { classes, current } = this.props;
+    const { classes, current, menuBarNotification } = this.props;
     const { isConnected } = this.state;
 
     return (
       <div className={classes.root}>
         <div className={classes.bars}>
-          <MenuBar showOffline={!isConnected} />
+          <MenuBar
+            showOffline={!isConnected}
+            menuBarNotification={menuBarNotification}
+          />
           <ToolBar />
         </div>
         <div className={classes.content}>
@@ -93,6 +96,7 @@ const mapStateToProps = (states: IStates) => {
   return {
     connection: states.gong.connection,
     current: states.gong.current,
+    menuBarNotification: states.gong.menuBarNotification,
   };
 };
 

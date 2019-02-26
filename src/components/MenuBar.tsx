@@ -11,15 +11,56 @@ import RemoveIcon from '@material-ui/icons/Remove';
 const { BrowserWindow } = (window as any).require('electron').remote;
 
 class MenuBar extends React.Component<any, any> {
+  public state = {
+    isFlashing: false,
+    menuBarNotification: this.props.menuBarNotification,
+  };
+
   constructor(props: any) {
     super(props);
   }
 
+  public componentWillReceiveProps(nextProps: any) {
+    if (nextProps.menuBarNotification !== '') {
+      if (
+        nextProps.menuBarNotification !== this.state.menuBarNotification &&
+        !this.state.isFlashing
+      ) {
+        this.setState({ menuBarNotification: '' });
+        setTimeout(() => {
+          this.setState({
+            menuBarNotification: nextProps.menuBarNotification,
+            isFlashing:
+              nextProps.menuBarNotification.split(',')[0] === 'repeat'
+                ? true
+                : false,
+          });
+        }, 1);
+      }
+    } else {
+      this.setState({ menuBarNotification: '', isFlashing: false });
+    }
+  }
+
   public render() {
     const { classes, showOffline } = this.props;
+    const { menuBarNotification } = this.state;
+    const menuBarNotificationFrequency = menuBarNotification
+      ? menuBarNotification.split(',')[0]
+      : '';
 
     return (
-      <div className={['menu-bar', classes.root].join(' ')}>
+      <div
+        className={[
+          'menu-bar',
+          classes.root,
+          menuBarNotificationFrequency === 'once'
+            ? classes.flashOnce
+            : menuBarNotificationFrequency === 'repeat'
+            ? classes.flashRepeat
+            : '',
+        ].join(' ')}
+      >
         <div className={classes.brand}>
           <Typography>Gong{showOffline ? ' (offline)' : ''}</Typography>
         </div>
@@ -111,6 +152,23 @@ const styles: any = (theme: any) => ({
   close: {
     '&:hover': {
       backgroundColor: 'red',
+    },
+  },
+  flashOnce: {
+    animation: 'flashPrimary 1s linear',
+  },
+  flashRepeat: {
+    animation: 'flashPrimary 1s infinite',
+  },
+  '@keyframes flashPrimary': {
+    '0%': {
+      backgroundColor: theme.palette.backgroundAccent,
+    },
+    '50%': {
+      backgroundColor: theme.palette.primary.main,
+    },
+    '100%': {
+      backgroundColor: theme.palette.backgroundAccent,
     },
   },
 });

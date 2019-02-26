@@ -2,7 +2,7 @@ import * as React from 'react';
 
 // redux & actions
 import { connect } from 'react-redux';
-import { setNotificationSettings } from 'src/actions/dispatcher';
+import { setSettings } from 'src/actions/dispatcher';
 
 // material ui
 import { withStyles } from '@material-ui/core';
@@ -29,14 +29,31 @@ class NotificationSettings extends React.Component<any, any> {
       .playAudioOnGroupchatMessage,
     playAudioOnChatMessage: this.props.settings.playAudioOnChatMessage,
     playAudioOnMentionMe: this.props.settings.playAudioOnMentionMe,
+    flashMenuBarOnGroupchatMessage: this.props.settings
+      .flashMenuBarOnGroupchatMessage,
+    flashMenuBarOnGroupchatMessageFrequency: this.props.settings
+      .flashMenuBarOnGroupchatMessageFrequency,
+    flashMenuBarOnMentionMe: this.props.settings.flashMenuBarOnMentionMe,
+    flashMenuBarOnMentionMeFrequency: this.props.settings
+      .flashMenuBarOnMentionMeFrequency,
+    flashMenuBarOnChatMessage: this.props.settings.flashMenuBarOnChatMessage,
+    flashMenuBarOnChatMessageFrequency: this.props.settings
+      .flashMenuBarOnChatMessageFrequency,
   };
 
   public render() {
+    const { classes } = this.props;
     const {
       soundName,
       playAudioOnGroupchatMessage,
       playAudioOnChatMessage,
       playAudioOnMentionMe,
+      flashMenuBarOnGroupchatMessage,
+      flashMenuBarOnGroupchatMessageFrequency,
+      flashMenuBarOnMentionMe,
+      flashMenuBarOnMentionMeFrequency,
+      flashMenuBarOnChatMessage,
+      flashMenuBarOnChatMessageFrequency,
     } = this.state;
 
     return (
@@ -114,6 +131,131 @@ class NotificationSettings extends React.Component<any, any> {
             </Select>
           </FormControl>
         </BaseSection>
+        <BaseSection title="Display">
+          <div className={classes.split}>
+            <FormControl variant="filled">
+              <InputLabel htmlFor="flashMenuBarOnGroupchatMessage">
+                On Groupchat Message
+              </InputLabel>
+              <Select
+                value={flashMenuBarOnGroupchatMessage}
+                onChange={this.handleChange}
+                input={
+                  <FilledInput
+                    name="flashMenuBarOnGroupchatMessage"
+                    id="flashMenuBarOnGroupchatMessage"
+                  />
+                }
+              >
+                <MenuItem value="always">Always</MenuItem>
+                <MenuItem value="unread">Unread</MenuItem>
+                <MenuItem value="never">Never</MenuItem>
+              </Select>
+            </FormControl>
+            {flashMenuBarOnGroupchatMessage !== 'never' && (
+              <FormControl variant="filled">
+                <InputLabel htmlFor="flashMenuBarOnGroupchatMessageFrequency">
+                  Frequency
+                </InputLabel>
+                <Select
+                  value={flashMenuBarOnGroupchatMessageFrequency}
+                  onChange={this.handleChange}
+                  input={
+                    <FilledInput
+                      name="flashMenuBarOnGroupchatMessageFrequency"
+                      id="flashMenuBarOnGroupchatMessageFrequency"
+                    />
+                  }
+                >
+                  <MenuItem value="once">Once</MenuItem>
+                  <MenuItem value="repeat">Repeat</MenuItem>
+                </Select>
+              </FormControl>
+            )}
+          </div>
+          <div className={classes.split}>
+            <FormControl variant="filled">
+              <InputLabel htmlFor="flashMenuBarOnMentionMe">
+                On Mention
+              </InputLabel>
+              <Select
+                value={flashMenuBarOnMentionMe}
+                onChange={this.handleChange}
+                input={
+                  <FilledInput
+                    name="flashMenuBarOnMentionMe"
+                    id="flashMenuBarOnMentionMe"
+                  />
+                }
+              >
+                <MenuItem value="always">Always</MenuItem>
+                <MenuItem value="unread">Unread</MenuItem>
+                <MenuItem value="never">Never</MenuItem>
+              </Select>
+            </FormControl>
+            {flashMenuBarOnMentionMe !== 'never' && (
+              <FormControl variant="filled">
+                <InputLabel htmlFor="flashMenuBarOnMentionMeFrequency">
+                  Frequency
+                </InputLabel>
+                <Select
+                  value={flashMenuBarOnMentionMeFrequency}
+                  onChange={this.handleChange}
+                  input={
+                    <FilledInput
+                      name="flashMenuBarOnMentionMeFrequency"
+                      id="flashMenuBarOnMentionMeFrequency"
+                    />
+                  }
+                >
+                  <MenuItem value="once">Once</MenuItem>
+                  <MenuItem value="repeat">Repeat</MenuItem>
+                </Select>
+              </FormControl>
+            )}
+          </div>
+          <div className={classes.split}>
+            <FormControl variant="filled">
+              <InputLabel htmlFor="flashMenuBarOnChatMessage">
+                On Chat Message
+              </InputLabel>
+              <Select
+                value={flashMenuBarOnChatMessage}
+                onChange={this.handleChange}
+                input={
+                  <FilledInput
+                    name="flashMenuBarOnChatMessage"
+                    id="flashMenuBarOnChatMessage"
+                  />
+                }
+              >
+                <MenuItem value="always">Always</MenuItem>
+                <MenuItem value="unread">Unread</MenuItem>
+                <MenuItem value="never">Never</MenuItem>
+              </Select>
+            </FormControl>
+            {flashMenuBarOnChatMessage !== 'never' && (
+              <FormControl variant="filled">
+                <InputLabel htmlFor="flashMenuBarOnChatMessageFrequency">
+                  Frequency
+                </InputLabel>
+                <Select
+                  value={flashMenuBarOnChatMessageFrequency}
+                  onChange={this.handleChange}
+                  input={
+                    <FilledInput
+                      name="flashMenuBarOnChatMessageFrequency"
+                      id="flashMenuBarOnChatMessageFrequency"
+                    />
+                  }
+                >
+                  <MenuItem value="once">Once</MenuItem>
+                  <MenuItem value="repeat">Repeat</MenuItem>
+                </Select>
+              </FormControl>
+            )}
+          </div>
+        </BaseSection>
       </BasePage>
     );
   }
@@ -125,20 +267,9 @@ class NotificationSettings extends React.Component<any, any> {
       Notification.playAudio(value);
     }
     this.setState({ [name]: value });
-    this.props.setNotificationSettings({
-      soundName: name === 'soundName' ? value : this.state.soundName,
-      playAudioOnGroupchatMessage:
-        name === 'playAudioOnGroupchatMessage'
-          ? value
-          : this.state.playAudioOnGroupchatMessage,
-      playAudioOnChatMessage:
-        name === 'playAudioOnChatMessage'
-          ? value
-          : this.state.playAudioOnChatMessage,
-      playAudioOnMentionMe:
-        name === 'playAudioOnMentionMe'
-          ? value
-          : this.state.playAudioOnMentionMe,
+    this.props.setSettings({
+      ...this.state,
+      [name]: value,
     });
   };
 }
@@ -148,11 +279,17 @@ const mapStateToProps = (states: IStates) => ({
 });
 
 const mapDispatchToProps = {
-  setNotificationSettings,
+  setSettings,
 };
 
 const styles: any = (theme: any) => ({
-  root: {},
+  split: {
+    display: 'flex',
+    flexWrap: 'nowrap',
+    '& > *': {
+      width: '50%',
+    },
+  },
 });
 
 export default connect(

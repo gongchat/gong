@@ -22,6 +22,7 @@ export default interface IState {
 
   showSettings: boolean;
   snackbarNotifications: ISnackbarNotification[];
+  menuBarNotification: string;
 
   // TODO: once theme is better defined convert to an interface
   theme: any;
