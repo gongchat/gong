@@ -45,11 +45,11 @@ export default class Notification {
       .filter((channel: IChannel) => channel.type === 'groupchat')
       .reduce((a: number, channel: IChannel) => a + channel.unreadMessages, 0);
 
-    const groupChatHasUnreadMentionMe = state.channels.filter(
-      (channel: IChannel) => channel.hasUnreadMentionMe
-    )
-      ? true
-      : false;
+    const groupChatHasUnreadMentionMe =
+      state.channels.filter((channel: IChannel) => channel.hasUnreadMentionMe)
+        .length === 0
+        ? false
+        : true;
 
     const chatMessagesUnread = state.channels
       .filter((channel: IChannel) => channel.type === 'chat')
