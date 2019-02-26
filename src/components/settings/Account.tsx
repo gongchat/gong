@@ -213,7 +213,7 @@ class Account extends React.Component<any, any> {
                   label="Nickname"
                   value={nickname}
                   variant="filled"
-                  validators={['matchRegexp:^[a-zA-Z0-9_.- ]*$']}
+                  validators={['matchRegexp:^[a-zA-Z0-9_\\.\\- ]*$']}
                   errorMessages={['Please enter a valid nickname']}
                   FormHelperTextProps={{ className: classes.helperText }}
                   className={classes.input}
