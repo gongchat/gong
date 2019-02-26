@@ -36,7 +36,11 @@ class UserCard extends React.Component<any, any> {
     return (
       <React.Fragment>
         <div
-          className={[classes.root, isSelected ? classes.active : ''].join(' ')}
+          className={[
+            classes.root,
+            isSelected ? classes.active : '',
+            showAvatar ? '' : classes.rootNarrow,
+          ].join(' ')}
           onClick={this.handleOnClick}
           onContextMenu={this.handleOnContextMenu}
         >
@@ -146,6 +150,9 @@ const styles: any = (theme: any) => ({
     '&:hover': {
       backgroundColor: 'rgba(125,125,125,.2)',
     },
+  },
+  rootNarrow: {
+    padding: `${theme.spacing.unit / 2}px ${theme.spacing.unit}px`,
   },
   title: {
     flexGrow: 1,

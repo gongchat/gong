@@ -17,7 +17,12 @@ class ChannelUser extends React.Component<any, any> {
     const { classes, user, showAvatar } = this.props;
 
     return (
-      <div className={classes.root} onClick={this.handleOnClick}>
+      <div
+        className={[classes.root, showAvatar ? '' : classes.rootNarrow].join(
+          ' '
+        )}
+        onClick={this.handleOnClick}
+      >
         {showAvatar && (
           <div className={classes.avatar}>
             <Avatar className={classes.img}>
@@ -53,6 +58,9 @@ const styles: any = (theme: any) => ({
     '&:hover': {
       backgroundColor: 'rgba(125,125,125,.2)',
     },
+  },
+  rootNarrow: {
+    padding: `${theme.spacing.unit / 2}px ${theme.spacing.unit}px`,
   },
   title: {
     fontSize: '16px',
