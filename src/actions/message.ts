@@ -201,9 +201,6 @@ export default class Message {
         user.nickname
       }</span>`;
       const regExpWithAt = new RegExp(`\@${user.nickname}\\b`, 'gi');
-      if (!message.isHistory && isMe && regExpWithAt.test(formattedMessage)) {
-        message.isMentioningMe = true;
-      }
 
       // handle mentions without @
       const htmlWithoutAt = `<span class="${isMe ? 'mention-me' : 'mention'}">${
@@ -219,8 +216,8 @@ export default class Message {
       if (
         !message.isHistory &&
         isMe &&
-        (formattedMessage.match(regExpWithAt) ||
-          formattedMessage.match(regExpWithoutAt))
+        (regExpWithAt.test(formattedMessage) ||
+          regExpWithoutAt.test(formattedMessage))
       ) {
         message.isMentioningMe = true;
       }
