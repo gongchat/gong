@@ -106,7 +106,7 @@ export default class Connection {
         playAudioOnChatMessage: 'unread',
         playAudioOnMentionMe: 'always',
         flashMenuBarOnGroupchatMessage: 'never',
-        flashMenuBarOnGroupchatMessageFrequency: 'never',
+        flashMenuBarOnGroupchatMessageFrequency: 'once',
         flashMenuBarOnMentionMe: 'unread',
         flashMenuBarOnMentionMeFrequency: 'repeat',
         flashMenuBarOnChatMessage: 'unread',
