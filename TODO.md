@@ -53,10 +53,10 @@ Loosely ordered in priority from top down
 - [x] Add support for getyarn links
 - [x] Add support for images links
 - [x] Add settings to disable media content for video, getyarn and image links
+- [x] Add setting to flash chat when you get a message
+- [x] Reduce top and bottom spacing on user cards if there is not avatar being displayed
 
 - [ ] Add status on channels and show if password has failed
-- [ ] Add setting to flash chat when you get a message
-- [ ] Reduce top and bottom spacing on user cards if there is not avatar being displayed
 - [ ] Allow navigation of chat with ctrl page up and page down
 - [ ] Add a way to specify a port on login
 - [ ] The default font value of 15 does not represent the default material ui font sizes for some of the elements
