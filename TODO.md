@@ -63,6 +63,7 @@ Loosely ordered in priority from top down
 - [ ] Toggling avatars causes other styles to change (maybe font size and related to task above or spacing)
 - [ ] Handle message errors and acknowledgment
 - [ ] Cannot resize window from top edge
+- [ ] Show selected color in theme customization
 
 - [ ] Better styling on input (sometimes there is a weird dot at the start that blinks and text gets cut off)
 
