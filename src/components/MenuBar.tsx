@@ -16,10 +16,6 @@ class MenuBar extends React.Component<any, any> {
     menuBarNotification: this.props.menuBarNotification,
   };
 
-  constructor(props: any) {
-    super(props);
-  }
-
   public componentWillReceiveProps(nextProps: any) {
     if (nextProps.menuBarNotification !== '') {
       if (

@@ -7,6 +7,9 @@ import { addSnackbarNotification, autoLogin } from 'src/actions/dispatcher';
 // material
 import { withStyles } from '@material-ui/core';
 
+// libs
+import * as WebFont from 'webfontloader';
+
 // components
 import Chat from './chat/Chat';
 import SidebarLeft from './chat/SidebarLeft';
@@ -23,11 +26,12 @@ class Main extends React.Component<any, any> {
   public state = {
     chatType: '',
     isConnected: true,
+    fontFamily: '',
   };
 
   private reconnectTimer: any;
 
-  public componentWillMount() {
+  public componentDidMount() {
     if (this.props.connection) {
       if (
         !this.props.connection.isConnecting &&
@@ -36,18 +40,25 @@ class Main extends React.Component<any, any> {
         this.props.autoLogin();
       }
     }
+
+    if (this.props.theme) {
+      this.loadFont(this.props.theme.typography.fontFamily);
+    }
+    // document.addEventListener;
   }
 
-  public componentWillReceiveProps(nextProps: any) {
-    if (nextProps.chatType) {
-      this.setState({ chatType: nextProps.chatType });
+  public componentDidUpdate(prevProps: any) {
+    if (this.state.chatType !== prevProps.chatType) {
+      this.setState({ chatType: prevProps.chatType });
     }
-
-    if (nextProps.connection) {
-      this.setState({ isConnected: nextProps.connection.isConnected });
+    if (
+      prevProps.connection &&
+      this.state.isConnected !== prevProps.connection.isConnected
+    ) {
+      this.setState({ isConnected: prevProps.connection.isConnected });
       if (
-        !nextProps.connection.isConnecting &&
-        !nextProps.connection.isConnected
+        !prevProps.connection.isConnecting &&
+        !prevProps.connection.isConnected
       ) {
         if (this.reconnectTimer) {
           clearTimeout(this.reconnectTimer);
@@ -56,6 +67,10 @@ class Main extends React.Component<any, any> {
           this.props.autoLogin();
         }, 10000);
       }
+    }
+
+    if (this.state.fontFamily !== prevProps.theme.typography.fontFamily) {
+      this.loadFont(prevProps.theme.typography.fontFamily);
     }
   }
 
@@ -90,13 +105,25 @@ class Main extends React.Component<any, any> {
       </div>
     );
   }
+
+  private loadFont(fontFamily: string) {
+    this.setState({ fontFamily });
+    const font: string = fontFamily.split(',')[0].replace(/"/g, '');
+    WebFont.load({
+      google: {
+        families: [`${font}:400,700`, 'sans-serif'],
+      },
+    });
+  }
 }
 
 const mapStateToProps = (states: IStates) => {
   return {
     connection: states.gong.connection,
+    channel: states.gong.channels,
     current: states.gong.current,
     menuBarNotification: states.gong.menuBarNotification,
+    theme: states.gong.theme,
   };
 };
 

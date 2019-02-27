@@ -36,9 +36,7 @@ import ISubdomain from 'src/interfaces/ISubdomain';
 class Rooms extends React.Component<any, any> {
   public state = {
     open: false,
-    subdomains: [],
     selectedSubdomainJid: '',
-    rooms: [],
     tabIndex: 0,
     form: {
       jid: '',
@@ -48,28 +46,15 @@ class Rooms extends React.Component<any, any> {
     },
   };
 
-  public componentWillReceiveProps(nextProps: any) {
-    if (nextProps.showDiscover) {
-      this.setState({ open: nextProps.showDiscover });
-    }
-    if (nextProps.subdomains) {
-      this.setState({ subdomains: nextProps.subdomains });
-    }
-    if (nextProps.rooms) {
-      this.setState({ rooms: nextProps.rooms });
+  public componentDidUpdate(prevProps: any) {
+    if (this.state.open !== prevProps.showDiscover) {
+      this.setState({ open: prevProps.showDiscover });
     }
   }
 
   public render() {
-    const { classes } = this.props;
-    const {
-      open,
-      subdomains,
-      rooms,
-      selectedSubdomainJid,
-      tabIndex,
-      form,
-    } = this.state;
+    const { classes, subdomains, rooms } = this.props;
+    const { open, selectedSubdomainJid, tabIndex, form } = this.state;
 
     return (
       <Dialog

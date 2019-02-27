@@ -15,25 +15,9 @@ import Group from './Group';
 import User from './User';
 
 class Users extends React.Component<any, any> {
-  public state = {
-    groupedUsers: [],
-  };
-
-  constructor(props: any) {
-    super(props);
-  }
-
-  public componentWillReceiveProps(nextProps: any) {
-    if (nextProps.users) {
-      this.setState({
-        groupedUsers: this.getGroupedUsers(nextProps.users),
-      });
-    }
-  }
-
   public render() {
     const { classes, theme } = this.props;
-    const { groupedUsers } = this.state;
+    const groupedUsers = this.getGroupedUsers(this.props.users);
 
     const totalUnreadMessages = this.props.users.reduce(
       (a: number, b: IUser) => a + b.unreadMessages,

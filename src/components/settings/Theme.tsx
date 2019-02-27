@@ -2,6 +2,7 @@ import * as React from 'react';
 
 // redux & actions
 import { connect } from 'react-redux';
+import { setTheme } from 'src/actions/dispatcher';
 
 // material ui
 import { withStyles } from '@material-ui/core';
@@ -72,20 +73,16 @@ class Theme extends React.Component<any, any> {
     selectedItem: ITEMS[0],
   };
 
-  public componentWillMount() {
-    const items = this.getItemsFromTheme(this.props.theme);
-    this.setState({ items, selectedItem: items[0] });
+  constructor(props: any) {
+    super(props);
+
+    this.state.items = this.getItemsFromTheme(props.theme);
+    this.state.selectedItem = this.state.items[0];
   }
 
-  public componentWillReceiveProps(nextProps: any) {
-    if (nextProps.theme) {
-      const items = this.getItemsFromTheme(nextProps.theme);
-      this.setState({
-        items,
-        selectedItem: items.find(
-          item => item.themeKey === this.state.selectedItem.themeKey
-        ),
-      });
+  public componentDidUpdate(prevProps: any) {
+    if (this.props.theme !== prevProps.theme) {
+      this.setState({ items: this.getItemsFromTheme(prevProps.theme) });
     }
   }
 
@@ -119,11 +116,25 @@ class Theme extends React.Component<any, any> {
           ))}
         </List>
         <div className={classes.picker}>
-          <ColorPicker item={selectedItem} selectedColor={selectedItem.color} />
+          <ColorPicker
+            item={selectedItem}
+            onSelection={this.handleClickColor}
+          />
         </div>
       </React.Fragment>
     );
   }
+
+  private handleClickColor = (color: string, name: string, shade: string) => {
+    const updatedItem = {
+      ...this.state.selectedItem,
+      name,
+      shade,
+      value: color,
+    };
+    this.setState({ selectedItem: { ...this.state.selectedItem, color } });
+    this.props.setTheme(updatedItem);
+  };
 
   private handleClickItem = (item: any) => {
     this.setState({ selectedItem: item });
@@ -153,9 +164,10 @@ const mapStateToProps = (states: IStates) => ({
   theme: states.gong.theme,
 });
 
-// total width: 800px
-// 240px for nav
-// color area total width 440px
+const mapDispatchToProps = {
+  setTheme,
+};
+
 const styles: any = (theme: any) => ({
   itemText: {
     fontSize: '9px',
@@ -180,5 +192,5 @@ const styles: any = (theme: any) => ({
 
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(withStyles(styles)(Theme));

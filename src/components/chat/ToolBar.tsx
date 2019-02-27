@@ -14,61 +14,29 @@ import IStates from 'src/interfaces/IStates';
 import Status from './Status';
 
 class ToolBar extends React.Component<any, any> {
-  public state = {
-    domain: '',
-    chatName: '',
-    chatType: '',
-    chatStatus: '',
-  };
+  public render() {
+    const { classes, domain, current } = this.props;
+    let chatName = '';
+    let chatStatus = '';
 
-  constructor(props: any) {
-    super(props);
-  }
-
-  public componentWillMount() {
-    if (this.props.domain) {
-      this.setState({ domain: this.props.domain });
-    }
-  }
-
-  public componentWillReceiveProps(nextProps: any) {
-    if (nextProps.domain !== this.state.domain) {
-      this.setState({ domain: nextProps.domain });
-    }
-    if (nextProps.current) {
-      if (nextProps.current.type !== this.state.chatType) {
-        this.setState({ chatType: nextProps.current.type });
-      }
-
-      switch (nextProps.current.type) {
+    if (current) {
+      switch (current.type) {
         case 'groupchat':
-          this.setState({
-            chatName:
-              nextProps.current.name.startsWith('#') &&
-              nextProps.current.name.length > 1
-                ? nextProps.current.name.substring(1)
-                : nextProps.current.name,
-            chatStatus: nextProps.current.isConnected ? 'online' : 'offline',
-          });
+          chatName =
+            current.name.startsWith('#') && current.name.length > 1
+              ? current.name.substring(1)
+              : current.name;
+          chatStatus = current.isConnected ? 'online' : 'offline';
           break;
         case 'chat':
-          this.setState({
-            chatName:
-              nextProps.current.vCard && nextProps.current.vCard.fullName
-                ? nextProps.current.vCard.fullName
-                : nextProps.current.name,
-            chatStatus: nextProps.current.status,
-          });
+          chatName =
+            current.vCard && current.vCard.fullName
+              ? current.vCard.fullName
+              : current.name;
+          chatStatus = current.status;
           break;
       }
-    } else {
-      this.setState({ chatName: '', chatType: '', chatStatus: '' });
     }
-  }
-
-  public render() {
-    const { classes } = this.props;
-    const { domain, chatType, chatName, chatStatus } = this.state;
 
     return (
       <div className={classes.root}>
@@ -78,12 +46,12 @@ class ToolBar extends React.Component<any, any> {
         <div className={classes.right}>
           <Typography>
             <span className={classes.symbol}>
-              {chatType === 'groupchat' && '# '}
-              {chatType === 'chat' && '@ '}
+              {current && current.type === 'groupchat' && '# '}
+              {current && current.type === 'chat' && '@ '}
             </span>
             {chatName}
           </Typography>
-          {chatType === 'chat' && <Status status={chatStatus} />}
+          {current && current.type === 'chat' && <Status status={chatStatus} />}
         </div>
       </div>
     );

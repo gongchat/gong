@@ -1,9 +1,5 @@
 import * as React from 'react';
 
-// redux & actions
-import { connect } from 'react-redux';
-import { setTheme } from 'src/actions/dispatcher';
-
 // material ui
 import { withStyles } from '@material-ui/core';
 
@@ -11,16 +7,7 @@ import { withStyles } from '@material-ui/core';
 import MaterialColors from 'src/utils/materialColors';
 
 class ColorPicker extends React.Component<any, any> {
-  public state = {
-    selectedColor: this.props.selectedColor,
-  };
-
-  public componentWillReceiveProps(nextProps: any) {
-    this.setState({ selectedColor: nextProps.selectedColor });
-  }
-
   public render() {
-    const { selectedColor } = this.state;
     const { classes } = this.props;
 
     return (
@@ -32,11 +19,13 @@ class ColorPicker extends React.Component<any, any> {
                 key={`${colorIndex}-${shadeIndex}`}
                 className={[
                   classes.color,
-                  selectedColor === color.color[shade] ? classes.selected : '',
+                  this.props.item.color === color.color[shade]
+                    ? classes.selected
+                    : '',
                 ].join(' ')}
                 style={{ backgroundColor: color.color[shade] || 'transparent' }}
                 onClick={() =>
-                  this.handleClickColor(color.color[shade], color.name, shade)
+                  this.props.onSelection(color.color[shade], color.name, shade)
                 }
               />
             ))}
@@ -45,17 +34,7 @@ class ColorPicker extends React.Component<any, any> {
       </div>
     );
   }
-
-  private handleClickColor = (color: string, name: string, shade: string) => {
-    this.setState({ selectedColor: color });
-    const updatedItem = { ...this.props.item, name, shade, value: color };
-    this.props.setTheme(updatedItem);
-  };
 }
-
-const mapDispatchToProps = {
-  setTheme,
-};
 
 const styles: any = (theme: any) => ({
   root: {
@@ -99,7 +78,4 @@ const styles: any = (theme: any) => ({
   },
 });
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(withStyles(styles)(ColorPicker));
+export default withStyles(styles)(ColorPicker);

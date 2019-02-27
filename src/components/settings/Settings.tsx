@@ -58,22 +58,17 @@ const TABS = [
 
 class Settings extends React.Component<any, any> {
   public state = {
-    open: false,
     selectedTab: TABS[0],
   };
 
-  public componentWillReceiveProps(nextProps: any) {
-    this.setState({ open: nextProps.showSettings });
-  }
-
   public render() {
-    const { classes } = this.props;
-    const { open, selectedTab } = this.state;
+    const { classes, showSettings } = this.props;
+    const { selectedTab } = this.state;
 
     return (
       <Dialog
         fullScreen={true}
-        open={open}
+        open={showSettings}
         className={classes.dialog}
         BackdropProps={{ className: classes.dialog }}
       >

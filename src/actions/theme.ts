@@ -105,7 +105,7 @@ export default class Theme {
 
     return {
       ...state,
-      theme: { ...muiTheme },
+      theme: muiTheme,
     };
   };
 

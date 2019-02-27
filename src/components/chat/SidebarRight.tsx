@@ -13,39 +13,27 @@ import IChannelUser from 'src/interfaces/IChannelUser';
 import ChannelUsers from './ChannelUsers';
 
 class SidebarRight extends React.Component<any, any> {
-  public state = {
-    chatUsers: [],
-  };
-
-  public componentWillMount() {
-    if (this.props.current) {
-      this.setState({ chatUsers: this.props.current.users });
-    }
-  }
-
-  public componentWillReceiveProps(nextProps: any) {
-    if (nextProps.current) {
-      this.setState({ chatUsers: nextProps.current.users });
-    }
-  }
-
   public render() {
-    const { classes } = this.props;
-    const { chatUsers } = this.state;
-
+    const { classes, current } = this.props;
     return (
       <div className={classes.root}>
         <ChannelUsers
           title="Moderators"
-          users={chatUsers.filter(
-            (user: IChannelUser) => user.role === 'moderator'
-          )}
+          users={
+            current &&
+            current.users.filter(
+              (user: IChannelUser) => user.role === 'moderator'
+            )
+          }
         />
         <ChannelUsers
           title="Participants"
-          users={chatUsers.filter(
-            (user: IChannelUser) => user.role === 'participant'
-          )}
+          users={
+            current &&
+            current.users.filter(
+              (user: IChannelUser) => user.role === 'participant'
+            )
+          }
         />
       </div>
     );
