@@ -23,12 +23,6 @@ import Settings from './settings/Settings';
 import IStates from 'src/interfaces/IStates';
 
 class Main extends React.Component<any, any> {
-  public state = {
-    chatType: '',
-    isConnected: true,
-    fontFamily: '',
-  };
-
   private reconnectTimer: any;
 
   public componentDidMount() {
@@ -44,45 +38,47 @@ class Main extends React.Component<any, any> {
     if (this.props.theme) {
       this.loadFont(this.props.theme.typography.fontFamily);
     }
-    // document.addEventListener;
   }
 
   public componentDidUpdate(prevProps: any) {
-    if (this.state.chatType !== prevProps.chatType) {
-      this.setState({ chatType: prevProps.chatType });
-    }
     if (
       prevProps.connection &&
-      this.state.isConnected !== prevProps.connection.isConnected
+      this.props.connection &&
+      this.props.connection.isConnected !== prevProps.connection.isConnected
     ) {
-      this.setState({ isConnected: prevProps.connection.isConnected });
       if (
-        !prevProps.connection.isConnecting &&
-        !prevProps.connection.isConnected
+        this.props.connection.hasSavedCredentials !== undefined &&
+        !this.props.connection.isConnecting &&
+        !this.props.connection.isConnected
       ) {
         if (this.reconnectTimer) {
           clearTimeout(this.reconnectTimer);
         }
         this.reconnectTimer = setTimeout(() => {
+          this.setState({ isAwaitingResponse: false });
           this.props.autoLogin();
         }, 10000);
       }
     }
 
-    if (this.state.fontFamily !== prevProps.theme.typography.fontFamily) {
-      this.loadFont(prevProps.theme.typography.fontFamily);
+    if (
+      this.props.theme &&
+      prevProps.theme &&
+      this.props.theme.typography.fontFamily !==
+        prevProps.theme.typography.fontFamily
+    ) {
+      this.loadFont(this.props.theme.typography.fontFamily);
     }
   }
 
   public render() {
-    const { classes, current, menuBarNotification } = this.props;
-    const { isConnected } = this.state;
+    const { classes, current, menuBarNotification, connection } = this.props;
 
     return (
       <div className={classes.root}>
         <div className={classes.bars}>
           <MenuBar
-            showOffline={!isConnected}
+            showOffline={connection ? !connection.isConnected : true}
             menuBarNotification={menuBarNotification}
           />
           <ToolBar />
@@ -120,7 +116,6 @@ class Main extends React.Component<any, any> {
 const mapStateToProps = (states: IStates) => {
   return {
     connection: states.gong.connection,
-    channel: states.gong.channels,
     current: states.gong.current,
     menuBarNotification: states.gong.menuBarNotification,
     theme: states.gong.theme,
