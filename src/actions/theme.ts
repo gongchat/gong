@@ -88,12 +88,12 @@ export default class Theme {
       Theme.updateTypographyFontSize(theme, item.value);
     } else if (item.themeKey === 'palette.text.primary') {
       Theme.updateTypographyColor(theme, item.value);
+    } else if (props[1] === 'primary') {
+      Theme.updatePrimaryColor(theme, item);
+    } else if (props[1] === 'secondary') {
+      Theme.updateSecondaryColor(theme, item);
     } else if (props[0] === 'palette') {
       Theme.updatePalette(theme, props, lastProp, item.value);
-    } else if (props[1] === 'primary') {
-      Theme.updatePrimaryColor(theme, item.value);
-    } else if (props[1] === 'secondary') {
-      Theme.updateSecondaryColor(theme, item.value);
     } else if (lastProp === 'unit') {
       theme.spacing.unit = item.value;
     } else {
@@ -115,12 +115,12 @@ export default class Theme {
       Theme.convertSavedTheme(theme); // TODO: Remove line below when alpha
       return createMuiTheme(theme);
     } else {
-      return createMuiTheme(DEFAULT);
+      return createMuiTheme({ ...DEFAULT });
     }
   };
 
   public static setThemeToDefault = (state: IState): IState => {
-    const theme = createMuiTheme(DEFAULT);
+    const theme = createMuiTheme({ ...DEFAULT });
     electronStore.set('theme', theme);
     return { ...state, theme: { ...theme } };
   };
@@ -153,11 +153,20 @@ export default class Theme {
     const shadeLength = MaterialColorsUtil.shades.length;
     if (color) {
       theme.palette.primary = {
-        light: color[baseShadeIndex - 1 <= 0 ? 0 : baseShadeIndex - 2],
-        main: color[baseShadeIndex],
+        light:
+          color.color[
+            MaterialColorsUtil.shades[
+              baseShadeIndex - 1 <= 0 ? 0 : baseShadeIndex - 2
+            ]
+          ],
+        main: color.color[MaterialColorsUtil.shades[baseShadeIndex]],
         dark:
-          color[
-            baseShadeIndex + 1 >= shadeLength ? shadeLength : baseShadeIndex + 2
+          color.color[
+            MaterialColorsUtil.shades[
+              baseShadeIndex + 1 >= shadeLength
+                ? shadeLength
+                : baseShadeIndex + 2
+            ]
           ],
       };
     }
@@ -171,11 +180,20 @@ export default class Theme {
     const shadeLength = MaterialColorsUtil.shades.length;
     if (color) {
       theme.palette.secondary = {
-        light: color[baseShadeIndex - 1 <= 0 ? 0 : baseShadeIndex - 2],
-        main: color[baseShadeIndex],
+        light:
+          color.color[
+            MaterialColorsUtil.shades[
+              baseShadeIndex - 1 <= 0 ? 0 : baseShadeIndex - 2
+            ]
+          ],
+        main: color.color[MaterialColorsUtil.shades[baseShadeIndex]],
         dark:
-          color[
-            baseShadeIndex + 1 >= shadeLength ? shadeLength : baseShadeIndex + 2
+          color.color[
+            MaterialColorsUtil.shades[
+              baseShadeIndex + 1 >= shadeLength
+                ? shadeLength
+                : baseShadeIndex + 2
+            ]
           ],
       };
     }
