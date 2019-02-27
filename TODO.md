@@ -2,7 +2,6 @@
 
 Loosely ordered in priority from top down
 
-- [ ] Put TODO into trello
 - [x] Remember scroll positions and keep it at bottom when current is active
 - [x] Notifications/Badges within App
 - [x] Emojis on :
@@ -55,24 +54,28 @@ Loosely ordered in priority from top down
 - [x] Add settings to disable media content for video, getyarn and image links
 - [x] Add setting to flash chat when you get a message
 - [x] Reduce top and bottom spacing on user cards if there is not avatar being displayed
+- [x] Cannot resize window from top edge
+- [x] Show selected color in theme customization
+- [x] Gong will remove any message between angle brackets, need to escape
 
-- [ ] Add status on channels and show if password has failed
 - [ ] Allow navigation of chat with ctrl page up and page down
-- [ ] Add a way to specify a port on login
+
 - [ ] The default font value of 15 does not represent the default material ui font sizes for some of the elements
 - [ ] Toggling avatars causes other styles to change (maybe font size and related to task above or spacing)
+  
+- [ ] Add status on channels and show if password has failed
 - [ ] Handle message errors and acknowledgment
-- [ ] Cannot resize window from top edge
-- [ ] Show selected color in theme customization
 
+- [ ] Add a way to specify a port on login
 - [ ] Better styling on input (sometimes there is a weird dot at the start that blinks and text gets cut off)
 
 - [ ] Change nick on /nick
-- [ ] Add way to change nickname on an added channel
+- [ ] Add way to change saved channel data such as a user's nickname
 - [ ] Format messages with /me
 
 - [ ] Add a new element that specifies at what point in the listing of messages where the new messages begin
 - [ ] Have setting to load application on startup
+- [ ] Have gong run in taskbar
 - [ ] Notifications outside App
 - [ ] After x min of inactivity set status to away
 - [ ] Notify user on both ends when someone is typing
@@ -85,6 +88,7 @@ Loosely ordered in priority from top down
 
 Alpha
 
+- [ ] Emoji explorer when emoji icon is clicked
 - [ ] Keep logs of messages
 - [ ] Make rooms sortable
 - [ ] Include options for a compact and cozy layout for the messages. compact is the current and cozy would include avatars
@@ -92,7 +96,6 @@ Alpha
 - [ ] Select colors for theme with hex code
 - [ ] Scheduled messages
 - [ ] Virtualize messages when there is a large number of them
-- [ ] Link previews (still debating whether I want to do this)
 
 Beta
 
