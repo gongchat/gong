@@ -34,7 +34,6 @@ class Main extends React.Component<any, any> {
         this.props.autoLogin();
       }
     }
-
     if (this.props.theme) {
       this.loadFont(this.props.theme.typography.fontFamily);
     }
@@ -44,21 +43,17 @@ class Main extends React.Component<any, any> {
     if (
       prevProps.connection &&
       this.props.connection &&
-      this.props.connection.isConnected !== prevProps.connection.isConnected
+      this.props.connection.isConnected !== prevProps.connection.isConnected &&
+      this.props.connection.hasSavedCredentials !== undefined &&
+      !this.props.connection.isConnecting &&
+      !this.props.connection.isConnected
     ) {
-      if (
-        this.props.connection.hasSavedCredentials !== undefined &&
-        !this.props.connection.isConnecting &&
-        !this.props.connection.isConnected
-      ) {
-        if (this.reconnectTimer) {
-          clearTimeout(this.reconnectTimer);
-        }
-        this.reconnectTimer = setTimeout(() => {
-          this.setState({ isAwaitingResponse: false });
-          this.props.autoLogin();
-        }, 10000);
+      if (this.reconnectTimer) {
+        clearTimeout(this.reconnectTimer);
       }
+      this.reconnectTimer = setTimeout(() => {
+        this.props.autoLogin();
+      }, 10000);
     }
 
     if (
@@ -103,7 +98,6 @@ class Main extends React.Component<any, any> {
   }
 
   private loadFont(fontFamily: string) {
-    this.setState({ fontFamily });
     const font: string = fontFamily.split(',')[0].replace(/"/g, '');
     WebFont.load({
       google: {
