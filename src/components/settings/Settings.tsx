@@ -175,7 +175,7 @@ const mapDispatchToProps = {
 
 const styles: any = (theme: any) => ({
   dialog: {
-    top: '28px',
+    top: '24px',
   },
   dialogContent: {
     display: 'flex',

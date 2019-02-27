@@ -52,7 +52,6 @@ class MenuBar extends React.Component<any, any> {
     return (
       <div
         className={[
-          'menu-bar',
           classes.root,
           menuBarNotificationFrequency === 'once'
             ? classes.flashOnce
@@ -61,31 +60,33 @@ class MenuBar extends React.Component<any, any> {
             : '',
         ].join(' ')}
       >
-        <div className={classes.brand}>
-          <Typography>Gong{showOffline ? ' (offline)' : ''}</Typography>
-        </div>
-        <div className={['menu-bar--items', classes.menu].join(' ')}>
-          {/* <Typography>File</Typography> */}
-        </div>
-        <div className={['menu-bar--actions', classes.actions].join(' ')}>
-          <Typography
-            onClick={this.minimize}
-            className={[classes.actionItem].join(' ')}
-          >
-            <RemoveIcon />
-          </Typography>
-          <Typography
-            onClick={this.toggleMaximize}
-            className={[classes.actionItem].join(' ')}
-          >
-            <CropSquareIcon />
-          </Typography>
-          <Typography
-            onClick={this.close}
-            className={[classes.actionItem, classes.close].join(' ')}
-          >
-            <CloseIcon />
-          </Typography>
+        <div className={['menu-bar', classes.menuBar].join(' ')}>
+          <div className={classes.brand}>
+            <Typography>Gong{showOffline ? ' (offline)' : ''}</Typography>
+          </div>
+          <div className={['menu-bar--items', classes.menu].join(' ')}>
+            {/* <Typography>File</Typography> */}
+          </div>
+          <div className={['menu-bar--actions', classes.actions].join(' ')}>
+            <Typography
+              onClick={this.minimize}
+              className={[classes.actionItem].join(' ')}
+            >
+              <RemoveIcon />
+            </Typography>
+            <Typography
+              onClick={this.toggleMaximize}
+              className={[classes.actionItem].join(' ')}
+            >
+              <CropSquareIcon />
+            </Typography>
+            <Typography
+              onClick={this.close}
+              className={[classes.actionItem, classes.close].join(' ')}
+            >
+              <CloseIcon />
+            </Typography>
+          </div>
         </div>
       </div>
     );
@@ -113,9 +114,12 @@ class MenuBar extends React.Component<any, any> {
 
 const styles: any = (theme: any) => ({
   root: {
+    background: theme.palette.backgroundAccent,
+  },
+  menuBar: {
+    margin: 1, // to allow resizing on menu bar
     display: 'flex',
     flexWrap: 'nowrap',
-    background: theme.palette.backgroundAccent,
     '& $brand, & $menu': {
       display: 'flex',
       alignItems: 'center',
@@ -135,9 +139,10 @@ const styles: any = (theme: any) => ({
   actions: {
     display: 'flex',
     flexWrap: 'nowrap',
+    margin: '-1px',
   },
   actionItem: {
-    padding: '5px 15px',
+    padding: '2px 7px',
     display: 'flex',
     alignItems: 'center',
     userSelect: 'none',
@@ -146,7 +151,7 @@ const styles: any = (theme: any) => ({
       width: '18px',
     },
     '&:hover': {
-      backgroundColor: theme.palette.background.paper,
+      background: 'rgba(125,125,125,.2)',
     },
   },
   close: {
