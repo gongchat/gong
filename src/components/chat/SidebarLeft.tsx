@@ -2,7 +2,7 @@ import * as React from 'react';
 
 // redux & actions
 import { connect } from 'react-redux';
-import { settingsToggle } from 'src/actions/dispatcher';
+import { selectChannel, settingsToggle } from 'src/actions/dispatcher';
 
 // material ui
 import { withStyles } from '@material-ui/core';
@@ -19,6 +19,14 @@ import Me from './Me';
 import Users from './Users';
 
 class SidebarLeft extends React.Component<any, any> {
+  public componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyDown, false);
+  }
+
+  public componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown, false);
+  }
+
   public render() {
     const { classes, profile, channels, current } = this.props;
     return (
@@ -70,6 +78,41 @@ class SidebarLeft extends React.Component<any, any> {
       </div>
     );
   }
+
+  private handleKeyDown = (event: any) => {
+    if (
+      this.props.channels &&
+      event.ctrlKey &&
+      (event.key === 'PageUp' || event.key === 'PageDown')
+    ) {
+      event.preventDefault();
+      const sortedChannels = this.props.channels.sort(
+        (a: IChannel, b: IChannel) => {
+          if (a.type > b.type) return -1;
+          if (a.type < b.type) return 1;
+          if (a.name > b.name) return 1;
+          if (a.name < b.name) return -1;
+          return 0;
+        }
+      );
+      const maxIndex = this.props.channels.length - 1;
+      const index = this.props.current
+        ? sortedChannels.findIndex(
+            (channel: IChannel) => channel.jid === this.props.current.jid
+          )
+        : -1;
+
+      if (event.key === 'PageUp') {
+        this.props.selectChannel(
+          sortedChannels[index > 0 ? index - 1 : maxIndex].jid
+        );
+      } else if (event.key === 'PageDown') {
+        this.props.selectChannel(
+          sortedChannels[index < maxIndex ? index + 1 : 0].jid
+        );
+      }
+    }
+  };
 }
 
 const mapStateToProps = (states: IStates) => ({
@@ -80,6 +123,7 @@ const mapStateToProps = (states: IStates) => ({
 
 const mapDispatchToProps = {
   settingsToggle,
+  selectChannel,
 };
 
 const styles: any = (theme: any) => ({

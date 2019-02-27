@@ -57,8 +57,7 @@ Loosely ordered in priority from top down
 - [x] Cannot resize window from top edge
 - [x] Show selected color in theme customization
 - [x] Gong will remove any message between angle brackets, need to escape
-
-- [ ] Allow navigation of chat with ctrl page up and page down
+- [x] Allow navigation of chat with ctrl page up and page down
 
 - [ ] The default font value of 15 does not represent the default material ui font sizes for some of the elements
 - [ ] Toggling avatars causes other styles to change (maybe font size and related to task above or spacing)
