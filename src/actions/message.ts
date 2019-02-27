@@ -192,6 +192,10 @@ export default class Message {
       message.urls = [...message.urls, ...Message.getImageUrls(message.body)];
     }
 
+    // escape tags
+    formattedMessage = formattedMessage.replace(/</g, '&lt;');
+    formattedMessage = formattedMessage.replace(/>/g, '&gt;');
+
     // handle mentions this only applies to IRoom
     channelUsers.forEach((user: IChannelUser) => {
       const isMe = user.nickname === myChannelNickname;
