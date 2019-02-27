@@ -15,7 +15,12 @@ class ColorPicker extends React.Component<any, any> {
     selectedColor: this.props.selectedColor,
   };
 
+  public componentWillReceiveProps(nextProps: any) {
+    this.setState({ selectedColor: nextProps.selectedColor });
+  }
+
   public render() {
+    const { selectedColor } = this.state;
     const { classes } = this.props;
 
     return (
@@ -25,7 +30,10 @@ class ColorPicker extends React.Component<any, any> {
             {MaterialColors.shades.map((shade, shadeIndex) => (
               <div
                 key={`${colorIndex}-${shadeIndex}`}
-                className={classes.color}
+                className={[
+                  classes.color,
+                  selectedColor === color.color[shade] ? classes.selected : '',
+                ].join(' ')}
                 style={{ backgroundColor: color.color[shade] || 'transparent' }}
                 onClick={() =>
                   this.handleClickColor(color.color[shade], color.name, shade)
@@ -75,18 +83,19 @@ const styles: any = (theme: any) => ({
   color: {
     width: '25px',
     height: '25px',
+    transition: 'ease 0.5s',
+    cursor: 'pointer',
     '&:hover': {
       borderRadius: '7px',
-      transition: 'ease 0.5s',
-      cursor: 'pointer',
     },
   },
   shade: {
     width: '25px',
     fontSize: '8px',
     textAlign: 'center',
-    // padding: 0,
-    // margin: 0,
+  },
+  selected: {
+    borderRadius: '7px',
   },
 });
 

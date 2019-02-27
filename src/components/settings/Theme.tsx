@@ -79,7 +79,13 @@ class Theme extends React.Component<any, any> {
 
   public componentWillReceiveProps(nextProps: any) {
     if (nextProps.theme) {
-      this.setState({ items: this.getItemsFromTheme(nextProps.theme) });
+      const items = this.getItemsFromTheme(nextProps.theme);
+      this.setState({
+        items,
+        selectedItem: items.find(
+          item => item.themeKey === this.state.selectedItem.themeKey
+        ),
+      });
     }
   }
 
@@ -113,7 +119,7 @@ class Theme extends React.Component<any, any> {
           ))}
         </List>
         <div className={classes.picker}>
-          <ColorPicker item={selectedItem} />
+          <ColorPicker item={selectedItem} selectedColor={selectedItem.color} />
         </div>
       </React.Fragment>
     );
