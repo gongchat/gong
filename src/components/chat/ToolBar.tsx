@@ -51,6 +51,9 @@ class ToolBar extends React.Component<any, any> {
             </span>
             {chatName}
           </Typography>
+          {current && current.connectionError && (
+            <Typography color="error">({current.connectionError})</Typography>
+          )}
           {current && current.type === 'chat' && <Status status={chatStatus} />}
         </div>
       </div>

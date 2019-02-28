@@ -7,5 +7,5 @@ export default interface IRoom extends IChannel {
   myNickname: string;
   isConnected: boolean;
   isConnecting: boolean;
-  isUnableToConnect: boolean;
+  connectionError: string;
 }

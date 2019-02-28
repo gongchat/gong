@@ -10,7 +10,7 @@ import ColorUtil from 'src/utils/colorUtil';
 
 export default class Presence {
   public static set = (state: IState, payload: IPresence): IState => {
-    if (payload.user === undefined) {
+    if (!payload.user && !payload.code) {
       return Presence.setChat(state, payload);
     } else {
       return Presence.setGroupchat(state, payload);
@@ -89,44 +89,53 @@ export default class Presence {
     );
 
     if (room) {
-      // if presence is received, set channel to connected
-      room = {
-        ...room,
-        isConnected: true,
-        isConnecting: false,
-        isUnableToConnect: false,
-      };
-
-      if (presence.status === 'offline') {
-        // remove user if status is no longer online
-        room.users = [
-          ...room.users.filter(
-            (user: IChannelUser) => user.jid !== presence.user
-          ),
-        ];
-      } else {
-        // if user does not exist, add it
-        if (
-          room.users &&
-          !room.users.find((u: IChannelUser) => u.jid === presence.user)
-        ) {
-          const nickname: string = presence.from.split('/')[1];
-          const newUser: IChannelUser = {
-            jid: presence.user,
-            role: presence.role,
-            nickname,
-            color: ColorUtil.stringToHexColor(nickname),
-          };
-          room.users = [...room.users, newUser];
-        }
-      }
-
-      // if channel is the current one, update it
-      if (state.current && state.current.jid === room.jid) {
-        state.current = {
-          ...state.current,
-          users: room.users,
+      if (presence.code === '401') {
+        // not authorized
+        room = {
+          ...room,
+          isConnected: false,
+          isConnecting: false,
+          connectionError: 'Not authorized',
         };
+      } else {
+        room = {
+          ...room,
+          isConnected: true,
+          isConnecting: false,
+          connectionError: '',
+        };
+
+        if (presence.status === 'offline') {
+          // remove user if status is no longer online
+          room.users = [
+            ...room.users.filter(
+              (user: IChannelUser) => user.jid !== presence.user
+            ),
+          ];
+        } else {
+          // if user does not exist, add it
+          if (
+            room.users &&
+            !room.users.find((u: IChannelUser) => u.jid === presence.user)
+          ) {
+            const nickname: string = presence.from.split('/')[1];
+            const newUser: IChannelUser = {
+              jid: presence.user,
+              role: presence.role,
+              nickname,
+              color: ColorUtil.stringToHexColor(nickname),
+            };
+            room.users = [...room.users, newUser];
+          }
+        }
+
+        // if channel is the current one, update it
+        if (state.current && state.current.jid === room.jid) {
+          state.current = {
+            ...state.current,
+            users: room.users,
+          };
+        }
       }
 
       return { ...state, channels: [...channels, room] };

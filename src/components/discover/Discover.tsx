@@ -176,6 +176,7 @@ class Rooms extends React.Component<any, any> {
                 variant="filled"
                 margin="dense"
                 helperText="Leave empty if no password"
+                FormHelperTextProps={{ className: classes.helperText }}
                 type="password"
                 value={form.password}
               />
@@ -323,6 +324,9 @@ const styles: any = (theme: any) => ({
     alignItems: 'center',
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit,
+  },
+  helperText: {
+    marginLeft: 0,
   },
 });
 

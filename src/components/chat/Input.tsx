@@ -33,7 +33,6 @@ class Input extends React.Component<any, any> {
     emojisIndex: -1,
     channelUsers: [],
     channelUsersIndex: -1,
-    enabled: true,
   };
 
   private inputRef: React.RefObject<HTMLInputElement>;
@@ -48,10 +47,6 @@ class Input extends React.Component<any, any> {
     this.channelUsersRef = React.createRef<HTMLDivElement>();
   }
 
-  public componentWillReceiveProps(nextProps: any) {
-    this.setState({ enabled: nextProps.connection.isConnected });
-  }
-
   public render() {
     const { classes } = this.props;
     const {
@@ -62,7 +57,6 @@ class Input extends React.Component<any, any> {
       emojisIndex,
       channelUsers,
       channelUsersIndex,
-      enabled,
     } = this.state;
     const markdownIt = new MarkdownIt();
     const emojiIcon: string = markdownIt
@@ -145,7 +139,11 @@ class Input extends React.Component<any, any> {
             InputProps={{ className: classes.textareaRoot }}
             rowsMax={8}
             inputRef={this.inputRef}
-            disabled={!enabled}
+            disabled={
+              !this.props.connection.isConnected ||
+              (this.props.current.connectionError !== undefined &&
+                !this.props.current.isConnected)
+            }
             // inputProps={{ style: { maxHeight: 19 * 24 } }}
             // inputProps={{ style: { minHeight: 19 * 3 } }}
           />

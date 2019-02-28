@@ -24,12 +24,17 @@ class Channel extends React.Component<any, any> {
       <div
         className={[
           classes.root,
-          channel.isConnected ? classes.connected : '',
+          channel.isConnected ? classes.connected : classes.notConnected,
           isSelected ? classes.active : '',
         ].join(' ')}
       >
         <div className={classes.content} onClick={this.handleOnClick}>
-          <Typography className={classes.hashtag}>{prefix}</Typography>
+          <Typography
+            className={classes.hashtag}
+            color={channel.connectionError ? 'error' : 'default'}
+          >
+            {prefix}
+          </Typography>
           <Typography className={classes.name}>{name}</Typography>
           {channel.unreadMessages > 0 && (
             <Badge
@@ -87,8 +92,10 @@ const styles: any = (theme: any) => ({
   },
   notConnected: {
     justifyContent: 'space-between',
-    cursor: 'not-allowed',
-    opacity: 0.2,
+    opacity: 0.4,
+  },
+  connectionError: {
+    color: theme.palette.secondary.main,
   },
   content: {
     display: 'flex',

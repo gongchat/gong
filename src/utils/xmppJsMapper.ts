@@ -34,6 +34,9 @@ export default class XmppJsMapper {
   }
 
   public static mapToPresence(jsXml: any): IPresence {
+    const error: any = jsXml.children.find(
+      (child: any) => child.name === 'error'
+    );
     const x: any = jsXml.children.find(
       (child: any) =>
         child.attrs.xmlns === 'http://jabber.org/protocol/muc#user'
@@ -52,7 +55,7 @@ export default class XmppJsMapper {
     const presence: IPresence = {
       from: jsXml.attrs.from,
       status:
-        jsXml.attrs.type === 'unavailable'
+        error || jsXml.attrs.type === 'unavailable'
           ? 'offline'
           : status
           ? status.children[0]
@@ -65,7 +68,7 @@ export default class XmppJsMapper {
         : jsXml.attrs.from,
       role: itemAttrs && itemAttrs.role,
       affiliation: itemAttrs && itemAttrs.affiliation,
-      code: '',
+      code: error && error.attrs.code,
     };
     return presence;
   }
