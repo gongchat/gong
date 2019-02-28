@@ -233,6 +233,8 @@ class Input extends React.Component<any, any> {
       } else {
         this.setState({ emojisIndex: -1 });
       }
+    } else {
+      this.setState({ emojisIndex: -1 });
     }
 
     // check for users
@@ -261,6 +263,8 @@ class Input extends React.Component<any, any> {
           this.setState({ channelUsersIndex: -1 });
         }
       }
+    } else {
+      this.setState({ channelUsersIndex: -1 });
     }
   };
 
