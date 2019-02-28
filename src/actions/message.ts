@@ -83,8 +83,8 @@ export default class Message {
         urls: [],
         timestamp: moment(),
         userNickname:
-          newState.profile.vCard && newState.profile.vCard.nickname
-            ? newState.profile.vCard.nickname
+          newState.profile.vCard && newState.profile.vCard.fullName
+            ? newState.profile.vCard.fullName
             : newState.profile.username,
         color: newState.profile.color,
         isHistory: false,
