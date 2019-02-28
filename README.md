@@ -27,4 +27,4 @@ _I am using electron 3, node 10.13.0, and Windows 10_
    1. If you get a `Error: Chunk.entrypoints: Use Chunks.addGroup instead` you may have to run `npm install -D extract-text-webpack-plugin@next`. See this github [issue](https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/701#issuecomment-398103246) for more info.
    2. If you get a `...\app.asar: The process cannot access the file because it is being used by another process.` Close any IDEs that have this project open and run the command from terminal. See this github [issue](https://github.com/electron-userland/electron-builder/issues/3666) for more info.
 
-After `npm run dist` finishes you can find the installation file in the `/dist`.
+After `npm run dist` finishes you can find the installation file in `/dist`.
