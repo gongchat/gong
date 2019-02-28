@@ -101,6 +101,8 @@ class UserCard extends React.Component<any, any> {
         <Dialog
           open={isDetailsOpen}
           onClose={this.handleDetailClose}
+          className={classes.dialog}
+          BackdropProps={{ className: classes.dialog }}
           aria-labelledby="detail-dialog-title"
         >
           <UserDetail user={user} />
@@ -191,6 +193,9 @@ const styles: any = (theme: any) => ({
     width: '20px',
     marginRight: '8px',
     borderRadius: '5px',
+  },
+  dialog: {
+    top: '23px',
   },
 });
 
