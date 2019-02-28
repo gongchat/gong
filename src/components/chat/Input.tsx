@@ -193,61 +193,65 @@ class Input extends React.Component<any, any> {
 
     // check for emojis
     const emojiCommandIndex = text.lastIndexOf(':');
-    const emojiCommandPrevIndex = text
-      .substring(0, emojiCommandIndex)
-      .lastIndexOf(':');
-    if (
-      emojiCommandIndex !== -1 &&
-      !emojisObj[text.substring(emojiCommandPrevIndex + 1, emojiCommandIndex)]
-    ) {
-      const emojiWord = text.substring(emojiCommandIndex);
-      const term = emojiWord.substring(1);
-      const matchingEmojis = Emojis.filter(
-        (emoji: any) => emoji.key.startsWith(term) || emoji.key === term
-      );
-      if (matchingEmojis.length > 0) {
-        this.setState({
-          lastWord: term,
-          channelUsersIndex: -1,
-          emojisIndex: 0,
-          emojis:
-            term.length === 0
-              ? Emojis.map((x: any) => ({ x, r: Math.random() }))
-                  .sort((a: any, b: any) => a.r - b.r)
-                  .map((a: any) => a.x)
-                  .slice(0, 20)
-              : matchingEmojis,
-        });
+    if (emojiCommandIndex !== -1) {
+      const emojiCommandPrevIndex = text
+        .substring(0, emojiCommandIndex)
+        .lastIndexOf(':');
+      if (
+        emojiCommandIndex !== -1 &&
+        !emojisObj[text.substring(emojiCommandPrevIndex + 1, emojiCommandIndex)]
+      ) {
+        const emojiWord = text.substring(emojiCommandIndex);
+        const term = emojiWord.substring(1);
+        const matchingEmojis = Emojis.filter(
+          (emoji: any) => emoji.key.startsWith(term) || emoji.key === term
+        );
+        if (matchingEmojis.length > 0) {
+          this.setState({
+            lastWord: term,
+            channelUsersIndex: -1,
+            emojisIndex: 0,
+            emojis:
+              term.length === 0
+                ? Emojis.map((x: any) => ({ x, r: Math.random() }))
+                    .sort((a: any, b: any) => a.r - b.r)
+                    .map((a: any) => a.x)
+                    .slice(0, 20)
+                : matchingEmojis,
+          });
+        } else {
+          this.setState({ emojisIndex: -1 });
+        }
       } else {
         this.setState({ emojisIndex: -1 });
       }
-    } else {
-      this.setState({ emojisIndex: -1 });
     }
 
     // check for users
     if (this.props.current.type === 'groupchat') {
       const channelCommandIndex = text.lastIndexOf('@');
-      const channelUserWord = text.substring(channelCommandIndex);
-      if (channelCommandIndex !== -1 && channelUserWord) {
-        const term = channelUserWord.substring(1);
-        const matchingChannelUsers = this.props.current.users.filter(
-          (user: IChannelUser) =>
-            user.nickname.toLowerCase().startsWith(term.toLowerCase()) ||
-            user.nickname.toLowerCase() === term.toLowerCase()
-        );
-        if (matchingChannelUsers.length > 0) {
-          this.setState({
-            lastWord: term,
-            emojisIndex: -1,
-            channelUsersIndex: 0,
-            channelUsers: matchingChannelUsers,
-          });
+      if (channelCommandIndex !== -1) {
+        const channelUserWord = text.substring(channelCommandIndex);
+        if (channelCommandIndex !== -1 && channelUserWord) {
+          const term = channelUserWord.substring(1);
+          const matchingChannelUsers = this.props.current.users.filter(
+            (user: IChannelUser) =>
+              user.nickname.toLowerCase().startsWith(term.toLowerCase()) ||
+              user.nickname.toLowerCase() === term.toLowerCase()
+          );
+          if (matchingChannelUsers.length > 0) {
+            this.setState({
+              lastWord: term,
+              emojisIndex: -1,
+              channelUsersIndex: 0,
+              channelUsers: matchingChannelUsers,
+            });
+          } else {
+            this.setState({ channelUsersIndex: -1 });
+          }
         } else {
           this.setState({ channelUsersIndex: -1 });
         }
-      } else {
-        this.setState({ channelUsersIndex: -1 });
       }
     }
   };
