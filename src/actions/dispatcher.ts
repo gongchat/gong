@@ -10,6 +10,8 @@ import {
   MESSAGE_SEND,
   MY_STATUS_SET,
   MY_VCARD_SET,
+  ROOM_EDIT,
+  ROOM_SET_NICKNAME,
   SETTINGS_SET,
   SETTINGS_TOGGLE,
   SNACKBAR_NOTIFICATION_ADD,
@@ -107,4 +109,12 @@ export const addSnackbarNotification = (
 
 export const setSettings = (settings: any) => (dispatch: any) => {
   dispatch({ type: SETTINGS_SET, payload: settings });
+};
+
+export const setRoomNickname = (roomNickname: any) => (dispatch: any) => {
+  dispatch({ type: ROOM_SET_NICKNAME, payload: roomNickname });
+};
+
+export const editRoom = (room: IRoomJoin) => (dispatch: any) => {
+  dispatch({ type: ROOM_EDIT, payload: room });
 };

@@ -13,6 +13,8 @@ import {
   MY_STATUS_SET,
   MY_VCARD_SET,
   PRESENCE_SET,
+  ROOM_EDIT,
+  ROOM_SET_NICKNAME,
   ROOMS_SET,
   SETTINGS_SET,
   SETTINGS_TOGGLE,
@@ -123,6 +125,10 @@ export default function(state = initialState, action: any) {
       return Room.addToChannels(state, action.payload);
     case CHANNEL_SELECT_USER:
       return Room.selectUser(state, action.payload);
+    case ROOM_EDIT:
+      return Room.edit(state, action.payload);
+    case ROOM_SET_NICKNAME:
+      return Room.setNickname(state, action.payload);
 
     case CHANNEL_REMOVE:
       return Channel.remove(state, action.payload);

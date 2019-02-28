@@ -383,6 +383,12 @@ class XmppJsClient {
     );
   }
 
+  sendRoomNickname(jid, nickname) {
+    this.client.send(
+      xml('presence', { to: `${jid}/${nickname}` })
+    );
+  }
+
   sendMessage(message) {
     // for some reason without setTimeout for a set period after sending a message
     // subsequent messages will have a delay before being sent

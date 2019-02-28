@@ -2,7 +2,7 @@ import * as React from 'react';
 
 // redux & actions
 import { connect } from 'react-redux';
-import { sendMessage } from 'src/actions/dispatcher';
+import { sendMessage, setRoomNickname } from 'src/actions/dispatcher';
 
 // material ui
 import { withStyles } from '@material-ui/core';
@@ -172,14 +172,22 @@ class Input extends React.Component<any, any> {
   }
 
   private sendMessage = () => {
+    if (this.state.text.startsWith('/nick')) {
+      this.props.setRoomNickname({
+        jid: this.props.current.jid,
+        currentNickname: this.props.current.myNickname,
+        newNickname: this.state.text.substring(6),
+      });
+    } else {
+      const messageSend: IMessageSend = {
+        type: this.props.current.type,
+        to: this.props.current.jid,
+        from: this.props.from,
+        body: this.state.text,
+      };
+      this.props.sendMessage(messageSend);
+    }
     this.setState({ text: '', lastWord: 0 });
-    const messageSend: IMessageSend = {
-      type: this.props.current.type,
-      to: this.props.current.jid,
-      from: this.props.from,
-      body: this.state.text,
-    };
-    this.props.sendMessage(messageSend);
   };
 
   //
@@ -445,6 +453,7 @@ const mapStateToProps = (states: IStates) => {
 
 const mapDispatchToProps = {
   sendMessage,
+  setRoomNickname,
 };
 
 const styles: any = (theme: any) => ({

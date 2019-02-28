@@ -33,7 +33,7 @@ import IRoomJoin from 'src/interfaces/IRoomJoin';
 import IStates from 'src/interfaces/IStates';
 import ISubdomain from 'src/interfaces/ISubdomain';
 
-class Rooms extends React.Component<any, any> {
+class Discover extends React.Component<any, any> {
   public state = {
     open: false,
     selectedSubdomainJid: '',
@@ -333,4 +333,4 @@ const styles: any = (theme: any) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(styles)(Rooms));
+)(withStyles(styles)(Discover));

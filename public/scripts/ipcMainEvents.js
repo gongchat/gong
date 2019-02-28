@@ -57,6 +57,10 @@ class IpcMainEvents {
     ipcMain.on('xmpp-set-vcard', (event, arg) => {
       xmppClient.sendSetVCard(event, arg);
     });
+
+    ipcMain.on('xmpp-set-room-nickname', (event, arg) => {
+      xmppClient.sendRoomNickname(arg.jid, arg.nickname);
+    });
   }
 }
 

@@ -116,4 +116,66 @@ export default class Room {
       };
     }
   };
+
+  public static edit = (state: IState, roomJoin: IRoomJoin): IState => {
+    const channel = state.channels.find(
+      (c: IChannel) => c.jid === roomJoin.jid
+    );
+    if (channel) {
+      const room: IRoom = {
+        type: 'groupchat',
+        order: 20,
+        jid: roomJoin.jid,
+        password: roomJoin.password,
+        name: roomJoin.channelName,
+        messages: [],
+        users: [],
+        isConnected: false,
+        isConnecting: true,
+        connectionError: '',
+        myNickname: roomJoin.nickname,
+        unreadMessages: 0,
+        hasUnreadMentionMe: false,
+        scrollPosition: 0,
+      };
+      const channels: IChannel[] = [
+        ...state.channels.filter((c: IChannel) => c !== channel),
+        room,
+      ];
+      ipcRenderer.send('xmpp-subscribe-to-room', roomJoin);
+      Channel.saveRooms(channels);
+      return {
+        ...state,
+        channels,
+      };
+    } else {
+      return state;
+    }
+  };
+
+  public static setNickname = (state: IState, payload: any): IState => {
+    ipcRenderer.send('xmpp-set-room-nickname', {
+      jid: payload.jid,
+      nickname: payload.newNickname,
+    });
+    const channels = state.channels.map((channel: IChannel) => {
+      if (channel.jid === payload.jid && channel.type === 'groupchat') {
+        const room = channel as IRoom;
+        const user = room.users.find(
+          (u: IChannelUser) =>
+            u.nickname !== payload.newNickname &&
+            u.nickname !== payload.currentNickname
+        );
+        if (user) {
+          return { ...channel, myNickname: payload.newNickname };
+        }
+      }
+      return channel;
+    });
+    Channel.saveRooms(channels);
+    return {
+      ...state,
+      channels,
+    };
+  };
 }
