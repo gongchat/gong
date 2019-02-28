@@ -22,6 +22,8 @@ class Message extends React.Component<any, any> {
       renderImages,
     } = this.props;
 
+    const isMe = message.body.startsWith('/me ');
+
     return (
       <div className={classes.root}>
         <div className={classes.text}>
@@ -38,8 +40,10 @@ class Message extends React.Component<any, any> {
               {message.userNickname}
             </span>
             <span
-              className={classes.body}
-              dangerouslySetInnerHTML={{ __html: message.body }}
+              className={[classes.body, isMe && classes.me].join(' ')}
+              dangerouslySetInnerHTML={{
+                __html: isMe ? `*${message.body.substring(4)}*` : message.body,
+              }}
             />
           </Typography>
         </div>
@@ -176,6 +180,9 @@ const styles: any = (theme: any) => ({
       width: 300,
       height: 150,
     },
+  },
+  me: {
+    color: theme.palette.primary.main,
   },
 });
 

@@ -63,8 +63,7 @@ Loosely ordered in priority from top down
 - [x] Add status on channels and show if password has failed
 - [x] Change nick on /nick
 - [x] Add way to change saved channel data such as a user's nickname
-
-- [ ] Format messages with /me
+- [x] Format messages with /me
 
 - [ ] Use timestamp to identify if historical messages have been read
 - [ ] Add a new element that specifies at what point in the listing of messages where the new messages begin
