@@ -74,7 +74,7 @@ const styles: any = (theme: any) => ({
     textAlign: 'center',
   },
   selected: {
-    borderRadius: '7px',
+    borderRadius: '14px !important',
   },
 });
 
