@@ -71,14 +71,14 @@ Loosely ordered in priority from top down
 - [ ] Change nick on /nick
 - [ ] Add way to change saved channel data such as a user's nickname
 - [ ] Format messages with /me
+- [ ] After x min of inactivity set status to away
 
 - [ ] Add a new element that specifies at what point in the listing of messages where the new messages begin
+- [ ] Use timestamp to identify if historical messages have been read
+
 - [ ] Have setting to load application on startup
 - [ ] Have gong run in taskbar
 - [ ] Notifications outside App
-- [ ] After x min of inactivity set status to away
-- [ ] Notify user on both ends when someone is typing
-- [ ] Use timestamp to identify if historical messages have been read
 - [ ] Encrypted channel passwords (not high priority, pidgin doesn't encrypt any passwords)
 
 - [ ] Figure out why streams aren't closing properly (currently fixed with a bit of a hack, need to look into it some more)
@@ -95,6 +95,7 @@ Alpha
 - [ ] Select colors for theme with hex code
 - [ ] Scheduled messages
 - [ ] Virtualize messages when there is a large number of them
+- [ ] Notify user on both ends when someone is typing
 
 Beta
 
