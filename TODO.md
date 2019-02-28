@@ -60,8 +60,8 @@ Loosely ordered in priority from top down
 - [x] Allow navigation of chat with ctrl page up and page down
 - [x] The default font value of 15 does not represent the default material ui font sizes for some of the elements
 - [x] Toggling avatars causes other styles to change (maybe font size and related to task above or spacing)
+- [x] Add status on channels and show if password has failed
 
-- [ ] Add status on channels and show if password has failed
 - [ ] Handle message errors and acknowledgment
 
 - [ ] Add a way to specify a port on login
