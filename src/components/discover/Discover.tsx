@@ -46,9 +46,9 @@ class Rooms extends React.Component<any, any> {
     },
   };
 
-  public componentDidUpdate(prevProps: any) {
-    if (this.state.open !== prevProps.showDiscover) {
-      this.setState({ open: prevProps.showDiscover });
+  public componentDidUpdate() {
+    if (this.state.open !== this.props.showDiscover) {
+      this.setState({ open: this.props.showDiscover });
     }
   }
 
