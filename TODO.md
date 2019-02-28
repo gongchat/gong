@@ -62,23 +62,24 @@ Loosely ordered in priority from top down
 - [x] Toggling avatars causes other styles to change (maybe font size and related to task above or spacing)
 - [x] Add status on channels and show if password has failed
 
-- [ ] Handle message errors and acknowledgment
-
-- [ ] Add a way to specify a port on login
-- [ ] Better styling on input (sometimes there is a weird dot at the start that blinks and text gets cut off)
-
 - [ ] Change nick on /nick
 - [ ] Add way to change saved channel data such as a user's nickname
 - [ ] Format messages with /me
-- [ ] After x min of inactivity set status to away
 
-- [ ] Add a new element that specifies at what point in the listing of messages where the new messages begin
 - [ ] Use timestamp to identify if historical messages have been read
+- [ ] Add a new element that specifies at what point in the listing of messages where the new messages begin
+- [ ] Keep logs of messages
 
 - [ ] Have setting to load application on startup
 - [ ] Have gong run in taskbar
 - [ ] Notifications outside App
 - [ ] Encrypted channel passwords (not high priority, pidgin doesn't encrypt any passwords)
+
+- [ ] Better styling on input (sometimes there is a weird dot at the start that blinks and text gets cut off)
+
+- [ ] Add a way to specify a port on login
+- [ ] Handle message errors and acknowledgment
+- [ ] After x min of inactivity set status to away
 
 - [ ] Figure out why streams aren't closing properly (currently fixed with a bit of a hack, need to look into it some more)
 - [ ] PropTypes on all components
@@ -87,7 +88,6 @@ Loosely ordered in priority from top down
 Alpha
 
 - [ ] Emoji explorer when emoji icon is clicked
-- [ ] Keep logs of messages
 - [ ] Make rooms sortable
 - [ ] Include options for a compact and cozy layout for the messages. compact is the current and cozy would include avatars
 - [ ] Show a users connections in user details
