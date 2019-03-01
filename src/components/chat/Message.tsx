@@ -182,7 +182,7 @@ const styles: any = (theme: any) => ({
     },
   },
   me: {
-    color: theme.palette.primary.main,
+    color: theme.palette.text.secondary,
   },
 });
 
