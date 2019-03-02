@@ -262,9 +262,9 @@ class Input extends React.Component<any, any> {
         } else {
           this.setState({ channelUsersIndex: -1 });
         }
+      } else {
+        this.setState({ channelUsersIndex: -1 });
       }
-    } else {
-      this.setState({ channelUsersIndex: -1 });
     }
   };
 
