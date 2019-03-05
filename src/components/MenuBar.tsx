@@ -20,7 +20,8 @@ class MenuBar extends React.Component<any, any> {
     if (nextProps.menuBarNotification !== '') {
       if (
         nextProps.menuBarNotification !== this.state.menuBarNotification &&
-        !this.state.isFlashing
+        (!this.state.isFlashing ||
+          nextProps.menuBarNotification.split(',')[0] === 'once')
       ) {
         this.setState({ menuBarNotification: '' });
         setTimeout(() => {

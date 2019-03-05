@@ -11,26 +11,36 @@ const { client, xml } = require('@xmpp/client');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 class XmppJsClient {
-  constructor() {
+  constructor(settings) {
     this.client = undefined;
     this.credentials = undefined;
     this.connectionTimer = undefined;
+    this.settings = settings;
+  }
+
+  setSettings(arg) {
+    // TODO: should update settings on electron.js with an EventEmitter
+    if (this.settings.minimizeToTrayOnClose !== undefined) {
+      this.settings.minimizeToTrayOnClose = arg.minimizeToTrayOnClose;
+    }
   }
 
   //
   // Connection
   //
-  autoConnect(event, credentials) {
-    this.credentials = { username: credentials.username };
-    keytar.getPassword('gong', credentials.username).then(key => {
-      credentials.password = key ?
-        CryptoJS.AES.decrypt(credentials.password, key).toString(
-          CryptoJS.enc.Utf8) : credentials.password;
-      this.connect(event, credentials, key);
+  autoConnect(event, arg) {
+    this.credentials = { username: arg.credentials.username };
+    keytar.getPassword('gong', arg.credentials.username).then(key => {
+      arg.credentials.password = key ?
+        CryptoJS.AES.decrypt(arg.credentials.password, key).toString(
+          CryptoJS.enc.Utf8) : arg.credentials.password;
+      this.connect(event, arg.credentials, key, {
+        minimizeToTrayOnClose: arg.minimizeToTrayOnClose
+      });
     });
   }
 
-  connect(event, credentials, key) {
+  connect(event, credentials, key, settings) {
     // TODO: not sure if all this is necessary, things got out of hand when trying to deal with a bug
     this.credentials = { username: credentials.username };
     if (this.client) {
@@ -39,15 +49,15 @@ class XmppJsClient {
           clearTimeout(this.connectionTimer);
         }
         this.connectionTimer = setTimeout(() => {
-          this.createConnection(event, credentials, key);
+          this.createConnection(event, credentials, key, settings);
         }, 1000);
       });
     } else {
-      this.createConnection(event, credentials, key);
+      this.createConnection(event, credentials, key, settings);
     }
   }
 
-  createConnection(event, credentials, key) {
+  createConnection(event, credentials, key, settings) {
     this.client = new client({
       service: `xmpp://${credentials.domain}:5222`,
       domain: credentials.domain,
@@ -56,12 +66,12 @@ class XmppJsClient {
       password: credentials.password,
     });
 
-    this.attachEvents(event, credentials, key);
+    this.attachEvents(event, credentials, key, settings);
 
     this.client.start().catch(console.error);
   }
 
-  attachEvents(event, credentials, key) {
+  attachEvents(event, credentials, key, settings) {
     this.client.on('error', err => {
       let stopClient = false;
 
@@ -108,7 +118,10 @@ class XmppJsClient {
       console.log('ONLINE:', jid.toString());
       this.sendGetInfo(event, credentials.domain);
 
-      // save for refresh
+      if (settings) {
+        // TODO: should update settings on electron.js with an EventEmitter
+        this.settings.minimizeToTrayOnClose = settings.minimizeToTrayOnClose;
+      }
       this.credentials = { ...credentials, jid: jid.toString() };
 
       if (!key) {

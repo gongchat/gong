@@ -1,22 +1,28 @@
 export default interface ISettings {
   jid: string;
   domain: string;
-  name: string;
   username: string;
   resource: string;
+
+  minimizeToTrayOnClose: boolean;
+
+  systemNotificationOnGroupchat: string; // always, unread, never TODO: instead of unread maybe not-focused
+  systemNotificationOnMentionMe: string; // always, unread, never
+  systemNotificationOnChat: string; // always, unread, never
 
   renderVideos: boolean;
   renderGetYarn: boolean;
   renderImages: boolean;
 
   soundName: string;
-  playAudioOnGroupchatMessage: string; // always, unread, never
-  playAudioOnChatMessage: string; // always, unread, never
+  playAudioOnGroupchat: string; // always, unread, never
+  playAudioOnChat: string; // always, unread, never
   playAudioOnMentionMe: string; // always, unread, never
-  flashMenuBarOnGroupchatMessage: string; // always, unread, never
-  flashMenuBarOnGroupchatMessageFrequency: string; // once, repeat, never
+
+  flashMenuBarOnGroupchat: string; // always, unread, never
+  flashMenuBarOnGroupchatFrequency: string; // once, repeat, never
   flashMenuBarOnMentionMe: string; // always, unread, never
   flashMenuBarOnMentionMeFrequency: string; // once, repeat, never
-  flashMenuBarOnChatMessage: string; // once, repeat, never
-  flashMenuBarOnChatMessageFrequency: string; // once, repeat, never
+  flashMenuBarOnChat: string; // once, repeat, never
+  flashMenuBarOnChatFrequency: string; // once, repeat, never
 }

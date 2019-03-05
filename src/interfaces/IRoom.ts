@@ -1,3 +1,5 @@
+import { Moment } from 'moment';
+
 import IChannel from './IChannel';
 import IChannelUser from './IChannelUser';
 
@@ -8,4 +10,5 @@ export default interface IRoom extends IChannel {
   isConnected: boolean;
   isConnecting: boolean;
   connectionError: string;
+  lastReadTimestamp: Moment | undefined;
 }
