@@ -1,5 +1,6 @@
 const ElectronStore = window.require('electron-store');
 const electronStore = new ElectronStore();
+const { ipcRenderer } = window.require('electron');
 
 import ISettings from 'src/interfaces/ISettings';
 import ISettingsSaved from 'src/interfaces/ISettingsSaved';
@@ -14,6 +15,13 @@ export default class Settings {
       ...settings,
     };
     electronStore.set('settings', savedSettings);
+
+    // TODO: breakout into separate function
+    if (settings.minimizeToTrayOnClose !== undefined) {
+      ipcRenderer.send('set-settings', {
+        minimizeToTrayOnClose: settings.minimizeToTrayOnClose,
+      });
+    }
 
     return {
       ...state,
@@ -30,9 +38,21 @@ export default class Settings {
     const mappedSettings: ISettings = {
       jid: settings.jid,
       domain: settings.domain,
-      name: settings.name,
       username: settings.username,
       resource: settings.resource,
+      systemNotificationOnGroupchat: settings.systemNotificationOnGroupchat
+        ? settings.systemNotificationOnGroupchat
+        : 'never',
+      systemNotificationOnMentionMe: settings.systemNotificationOnMentionMe
+        ? settings.systemNotificationOnMentionMe
+        : 'unread',
+      systemNotificationOnChat: settings.systemNotificationOnChat
+        ? settings.systemNotificationOnChat
+        : 'unread',
+      minimizeToTrayOnClose:
+        settings.minimizeToTrayOnClose !== undefined
+          ? settings.minimizeToTrayOnClose
+          : true,
       renderVideos:
         settings.renderVideos !== undefined ? settings.renderVideos : true,
       renderGetYarn:
@@ -40,18 +60,17 @@ export default class Settings {
       renderImages:
         settings.renderImages !== undefined ? settings.renderImages : true,
       soundName: settings.soundName,
-      playAudioOnGroupchatMessage: settings.playAudioOnGroupchatMessage,
-      playAudioOnChatMessage: settings.playAudioOnChatMessage,
+      playAudioOnGroupchat: settings.playAudioOnGroupchat,
+      playAudioOnChat: settings.playAudioOnChat,
       playAudioOnMentionMe: settings.playAudioOnMentionMe,
-      flashMenuBarOnGroupchatMessage: settings.flashMenuBarOnGroupchatMessage,
-      flashMenuBarOnGroupchatMessageFrequency:
-        settings.flashMenuBarOnGroupchatMessageFrequency,
+      flashMenuBarOnGroupchat: settings.flashMenuBarOnGroupchat,
+      flashMenuBarOnGroupchatFrequency:
+        settings.flashMenuBarOnGroupchatFrequency,
       flashMenuBarOnMentionMe: settings.flashMenuBarOnMentionMe,
       flashMenuBarOnMentionMeFrequency:
         settings.flashMenuBarOnMentionMeFrequency,
-      flashMenuBarOnChatMessage: settings.flashMenuBarOnChatMessage,
-      flashMenuBarOnChatMessageFrequency:
-        settings.flashMenuBarOnChatMessageFrequency,
+      flashMenuBarOnChat: settings.flashMenuBarOnChat,
+      flashMenuBarOnChatFrequency: settings.flashMenuBarOnChatFrequency,
     };
     return mappedSettings;
   };
@@ -63,25 +82,27 @@ export default class Settings {
     const mappedSettings: ISettingsSaved = {
       jid: settings.jid,
       domain: settings.domain,
-      name: settings.name,
       username: settings.username,
       resource: settings.resource,
+      systemNotificationOnGroupchat: settings.systemNotificationOnGroupchat,
+      systemNotificationOnMentionMe: settings.systemNotificationOnMentionMe,
+      systemNotificationOnChat: settings.systemNotificationOnChat,
+      minimizeToTrayOnClose: settings.minimizeToTrayOnClose,
       renderVideos: settings.renderVideos,
       renderGetYarn: settings.renderGetYarn,
       renderImages: settings.renderImages,
       soundName: settings.soundName,
-      playAudioOnGroupchatMessage: settings.playAudioOnGroupchatMessage,
-      playAudioOnChatMessage: settings.playAudioOnChatMessage,
+      playAudioOnGroupchat: settings.playAudioOnGroupchat,
+      playAudioOnChat: settings.playAudioOnChat,
       playAudioOnMentionMe: settings.playAudioOnMentionMe,
-      flashMenuBarOnGroupchatMessage: settings.flashMenuBarOnGroupchatMessage,
-      flashMenuBarOnGroupchatMessageFrequency:
-        settings.flashMenuBarOnGroupchatMessageFrequency,
+      flashMenuBarOnGroupchat: settings.flashMenuBarOnGroupchat,
+      flashMenuBarOnGroupchatFrequency:
+        settings.flashMenuBarOnGroupchatFrequency,
       flashMenuBarOnMentionMe: settings.flashMenuBarOnMentionMe,
       flashMenuBarOnMentionMeFrequency:
         settings.flashMenuBarOnMentionMeFrequency,
-      flashMenuBarOnChatMessage: settings.flashMenuBarOnChatMessage,
-      flashMenuBarOnChatMessageFrequency:
-        settings.flashMenuBarOnChatMessageFrequency,
+      flashMenuBarOnChat: settings.flashMenuBarOnChat,
+      flashMenuBarOnChatFrequency: settings.flashMenuBarOnChatFrequency,
       password,
     };
     return mappedSettings;

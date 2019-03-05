@@ -8,9 +8,11 @@ import { setSettings } from 'src/actions/dispatcher';
 import { withStyles } from '@material-ui/core';
 import FilledInput from '@material-ui/core/FilledInput';
 import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import Switch from '@material-ui/core/Switch';
 
 // actions
 import Notification, { SOUNDS } from 'src/actions/notification';
@@ -25,35 +27,42 @@ import BaseSection from './BaseSection';
 class NotificationSettings extends React.Component<any, any> {
   public state = {
     soundName: this.props.settings.soundName,
-    playAudioOnGroupchatMessage: this.props.settings
-      .playAudioOnGroupchatMessage,
-    playAudioOnChatMessage: this.props.settings.playAudioOnChatMessage,
+    playAudioOnGroupchat: this.props.settings
+      .playAudioOnGroupchat,
+    playAudioOnChat: this.props.settings.playAudioOnChat,
     playAudioOnMentionMe: this.props.settings.playAudioOnMentionMe,
-    flashMenuBarOnGroupchatMessage: this.props.settings
-      .flashMenuBarOnGroupchatMessage,
-    flashMenuBarOnGroupchatMessageFrequency: this.props.settings
-      .flashMenuBarOnGroupchatMessageFrequency,
+    flashMenuBarOnGroupchat: this.props.settings.flashMenuBarOnGroupchat,
+    flashMenuBarOnGroupchatFrequency: this.props.settings
+      .flashMenuBarOnGroupchatFrequency,
     flashMenuBarOnMentionMe: this.props.settings.flashMenuBarOnMentionMe,
     flashMenuBarOnMentionMeFrequency: this.props.settings
       .flashMenuBarOnMentionMeFrequency,
-    flashMenuBarOnChatMessage: this.props.settings.flashMenuBarOnChatMessage,
-    flashMenuBarOnChatMessageFrequency: this.props.settings
-      .flashMenuBarOnChatMessageFrequency,
+    flashMenuBarOnChat: this.props.settings.flashMenuBarOnChat,
+    flashMenuBarOnChatFrequency: this.props.settings
+      .flashMenuBarOnChatFrequency,
+    systemNotificationOnGroupchat: this.props.settings
+      .systemNotificationOnGroupchat,
+    systemNotificationOnMentionMe: this.props.settings
+      .systemNotificationOnMentionMe,
+    systemNotificationOnChat: this.props.settings.systemNotificationOnChat,
   };
 
   public render() {
     const { classes } = this.props;
     const {
       soundName,
-      playAudioOnGroupchatMessage,
-      playAudioOnChatMessage,
+      playAudioOnGroupchat,
+      playAudioOnChat,
       playAudioOnMentionMe,
-      flashMenuBarOnGroupchatMessage,
-      flashMenuBarOnGroupchatMessageFrequency,
+      flashMenuBarOnGroupchat,
+      flashMenuBarOnGroupchatFrequency,
       flashMenuBarOnMentionMe,
       flashMenuBarOnMentionMeFrequency,
-      flashMenuBarOnChatMessage,
-      flashMenuBarOnChatMessageFrequency,
+      flashMenuBarOnChat,
+      flashMenuBarOnChatFrequency,
+      systemNotificationOnGroupchat,
+      systemNotificationOnMentionMe,
+      systemNotificationOnChat,
     } = this.state;
 
     return (
@@ -74,16 +83,16 @@ class NotificationSettings extends React.Component<any, any> {
             </Select>
           </FormControl>
           <FormControl variant="filled">
-            <InputLabel htmlFor="playAudioOnGroupchatMessage">
+            <InputLabel htmlFor="playAudioOnGroupchat">
               On Groupchat Message
             </InputLabel>
             <Select
-              value={playAudioOnGroupchatMessage}
+              value={playAudioOnGroupchat}
               onChange={this.handleChange}
               input={
                 <FilledInput
-                  name="playAudioOnGroupchatMessage"
-                  id="playAudioOnGroupchatMessage"
+                  name="playAudioOnGroupchat"
+                  id="playAudioOnGroupchat"
                 />
               }
             >
@@ -93,16 +102,16 @@ class NotificationSettings extends React.Component<any, any> {
             </Select>
           </FormControl>
           <FormControl variant="filled">
-            <InputLabel htmlFor="playAudioOnChatMessage">
+            <InputLabel htmlFor="playAudioOnChat">
               On Chat Message
             </InputLabel>
             <Select
-              value={playAudioOnChatMessage}
+              value={playAudioOnChat}
               onChange={this.handleChange}
               input={
                 <FilledInput
-                  name="playAudioOnChatMessage"
-                  id="playAudioOnChatMessage"
+                  name="playAudioOnChat"
+                  id="playAudioOnChat"
                 />
               }
             >
@@ -134,16 +143,16 @@ class NotificationSettings extends React.Component<any, any> {
         <BaseSection title="Display">
           <div className={classes.split}>
             <FormControl variant="filled">
-              <InputLabel htmlFor="flashMenuBarOnGroupchatMessage">
+              <InputLabel htmlFor="flashMenuBarOnGroupchat">
                 On Groupchat Message
               </InputLabel>
               <Select
-                value={flashMenuBarOnGroupchatMessage}
+                value={flashMenuBarOnGroupchat}
                 onChange={this.handleChange}
                 input={
                   <FilledInput
-                    name="flashMenuBarOnGroupchatMessage"
-                    id="flashMenuBarOnGroupchatMessage"
+                    name="flashMenuBarOnGroupchat"
+                    id="flashMenuBarOnGroupchat"
                   />
                 }
               >
@@ -152,18 +161,18 @@ class NotificationSettings extends React.Component<any, any> {
                 <MenuItem value="never">Never</MenuItem>
               </Select>
             </FormControl>
-            {flashMenuBarOnGroupchatMessage !== 'never' && (
+            {flashMenuBarOnGroupchat !== 'never' && (
               <FormControl variant="filled">
-                <InputLabel htmlFor="flashMenuBarOnGroupchatMessageFrequency">
+                <InputLabel htmlFor="flashMenuBarOnGroupchatFrequency">
                   Frequency
                 </InputLabel>
                 <Select
-                  value={flashMenuBarOnGroupchatMessageFrequency}
+                  value={flashMenuBarOnGroupchatFrequency}
                   onChange={this.handleChange}
                   input={
                     <FilledInput
-                      name="flashMenuBarOnGroupchatMessageFrequency"
-                      id="flashMenuBarOnGroupchatMessageFrequency"
+                      name="flashMenuBarOnGroupchatFrequency"
+                      id="flashMenuBarOnGroupchatFrequency"
                     />
                   }
                 >
@@ -216,16 +225,16 @@ class NotificationSettings extends React.Component<any, any> {
           </div>
           <div className={classes.split}>
             <FormControl variant="filled">
-              <InputLabel htmlFor="flashMenuBarOnChatMessage">
+              <InputLabel htmlFor="flashMenuBarOnChat">
                 On Chat Message
               </InputLabel>
               <Select
-                value={flashMenuBarOnChatMessage}
+                value={flashMenuBarOnChat}
                 onChange={this.handleChange}
                 input={
                   <FilledInput
-                    name="flashMenuBarOnChatMessage"
-                    id="flashMenuBarOnChatMessage"
+                    name="flashMenuBarOnChat"
+                    id="flashMenuBarOnChat"
                   />
                 }
               >
@@ -234,18 +243,18 @@ class NotificationSettings extends React.Component<any, any> {
                 <MenuItem value="never">Never</MenuItem>
               </Select>
             </FormControl>
-            {flashMenuBarOnChatMessage !== 'never' && (
+            {flashMenuBarOnChat !== 'never' && (
               <FormControl variant="filled">
-                <InputLabel htmlFor="flashMenuBarOnChatMessageFrequency">
+                <InputLabel htmlFor="flashMenuBarOnChatFrequency">
                   Frequency
                 </InputLabel>
                 <Select
-                  value={flashMenuBarOnChatMessageFrequency}
+                  value={flashMenuBarOnChatFrequency}
                   onChange={this.handleChange}
                   input={
                     <FilledInput
-                      name="flashMenuBarOnChatMessageFrequency"
-                      id="flashMenuBarOnChatMessageFrequency"
+                      name="flashMenuBarOnChatFrequency"
+                      id="flashMenuBarOnChatFrequency"
                     />
                   }
                 >
@@ -255,6 +264,38 @@ class NotificationSettings extends React.Component<any, any> {
               </FormControl>
             )}
           </div>
+        </BaseSection>
+        <BaseSection title="System Notifications">
+          <FormControlLabel
+            control={
+              <Switch
+                name="systemNotificationOnGroupchat"
+                checked={systemNotificationOnGroupchat}
+                onChange={this.handleSwitchChange}
+              />
+            }
+            label="On Groupchat"
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                name="systemNotificationOnMentionMe"
+                checked={systemNotificationOnMentionMe}
+                onChange={this.handleSwitchChange}
+              />
+            }
+            label="On Mention Me"
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                name="systemNotificationOnChat"
+                checked={systemNotificationOnChat}
+                onChange={this.handleSwitchChange}
+              />
+            }
+            label="On Chat"
+          />
         </BaseSection>
       </BasePage>
     );
@@ -267,10 +308,13 @@ class NotificationSettings extends React.Component<any, any> {
       Notification.playAudio(value);
     }
     this.setState({ [name]: value });
-    this.props.setSettings({
-      ...this.state,
-      [name]: value,
-    });
+    this.props.setSettings({ [name]: value });
+  };
+
+  private handleSwitchChange = (event: any, value: any) => {
+    const name = event.target.name;
+    this.setState({ [name]: value });
+    this.props.setSettings({ [name]: value });
   };
 }
 

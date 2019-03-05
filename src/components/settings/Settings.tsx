@@ -31,6 +31,7 @@ import HorizontalSplitIcon from '@material-ui/icons/HorizontalSplit';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import PaletteIcon from '@material-ui/icons/PaletteOutlined';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 // components
 import Account from './Account';
@@ -38,6 +39,7 @@ import Font from './Font';
 import Layout from './Layout';
 import Messages from './Messages';
 import Notifications from './Notifications';
+import System from './System';
 import Theme from './Theme';
 
 // interface
@@ -50,6 +52,7 @@ const TABS = [
   { name: 'Layout', icon: <DashboardIcon /> },
   { name: 'Messages', icon: <HorizontalSplitIcon /> },
   { name: 'Notifications', icon: <NotificationsIcon /> },
+  { name: 'System', icon: <SettingsApplicationsIcon /> },
   { name: 'divider' },
   { name: 'Reset', icon: <FormatColorResetIcon /> },
   { name: 'divider' },
@@ -103,6 +106,7 @@ class Settings extends React.Component<any, any> {
             {selectedTab.name === 'Layout' && <Layout />}
             {selectedTab.name === 'Messages' && <Messages />}
             {selectedTab.name === 'Notifications' && <Notifications />}
+            {selectedTab.name === 'System' && <System />}
             {selectedTab.name === 'Reset' && (
               <div className={classes.section}>
                 <Typography>

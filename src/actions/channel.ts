@@ -77,6 +77,7 @@ export default class Channel {
             type: room.type,
             nickname: room.myNickname,
             password: room.password,
+            lastReadTimestamp: room.lastReadTimestamp,
           };
           return roomSaved;
         })

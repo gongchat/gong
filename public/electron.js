@@ -15,11 +15,16 @@ const {
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
-
-const xmppJsClient = new XmppJsClient();
-const ipcMainEvents = new IpcMainEvents();
+const Menu = electron.Menu;
+const Tray = electron.Tray;
 
 let mainWindow;
+let tray;
+let isQuitting;
+let settings = { minimizeToTrayOnClose: true };
+
+const xmppJsClient = new XmppJsClient(settings);
+const ipcMainEvents = new IpcMainEvents();
 
 function createWindow() {
   // background must be white, see: https://github.com/electron/electron/issues/6344
@@ -39,6 +44,14 @@ function createWindow() {
     `file://${path.join(__dirname, '../build/index.html')}`
   );
 
+  mainWindow.on('close', (event) => {
+    if (settings.minimizeToTrayOnClose && !isQuitting) {
+      event.preventDefault();
+      mainWindow.hide();
+      event.returnValue = false;
+    }
+  });
+
   mainWindow.on('closed', () => {
     if (xmppJsClient.client) {
       xmppJsClient.client.stop();
@@ -56,6 +69,8 @@ function createWindow() {
     mainWindow.webContents.openDevTools({
       detach: true,
     });
+
+    app.setAppUserModelId(process.execPath);
   }
 
   // any messages with links open in browser, this is okay since
@@ -75,7 +90,31 @@ function createWindow() {
   });
 }
 
-app.on('ready', createWindow);
+function createTray() {
+  tray = new Tray(path.join(__dirname, 'icons/16x16.png'));
+  const contextMenu = Menu.buildFromTemplate([{
+    label: 'Quit Gong',
+    click: function() {
+      isQuitting = true;
+      app.quit();
+    }
+  }, ]);
+  tray.on('double-click', () => {
+    mainWindow.show();
+  });
+  tray.setToolTip('Gong');
+  tray.setContextMenu(contextMenu);
+}
+
+app.on('ready', () => {
+  createWindow();
+  createTray();
+});
+
+app.on('before-quit', function() {
+  isQuitting = true;
+  tray = null;
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -86,6 +125,9 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();
+  }
+  if (tray === null) {
+    createTray();
   }
 });
 

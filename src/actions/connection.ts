@@ -36,7 +36,10 @@ export default class Connection {
         password: settingsSaved.password,
         resource: settingsSaved.resource,
       };
-      ipcRenderer.send('xmpp-auto-connect', credentials);
+      ipcRenderer.send('xmpp-auto-connect', {
+        credentials,
+        minimizeToTrayOnClose: settingsSaved.minimizeToTrayOnClose,
+      });
 
       // handle reconnecting message if already authenticated
       let snackbarNotifications = state.snackbarNotifications;
@@ -95,22 +98,25 @@ export default class Connection {
         jid: payload.jid,
         domain: payload.domain,
         username: payload.username,
-        name: payload.username,
         resource: payload.jid.split('/')[1],
         password: payload.password,
         soundName: 'Gong 1',
+        minimizeToTrayOnClose: true,
+        systemNotificationOnGroupchat: 'never',
+        systemNotificationOnMentionMe: 'unread',
+        systemNotificationOnChat: 'unread',
         renderVideos: true,
         renderGetYarn: true,
         renderImages: true,
-        playAudioOnGroupchatMessage: 'never',
-        playAudioOnChatMessage: 'unread',
+        playAudioOnGroupchat: 'never',
+        playAudioOnChat: 'unread',
         playAudioOnMentionMe: 'always',
-        flashMenuBarOnGroupchatMessage: 'never',
-        flashMenuBarOnGroupchatMessageFrequency: 'once',
+        flashMenuBarOnGroupchat: 'never',
+        flashMenuBarOnGroupchatFrequency: 'once',
         flashMenuBarOnMentionMe: 'unread',
         flashMenuBarOnMentionMeFrequency: 'repeat',
-        flashMenuBarOnChatMessage: 'unread',
-        flashMenuBarOnChatMessageFrequency: 'repeat',
+        flashMenuBarOnChat: 'unread',
+        flashMenuBarOnChatFrequency: 'repeat',
       };
       electronStore.set('settings', settingsSaved);
     }

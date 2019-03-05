@@ -49,6 +49,7 @@ export default class Room {
             unreadMessages: 0,
             hasUnreadMentionMe: false,
             scrollPosition: 0,
+            lastReadTimestamp: roomSaved.lastReadTimestamp,
           };
           return room;
         }),
@@ -78,6 +79,7 @@ export default class Room {
       unreadMessages: 0,
       hasUnreadMentionMe: false,
       scrollPosition: 0,
+      lastReadTimestamp: undefined,
     };
     const channels: IChannel[] = [...state.channels, room];
     ipcRenderer.send('xmpp-subscribe-to-room', roomJoin);
@@ -137,6 +139,7 @@ export default class Room {
         unreadMessages: 0,
         hasUnreadMentionMe: false,
         scrollPosition: 0,
+        lastReadTimestamp: undefined,
       };
       const channels: IChannel[] = [
         ...state.channels.filter((c: IChannel) => c !== channel),

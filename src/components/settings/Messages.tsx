@@ -64,13 +64,8 @@ class Messages extends React.Component<any, any> {
 
   private handleOnChange = (event: any, value: any) => {
     const name = event.target.name;
-    this.setState({ [event.target.name]: value });
-    this.props.setSettings({
-      renderVideos: name === 'renderVideos' ? value : this.state.renderVideos,
-      renderGetYarn:
-        name === 'renderGetYarn' ? value : this.state.renderGetYarn,
-      renderImages: name === 'renderImages' ? value : this.state.renderImages,
-    });
+    this.setState({ [name]: value });
+    this.props.setSettings({ [name]: value });
   };
 }
 

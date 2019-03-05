@@ -1,6 +1,6 @@
 import IChannel from 'src/interfaces/IChannel';
 import IMessage from 'src/interfaces/IMessage';
-import ISnackbarNotification from 'src/interfaces/ISnackbarNotification';
+import ISnackbarNotifications from 'src/interfaces/ISnackbarNotification';
 import IState from 'src/interfaces/IState';
 
 export const SOUNDS = [
@@ -18,10 +18,10 @@ export const SOUNDS = [
   },
 ];
 
-export default class Notification {
+export default class Notifications {
   public static addToSnackbar = (
     state: IState,
-    notification: ISnackbarNotification
+    notification: ISnackbarNotifications
   ): IState => {
     return {
       ...state,
@@ -33,7 +33,7 @@ export default class Notification {
     return {
       ...state,
       snackbarNotifications: state.snackbarNotifications.filter(
-        (notification: ISnackbarNotification) => notification.id !== id
+        (notification: ISnackbarNotifications) => notification.id !== id
       ),
     };
   };
@@ -57,14 +57,14 @@ export default class Notification {
 
     if (state.profile.status !== 'dnd') {
       if (
-        settings.flashMenuBarOnGroupchatMessage !== 'never' &&
-        ((settings.flashMenuBarOnGroupchatMessage === 'unread' &&
+        settings.flashMenuBarOnGroupchat !== 'never' &&
+        ((settings.flashMenuBarOnGroupchat === 'unread' &&
           groupChatUnreadMessages > 0) ||
-          settings.flashMenuBarOnGroupchatMessage === 'always')
+          settings.flashMenuBarOnGroupchat === 'always')
       ) {
         state.menuBarNotification = `${
           groupChatUnreadMessages > 0
-            ? settings.flashMenuBarOnGroupchatMessageFrequency
+            ? settings.flashMenuBarOnGroupchatFrequency
             : 'once'
         },${new Date().getTime() + Math.random() + ''}`;
       }
@@ -82,15 +82,12 @@ export default class Notification {
         },${new Date().getTime() + Math.random() + ''}`;
       }
       if (
-        settings.flashMenuBarOnChatMessage !== 'never' &&
-        ((settings.flashMenuBarOnChatMessage === 'unread' &&
-          chatMessagesUnread > 0) ||
-          settings.flashMenuBarOnChatMessage === 'always')
+        settings.flashMenuBarOnChat !== 'never' &&
+        ((settings.flashMenuBarOnChat === 'unread' && chatMessagesUnread > 0) ||
+          settings.flashMenuBarOnChat === 'always')
       ) {
         state.menuBarNotification = `${
-          chatMessagesUnread > 0
-            ? settings.flashMenuBarOnChatMessageFrequency
-            : 'once'
+          chatMessagesUnread > 0 ? settings.flashMenuBarOnChatFrequency : 'once'
         },${new Date().getTime() + Math.random() + ''}`;
       }
     }
@@ -113,26 +110,26 @@ export default class Notification {
       .filter((channel: IChannel) => channel.type === 'chat')
       .reduce((a: number, channel: IChannel) => a + channel.unreadMessages, 0);
 
+    console.log(groupChatUnread, hasUnreadMentionMe, chatUnread);
+
     if (groupChatUnread === 0 && chatUnread === 0) {
       state.menuBarNotification = '';
     } else {
       if (state.profile.status !== 'dnd') {
         if (
           groupChatUnread > 0 &&
-          settings.flashMenuBarOnGroupchatMessageFrequency === 'repeat' &&
-          settings.flashMenuBarOnGroupchatMessage !== 'never' &&
-          ((settings.flashMenuBarOnGroupchatMessage === 'unread' &&
+          settings.flashMenuBarOnGroupchat !== 'never' &&
+          ((settings.flashMenuBarOnGroupchat === 'unread' &&
             groupChatUnread > 0) ||
-            settings.flashMenuBarOnGroupchatMessage === 'always')
+            settings.flashMenuBarOnGroupchat === 'always')
         ) {
           state.menuBarNotification = `${
-            settings.flashMenuBarOnGroupchatMessageFrequency
+            settings.flashMenuBarOnGroupchatFrequency
           },${new Date().getTime() + Math.random() + ''}`;
         }
         if (
           groupChatUnread > 0 &&
           hasUnreadMentionMe &&
-          settings.flashMenuBarOnMentionMeFrequency === 'repeat' &&
           settings.flashMenuBarOnMentionMe !== 'never' &&
           ((settings.flashMenuBarOnMentionMe === 'unread' &&
             groupChatUnread > 0) ||
@@ -144,14 +141,12 @@ export default class Notification {
         }
         if (
           chatUnread > 0 &&
-          settings.flashMenuBarOnChatMessageFrequency === 'repeat' &&
-          settings.flashMenuBarOnChatMessage !== 'never' &&
-          ((settings.flashMenuBarOnChatMessage === 'unread' &&
-            chatUnread > 0) ||
-            settings.flashMenuBarOnChatMessage === 'always')
+          settings.flashMenuBarOnChat !== 'never' &&
+          ((settings.flashMenuBarOnChat === 'unread' && chatUnread > 0) ||
+            settings.flashMenuBarOnChat === 'always')
         ) {
           state.menuBarNotification = `${
-            settings.flashMenuBarOnChatMessageFrequency
+            settings.flashMenuBarOnChatFrequency
           },${new Date().getTime() + Math.random() + ''}`;
         }
       }
@@ -170,9 +165,9 @@ export default class Notification {
       if (type === 'groupchat') {
         // on message
         if (
-          settings.playAudioOnGroupchatMessage !== 'never' &&
-          ((settings.playAudioOnGroupchatMessage === 'unread' && isUnread) ||
-            settings.playAudioOnGroupchatMessage === 'always')
+          settings.playAudioOnGroupchat !== 'never' &&
+          ((settings.playAudioOnGroupchat === 'unread' && isUnread) ||
+            settings.playAudioOnGroupchat === 'always')
         ) {
           return true;
         }
@@ -189,9 +184,9 @@ export default class Notification {
       // one on one chat
       if (type === 'chat') {
         if (
-          settings.playAudioOnChatMessage !== 'never' &&
-          ((settings.playAudioOnChatMessage === 'unread' && isUnread) ||
-            settings.playAudioOnChatMessage === 'always')
+          settings.playAudioOnChat !== 'never' &&
+          ((settings.playAudioOnChat === 'unread' && isUnread) ||
+            settings.playAudioOnChat === 'always')
         ) {
           return true;
         }
@@ -215,8 +210,79 @@ export default class Notification {
     type: string,
     isUnread: boolean
   ) => {
-    if (Notification.shouldPlayAudio(state, message, type, isUnread)) {
-      Notification.playAudio(state.settings.soundName);
+    if (Notifications.shouldPlayAudio(state, message, type, isUnread)) {
+      Notifications.playAudio(state.settings.soundName);
+    }
+  };
+
+  public static shouldSendSystemNotifications = (
+    state: IState,
+    message: IMessage,
+    type: string,
+    isUnread: boolean
+  ): boolean => {
+    const settings = state.settings;
+    if (!message.isHistory && state.profile.status !== 'dnd') {
+      // Group chat
+      if (type === 'groupchat') {
+        // on message
+        if (
+          settings.systemNotificationOnGroupchat !== 'never' &&
+          ((settings.systemNotificationOnGroupchat === 'unread' && isUnread) ||
+            settings.systemNotificationOnGroupchat === 'always')
+        ) {
+          return true;
+        }
+        // on mention
+        if (
+          message.isMentioningMe &&
+          settings.systemNotificationOnMentionMe !== 'never' &&
+          ((settings.systemNotificationOnMentionMe === 'unread' && isUnread) ||
+            settings.systemNotificationOnMentionMe === 'always')
+        ) {
+          return true;
+        }
+      }
+      // one on one chat
+      if (type === 'chat') {
+        if (
+          settings.systemNotificationOnChat !== 'never' &&
+          ((settings.systemNotificationOnChat === 'unread' && isUnread) ||
+            settings.systemNotificationOnChat === 'always')
+        ) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  public static sendSystemNotificationOnMessage = (
+    state: IState,
+    message: IMessage,
+    type: string,
+    isUnread: boolean,
+    rawText: string
+  ) => {
+    if (
+      Notifications.shouldSendSystemNotifications(
+        state,
+        message,
+        type,
+        isUnread
+      )
+    ) {
+      const myNotifications = new Notification(message.userNickname, {
+        body: rawText,
+      });
+      myNotifications.onclick = () => {
+        // TODO: https://github.com/electron/electron/issues/2867
+        // TODO: need to select the channel the message came from
+        const win = window.require('electron').remote.getCurrentWindow();
+        win.setAlwaysOnTop(true);
+        win.focus();
+        win.setAlwaysOnTop(false);
+      };
     }
   };
 }

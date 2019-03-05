@@ -91,7 +91,7 @@ export default class Message {
         isMentioningMe: false,
       };
       Message.processMessage(newState, message, [], '');
-      Message.addMessage(newState, message, 'chat');
+      Message.addMessage(newState, message, 'chat', messageSend.body);
     }
     return newState;
   };
@@ -168,7 +168,12 @@ export default class Message {
     };
 
     Message.processMessage(newState, message, channelUsers, myChannelNickname);
-    Message.addMessage(newState, message, messageReceive.type);
+    Message.addMessage(
+      newState,
+      message,
+      messageReceive.type,
+      messageReceive.body
+    );
 
     return newState;
   };
@@ -296,22 +301,28 @@ export default class Message {
   private static addMessage = (
     state: IState,
     message: IMessage,
-    type: string
+    type: string,
+    rawText: string
   ): IState => {
     // Checks if current, if it is, it will add the message to it
-    Message.updateCurrent(state, type, message);
+    Message.updateCurrent(state, type, message, rawText);
 
     // Looks for channel, if found, it will update it
-    const channelUpdated = Message.updateChannel(state, type, message);
+    const channelUpdated = Message.updateChannel(state, type, message, rawText);
     if (!channelUpdated) {
       // if no channel is found add it to the open channels
-      Message.addToOpenChannels(state, message);
+      Message.addToOpenChannels(state, message, rawText);
     }
 
     return { ...state };
   };
 
-  private static updateCurrent(state: IState, type: string, message: IMessage) {
+  private static updateCurrent(
+    state: IState,
+    type: string,
+    message: IMessage,
+    rawText: string
+  ) {
     if (
       state.current &&
       state.current.jid === message.channelName &&
@@ -323,6 +334,13 @@ export default class Message {
       };
 
       Notification.playAudioOnMessage(state, message, type, false);
+      Notification.sendSystemNotificationOnMessage(
+        state,
+        message,
+        type,
+        false,
+        rawText
+      );
 
       if (!message.isHistory) {
         Notification.setMenuBarNotificationOnMessage(state);
@@ -333,7 +351,8 @@ export default class Message {
   private static updateChannel(
     state: IState,
     type: string,
-    message: IMessage
+    message: IMessage,
+    rawText: string
   ): boolean {
     let channelUpdated: boolean = false;
     state.channels = [
@@ -343,6 +362,13 @@ export default class Message {
 
           const isUnread = !state.current || state.current.jid !== channel.jid;
           Notification.playAudioOnMessage(state, message, type, isUnread);
+          Notification.sendSystemNotificationOnMessage(
+            state,
+            message,
+            type,
+            isUnread,
+            rawText
+          );
 
           return {
             ...channel,
@@ -364,7 +390,11 @@ export default class Message {
     return channelUpdated;
   }
 
-  private static addToOpenChannels(state: IState, message: IMessage) {
+  private static addToOpenChannels(
+    state: IState,
+    message: IMessage,
+    rawText: string
+  ) {
     const isUnread =
       !state.current || state.current.jid !== message.channelName;
 
@@ -381,6 +411,13 @@ export default class Message {
     state.channels = [...state.channels, newChannel];
 
     Notification.playAudioOnMessage(state, message, 'chat', isUnread);
+    Notification.sendSystemNotificationOnMessage(
+      state,
+      message,
+      'chat',
+      isUnread,
+      rawText
+    );
 
     if (message.isHistory) {
       Notification.setMenuBarNotificationOnMessage(state);
