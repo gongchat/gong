@@ -8,11 +8,9 @@ import { setSettings } from 'src/actions/dispatcher';
 import { withStyles } from '@material-ui/core';
 import FilledInput from '@material-ui/core/FilledInput';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import Switch from '@material-ui/core/Switch';
 
 // actions
 import Notification, { SOUNDS } from 'src/actions/notification';
@@ -27,8 +25,7 @@ import BaseSection from './BaseSection';
 class NotificationSettings extends React.Component<any, any> {
   public state = {
     soundName: this.props.settings.soundName,
-    playAudioOnGroupchat: this.props.settings
-      .playAudioOnGroupchat,
+    playAudioOnGroupchat: this.props.settings.playAudioOnGroupchat,
     playAudioOnChat: this.props.settings.playAudioOnChat,
     playAudioOnMentionMe: this.props.settings.playAudioOnMentionMe,
     flashMenuBarOnGroupchat: this.props.settings.flashMenuBarOnGroupchat,
@@ -102,17 +99,12 @@ class NotificationSettings extends React.Component<any, any> {
             </Select>
           </FormControl>
           <FormControl variant="filled">
-            <InputLabel htmlFor="playAudioOnChat">
-              On Chat Message
-            </InputLabel>
+            <InputLabel htmlFor="playAudioOnChat">On Chat Message</InputLabel>
             <Select
               value={playAudioOnChat}
               onChange={this.handleChange}
               input={
-                <FilledInput
-                  name="playAudioOnChat"
-                  id="playAudioOnChat"
-                />
+                <FilledInput name="playAudioOnChat" id="playAudioOnChat" />
               }
             >
               <MenuItem value="always">Always</MenuItem>
@@ -266,36 +258,61 @@ class NotificationSettings extends React.Component<any, any> {
           </div>
         </BaseSection>
         <BaseSection title="System Notifications">
-          <FormControlLabel
-            control={
-              <Switch
-                name="systemNotificationOnGroupchat"
-                checked={systemNotificationOnGroupchat}
-                onChange={this.handleSwitchChange}
-              />
-            }
-            label="On Groupchat"
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                name="systemNotificationOnMentionMe"
-                checked={systemNotificationOnMentionMe}
-                onChange={this.handleSwitchChange}
-              />
-            }
-            label="On Mention Me"
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                name="systemNotificationOnChat"
-                checked={systemNotificationOnChat}
-                onChange={this.handleSwitchChange}
-              />
-            }
-            label="On Chat"
-          />
+          <FormControl variant="filled">
+            <InputLabel htmlFor="systemNotificationOnGroupchat">
+              On Groupchat
+            </InputLabel>
+            <Select
+              value={systemNotificationOnGroupchat}
+              onChange={this.handleChange}
+              input={
+                <FilledInput
+                  name="systemNotificationOnGroupchat"
+                  id="systemNotificationOnGroupchat"
+                />
+              }
+            >
+              <MenuItem value="always">Always</MenuItem>
+              <MenuItem value="unread">Unread</MenuItem>
+              <MenuItem value="never">Never</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl variant="filled">
+            <InputLabel htmlFor="systemNotificationOnMentionMe">
+              On Mention
+            </InputLabel>
+            <Select
+              value={systemNotificationOnMentionMe}
+              onChange={this.handleChange}
+              input={
+                <FilledInput
+                  name="systemNotificationOnMentionMe"
+                  id="systemNotificationOnMentionMe"
+                />
+              }
+            >
+              <MenuItem value="always">Always</MenuItem>
+              <MenuItem value="unread">Unread</MenuItem>
+              <MenuItem value="never">Never</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl variant="filled">
+            <InputLabel htmlFor="systemNotificationOnChat">On Chat</InputLabel>
+            <Select
+              value={systemNotificationOnChat}
+              onChange={this.handleChange}
+              input={
+                <FilledInput
+                  name="systemNotificationOnChat"
+                  id="systemNotificationOnChat"
+                />
+              }
+            >
+              <MenuItem value="always">Always</MenuItem>
+              <MenuItem value="unread">Unread</MenuItem>
+              <MenuItem value="never">Never</MenuItem>
+            </Select>
+          </FormControl>
         </BaseSection>
       </BasePage>
     );
@@ -307,12 +324,6 @@ class NotificationSettings extends React.Component<any, any> {
     if (name === 'soundName') {
       Notification.playAudio(value);
     }
-    this.setState({ [name]: value });
-    this.props.setSettings({ [name]: value });
-  };
-
-  private handleSwitchChange = (event: any, value: any) => {
-    const name = event.target.name;
     this.setState({ [name]: value });
     this.props.setSettings({ [name]: value });
   };
