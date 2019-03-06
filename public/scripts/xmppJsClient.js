@@ -7,22 +7,16 @@ const keytar = require('keytar');
 
 const { client, xml } = require('@xmpp/client');
 
+const Settings = require('./settings');
+
 // TODO: find less hacky solution, https://stackoverflow.com/questions/35633829/node-js-error-process-env-node-tls-reject-unauthorized-what-does-this-mean
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 class XmppJsClient {
-  constructor(settings) {
+  constructor() {
     this.client = undefined;
     this.credentials = undefined;
     this.connectionTimer = undefined;
-    this.settings = settings;
-  }
-
-  setSettings(arg) {
-    // TODO: should update settings on electron.js with an EventEmitter
-    if (this.settings.minimizeToTrayOnClose !== undefined) {
-      this.settings.minimizeToTrayOnClose = arg.minimizeToTrayOnClose;
-    }
   }
 
   //
@@ -124,8 +118,7 @@ class XmppJsClient {
       this.sendGetInfo(event, credentials.domain);
 
       if (settings) {
-        // TODO: should update settings on electron.js with an EventEmitter
-        this.settings.minimizeToTrayOnClose = settings.minimizeToTrayOnClose;
+        Settings.set(settings);
       }
       this.credentials = { ...credentials, jid: jid.toString() };
 

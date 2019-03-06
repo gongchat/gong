@@ -6,6 +6,7 @@ const url = require('url');
 
 const XmppJsClient = require('./scripts/xmppJsClient');
 const IpcMainEvents = require('./scripts/ipcMainEvents');
+const Settings = require('./scripts/settings');
 
 const {
   default: installExtension,
@@ -45,7 +46,7 @@ function createWindow() {
   );
 
   mainWindow.on('close', (event) => {
-    if (settings.minimizeToTrayOnClose && !isQuitting) {
+    if (Settings.get().minimizeToTrayOnClose && !isQuitting) {
       event.preventDefault();
       mainWindow.hide();
       event.returnValue = false;

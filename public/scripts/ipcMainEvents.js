@@ -1,6 +1,4 @@
-const CryptoJS = require('crypto-js');
-const electronStore = require('electron-store');
-const keytar = require('keytar');
+const Settings = require('./settings');
 
 class IpcMainEvents {
   attachEvents(ipcMain, xmppJsClient) {
@@ -63,11 +61,11 @@ class IpcMainEvents {
     });
 
     ipcMain.on('set-settings', (event, arg) => {
-      xmppJsClient.setSettings(arg);
+      Settings.set(arg);
     });
 
     ipcMain.on('set-flash-frame', (event, arg) => {
-      xmppJsClient.setFlashFrame(arg);
+      Settings.set(arg);
     });
   }
 }
