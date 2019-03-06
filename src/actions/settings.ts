@@ -40,26 +40,14 @@ export default class Settings {
       domain: settings.domain,
       username: settings.username,
       resource: settings.resource,
-      port: settings.port ? settings.port : '5222',
-      systemNotificationOnGroupchat: settings.systemNotificationOnGroupchat
-        ? settings.systemNotificationOnGroupchat
-        : 'never',
-      systemNotificationOnMentionMe: settings.systemNotificationOnMentionMe
-        ? settings.systemNotificationOnMentionMe
-        : 'unread',
-      systemNotificationOnChat: settings.systemNotificationOnChat
-        ? settings.systemNotificationOnChat
-        : 'unread',
-      minimizeToTrayOnClose:
-        settings.minimizeToTrayOnClose !== undefined
-          ? settings.minimizeToTrayOnClose
-          : true,
-      renderVideos:
-        settings.renderVideos !== undefined ? settings.renderVideos : true,
-      renderGetYarn:
-        settings.renderGetYarn !== undefined ? settings.renderGetYarn : true,
-      renderImages:
-        settings.renderImages !== undefined ? settings.renderImages : true,
+      port: settings.port,
+      systemNotificationOnGroupchat: settings.systemNotificationOnGroupchat,
+      systemNotificationOnMentionMe: settings.systemNotificationOnMentionMe,
+      systemNotificationOnChat: settings.systemNotificationOnChat,
+      minimizeToTrayOnClose: settings.minimizeToTrayOnClose,
+      renderVideos: settings.renderVideos,
+      renderGetYarn: settings.renderGetYarn,
+      renderImages: settings.renderImages,
       soundName: settings.soundName,
       playAudioOnGroupchat: settings.playAudioOnGroupchat,
       playAudioOnChat: settings.playAudioOnChat,
