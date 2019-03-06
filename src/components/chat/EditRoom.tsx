@@ -101,7 +101,7 @@ class EditRoom extends React.Component<any, any> {
       nickname: form.nickname,
       password: form.password,
     };
-    this.props.editRoom(channelJoin);
+    this.props.editRoom(this.props.channel.jid, channelJoin);
     this.props.onClose();
   };
 

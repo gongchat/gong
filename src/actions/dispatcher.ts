@@ -115,6 +115,6 @@ export const setRoomNickname = (roomNickname: any) => (dispatch: any) => {
   dispatch({ type: ROOM_SET_NICKNAME, payload: roomNickname });
 };
 
-export const editRoom = (room: IRoomJoin) => (dispatch: any) => {
-  dispatch({ type: ROOM_EDIT, payload: room });
+export const editRoom = (jid: string, room: IRoomJoin) => (dispatch: any) => {
+  dispatch({ type: ROOM_EDIT, payload: { jid, room } });
 };

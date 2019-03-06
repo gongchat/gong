@@ -121,23 +121,21 @@ export default class Room {
     }
   };
 
-  public static edit = (state: IState, roomJoin: IRoomJoin): IState => {
-    const channel = state.channels.find(
-      (c: IChannel) => c.jid === roomJoin.jid
-    );
+  public static edit = (state: IState, payload: any): IState => {
+    const channel = state.channels.find((c: IChannel) => c.jid === payload.jid);
     if (channel) {
       const room: IRoom = {
         type: 'groupchat',
         order: 20,
-        jid: roomJoin.jid,
-        password: roomJoin.password,
-        name: roomJoin.channelName,
+        jid: payload.room.jid,
+        password: payload.room.password,
+        name: payload.room.channelName,
         messages: [],
         users: [],
         isConnected: false,
         isConnecting: true,
         connectionError: '',
-        myNickname: roomJoin.nickname,
+        myNickname: payload.room.nickname,
         unreadMessages: 0,
         hasUnreadMentionMe: false,
         scrollPosition: 0,
@@ -147,7 +145,7 @@ export default class Room {
         ...state.channels.filter((c: IChannel) => c !== channel),
         room,
       ];
-      ipcRenderer.send('xmpp-subscribe-to-room', roomJoin);
+      ipcRenderer.send('xmpp-subscribe-to-room', payload.room);
       Channel.saveRooms(channels);
       return {
         ...state,
