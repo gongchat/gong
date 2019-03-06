@@ -108,7 +108,7 @@ class Messages extends React.Component<any, any> {
               index + 1 > messages.length ? undefined : messages[index + 1];
             const showDate = previousDate !== message.timestamp.format('L');
             const showNewMessageMarker =
-              previousMessageStatus !== message.isRead;
+              index !== 0 && previousMessageStatus !== message.isRead;
             const isNextShowDate = nextMessage
               ? nextMessage.timestamp.format('L') !==
                 message.timestamp.format('L')
