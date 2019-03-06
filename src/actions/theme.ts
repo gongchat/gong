@@ -112,7 +112,6 @@ export default class Theme {
   public static getTheme = () => {
     const theme = electronStore.get('theme');
     if (theme) {
-      Theme.convertSavedTheme(theme); // TODO: Remove line below when alpha
       return createMuiTheme(theme);
     } else {
       return createMuiTheme({ ...DEFAULT });
@@ -123,26 +122,6 @@ export default class Theme {
     const theme = createMuiTheme({ ...DEFAULT });
     electronStore.set('theme', theme);
     return { ...state, theme: { ...theme } };
-  };
-
-  // TODO: remove this once alpha
-  private static convertSavedTheme = (theme: any) => {
-    let isUpdated = false;
-    if (typeof theme.sidebarWidth === 'string') {
-      theme.sidebarWidth = parseInt(theme.sidebarWidth.replace('px', ''), 10);
-      isUpdated = true;
-    }
-    if (theme.sidebarLeftShowAvatar === undefined) {
-      theme.sidebarLeftShowAvatar = true;
-      isUpdated = true;
-    }
-    if (theme.sidebarRightShowAvatar === undefined) {
-      theme.sidebarRightShowAvatar = true;
-      isUpdated = true;
-    }
-    if (isUpdated) {
-      electronStore.set('theme', theme);
-    }
   };
 
   private static updatePrimaryColor = (theme: any, item: any) => {
