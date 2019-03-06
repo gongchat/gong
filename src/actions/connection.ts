@@ -44,7 +44,7 @@ export default class Connection {
 
       // handle reconnecting message if already authenticated
       let snackbarNotifications = state.snackbarNotifications;
-      if (state.connection.hasSavedCredentials) {
+      if (state.connection.isAuthenticated) {
         const snackbarNotification: ISnackbarNotification = {
           id: new Date().getTime() + Math.random() + '',
           source: 'connection',
@@ -149,7 +149,7 @@ export default class Connection {
 
     // handle reconnected message if already authenticated
     let snackbarNotifications = state.snackbarNotifications;
-    if (state.connection.hasSavedCredentials) {
+    if (state.connection.isAuthenticated) {
       const snackbarNotification: ISnackbarNotification = {
         id: new Date().getTime() + Math.random() + '',
         source: 'connection',
@@ -171,7 +171,7 @@ export default class Connection {
 
   public static failed = (state: IState, error: string): IState => {
     let snackbarNotifications = state.snackbarNotifications;
-    if (state.connection.hasSavedCredentials) {
+    if (state.connection.isAuthenticated) {
       const snackbarNotification: ISnackbarNotification = {
         id: new Date().getTime() + Math.random() + '',
         source: 'connection',
@@ -182,7 +182,7 @@ export default class Connection {
     }
 
     if (
-      state.connection.hasSavedCredentials &&
+      state.connection.isAuthenticated &&
       error === 'Cannot authorize your credentials'
     ) {
       ipcRenderer.send('xmpp-log-off');
