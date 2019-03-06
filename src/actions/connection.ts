@@ -44,7 +44,7 @@ export default class Connection {
 
       // handle reconnecting message if already authenticated
       let snackbarNotifications = state.snackbarNotifications;
-      if (state.connection.isAuthenticated) {
+      if (state.connection.hasSavedCredentials) {
         const snackbarNotification: ISnackbarNotification = {
           id: new Date().getTime() + Math.random() + '',
           source: 'connection',
@@ -149,7 +149,7 @@ export default class Connection {
 
     // handle reconnected message if already authenticated
     let snackbarNotifications = state.snackbarNotifications;
-    if (state.connection.isAuthenticated) {
+    if (state.connection.hasSavedCredentials) {
       const snackbarNotification: ISnackbarNotification = {
         id: new Date().getTime() + Math.random() + '',
         source: 'connection',
@@ -171,7 +171,7 @@ export default class Connection {
 
   public static failed = (state: IState, error: string): IState => {
     let snackbarNotifications = state.snackbarNotifications;
-    if (state.connection.isAuthenticated) {
+    if (state.connection.hasSavedCredentials) {
       const snackbarNotification: ISnackbarNotification = {
         id: new Date().getTime() + Math.random() + '',
         source: 'connection',

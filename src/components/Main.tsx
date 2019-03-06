@@ -23,6 +23,10 @@ import Settings from './settings/Settings';
 import IStates from 'src/interfaces/IStates';
 
 class Main extends React.Component<any, any> {
+  public state = {
+    shouldReconnect: true,
+  };
+
   private reconnectTimer: any;
 
   public componentDidMount() {
@@ -40,20 +44,28 @@ class Main extends React.Component<any, any> {
   }
 
   public componentDidUpdate(prevProps: any) {
-    if (
-      prevProps.connection &&
-      this.props.connection &&
-      this.props.connection.isConnected !== prevProps.connection.isConnected &&
-      this.props.connection.hasSavedCredentials !== undefined &&
-      !this.props.connection.isConnecting &&
-      !this.props.connection.isConnected
-    ) {
-      if (this.reconnectTimer) {
-        clearTimeout(this.reconnectTimer);
+    // TODO: need to handle errors better
+    let shouldReconnect = this.state.shouldReconnect;
+    if (shouldReconnect) {
+      if (
+        this.props.connection.connectionError === 'Connection has been aborted'
+      ) {
+        shouldReconnect = false;
+        this.setState({ shouldReconnect });
+      } else if (
+        prevProps.connection &&
+        this.props.connection &&
+        this.props.connection.hasSavedCredentials !== undefined &&
+        !this.props.connection.isConnecting &&
+        !this.props.connection.isConnected
+      ) {
+        if (this.reconnectTimer) {
+          clearTimeout(this.reconnectTimer);
+        }
+        this.reconnectTimer = setTimeout(() => {
+          this.props.autoLogin();
+        }, 10000);
       }
-      this.reconnectTimer = setTimeout(() => {
-        this.props.autoLogin();
-      }, 10000);
     }
 
     if (

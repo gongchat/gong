@@ -99,6 +99,11 @@ class XmppJsClient {
             event.sender.send('xmpp-connection-failed', { error: 'Cannot connect to server' });
             stopClient = true;
             break;
+          case 'ECONNABORTED':
+            console.log('ERROR: ECONNABORTED');
+            event.sender.send('xmpp-connection-failed', { error: 'Connection has been aborted' });
+            stopClient = true;
+            break;
           default:
             console.log('ERROR:', err);
             break;
