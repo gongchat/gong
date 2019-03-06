@@ -97,6 +97,7 @@ class Messages extends React.Component<any, any> {
     let previousDate = '';
     let previousUserNickname = '';
     let previousMessageStatus = true;
+    let hasNewMessageMarker = false;
 
     return (
       <div className={classes.root} ref={this.root}>
@@ -108,7 +109,9 @@ class Messages extends React.Component<any, any> {
               index + 1 > messages.length ? undefined : messages[index + 1];
             const showDate = previousDate !== message.timestamp.format('L');
             const showNewMessageMarker =
-              index !== 0 && previousMessageStatus !== message.isRead;
+              index !== 0 &&
+              !hasNewMessageMarker &&
+              previousMessageStatus !== message.isRead;
             const isNextShowDate = nextMessage
               ? nextMessage.timestamp.format('L') !==
                 message.timestamp.format('L')
@@ -118,6 +121,10 @@ class Messages extends React.Component<any, any> {
             const isEndOfGroup = nextMessage
               ? nextMessage.userNickname !== message.userNickname
               : true;
+
+            if (showNewMessageMarker) {
+              hasNewMessageMarker = true;
+            }
 
             const returnVal = (
               <React.Fragment key={index}>
@@ -144,10 +151,7 @@ class Messages extends React.Component<any, any> {
                 <div
                   className={[
                     classes.message,
-                    showDate && isStartOfGroup
-                      ? 'classes.startOfGroupPadding'
-                      : '',
-                    !showDate && isStartOfGroup
+                    !showDate && !showNewMessageMarker && isStartOfGroup
                       ? `${classes.startOfGroupPadding} ${
                           classes.startOfGroupBorder
                         }`
