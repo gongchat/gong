@@ -12,6 +12,7 @@ export default interface IMessage {
   timestamp: Moment;
   userNickname: string;
   color: string;
+  isRead: boolean;
   isHistory: boolean;
   isMentioningMe: boolean;
 }

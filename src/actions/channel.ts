@@ -5,6 +5,7 @@ const electronStore = new ElectronStore();
 import * as moment from 'moment';
 
 import IChannel from 'src/interfaces/IChannel';
+import IMessage from 'src/interfaces/IMessage';
 import IRoom from 'src/interfaces/IRoom';
 import IRoomSaved from 'src/interfaces/IRoomSaved';
 import IState from 'src/interfaces/IState';
@@ -48,6 +49,15 @@ export default class Channel {
 
         return newChannel;
       } else {
+        if (state.current && state.current.jid === channel.jid) {
+          return {
+            ...channel,
+            messages: channel.messages.map((message: IMessage) => ({
+              ...message,
+              isRead: true,
+            })),
+          };
+        }
         return channel;
       }
     });

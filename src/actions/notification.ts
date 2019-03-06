@@ -157,8 +157,7 @@ export default class Notifications {
   public static shouldPlayAudio = (
     state: IState,
     message: IMessage,
-    type: string,
-    isUnread: boolean
+    type: string
   ): boolean => {
     const settings = state.settings;
     if (!message.isHistory && state.profile.status !== 'dnd') {
@@ -167,7 +166,7 @@ export default class Notifications {
         // on message
         if (
           settings.playAudioOnGroupchat !== 'never' &&
-          ((settings.playAudioOnGroupchat === 'unread' && isUnread) ||
+          ((settings.playAudioOnGroupchat === 'unread' && !message.isRead) ||
             settings.playAudioOnGroupchat === 'always')
         ) {
           return true;
@@ -176,7 +175,7 @@ export default class Notifications {
         if (
           message.isMentioningMe &&
           settings.playAudioOnMentionMe !== 'never' &&
-          ((settings.playAudioOnMentionMe === 'unread' && isUnread) ||
+          ((settings.playAudioOnMentionMe === 'unread' && !message.isRead) ||
             settings.playAudioOnMentionMe === 'always')
         ) {
           return true;
@@ -186,7 +185,7 @@ export default class Notifications {
       if (type === 'chat') {
         if (
           settings.playAudioOnChat !== 'never' &&
-          ((settings.playAudioOnChat === 'unread' && isUnread) ||
+          ((settings.playAudioOnChat === 'unread' && !message.isRead) ||
             settings.playAudioOnChat === 'always')
         ) {
           return true;
@@ -208,10 +207,9 @@ export default class Notifications {
   public static playAudioOnMessage = (
     state: IState,
     message: IMessage,
-    type: string,
-    isUnread: boolean
+    type: string
   ) => {
-    if (Notifications.shouldPlayAudio(state, message, type, isUnread)) {
+    if (Notifications.shouldPlayAudio(state, message, type)) {
       Notifications.playAudio(state.settings.soundName);
     }
   };
@@ -219,8 +217,7 @@ export default class Notifications {
   public static shouldSendSystemNotifications = (
     state: IState,
     message: IMessage,
-    type: string,
-    isUnread: boolean
+    type: string
   ): boolean => {
     const settings = state.settings;
     if (!message.isHistory && state.profile.status !== 'dnd') {
@@ -229,7 +226,8 @@ export default class Notifications {
         // on message
         if (
           settings.systemNotificationOnGroupchat !== 'never' &&
-          ((settings.systemNotificationOnGroupchat === 'unread' && isUnread) ||
+          ((settings.systemNotificationOnGroupchat === 'unread' &&
+            !message.isRead) ||
             settings.systemNotificationOnGroupchat === 'always')
         ) {
           return true;
@@ -238,7 +236,8 @@ export default class Notifications {
         if (
           message.isMentioningMe &&
           settings.systemNotificationOnMentionMe !== 'never' &&
-          ((settings.systemNotificationOnMentionMe === 'unread' && isUnread) ||
+          ((settings.systemNotificationOnMentionMe === 'unread' &&
+            !message.isRead) ||
             settings.systemNotificationOnMentionMe === 'always')
         ) {
           return true;
@@ -248,7 +247,8 @@ export default class Notifications {
       if (type === 'chat') {
         if (
           settings.systemNotificationOnChat !== 'never' &&
-          ((settings.systemNotificationOnChat === 'unread' && isUnread) ||
+          ((settings.systemNotificationOnChat === 'unread' &&
+            !message.isRead) ||
             settings.systemNotificationOnChat === 'always')
         ) {
           return true;
@@ -262,17 +262,9 @@ export default class Notifications {
     state: IState,
     message: IMessage,
     type: string,
-    isUnread: boolean,
     rawText: string
   ) => {
-    if (
-      Notifications.shouldSendSystemNotifications(
-        state,
-        message,
-        type,
-        isUnread
-      )
-    ) {
+    if (Notifications.shouldSendSystemNotifications(state, message, type)) {
       const myNotifications = new Notification(message.userNickname, {
         body: rawText,
       });

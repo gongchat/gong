@@ -2,6 +2,8 @@ const ElectronStore = window.require('electron-store');
 const electronStore = new ElectronStore();
 const { ipcRenderer } = window.require('electron');
 
+import * as moment from 'moment';
+
 import IChannel from 'src/interfaces/IChannel';
 import IChannelUser from 'src/interfaces/IChannelUser';
 import IRoom from 'src/interfaces/IRoom';
@@ -49,7 +51,7 @@ export default class Room {
             unreadMessages: 0,
             hasUnreadMentionMe: false,
             scrollPosition: 0,
-            lastReadTimestamp: roomSaved.lastReadTimestamp,
+            lastReadTimestamp: moment(roomSaved.lastReadTimestamp),
           };
           return room;
         }),

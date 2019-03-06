@@ -96,6 +96,7 @@ class Messages extends React.Component<any, any> {
 
     let previousDate = '';
     let previousUserNickname = '';
+    let previousMessageStatus = true;
 
     return (
       <div className={classes.root} ref={this.root}>
@@ -106,6 +107,8 @@ class Messages extends React.Component<any, any> {
             const nextMessage: any =
               index + 1 > messages.length ? undefined : messages[index + 1];
             const showDate = previousDate !== message.timestamp.format('L');
+            const showNewMessageMarker =
+              previousMessageStatus !== message.isRead;
             const isNextShowDate = nextMessage
               ? nextMessage.timestamp.format('L') !==
                 message.timestamp.format('L')
@@ -119,9 +122,22 @@ class Messages extends React.Component<any, any> {
             const returnVal = (
               <React.Fragment key={index}>
                 {showDate && (
-                  <div className={classes.date}>
-                    <Typography className={classes.dateValue}>
+                  <div className={classes.marker}>
+                    <Typography className={classes.markerValue}>
                       <span>{message.timestamp.format('LL')}</span>
+                    </Typography>
+                  </div>
+                )}
+                {showNewMessageMarker && (
+                  <div className={classes.marker}>
+                    <Typography
+                      color="error"
+                      className={[
+                        classes.markerValue,
+                        classes.newMessageMarkerValue,
+                      ].join(' ')}
+                    >
+                      <span>New Messages</span>
                     </Typography>
                   </div>
                 )}
@@ -155,6 +171,7 @@ class Messages extends React.Component<any, any> {
 
             previousDate = message.timestamp.format('L');
             previousUserNickname = message.userNickname;
+            previousMessageStatus = message.isRead;
 
             return returnVal;
           })}
@@ -199,11 +216,11 @@ const styles: any = (theme: any) => ({
   filler: {
     flexGrow: 1,
   },
-  date: {
+  marker: {
     paddingTop: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
   },
-  dateValue: {
+  markerValue: {
     position: 'relative',
     textAlign: 'center',
     opacity: 0.5,
@@ -215,6 +232,9 @@ const styles: any = (theme: any) => ({
       backgroundColor: theme.palette.background.paper,
       padding: `0 ${theme.spacing.unit}px`,
     },
+  },
+  newMessageMarkerValue: {
+    borderBottom: '1px solid ' + theme.palette.error.main,
   },
   startOfGroupBorder: {
     borderTop: '1px solid ' + theme.palette.divider,

@@ -88,6 +88,7 @@ export default class Message {
             ? newState.profile.vCard.fullName
             : newState.profile.username,
         color: newState.profile.color,
+        isRead: true,
         isHistory: false,
         isMentioningMe: false,
       };
@@ -162,6 +163,7 @@ export default class Message {
       body: messageReceive.body,
       urls: [],
       timestamp: messageReceive.timestamp,
+      isRead: false,
       isHistory: messageReceive.isHistory,
       isMentioningMe: false,
       userNickname,
@@ -329,17 +331,17 @@ export default class Message {
       state.current.jid === message.channelName &&
       state.current.type === type
     ) {
+      message.isRead = true;
       state.current = {
         ...state.current,
         messages: [...state.current.messages, message],
       };
 
-      Notification.playAudioOnMessage(state, message, type, false);
+      Notification.playAudioOnMessage(state, message, type);
       Notification.sendSystemNotificationOnMessage(
         state,
         message,
         type,
-        false,
         rawText
       );
 
@@ -363,26 +365,35 @@ export default class Message {
         if (channel.jid === message.channelName && channel.type === type) {
           channelUpdated = true;
 
-          const isUnread = !state.current || state.current.jid !== channel.jid;
-          Notification.playAudioOnMessage(state, message, type, isUnread);
+          const isUnreadOne =
+            !state.current || state.current.jid !== channel.jid;
+          const isUnreadTwo =
+            !(channel as IRoom).lastReadTimestamp ||
+            message.timestamp.diff(
+              (channel as IRoom).lastReadTimestamp,
+              'seconds'
+            ) > 0;
+          message.isRead = !isUnreadOne || !isUnreadTwo;
+
+          Notification.playAudioOnMessage(state, message, type);
           Notification.sendSystemNotificationOnMessage(
             state,
             message,
             type,
-            isUnread,
             rawText
           );
 
           const newChannel = {
             ...channel,
             messages: [...channel.messages, message],
-            unreadMessages: isUnread
-              ? channel.unreadMessages + 1
-              : channel.unreadMessages,
-            hasUnreadMentionMe: isUnread && message.isMentioningMe,
+            unreadMessages:
+              isUnreadOne && isUnreadTwo
+                ? channel.unreadMessages + 1
+                : channel.unreadMessages,
+            hasUnreadMentionMe: isUnreadOne && message.isMentioningMe,
           };
 
-          if (!isUnread && type === 'groupchat') {
+          if (!isUnreadOne && type === 'groupchat') {
             (newChannel as IRoom).lastReadTimestamp = moment();
             lastReadTimestampUpdated = true;
           }
@@ -409,8 +420,9 @@ export default class Message {
     message: IMessage,
     rawText: string
   ) {
-    const isUnread =
-      !state.current || state.current.jid !== message.channelName;
+    if (state.current) {
+      message.isRead = state.current.jid === message.channelName;
+    }
 
     const newChannel: IChannel = {
       type: 'chat',
@@ -418,18 +430,17 @@ export default class Message {
       jid: message.channelName,
       name: message.channelName,
       messages: [message],
-      unreadMessages: isUnread ? 1 : 0,
+      unreadMessages: message.isRead ? 1 : 0,
       hasUnreadMentionMe: message.isMentioningMe,
       scrollPosition: 0,
     };
     state.channels = [...state.channels, newChannel];
 
-    Notification.playAudioOnMessage(state, message, 'chat', isUnread);
+    Notification.playAudioOnMessage(state, message, 'chat');
     Notification.sendSystemNotificationOnMessage(
       state,
       message,
       'chat',
-      isUnread,
       rawText
     );
 
