@@ -3,6 +3,7 @@ export default interface ISettingsSaved {
   domain: string;
   username: string;
   resource: string;
+  port: string;
   password: string;
 
   minimizeToTrayOnClose: boolean;

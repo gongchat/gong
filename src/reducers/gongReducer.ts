@@ -59,6 +59,7 @@ export const initialState: IState = {
     domain: '',
     username: '',
     resource: '',
+    port: '',
     systemNotificationOnGroupchat: 'never',
     systemNotificationOnMentionMe: 'unread',
     systemNotificationOnChat: 'unread',

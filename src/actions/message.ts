@@ -21,6 +21,7 @@ import IRoom from 'src/interfaces/IRoom';
 import IState from 'src/interfaces/IState';
 import IUser from 'src/interfaces/IUser';
 
+import Channel from './channel';
 import Notification from './notification';
 
 import ColorUtil from 'src/utils/colorUtil';
@@ -286,7 +287,7 @@ export default class Message {
   }
 
   private static getImageUrls(text: string): IMessageUrl[] {
-    const getImageRegExp = new RegExp(/(https?:\/\/.*\.(?:png|jpg))/gi);
+    const getImageRegExp = new RegExp(/(https?:\/\/.*\.(?:png|jpg|gif))/gi);
     const scannedImageUrls = text.match(getImageRegExp);
     if (scannedImageUrls) {
       return scannedImageUrls.map((url: string) => ({
@@ -354,7 +355,9 @@ export default class Message {
     message: IMessage,
     rawText: string
   ): boolean {
-    let channelUpdated: boolean = false;
+    let channelUpdated = false;
+    let lastReadTimestampUpdated = false;
+
     state.channels = [
       ...state.channels.map((channel: IChannel) => {
         if (channel.jid === message.channelName && channel.type === type) {
@@ -370,7 +373,7 @@ export default class Message {
             rawText
           );
 
-          return {
+          const newChannel = {
             ...channel,
             messages: [...channel.messages, message],
             unreadMessages: isUnread
@@ -378,6 +381,13 @@ export default class Message {
               : channel.unreadMessages,
             hasUnreadMentionMe: isUnread && message.isMentioningMe,
           };
+
+          if (!isUnread && type === 'groupchat') {
+            (newChannel as IRoom).lastReadTimestamp = moment();
+            lastReadTimestampUpdated = true;
+          }
+
+          return newChannel;
         }
         return channel;
       }),
@@ -385,6 +395,10 @@ export default class Message {
 
     if (!message.isHistory) {
       Notification.setMenuBarNotificationOnMessage(state);
+
+      if (lastReadTimestampUpdated) {
+        Channel.saveRooms(state.channels);
+      }
     }
 
     return channelUpdated;

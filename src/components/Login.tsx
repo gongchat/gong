@@ -20,98 +20,123 @@ class Login extends React.Component<any, any> {
     domain: '',
     username: '',
     resource: '',
+    port: '',
     password: '',
     errorMessage: '',
   };
 
-  public componentWillReceiveProps(nextProps: any) {
-    if (nextProps.connection.isConnected === true) {
+  public componentDidUpdate(prevProps: any) {
+    if (this.props.connection.isConnected) {
       this.props.history.push('/main');
-    } else if (nextProps.connection.connectionError) {
-      this.setState({ errorMessage: nextProps.connection.connectionError });
+    } else if (
+      this.props.connection.connectionError !==
+      prevProps.connection.connectionError
+    ) {
+      this.setState({ errorMessage: this.props.connection.connectionError });
     }
   }
 
   public render() {
     const { classes } = this.props;
-    const { domain, username, resource, password, errorMessage } = this.state;
+    const {
+      domain,
+      username,
+      resource,
+      port,
+      password,
+      errorMessage,
+    } = this.state;
 
     return (
       <div className={classes.root}>
         <MenuBar showOffline={false} />
         <ValidatorForm onSubmit={this.handleSubmit} className={classes.form}>
-          <Typography className={classes.title}>Welcome to Gong</Typography>
-          <TextValidator
-            name="domain"
-            onChange={this.handleOnChange}
-            label="Domain"
-            value={domain}
-            variant="filled"
-            validators={['required', 'matchRegexp:^[a-zA-Z0-9_.-]*$']}
-            errorMessages={[
-              'Please input a domain',
-              'Please enter a valid domain',
-            ]}
-            FormHelperTextProps={{ className: classes.helperText }}
-            className={classes.input}
-          />
-          <TextValidator
-            name="username"
-            onChange={this.handleOnChange}
-            label="Username"
-            value={username}
-            variant="filled"
-            validators={['required', 'matchRegexp:^[a-zA-Z0-9_.-]*$']}
-            errorMessages={[
-              'Please input a username',
-              'Please enter a valid username',
-            ]}
-            FormHelperTextProps={{ className: classes.helperText }}
-            className={classes.input}
-          />
-          <TextValidator
-            name="resource"
-            onChange={this.handleOnChange}
-            label="Resource"
-            value={resource}
-            variant="filled"
-            validators={['required', 'matchRegexp:^[a-zA-Z0-9_.-]*$']}
-            errorMessages={[
-              'Please input a resource',
-              'Please enter a valid resource',
-            ]}
-            FormHelperTextProps={{ className: classes.helperText }}
-            className={classes.input}
-          />
-          <TextValidator
-            name="password"
-            type="password"
-            onChange={this.handleOnChange}
-            label="Password"
-            value={password}
-            variant="filled"
-            validators={['required']}
-            errorMessages={['Please input a password']}
-            FormHelperTextProps={{ className: classes.helperText }}
-            className={classes.input}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="secondary"
-            className={classes.button}
-          >
-            Login
-          </Button>
-          {errorMessage && errorMessage !== '' && (
-            <div>
-              <Chip
-                label={errorMessage}
-                color="secondary"
-                className={classes.error}
-              />
-            </div>
-          )}
+          <div className={classes.content}>
+            <Typography className={classes.title}>Welcome to Gong</Typography>
+            <TextValidator
+              name="domain"
+              onChange={this.handleOnChange}
+              label="Domain"
+              value={domain}
+              variant="filled"
+              validators={['required', 'matchRegexp:^[a-zA-Z0-9_.-]*$']}
+              errorMessages={[
+                'Please input a domain',
+                'Please enter a valid domain',
+              ]}
+              FormHelperTextProps={{ className: classes.helperText }}
+              className={classes.input}
+            />
+            <TextValidator
+              name="username"
+              onChange={this.handleOnChange}
+              label="Username"
+              value={username}
+              variant="filled"
+              validators={['required', 'matchRegexp:^[a-zA-Z0-9_.-]*$']}
+              errorMessages={[
+                'Please input a username',
+                'Please enter a valid username',
+              ]}
+              FormHelperTextProps={{ className: classes.helperText }}
+              className={classes.input}
+            />
+            <TextValidator
+              name="resource"
+              onChange={this.handleOnChange}
+              label="Resource"
+              value={resource}
+              variant="filled"
+              validators={['required', 'matchRegexp:^[a-zA-Z0-9_.-]*$']}
+              errorMessages={[
+                'Please input a resource',
+                'Please enter a valid resource',
+              ]}
+              FormHelperTextProps={{ className: classes.helperText }}
+              className={classes.input}
+            />
+            <TextValidator
+              name="port"
+              onChange={this.handleOnChange}
+              label="Port"
+              value={port}
+              variant="filled"
+              validators={['matchRegexp:^[0-9]*$']}
+              errorMessages={['Please enter a valid port']}
+              FormHelperTextProps={{ className: classes.helperText }}
+              helperText="If empty will default to 5222"
+              className={classes.input}
+            />
+            <TextValidator
+              name="password"
+              type="password"
+              onChange={this.handleOnChange}
+              label="Password"
+              value={password}
+              variant="filled"
+              validators={['required']}
+              errorMessages={['Please input a password']}
+              FormHelperTextProps={{ className: classes.helperText }}
+              className={classes.input}
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              color="secondary"
+              className={classes.button}
+            >
+              Login
+            </Button>
+            {errorMessage && errorMessage !== '' && (
+              <div>
+                <Chip
+                  label={errorMessage}
+                  color="secondary"
+                  className={classes.error}
+                />
+              </div>
+            )}
+          </div>
         </ValidatorForm>
       </div>
     );
@@ -128,6 +153,7 @@ class Login extends React.Component<any, any> {
       domain: this.state.domain,
       username: this.state.username,
       password: this.state.password,
+      port: this.state.port,
       resource: this.state.resource,
     });
   };
@@ -151,20 +177,30 @@ const styles: any = (theme: any) => ({
   },
   title: {
     fontSize: '2rem',
-    marginTop: theme.spacing.unit * 6,
+    textAlign: 'center',
+    marginTop: theme.spacing.unit * 4,
     marginBottom: theme.spacing.unit * 4,
   },
   form: {
-    flexGrow: 1,
+    overflowY: 'auto',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: theme.spacing.unit * 8,
+    flexGrow: 1,
+    flexShrink: 0,
+    flex: 1,
     '& div, & button': {
       marginBottom: theme.spacing.unit * 0.5,
       width: '100%',
       maxWidth: '400px',
+    },
+  },
+  content: {
+    display: 'flex',
+    flexDirection: 'column',
+    '& > *:last-child': {
+      marginBottom: theme.spacing.unit * 4,
     },
   },
   input: {

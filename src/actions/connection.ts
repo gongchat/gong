@@ -33,8 +33,9 @@ export default class Connection {
       const credentials: ICredentials = {
         domain: settingsSaved.domain,
         username: settingsSaved.username,
-        password: settingsSaved.password,
         resource: settingsSaved.resource,
+        port: settingsSaved.port,
+        password: settingsSaved.password,
       };
       ipcRenderer.send('xmpp-auto-connect', {
         credentials,
@@ -99,6 +100,7 @@ export default class Connection {
         domain: payload.domain,
         username: payload.username,
         resource: payload.jid.split('/')[1],
+        port: payload.port,
         password: payload.password,
         soundName: 'Gong 1',
         minimizeToTrayOnClose: true,
@@ -179,7 +181,10 @@ export default class Connection {
       snackbarNotifications = [...snackbarNotifications, snackbarNotification];
     }
 
-    if (error === 'Cannot authorize your credentials') {
+    if (
+      state.connection.hasSavedCredentials &&
+      error === 'Cannot authorize your credentials'
+    ) {
       ipcRenderer.send('xmpp-log-off');
       return { ...initialState };
     }

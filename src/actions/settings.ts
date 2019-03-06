@@ -40,6 +40,7 @@ export default class Settings {
       domain: settings.domain,
       username: settings.username,
       resource: settings.resource,
+      port: settings.port ? settings.port : '5222',
       systemNotificationOnGroupchat: settings.systemNotificationOnGroupchat
         ? settings.systemNotificationOnGroupchat
         : 'never',
@@ -84,6 +85,7 @@ export default class Settings {
       domain: settings.domain,
       username: settings.username,
       resource: settings.resource,
+      port: settings.port,
       systemNotificationOnGroupchat: settings.systemNotificationOnGroupchat,
       systemNotificationOnMentionMe: settings.systemNotificationOnMentionMe,
       systemNotificationOnChat: settings.systemNotificationOnChat,

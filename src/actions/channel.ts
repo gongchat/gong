@@ -2,6 +2,8 @@ const { ipcRenderer } = window.require('electron');
 const ElectronStore = window.require('electron-store');
 const electronStore = new ElectronStore();
 
+import * as moment from 'moment';
+
 import IChannel from 'src/interfaces/IChannel';
 import IRoom from 'src/interfaces/IRoom';
 import IRoomSaved from 'src/interfaces/IRoomSaved';
@@ -34,11 +36,17 @@ export default class Channel {
   public static select = (state: IState, channelJid: string): IState => {
     const channels: IChannel[] = state.channels.map((channel: IChannel) => {
       if (channel.jid === channelJid) {
-        return {
+        const newChannel = {
           ...channel,
           unreadMessages: 0,
           hasUnreadMentionMe: false,
         };
+
+        if (channel.type === 'groupchat') {
+          (newChannel as IRoom).lastReadTimestamp = moment();
+        }
+
+        return newChannel;
       } else {
         return channel;
       }
@@ -48,6 +56,7 @@ export default class Channel {
       current: channels.find((channel: IChannel) => channel.jid === channelJid),
       channels,
     };
+    Channel.saveRooms(channels);
     Notification.setMenuBarNotificationOnChannelSelect(newState);
     return newState;
   };

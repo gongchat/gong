@@ -110,14 +110,13 @@ export default class Notifications {
       .filter((channel: IChannel) => channel.type === 'chat')
       .reduce((a: number, channel: IChannel) => a + channel.unreadMessages, 0);
 
-    console.log(groupChatUnread, hasUnreadMentionMe, chatUnread);
-
     if (groupChatUnread === 0 && chatUnread === 0) {
       state.menuBarNotification = '';
     } else {
       if (state.profile.status !== 'dnd') {
         if (
           groupChatUnread > 0 &&
+          settings.flashMenuBarOnGroupchatFrequency === 'repeat' &&
           settings.flashMenuBarOnGroupchat !== 'never' &&
           ((settings.flashMenuBarOnGroupchat === 'unread' &&
             groupChatUnread > 0) ||
@@ -130,6 +129,7 @@ export default class Notifications {
         if (
           groupChatUnread > 0 &&
           hasUnreadMentionMe &&
+          settings.flashMenuBarOnMentionMeFrequency === 'repeat' &&
           settings.flashMenuBarOnMentionMe !== 'never' &&
           ((settings.flashMenuBarOnMentionMe === 'unread' &&
             groupChatUnread > 0) ||
@@ -141,6 +141,7 @@ export default class Notifications {
         }
         if (
           chatUnread > 0 &&
+          settings.flashMenuBarOnChatFrequency === 'repeat' &&
           settings.flashMenuBarOnChat !== 'never' &&
           ((settings.flashMenuBarOnChat === 'unread' && chatUnread > 0) ||
             settings.flashMenuBarOnChat === 'always')

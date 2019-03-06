@@ -59,7 +59,7 @@ class XmppJsClient {
 
   createConnection(event, credentials, key, settings) {
     this.client = new client({
-      service: `xmpp://${credentials.domain}:5222`,
+      service: `xmpp://${credentials.domain}:${credentials.port}`,
       domain: credentials.domain,
       username: credentials.username,
       resource: credentials.resource,
@@ -140,6 +140,7 @@ class XmppJsClient {
         domain: credentials.domain,
         username: credentials.username,
         resource: credentials.resource,
+        port: credentials.port,
         password: credentials.password,
       });
     });
