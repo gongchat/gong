@@ -29,6 +29,14 @@ _I am using electron 3, node 10.13.0, and Windows 10_
 
 After `npm run dist` finishes you can find the installation file in `/dist`.
 
+## Updating your Application
+
+Since the application is in a pre-alpha state there are little efforts for data migration. If your application is behaving strange deleting the `config.json` file may fix the issues. The location of the `config.json` file is different depending on your operating system. Typical locations are below.
+
+- Windows: `C:\Users\<username>\AppData\Roaming\gong\config.json`
+- Linux:  `~/.config/gong/config.json`
+- Mac: `~/Library/Application Support/gong/config.json`
+
 ## Determining Unread Messages
 
 ### Timestamp
