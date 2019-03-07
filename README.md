@@ -43,10 +43,4 @@ Since the application is in a pre-alpha state there are little efforts for data 
 
 #### Timestamp
 
-Historical messages are the only messages that have a timestamp from the server. All other
-messages are timestamped when received or sent by the client. This can cause issues when determining if historical messages have been read as the server and client timestamps
-will not always be synced.
-
-#### Ids
-
-A option is to use message ids to determine if a message has been read or not. Unfortunately, messages that have been sent by you do not contain an id when received back from the server. This also means ids cannot be used for message acknowledgement.
+Historical messages are the only messages that have a timestamp from the server. All other messages are timestamped when received or sent by the client. This can cause issues when determining if historical messages have been read as the server and client timestamps will not always be synced.

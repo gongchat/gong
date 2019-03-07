@@ -45,6 +45,8 @@ export default class Channel {
 
         if (channel.type === 'groupchat') {
           (newChannel as IRoom).lastReadTimestamp = moment();
+          (newChannel as IRoom).lastReadMessageId =
+            channel.messages[channel.messages.length - 1].id;
         }
 
         return newChannel;
@@ -97,9 +99,42 @@ export default class Channel {
             nickname: room.myNickname,
             password: room.password,
             lastReadTimestamp: room.lastReadTimestamp,
+            lastReadMessageId: room.lastReadMessageId,
           };
           return roomSaved;
         })
     );
+  };
+
+  public static addLoggedMessages = (
+    state: IState,
+    jid: string,
+    date: string
+  ) => {
+    const messagesElectronStore = new ElectronStore({
+      cwd: jid,
+      name: date,
+    });
+    const messages = messagesElectronStore.get('');
+
+    if (messages.length === 0) {
+      return state;
+    }
+
+    const channels = state.channels.map((channel: IChannel) => {
+      if (channel.jid === messages[0].channelName) {
+        return {
+          ...channel,
+          messages: [...messages, ...channel.messages],
+        };
+      } else {
+        return channel;
+      }
+    });
+
+    return {
+      ...state,
+      channels,
+    };
   };
 }

@@ -11,4 +11,5 @@ export default interface IRoom extends IChannel {
   isConnecting: boolean;
   connectionError: string;
   lastReadTimestamp: Moment | undefined;
+  lastReadMessageId: string;
 }

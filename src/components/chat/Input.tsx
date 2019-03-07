@@ -21,6 +21,7 @@ import IStates from 'src/interfaces/IStates';
 
 // utils
 import Emojis, { emojis as emojisObj } from 'src/utils/emojis';
+import StringUtil from 'src/utils/stringUtils';
 
 // TODO: Break up texthelpers(autocomplete) into smaller component
 
@@ -180,6 +181,7 @@ class Input extends React.Component<any, any> {
       });
     } else {
       const messageSend: IMessageSend = {
+        id: StringUtil.makeId(7),
         type: this.props.current.type,
         to: this.props.current.jid,
         from: this.props.from,

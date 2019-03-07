@@ -105,17 +105,21 @@ class Messages extends React.Component<any, any> {
         <div className={classes.filler} />
         {messages &&
           messages.map((message: IMessage, index: number) => {
-            const nextMessage: any =
-              index + 1 > messages.length ? undefined : messages[index + 1];
             const showDate = previousDate !== message.timestamp.format('L');
             const showNewMessageMarker =
-              index !== 0 &&
-              !hasNewMessageMarker &&
-              previousMessageStatus !== message.isRead;
+              !hasNewMessageMarker && previousMessageStatus !== message.isRead;
+
+            const nextMessage: any =
+              index + 1 > messages.length ? undefined : messages[index + 1];
             const isNextShowDate = nextMessage
               ? nextMessage.timestamp.format('L') !==
                 message.timestamp.format('L')
               : false;
+            const isNextShowNewMessageMarker =
+              !hasNewMessageMarker && nextMessage
+                ? nextMessage.isRead !== message.isRead
+                : false;
+
             const isStartOfGroup =
               previousUserNickname !== message.userNickname;
             const isEndOfGroup = nextMessage
@@ -156,7 +160,9 @@ class Messages extends React.Component<any, any> {
                           classes.startOfGroupBorder
                         }`
                       : '',
-                    isEndOfGroup && !isNextShowDate
+                    isEndOfGroup &&
+                    !isNextShowDate &&
+                    !isNextShowNewMessageMarker
                       ? classes.endOfGroupPadding
                       : '',
                   ].join(' ')}

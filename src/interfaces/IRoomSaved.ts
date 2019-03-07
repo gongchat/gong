@@ -7,4 +7,5 @@ export default interface IRoomSaved {
   nickname: string;
   password: string;
   lastReadTimestamp: Moment | undefined;
+  lastReadMessageId: string;
 }

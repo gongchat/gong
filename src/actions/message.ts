@@ -1,4 +1,5 @@
 const { ipcRenderer } = window.require('electron');
+const ElectronStore = window.require('electron-store');
 
 import * as moment from 'moment';
 import * as sanitizeHtml from 'sanitize-html';
@@ -25,7 +26,6 @@ import Channel from './channel';
 import Notification from './notification';
 
 import ColorUtil from 'src/utils/colorUtil';
-import StringUtil from 'src/utils/stringUtils';
 
 const ALLOWED_TAGS = [
   'h3',
@@ -76,7 +76,7 @@ export default class Message {
     const newState: IState = { ...state };
     if (newState.current && newState.current.type === 'chat') {
       const message: IMessage = {
-        id: StringUtil.makeId(7),
+        id: messageSend.id,
         channelName: messageSend.to,
         to: messageSend.to,
         from: messageSend.from,
@@ -344,10 +344,7 @@ export default class Message {
         type,
         rawText
       );
-
-      if (!message.isHistory) {
-        Notification.setMenuBarNotificationOnMessage(state);
-      }
+      Notification.setMenuBarNotificationOnMessage(state, message);
     }
   }
 
@@ -375,14 +372,6 @@ export default class Message {
             ) > 0;
           message.isRead = !isUnreadOne || !isUnreadTwo;
 
-          Notification.playAudioOnMessage(state, message, type);
-          Notification.sendSystemNotificationOnMessage(
-            state,
-            message,
-            type,
-            rawText
-          );
-
           const newChannel = {
             ...channel,
             messages: [...channel.messages, message],
@@ -390,7 +379,12 @@ export default class Message {
               isUnreadOne && isUnreadTwo
                 ? channel.unreadMessages + 1
                 : channel.unreadMessages,
-            hasUnreadMentionMe: isUnreadOne && message.isMentioningMe,
+            hasUnreadMentionMe:
+              isUnreadOne &&
+              (message.isMentioningMe ||
+                channel.messages.find(
+                  (m: IMessage) => m.isMentioningMe && !m.isRead
+                ) !== undefined),
           };
 
           if (!isUnreadOne && type === 'groupchat') {
@@ -398,18 +392,27 @@ export default class Message {
             lastReadTimestampUpdated = true;
           }
 
+          Message.log(channel, message);
+
           return newChannel;
         }
         return channel;
       }),
     ];
 
-    if (!message.isHistory) {
-      Notification.setMenuBarNotificationOnMessage(state);
+    if (channelUpdated) {
+      Notification.playAudioOnMessage(state, message, type);
+      Notification.sendSystemNotificationOnMessage(
+        state,
+        message,
+        type,
+        rawText
+      );
+      Notification.setMenuBarNotificationOnMessage(state, message);
+    }
 
-      if (lastReadTimestampUpdated) {
-        Channel.saveRooms(state.channels);
-      }
+    if (!message.isHistory && lastReadTimestampUpdated) {
+      Channel.saveRooms(state.channels);
     }
 
     return channelUpdated;
@@ -443,9 +446,31 @@ export default class Message {
       'chat',
       rawText
     );
-
-    if (message.isHistory) {
-      Notification.setMenuBarNotificationOnMessage(state);
-    }
+    Notification.setMenuBarNotificationOnMessage(state, message);
   }
+
+  private static log = (channel: IChannel, message: IMessage) => {
+    // TODO: make async
+    const messageElectronStore = new ElectronStore({
+      cwd: `logs/${message.channelName}`,
+      name: message.timestamp.format('YYYY-MM-DD'),
+    });
+    const messages = messageElectronStore.get('messages');
+    if (
+      channel.type === 'chat' ||
+      (channel.type === 'groupchat' &&
+        message.id !== undefined &&
+        (!message.isHistory ||
+          !messages ||
+          messages.find(
+            (m: IMessage) => m.id !== undefined && m.id === message.id
+          ) === undefined))
+    ) {
+      if (messages) {
+        messageElectronStore.set('messages', [...messages, message]);
+      } else {
+        messageElectronStore.set('messages', [message]);
+      }
+    }
+  };
 }
