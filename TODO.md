@@ -1,13 +1,6 @@
 # TODO
 
-- [x] Have gong run in taskbar
-- [x] Notifications outside App (need to test on other OS)
-- [x] Add a way to specify a port on login
-- [x] Use timestamp to identify if historical messages have been read
-- [x] Add a new element that specifies at what point in the listing of messages where the new messages begin
-
-- [ ] Keep logs of messages
-
+- [ ] Flash icon in tray on message
 - [ ] Have setting to load application on startup
 
 - [ ] Better styling on input (sometimes there is a weird dot at the start that blinks and text gets cut off)

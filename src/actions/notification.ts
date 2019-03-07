@@ -38,70 +38,28 @@ export default class Notifications {
     };
   };
 
-  public static setMenuBarNotificationOnMessage = (
+  public static handleOnMessage = (
     state: IState,
-    message: IMessage
+    message: IMessage,
+    type: string,
+    rawText: string
   ) => {
-    let frequency = '';
-    const key = new Date().getTime() + Math.random() + '';
-    const settings = state.settings;
-    const groupChatUnreadMessages = state.channels
-      .filter((channel: IChannel) => channel.type === 'groupchat')
-      .reduce((a: number, channel: IChannel) => a + channel.unreadMessages, 0);
-    const groupChatHasUnreadMentionMe =
-      state.channels.filter((channel: IChannel) => channel.hasUnreadMentionMe)
-        .length === 0
-        ? false
-        : true;
-    const chatMessagesUnread = state.channels
-      .filter((channel: IChannel) => channel.type === 'chat')
-      .reduce((a: number, channel: IChannel) => a + channel.unreadMessages, 0);
+    Notifications.playAudioOnMessage(state, message, type);
+    Notifications.sendSystemNotificationOnMessage(
+      state,
+      message,
+      type,
+      rawText
+    );
+    Notifications.setMenuBarNotificationOnMessage(state, message);
+  };
 
-    if (state.profile.status !== 'dnd') {
-      if (
-        settings.flashMenuBarOnGroupchat !== 'never' &&
-        ((settings.flashMenuBarOnGroupchat === 'unread' &&
-          groupChatUnreadMessages > 0 &&
-          !message.isRead) ||
-          settings.flashMenuBarOnGroupchat === 'always')
-      ) {
-        frequency =
-          groupChatUnreadMessages > 0
-            ? settings.flashMenuBarOnGroupchatFrequency
-            : 'once';
-      }
-      if (
-        frequency !== 'repeat' &&
-        groupChatHasUnreadMentionMe &&
-        settings.flashMenuBarOnMentionMe !== 'never' &&
-        ((settings.flashMenuBarOnMentionMe === 'unread' &&
-          groupChatUnreadMessages > 0 &&
-          !message.isRead) ||
-          settings.flashMenuBarOnMentionMe === 'always')
-      ) {
-        frequency =
-          groupChatUnreadMessages > 0
-            ? settings.flashMenuBarOnMentionMeFrequency
-            : 'once';
-      }
-      if (
-        frequency !== 'repeat' &&
-        settings.flashMenuBarOnChat !== 'never' &&
-        ((settings.flashMenuBarOnChat === 'unread' &&
-          chatMessagesUnread > 0 &&
-          !message.isRead) ||
-          settings.flashMenuBarOnChat === 'always')
-      ) {
-        frequency =
-          chatMessagesUnread > 0
-            ? settings.flashMenuBarOnChatFrequency
-            : 'once';
-      }
-      if (frequency !== '') {
-        state.menuBarNotification = `${frequency},${key}`;
-      } else {
-        state.menuBarNotification = '';
-      }
+  public static playAudio = (soundName: string) => {
+    const sound = SOUNDS.find((s: any) => s.name === soundName);
+    if (sound) {
+      const audio = new Audio(`./audio/${sound.fileName}`);
+      audio.volume = 1;
+      audio.play();
     }
   };
 
@@ -166,7 +124,7 @@ export default class Notifications {
     }
   };
 
-  public static shouldPlayAudio = (
+  private static shouldPlayAudio = (
     state: IState,
     message: IMessage,
     type: string
@@ -207,16 +165,7 @@ export default class Notifications {
     return false;
   };
 
-  public static playAudio = (soundName: string) => {
-    const sound = SOUNDS.find((s: any) => s.name === soundName);
-    if (sound) {
-      const audio = new Audio(`./audio/${sound.fileName}`);
-      audio.volume = 1;
-      audio.play();
-    }
-  };
-
-  public static playAudioOnMessage = (
+  private static playAudioOnMessage = (
     state: IState,
     message: IMessage,
     type: string
@@ -226,7 +175,7 @@ export default class Notifications {
     }
   };
 
-  public static shouldSendSystemNotifications = (
+  private static shouldSendSystemNotifications = (
     state: IState,
     message: IMessage,
     type: string
@@ -270,7 +219,7 @@ export default class Notifications {
     return false;
   };
 
-  public static sendSystemNotificationOnMessage = (
+  private static sendSystemNotificationOnMessage = (
     state: IState,
     message: IMessage,
     type: string,
@@ -288,6 +237,73 @@ export default class Notifications {
         win.focus();
         win.setAlwaysOnTop(false);
       };
+    }
+  };
+
+  private static setMenuBarNotificationOnMessage = (
+    state: IState,
+    message: IMessage
+  ) => {
+    let frequency = '';
+    const key = new Date().getTime() + Math.random() + '';
+    const settings = state.settings;
+    const groupChatUnreadMessages = state.channels
+      .filter((channel: IChannel) => channel.type === 'groupchat')
+      .reduce((a: number, channel: IChannel) => a + channel.unreadMessages, 0);
+    const groupChatHasUnreadMentionMe =
+      state.channels.filter((channel: IChannel) => channel.hasUnreadMentionMe)
+        .length === 0
+        ? false
+        : true;
+    const chatMessagesUnread = state.channels
+      .filter((channel: IChannel) => channel.type === 'chat')
+      .reduce((a: number, channel: IChannel) => a + channel.unreadMessages, 0);
+
+    if (state.profile.status !== 'dnd') {
+      if (
+        settings.flashMenuBarOnGroupchat !== 'never' &&
+        ((settings.flashMenuBarOnGroupchat === 'unread' &&
+          groupChatUnreadMessages > 0 &&
+          !message.isRead) ||
+          settings.flashMenuBarOnGroupchat === 'always')
+      ) {
+        frequency =
+          groupChatUnreadMessages > 0
+            ? settings.flashMenuBarOnGroupchatFrequency
+            : 'once';
+      }
+      if (
+        frequency !== 'repeat' &&
+        groupChatHasUnreadMentionMe &&
+        settings.flashMenuBarOnMentionMe !== 'never' &&
+        ((settings.flashMenuBarOnMentionMe === 'unread' &&
+          groupChatUnreadMessages > 0 &&
+          !message.isRead) ||
+          settings.flashMenuBarOnMentionMe === 'always')
+      ) {
+        frequency =
+          groupChatUnreadMessages > 0
+            ? settings.flashMenuBarOnMentionMeFrequency
+            : 'once';
+      }
+      if (
+        frequency !== 'repeat' &&
+        settings.flashMenuBarOnChat !== 'never' &&
+        ((settings.flashMenuBarOnChat === 'unread' &&
+          chatMessagesUnread > 0 &&
+          !message.isRead) ||
+          settings.flashMenuBarOnChat === 'always')
+      ) {
+        frequency =
+          chatMessagesUnread > 0
+            ? settings.flashMenuBarOnChatFrequency
+            : 'once';
+      }
+      if (frequency !== '') {
+        state.menuBarNotification = `${frequency},${key}`;
+      } else {
+        state.menuBarNotification = '';
+      }
     }
   };
 }

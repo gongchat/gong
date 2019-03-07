@@ -311,8 +311,8 @@ export default class Message {
     Message.updateCurrent(state, type, message, rawText);
 
     // Looks for channel, if found, it will update it
-    const channelUpdated = Message.updateChannel(state, type, message, rawText);
-    if (!channelUpdated) {
+    const updated = Message.updateChannel(state, type, message, rawText);
+    if (!updated) {
       // if no channel is found add it to the open channels
       Message.addToOpenChannels(state, message, rawText);
     }
@@ -337,14 +337,7 @@ export default class Message {
         messages: [...state.current.messages, message],
       };
 
-      Notification.playAudioOnMessage(state, message, type);
-      Notification.sendSystemNotificationOnMessage(
-        state,
-        message,
-        type,
-        rawText
-      );
-      Notification.setMenuBarNotificationOnMessage(state, message);
+      Notification.handleOnMessage(state, message, type, rawText);
     }
   }
 
@@ -401,14 +394,7 @@ export default class Message {
     ];
 
     if (channelUpdated) {
-      Notification.playAudioOnMessage(state, message, type);
-      Notification.sendSystemNotificationOnMessage(
-        state,
-        message,
-        type,
-        rawText
-      );
-      Notification.setMenuBarNotificationOnMessage(state, message);
+      Notification.handleOnMessage(state, message, type, rawText);
     }
 
     if (!message.isHistory && lastReadTimestampUpdated) {
@@ -439,23 +425,22 @@ export default class Message {
     };
     state.channels = [...state.channels, newChannel];
 
-    Notification.playAudioOnMessage(state, message, 'chat');
-    Notification.sendSystemNotificationOnMessage(
-      state,
-      message,
-      'chat',
-      rawText
-    );
-    Notification.setMenuBarNotificationOnMessage(state, message);
+    Notification.handleOnMessage(state, message, 'chat', rawText);
   }
 
   private static log = (channel: IChannel, message: IMessage) => {
     // TODO: make async
-    const messageElectronStore = new ElectronStore({
+    const date = message.timestamp.format('YYYY-MM-DD');
+    const logsElectronStore = new ElectronStore({
       cwd: `logs/${message.channelName}`,
-      name: message.timestamp.format('YYYY-MM-DD'),
+      name: 'index',
     });
-    const messages = messageElectronStore.get('messages');
+    const messagesElectronStore = new ElectronStore({
+      cwd: `logs/${message.channelName}`,
+      name: date,
+    });
+    const logs = logsElectronStore.get('logs');
+    const messages = messagesElectronStore.get('messages');
     if (
       channel.type === 'chat' ||
       (channel.type === 'groupchat' &&
@@ -466,10 +451,15 @@ export default class Message {
             (m: IMessage) => m.id !== undefined && m.id === message.id
           ) === undefined))
     ) {
-      if (messages) {
-        messageElectronStore.set('messages', [...messages, message]);
+      if (logs && logs.find((l: any) => l === date) === undefined) {
+        logsElectronStore.set('logs', [...logs, date]);
       } else {
-        messageElectronStore.set('messages', [message]);
+        logsElectronStore.set('logs', [date]);
+      }
+      if (messages) {
+        messagesElectronStore.set('messages', [...messages, message]);
+      } else {
+        messagesElectronStore.set('messages', [message]);
       }
     }
   };
