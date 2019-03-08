@@ -45,8 +45,10 @@ export default class Channel {
 
         if (channel.type === 'groupchat') {
           (newChannel as IRoom).lastReadTimestamp = moment();
-          (newChannel as IRoom).lastReadMessageId =
-            channel.messages[channel.messages.length - 1].id;
+          if (channel.messages.length > 0) {
+            (newChannel as IRoom).lastReadMessageId =
+              channel.messages[channel.messages.length - 1].id;
+          }
         }
 
         return newChannel;
