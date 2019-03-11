@@ -88,12 +88,7 @@ class Message extends React.Component<any, any> {
                 .filter((url: IMessageUrl) => url.type === 'image')
                 .map((url: IMessageUrl, index: number) => (
                   <div key={index} className={classes.image}>
-                    <div
-                      style={{
-                        background: `url("${url.url}") no-repeat left top`,
-                        backgroundSize: 'contain',
-                      }}
-                    />
+                    <img src={url.url} />
                   </div>
                 ))}
           </React.Fragment>
@@ -173,12 +168,12 @@ const styles: any = (theme: any) => ({
     },
   },
   image: {
-    flex: '0 1 100%',
-    padding: theme.spacing.unit * 2,
-    paddingLeft: theme.spacing.unit * 8,
-    '& > div': {
-      width: 300,
-      height: 150,
+    margin: theme.spacing.unit * 2,
+    marginLeft: theme.spacing.unit * 8,
+    width: 300,
+    backgroundColor: theme.palette.background.default,
+    '& img': {
+      maxWidth: '100%',
     },
   },
   me: {
