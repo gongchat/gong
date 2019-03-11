@@ -140,7 +140,6 @@ const styles: any = (theme: any) => ({
   channels: {
     overflowY: 'auto',
   },
-
   profile: {
     background: theme.palette.background.default,
   },
