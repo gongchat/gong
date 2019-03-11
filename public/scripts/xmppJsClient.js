@@ -258,7 +258,7 @@ class XmppJsClient {
     }
   }
 
-  async sendPong(id, domain) {
+  async sendPong(domain, id) {
     return await this.client.iqCaller.request(
       xml('iq', {
         id: id,
