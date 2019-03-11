@@ -50,6 +50,7 @@ export default class Room {
             users: [],
             unreadMessages: 0,
             hasUnreadMentionMe: false,
+            hasNoMoreLogs: undefined,
             scrollPosition: 0,
             lastReadTimestamp: moment(roomSaved.lastReadTimestamp),
             lastReadMessageId: roomSaved.lastReadMessageId,
@@ -81,6 +82,7 @@ export default class Room {
       myNickname: roomJoin.nickname,
       unreadMessages: 0,
       hasUnreadMentionMe: false,
+      hasNoMoreLogs: undefined,
       scrollPosition: 0,
       lastReadTimestamp: undefined,
       lastReadMessageId: '',
@@ -108,6 +110,7 @@ export default class Room {
         messages: [],
         unreadMessages: 0,
         hasUnreadMentionMe: false,
+        hasNoMoreLogs: undefined,
         scrollPosition: 0,
       };
       return {
@@ -140,6 +143,7 @@ export default class Room {
         myNickname: payload.room.nickname,
         unreadMessages: 0,
         hasUnreadMentionMe: false,
+        hasNoMoreLogs: undefined,
         scrollPosition: 0,
         lastReadTimestamp: undefined,
         lastReadMessageId: '',

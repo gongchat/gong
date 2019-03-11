@@ -1,5 +1,6 @@
 import {
   CHANNEL_ADD,
+  CHANNEL_GET_LOGGED_MESSAGES,
   CHANNEL_REMOVE,
   CHANNEL_SELECT,
   CHANNEL_SELECT_USER,
@@ -22,6 +23,7 @@ import {
   XMPP_CONNECTION_CONNECTING,
 } from './constants';
 
+import IChannel from 'src/interfaces/IChannel';
 import IChannelUser from 'src/interfaces/IChannelUser';
 import ICredentials from 'src/interfaces/ICredentials';
 import IMessageSend from 'src/interfaces/IMessageSend';
@@ -117,4 +119,8 @@ export const setRoomNickname = (roomNickname: any) => (dispatch: any) => {
 
 export const editRoom = (jid: string, room: IRoomJoin) => (dispatch: any) => {
   dispatch({ type: ROOM_EDIT, payload: { jid, room } });
+};
+
+export const getLoggedMessages = (channel: IChannel) => (dispatch: any) => {
+  dispatch({ type: CHANNEL_GET_LOGGED_MESSAGES, payload: channel });
 };

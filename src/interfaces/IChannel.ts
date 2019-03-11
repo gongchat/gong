@@ -9,4 +9,5 @@ export default interface IChannel {
   unreadMessages: number;
   hasUnreadMentionMe: boolean;
   scrollPosition: number;
+  hasNoMoreLogs: boolean | undefined;
 }

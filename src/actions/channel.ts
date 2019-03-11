@@ -108,34 +108,88 @@ export default class Channel {
     );
   };
 
-  public static addLoggedMessages = (
-    state: IState,
-    jid: string,
-    date: string
-  ) => {
-    const messagesElectronStore = new ElectronStore({
-      cwd: jid,
-      name: date,
+  public static addLoggedMessages = (state: IState, channel: IChannel) => {
+    let messages: IMessage[] = [];
+    let hasNoMoreLogs = false;
+    const date =
+      channel.messages && channel.messages.length > 0
+        ? moment(channel.messages[0].timestamp).format('YYYY-MM-DD')
+        : '';
+    const logsElectronStore = new ElectronStore({
+      cwd: `logs/${channel.jid}`,
+      name: 'index',
     });
-    const messages = messagesElectronStore.get('');
-
-    if (messages.length === 0) {
-      return state;
+    const logs = logsElectronStore.get('logs');
+    if (logs) {
+      const currentLogIndex = date ? logs.indexOf(date) : logs.length - 1;
+      if (currentLogIndex >= 0) {
+        // this should be the first log, need to get any items for that day
+        const currentMessagesElectronStore = new ElectronStore({
+          cwd: `logs/${channel.jid}`,
+          name: logs[currentLogIndex],
+        });
+        const currentSavedMessages: IMessage[] = currentMessagesElectronStore.get(
+          'messages'
+        );
+        if (currentSavedMessages && currentSavedMessages.length > 0) {
+          messages = currentSavedMessages.filter(
+            (message: IMessage) =>
+              channel.messages.find((m: IMessage) => m.id === message.id) ===
+              undefined
+          );
+        }
+        if (currentLogIndex - 1 >= 0) {
+          const nextMessagesElectronStore = new ElectronStore({
+            cwd: `logs/${channel.jid}`,
+            name: logs[currentLogIndex - 1],
+          });
+          const nextSavedMessages = nextMessagesElectronStore.get('messages');
+          if (nextSavedMessages && nextSavedMessages.length > 0) {
+            messages = [...nextSavedMessages, ...messages];
+          }
+        } else {
+          hasNoMoreLogs = true;
+        }
+        if (messages.length > 0) {
+          messages.forEach((message: IMessage) => {
+            message.timestamp = moment(message.timestamp);
+          });
+        }
+      } else {
+        hasNoMoreLogs = true;
+      }
+    } else {
+      hasNoMoreLogs = true;
     }
 
-    const channels = state.channels.map((channel: IChannel) => {
-      if (channel.jid === messages[0].channelName) {
+    const current =
+      state.current && state.current.jid === channel.jid
+        ? {
+            ...state.current,
+            messages:
+              messages.length > 0
+                ? [...messages, ...state.current.messages]
+                : state.current.messages,
+            hasNoMoreLogs,
+          }
+        : state.current;
+
+    const channels = state.channels.map((c: IChannel) => {
+      if (c.jid === channel.jid) {
         return {
-          ...channel,
-          messages: [...messages, ...channel.messages],
+          ...c,
+          messages:
+            messages.length > 0 ? [...messages, ...c.messages] : c.messages,
+          hasNoMoreLogs,
         };
       } else {
-        return channel;
+        return c;
       }
     });
 
     return {
       ...state,
+      current,
       channels,
     };
   };

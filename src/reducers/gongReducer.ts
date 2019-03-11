@@ -1,5 +1,6 @@
 import {
   CHANNEL_ADD,
+  CHANNEL_GET_LOGGED_MESSAGES,
   CHANNEL_REMOVE,
   CHANNEL_SELECT,
   CHANNEL_SELECT_USER,
@@ -140,6 +141,8 @@ export default function(state = initialState, action: any) {
       return Channel.select(state, action.payload);
     case CHANNEL_SET_SCROLL_POSITION:
       return Channel.setScrollPosition(state, action.payload);
+    case CHANNEL_GET_LOGGED_MESSAGES:
+      return Channel.addLoggedMessages(state, action.payload);
 
     case XMPP_CONNECTION_AUTO_CONNECT:
       return Connection.autoConnect(state);

@@ -24,6 +24,7 @@ export default class XmppJsMapper {
         messages: [],
         unreadMessages: 0,
         hasUnreadMentionMe: false,
+        hasNoMoreLogs: undefined,
         connections: [],
         scrollPosition: 0,
         vCard: undefined,

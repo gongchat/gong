@@ -422,6 +422,7 @@ export default class Message {
       unreadMessages: message.isRead ? 1 : 0,
       hasUnreadMentionMe: message.isMentioningMe,
       scrollPosition: 0,
+      hasNoMoreLogs: undefined,
     };
     state.channels = [...state.channels, newChannel];
 

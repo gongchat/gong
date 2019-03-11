@@ -2,7 +2,10 @@ import * as React from 'react';
 
 // redux & actions
 import { connect } from 'react-redux';
-import { setChannelScrollPosition } from 'src/actions/dispatcher';
+import {
+  getLoggedMessages,
+  setChannelScrollPosition,
+} from 'src/actions/dispatcher';
 
 // material ui
 import { withStyles } from '@material-ui/core';
@@ -40,9 +43,8 @@ class Messages extends React.Component<any, any> {
     }
   }
 
-  public componentWillReceiveProps(nextProps: any) {
-    const messagesCountBeforeUpdate: number = this.state.messages.length;
-    // check if at bottom before adding messages
+  public componentDidUpdate(prevProps: any) {
+    // check if at bottom or at top
     let isAtBottom: boolean = false;
     if (this.root.current) {
       isAtBottom =
@@ -50,26 +52,37 @@ class Messages extends React.Component<any, any> {
         this.root.current.scrollHeight - 5; // -5 is a buffer
     }
 
-    if (nextProps.current) {
+    if (this.props.current) {
       // check for new messages
       if (
-        nextProps.current.messages &&
-        (nextProps.current.messages.length !== messagesCountBeforeUpdate ||
-          (this.props.current &&
-            this.props.current.jid !== nextProps.current.jid))
+        this.props.current.messages &&
+        (!prevProps.current ||
+          this.props.current.messages.length !==
+            prevProps.current.messages.length ||
+          this.props.current.jid !== prevProps.current.jid)
       ) {
-        this.setState({ messages: nextProps.current.messages });
+        this.setState({ messages: this.props.current.messages });
       }
 
-      // check if new channel is selected
+      // determine if archived messages should be requested
       if (
-        this.props.current &&
-        this.props.current.jid !== nextProps.current.jid
+        !this.props.current.hasNoMoreLogs &&
+        this.root.current &&
+        this.root.current.scrollTop === 0 &&
+        this.root.current.offsetHeight === this.root.current.scrollHeight
+      ) {
+        this.props.getLoggedMessages(this.props.current);
+      }
+
+      // handle scroll position
+      if (
+        !prevProps.current ||
+        this.props.current.jid !== prevProps.current.jid
       ) {
         // update scroll position if new current channel
         setTimeout(() => {
           if (this.root.current) {
-            this.root.current.scrollTop = nextProps.current.scrollPosition;
+            this.root.current.scrollTop = this.props.current.scrollPosition;
           }
         });
       } else {
@@ -78,15 +91,14 @@ class Messages extends React.Component<any, any> {
           if (
             isAtBottom &&
             this.root.current &&
-            messagesCountBeforeUpdate !== nextProps.current.messages.length
+            this.props.current.messages.length !==
+              prevProps.current.messages.length
           ) {
             this.root.current.scrollTop =
               this.root.current.scrollHeight + this.root.current.offsetHeight;
           }
         });
       }
-    } else {
-      this.setState({ messages: [] });
     }
   }
 
@@ -195,6 +207,13 @@ class Messages extends React.Component<any, any> {
     }
     this.scrollTimer = setTimeout(() => {
       if (this.props.current) {
+        if (
+          this.props.current &&
+          !this.props.current.hasNoMoreLogs &&
+          event.target.scrollTop === 0
+        ) {
+          this.props.getLoggedMessages(this.props.current);
+        }
         this.props.setChannelScrollPosition(
           this.props.current.jid,
           event.target.scrollTop
@@ -210,6 +229,7 @@ const mapStateToProps = (states: IStates) => ({
 });
 
 const mapDispatchToProps = {
+  getLoggedMessages,
   setChannelScrollPosition,
 };
 
