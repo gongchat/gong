@@ -7,6 +7,7 @@
 
 - [ ] Handle message errors and acknowledgment
 - [ ] After x min of inactivity set status to away
+- [ ] Setup AppUserModelIDs, will fix notifications for Windows
 
 - [ ] Figure out why streams aren't closing properly (currently fixed with a bit of a hack, need to look into it some more)
 - [ ] Move to Context and Hooks and refactor code
