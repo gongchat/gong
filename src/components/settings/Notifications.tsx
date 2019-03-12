@@ -132,7 +132,7 @@ class NotificationSettings extends React.Component<any, any> {
             </Select>
           </FormControl>
         </BaseSection>
-        <BaseSection title="Display">
+        <BaseSection title="Flash Menu Bar">
           <div className={classes.split}>
             <FormControl variant="filled">
               <InputLabel htmlFor="flashMenuBarOnGroupchat">
