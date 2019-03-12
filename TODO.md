@@ -1,13 +1,10 @@
 # TODO
 
-- [ ] Flash icon in tray on message
 - [ ] Have setting to load application on startup
 
 - [ ] Better styling on input (sometimes there is a weird dot at the start that blinks and text gets cut off)
 
 - [ ] Handle message errors and acknowledgment
-- [ ] After x min of inactivity set status to away
-- [ ] Setup AppUserModelIDs, will fix notifications for Windows
 
 - [ ] Figure out why streams aren't closing properly (currently fixed with a bit of a hack, need to look into it some more)
 - [ ] Move to Context and Hooks and refactor code
@@ -17,6 +14,10 @@
 - [ ] Put together a website to download etc
 
 Alpha
+
+- [ ] Flash icon in tray on message
+- [ ] Setup AppUserModelIDs, will fix notifications for Windows
+- [ ] After x min of inactivity set status to away
 
 - [ ] Encrypted channel passwords (not high priority, pidgin doesn't encrypt any passwords)
 - [ ] Emoji explorer when emoji icon is clicked
