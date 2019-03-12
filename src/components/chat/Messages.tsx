@@ -128,7 +128,7 @@ class Messages extends React.Component<any, any> {
                 message.timestamp.format('L')
               : false;
             const isNextShowNewMessageMarker =
-              !hasNewMessageMarker && nextMessage
+              !hasNewMessageMarker && nextMessage && !nextMessage.isRead
                 ? nextMessage.isRead !== message.isRead
                 : false;
 
