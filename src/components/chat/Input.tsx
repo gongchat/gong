@@ -123,7 +123,9 @@ class Input extends React.Component<any, any> {
           </div>
         )}
         <div
-          className={[classes.input, isFocused && classes.focused].join(' ')}
+          className={[classes.input, isFocused ? classes.focused : ''].join(
+            ' '
+          )}
         >
           <TextField
             id="chat-textarea"
@@ -510,7 +512,7 @@ const styles: any = (theme: any) => ({
   },
   textareaRoot: {
     '& textarea': {
-      overflowY: 'hidden',
+      height: 21,
     },
     '& fieldset': {
       border: 'none',
