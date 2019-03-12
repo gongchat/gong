@@ -153,6 +153,7 @@ export default class Channel {
         if (messages.length > 0) {
           messages.forEach((message: IMessage) => {
             message.timestamp = moment(message.timestamp);
+            message.isRead = true;
           });
         }
       } else {
