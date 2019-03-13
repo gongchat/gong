@@ -48,7 +48,7 @@ class Discover extends React.Component<any, any> {
 
   public componentDidUpdate() {
     if (this.state.open !== this.props.showDiscover) {
-      this.setState({ open: this.props.showDiscover });
+      this.setState({ open: this.props.showDiscover, tabIndex: 0 });
     }
   }
 
@@ -202,7 +202,7 @@ class Discover extends React.Component<any, any> {
   }
 
   private handleClose = () => {
-    this.setState({ open: false, tabIndex: 0 });
+    this.setState({ open: false });
     this.props.setShowDiscover(false);
   };
 
