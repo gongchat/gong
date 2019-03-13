@@ -46,6 +46,7 @@ export default class Presence {
             return {
               ...connection,
               status: presence.status,
+              priority: presence.priority,
             };
           } else {
             return connection;
@@ -64,11 +65,17 @@ export default class Presence {
       }
 
       // get lowest priority connection and use it for status
-      const priorityConnection: IUserConnection = connections.sort(
-        (a: IUserConnection, b: IUserConnection) => a.priority - b.priority
-      )[0];
+      const priorityConnection: IUserConnection = connections
+        .filter((c: IUserConnection) => c.status !== 'offline')
+        .sort(
+          (a: IUserConnection, b: IUserConnection) => a.priority - b.priority
+        )[0];
 
-      user = { ...user, status: priorityConnection.status, connections };
+      user = {
+        ...user,
+        status: priorityConnection ? priorityConnection.status : 'offline',
+        connections,
+      };
 
       return { ...state, channels: [...channels, user] };
     }
