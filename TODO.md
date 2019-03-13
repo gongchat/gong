@@ -1,10 +1,7 @@
 # TODO
 
 - [ ] Have setting to load application on startup
-
 - [ ] Better styling on input (sometimes there is a weird dot at the start that blinks and text gets cut off)
-
-- [ ] Handle message errors and acknowledgment
 
 - [ ] Figure out why streams aren't closing properly (currently fixed with a bit of a hack, need to look into it some more)
 - [ ] Move to Context and Hooks and refactor code
@@ -18,6 +15,7 @@ Alpha
 - [ ] Flash icon in tray on message
 - [ ] Setup AppUserModelIDs, will fix notifications for Windows
 - [ ] After x min of inactivity set status to away
+- [ ] Confirm all message errors have been accounted for
 
 - [ ] Encrypted channel passwords (not high priority, pidgin doesn't encrypt any passwords)
 - [ ] Emoji explorer when emoji icon is clicked
