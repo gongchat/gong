@@ -108,70 +108,21 @@ export default class Channel {
     );
   };
 
-  public static addLoggedMessages = (state: IState, channel: IChannel) => {
-    let messages: IMessage[] = [];
-    let hasNoMoreLogs = false;
-    const date =
-      channel.messages && channel.messages.length > 0
-        ? moment(channel.messages[0].timestamp).format('YYYY-MM-DD')
-        : '';
-    const logsElectronStore = new ElectronStore({
-      cwd: `logs/${channel.jid}`,
-      name: 'index',
+  public static getLogs = (state: IState, channel: IChannel) => {
+    ipcRenderer.send('get-log', {
+      user: state.profile.jid,
+      date:
+        channel.messages && channel.messages.length > 0
+          ? moment(channel.messages[0].timestamp).format('YYYY-MM-DD')
+          : '',
+      channel,
     });
-    const logs = logsElectronStore.get('logs');
-    if (logs) {
-      const currentLogIndex = date ? logs.indexOf(date) : logs.length - 1;
-      if (currentLogIndex >= 0) {
-        // this should be the first log, need to get any items for that day
-        const currentMessagesElectronStore = new ElectronStore({
-          cwd: `logs/${channel.jid}`,
-          name: logs[currentLogIndex],
-        });
-        const currentSavedMessages: IMessage[] = currentMessagesElectronStore.get(
-          'messages'
-        );
-        if (currentSavedMessages && currentSavedMessages.length > 0) {
-          messages = currentSavedMessages.filter(
-            (message: IMessage) =>
-              channel.messages.find((m: IMessage) => m.id === message.id) ===
-              undefined
-          );
-        }
-        if (currentLogIndex - 1 >= 0) {
-          const nextMessagesElectronStore = new ElectronStore({
-            cwd: `logs/${channel.jid}`,
-            name: logs[currentLogIndex - 1],
-          });
-          const nextSavedMessages = nextMessagesElectronStore.get('messages');
-          if (nextSavedMessages && nextSavedMessages.length > 0) {
-            messages = [...nextSavedMessages, ...messages];
-          }
-        } else {
-          hasNoMoreLogs = true;
-        }
-        if (messages.length > 0) {
-          messages.forEach((message: IMessage) => {
-            message.timestamp = moment(message.timestamp);
-            message.isRead = true;
-          });
-        }
-      } else {
-        hasNoMoreLogs = true;
-      }
-    } else {
-      hasNoMoreLogs = true;
-    }
 
     const current =
       state.current && state.current.jid === channel.jid
         ? {
             ...state.current,
-            messages:
-              messages.length > 0
-                ? [...messages, ...state.current.messages]
-                : state.current.messages,
-            hasNoMoreLogs,
+            isRequestingLogs: true,
           }
         : state.current;
 
@@ -179,9 +130,49 @@ export default class Channel {
       if (c.jid === channel.jid) {
         return {
           ...c,
+          isRequestingLogs: true,
+        };
+      } else {
+        return c;
+      }
+    });
+
+    return {
+      ...state,
+      current,
+      channels,
+    };
+  };
+
+  public static setLogs = (state: IState, payload: any) => {
+    const { channelJid, messages, hasNoMoreLogs } = payload;
+
+    messages.forEach(message => {
+      message.timestamp = moment(message.timestamp);
+      message.isRead = true;
+    });
+
+    const current =
+      state.current && state.current.jid === channelJid
+        ? {
+            ...state.current,
+            messages:
+              messages.length > 0
+                ? [...messages, ...state.current.messages]
+                : state.current.messages,
+            hasNoMoreLogs,
+            isRequestingLogs: false,
+          }
+        : state.current;
+
+    const channels = state.channels.map((c: IChannel) => {
+      if (c.jid === channelJid) {
+        return {
+          ...c,
           messages:
             messages.length > 0 ? [...messages, ...c.messages] : c.messages,
           hasNoMoreLogs,
+          isRequestingLogs: false,
         };
       } else {
         return c;

@@ -1,5 +1,4 @@
 const { ipcRenderer } = window.require('electron');
-const ElectronStore = window.require('electron-store');
 
 import * as moment from 'moment';
 import * as sanitizeHtml from 'sanitize-html';
@@ -385,7 +384,7 @@ export default class Message {
             lastReadTimestampUpdated = true;
           }
 
-          Message.log(channel, message);
+          Message.log(state.profile.jid, channel, message);
 
           return newChannel;
         }
@@ -423,45 +422,19 @@ export default class Message {
       hasUnreadMentionMe: message.isMentioningMe,
       scrollPosition: 0,
       hasNoMoreLogs: undefined,
+      isRequestingLogs: false,
     };
     state.channels = [...state.channels, newChannel];
 
     Notification.handleOnMessage(state, message, 'chat', rawText);
   }
 
-  private static log = (channel: IChannel, message: IMessage) => {
-    // TODO: make async
-    const date = message.timestamp.format('YYYY-MM-DD');
-    const logsElectronStore = new ElectronStore({
-      cwd: `logs/${message.channelName}`,
-      name: 'index',
+  private static log = (user: string, channel: IChannel, message: IMessage) => {
+    ipcRenderer.send('set-log', {
+      user,
+      date: message.timestamp.format('YYYY-MM-DD'),
+      channel,
+      message: { ...message, timestamp: message.timestamp.format() },
     });
-    const messagesElectronStore = new ElectronStore({
-      cwd: `logs/${message.channelName}`,
-      name: date,
-    });
-    const logs = logsElectronStore.get('logs');
-    const messages = messagesElectronStore.get('messages');
-    if (
-      channel.type === 'chat' ||
-      (channel.type === 'groupchat' &&
-        message.id !== undefined &&
-        (!message.isHistory ||
-          !messages ||
-          messages.find(
-            (m: IMessage) => m.id !== undefined && m.id === message.id
-          ) === undefined))
-    ) {
-      if (logs && logs.find((l: any) => l === date) === undefined) {
-        logsElectronStore.set('logs', [...logs, date]);
-      } else {
-        logsElectronStore.set('logs', [date]);
-      }
-      if (messages) {
-        messagesElectronStore.set('messages', [...messages, message]);
-      } else {
-        messagesElectronStore.set('messages', [message]);
-      }
-    }
   };
 }

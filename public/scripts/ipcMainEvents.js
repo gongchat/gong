@@ -1,5 +1,8 @@
 const Settings = require('./settings');
 
+const Logger = require('./logger');
+const logger = new Logger();
+
 class IpcMainEvents {
   attachEvents(ipcMain, xmppJsClient) {
     // XMPP Events
@@ -66,6 +69,14 @@ class IpcMainEvents {
 
     ipcMain.on('set-flash-frame', (event, arg) => {
       Settings.set(arg);
+    });
+
+    ipcMain.on('set-log', (event, arg) => {
+      logger.set(arg);
+    });
+
+    ipcMain.on('get-log', (event, arg) => {
+      logger.get(event, arg);
     });
   }
 }

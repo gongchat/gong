@@ -28,6 +28,8 @@ Alpha
 - [ ] Scheduled messages
 - [ ] Virtualize messages when there is a large number of them
 - [ ] Notify user on both ends when someone is typing
+- [ ] Some type of log explorer
+- [ ] Fix scroll flicker when logs load
 
 Beta
 

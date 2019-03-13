@@ -51,6 +51,7 @@ export default class Room {
             unreadMessages: 0,
             hasUnreadMentionMe: false,
             hasNoMoreLogs: undefined,
+            isRequestingLogs: false,
             scrollPosition: 0,
             lastReadTimestamp: moment(roomSaved.lastReadTimestamp),
             lastReadMessageId: roomSaved.lastReadMessageId,
@@ -83,6 +84,7 @@ export default class Room {
       unreadMessages: 0,
       hasUnreadMentionMe: false,
       hasNoMoreLogs: undefined,
+      isRequestingLogs: false,
       scrollPosition: 0,
       lastReadTimestamp: undefined,
       lastReadMessageId: '',
@@ -111,6 +113,7 @@ export default class Room {
         unreadMessages: 0,
         hasUnreadMentionMe: false,
         hasNoMoreLogs: undefined,
+        isRequestingLogs: false,
         scrollPosition: 0,
       };
       return {
@@ -144,6 +147,7 @@ export default class Room {
         unreadMessages: 0,
         hasUnreadMentionMe: false,
         hasNoMoreLogs: undefined,
+        isRequestingLogs: false,
         scrollPosition: 0,
         lastReadTimestamp: undefined,
         lastReadMessageId: '',

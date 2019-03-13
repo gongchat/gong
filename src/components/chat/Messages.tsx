@@ -52,7 +52,7 @@ class Messages extends React.Component<any, any> {
         this.root.current.scrollHeight - 5; // -5 is a buffer
     }
 
-    if (this.props.current) {
+    if (this.props.current && this.root.current) {
       // check for new messages
       if (
         this.props.current.messages &&
@@ -62,16 +62,6 @@ class Messages extends React.Component<any, any> {
           this.props.current.jid !== prevProps.current.jid)
       ) {
         this.setState({ messages: this.props.current.messages });
-      }
-
-      // determine if archived messages should be requested
-      if (
-        !this.props.current.hasNoMoreLogs &&
-        this.root.current &&
-        this.root.current.scrollTop === 0 &&
-        this.root.current.offsetHeight === this.root.current.scrollHeight
-      ) {
-        this.props.getLoggedMessages(this.props.current);
       }
 
       // handle scroll position
@@ -87,18 +77,51 @@ class Messages extends React.Component<any, any> {
         });
       } else {
         // if not a new channel and scroll is at bottom stay at bottom.
-        setTimeout(() => {
-          if (
-            isAtBottom &&
-            this.root.current &&
-            this.props.current.messages.length !==
-              prevProps.current.messages.length
+        if (
+          this.props.current.messages.length !==
+          prevProps.current.messages.length
+        ) {
+          // if at bottom stay at bottom
+          if (isAtBottom) {
+            setTimeout(() => {
+              if (this.root.current) {
+                this.root.current.scrollTop =
+                  this.root.current.scrollHeight +
+                  this.root.current.offsetHeight;
+              }
+            });
+            // if the new messages are from logs
+          } else if (
+            prevProps.current.messages[0] &&
+            this.props.current.messages[0] &&
+            prevProps.current.messages[0].timestamp.diff(
+              this.props.current.messages[0].timestamp
+            ) > 0
           ) {
-            this.root.current.scrollTop =
-              this.root.current.scrollHeight + this.root.current.offsetHeight;
+            const currentPositionFromBottom = this.root.current.scrollHeight;
+            setTimeout(() => {
+              if (this.root.current) {
+                this.root.current.scrollTop =
+                  this.root.current.scrollHeight - currentPositionFromBottom;
+              }
+            });
           }
-        });
+        }
       }
+
+      // determine if archived messages should be requested
+      setTimeout(() => {
+        if (
+          !this.props.current.hasNoMoreLogs &&
+          !this.props.current.isRequestingLogs &&
+          this.root.current &&
+          this.root.current.scrollTop === 0 &&
+          this.root.current.offsetHeight === this.root.current.scrollHeight
+        ) {
+          console.log('new messages!', this.props.current);
+          this.props.getLoggedMessages(this.props.current);
+        }
+      });
     }
   }
 
@@ -210,8 +233,10 @@ class Messages extends React.Component<any, any> {
         if (
           this.props.current &&
           !this.props.current.hasNoMoreLogs &&
+          !this.props.current.isRequestingLogs &&
           event.target.scrollTop === 0
         ) {
+          console.log('getting logged messages from scroll');
           this.props.getLoggedMessages(this.props.current);
         }
         this.props.setChannelScrollPosition(
@@ -242,6 +267,7 @@ const styles: any = (theme: any) => ({
     overflowY: 'scroll',
     display: 'flex',
     flexDirection: 'column',
+    overflowAnchor: 'none',
   },
   filler: {
     flexGrow: 1,

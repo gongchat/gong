@@ -3,6 +3,7 @@ import store from 'src/store';
 import XmppJsMapper from 'src/utils/xmppJsMapper';
 
 import {
+  CHANNEL_SET_LOGGED_MESSAGES,
   CHANNELS_SET,
   MESSAGE_RECEIVE,
   MY_STATUS_SET,
@@ -65,6 +66,10 @@ export default class IpcRenderer {
         type: VCARD_SET,
         payload: XmppJsMapper.mapToVCard(arg),
       });
+    });
+
+    ipcRenderer.on('get-log', (event: any, arg: any) => {
+      store.dispatch({ type: CHANNEL_SET_LOGGED_MESSAGES, payload: arg });
     });
   }
 }
