@@ -36,7 +36,9 @@ class Channel extends React.Component<any, any> {
         <div
           className={[
             classes.root,
-            channel.isConnected ? classes.connected : classes.notConnected,
+            channel.isConnected || channel.type === 'chat'
+              ? classes.connected
+              : classes.notConnected,
             isSelected ? classes.active : '',
           ].join(' ')}
         >
