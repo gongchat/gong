@@ -118,7 +118,6 @@ class Messages extends React.Component<any, any> {
           this.root.current.scrollTop === 0 &&
           this.root.current.offsetHeight === this.root.current.scrollHeight
         ) {
-          console.log('new messages!', this.props.current);
           this.props.getLoggedMessages(this.props.current);
         }
       });
@@ -236,7 +235,6 @@ class Messages extends React.Component<any, any> {
           !this.props.current.isRequestingLogs &&
           event.target.scrollTop === 0
         ) {
-          console.log('getting logged messages from scroll');
           this.props.getLoggedMessages(this.props.current);
         }
         this.props.setChannelScrollPosition(
