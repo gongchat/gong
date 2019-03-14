@@ -40,6 +40,7 @@ class Logger {
 
   get(event, arg) {
     const { user, date, channel } = arg;
+    const maxNumberOfMessages = 25;
 
     let messages = [];
     let hasNoMoreLogs = false;
@@ -64,19 +65,36 @@ class Logger {
             channel.messages.find((m) => m.id === message.id) ===
             undefined
           );
+          if (messages.length > maxNumberOfMessages) {
+            messages = messages.slice(messages.length - maxNumberOfMessages,
+              messages.length);
+          }
         }
         // get the next full set of logs
-        if (currentLogIndex - 1 >= 0) {
-          const nextMessagesElectronStore = new ElectronStore({
-            cwd: `logs/${user.split('/')[0]}/${channel.jid}`,
-            name: logs[currentLogIndex - 1],
-          });
-          const nextSavedMessages = nextMessagesElectronStore.get('messages');
-          if (nextSavedMessages && nextSavedMessages.length > 0) {
-            messages = [...nextSavedMessages, ...messages];
+        let indexOffset = 1;
+        let getMoreLogs = messages.length < maxNumberOfMessages;
+        while (getMoreLogs) {
+          if (currentLogIndex - indexOffset < 0) {
+            hasNoMoreLogs = true;
+            getMoreLogs = false;
+          } else {
+            const nextMessagesElectronStore = new ElectronStore({
+              cwd: `logs/${user.split('/')[0]}/${channel.jid}`,
+              name: logs[currentLogIndex - indexOffset],
+            });
+            const nextSavedMessages = nextMessagesElectronStore.get(
+              'messages');
+            if (nextSavedMessages && nextSavedMessages.length > 0) {
+              messages = [...nextSavedMessages, ...messages];
+              if (messages.length > maxNumberOfMessages) {
+                messages = messages.slice(messages.length -
+                  maxNumberOfMessages,
+                  messages.length);
+              }
+              getMoreLogs = messages.length < maxNumberOfMessages;
+            }
+            indexOffset++;
           }
-        } else {
-          hasNoMoreLogs = true;
         }
       } else {
         hasNoMoreLogs = true;
