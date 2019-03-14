@@ -66,32 +66,34 @@ class Account extends React.Component<any, any> {
     this.fileInput = React.createRef<HTMLInputElement>();
   }
 
-  public componentWillReceiveProps(nextProps: any) {
-    if (nextProps.profile && nextProps.profile.vCard) {
-      this.setState({
-        fullName: nextProps.profile.vCard.fullName,
-        firstName: nextProps.profile.vCard.firstName,
-        lastName: nextProps.profile.vCard.lastName,
-        middleName: nextProps.profile.vCard.middleName,
-        nickname: nextProps.profile.vCard.nickname,
-        url: nextProps.profile.vCard.url,
-        birthday: nextProps.profile.vCard.birthday,
-        organizationName: nextProps.profile.vCard.organizationName,
-        organizationUnit: nextProps.profile.vCard.organizationUnit,
-        title: nextProps.profile.vCard.title,
-        role: nextProps.profile.vCard.role,
-        phoneNumber: nextProps.profile.vCard.phoneNumber,
-        street: nextProps.profile.vCard.street,
-        streetExtended: nextProps.profile.vCard.streetExtended,
-        city: nextProps.profile.vCard.city,
-        state: nextProps.profile.vCard.state,
-        zipCode: nextProps.profile.vCard.zipCode,
-        country: nextProps.profile.vCard.country,
-        email: nextProps.profile.vCard.email,
-        description: nextProps.profile.vCard.description,
-        photoType: nextProps.profile.vCard.photoType,
-        photo: nextProps.profile.vCard.photo,
-      });
+  public componentDidUpdate(prevProps: any) {
+    if (this.props.profile !== prevProps.profile) {
+      if (this.props.profile && this.props.profile.vCard) {
+        this.setState({
+          fullName: this.props.profile.vCard.fullName,
+          firstName: this.props.profile.vCard.firstName,
+          lastName: this.props.profile.vCard.lastName,
+          middleName: this.props.profile.vCard.middleName,
+          nickname: this.props.profile.vCard.nickname,
+          url: this.props.profile.vCard.url,
+          birthday: this.props.profile.vCard.birthday,
+          organizationName: this.props.profile.vCard.organizationName,
+          organizationUnit: this.props.profile.vCard.organizationUnit,
+          title: this.props.profile.vCard.title,
+          role: this.props.profile.vCard.role,
+          phoneNumber: this.props.profile.vCard.phoneNumber,
+          street: this.props.profile.vCard.street,
+          streetExtended: this.props.profile.vCard.streetExtended,
+          city: this.props.profile.vCard.city,
+          state: this.props.profile.vCard.state,
+          zipCode: this.props.profile.vCard.zipCode,
+          country: this.props.profile.vCard.country,
+          email: this.props.profile.vCard.email,
+          description: this.props.profile.vCard.description,
+          photoType: this.props.profile.vCard.photoType,
+          photo: this.props.profile.vCard.photo,
+        });
+      }
     }
   }
 

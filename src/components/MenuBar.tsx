@@ -16,26 +16,28 @@ class MenuBar extends React.Component<any, any> {
     menuBarNotification: this.props.menuBarNotification,
   };
 
-  public componentWillReceiveProps(nextProps: any) {
-    if (nextProps.menuBarNotification !== '') {
-      if (
-        nextProps.menuBarNotification !== this.state.menuBarNotification &&
-        (!this.state.isFlashing ||
-          nextProps.menuBarNotification.split(',')[0] === 'once')
-      ) {
-        this.setState({ menuBarNotification: '' });
-        setTimeout(() => {
-          this.setState({
-            menuBarNotification: nextProps.menuBarNotification,
-            isFlashing:
-              nextProps.menuBarNotification.split(',')[0] === 'repeat'
-                ? true
-                : false,
-          });
-        }, 1);
+  public componentDidUpdate(prevProps: any) {
+    if (this.props.menuBarNotification !== prevProps.menuBarNotification) {
+      if (this.props.menuBarNotification !== '') {
+        if (
+          this.props.menuBarNotification !== this.state.menuBarNotification &&
+          (!this.state.isFlashing ||
+            this.props.menuBarNotification.split(',')[0] === 'once')
+        ) {
+          this.setState({ menuBarNotification: '' });
+          setTimeout(() => {
+            this.setState({
+              menuBarNotification: this.props.menuBarNotification,
+              isFlashing:
+                this.props.menuBarNotification.split(',')[0] === 'repeat'
+                  ? true
+                  : false,
+            });
+          }, 1);
+        }
+      } else {
+        this.setState({ menuBarNotification: '', isFlashing: false });
       }
-    } else {
-      this.setState({ menuBarNotification: '', isFlashing: false });
     }
   }
 
