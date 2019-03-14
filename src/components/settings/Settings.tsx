@@ -33,6 +33,9 @@ import PaletteIcon from '@material-ui/icons/PaletteOutlined';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
+import GithubIcon from 'src/components/icons/GithubIcon';
+import GongIcon from 'src/components/icons/GongIcon';
+
 // components
 import Account from './Account';
 import Font from './Font';
@@ -97,6 +100,21 @@ class Settings extends React.Component<any, any> {
                   );
                 }
               })}
+              <Divider />
+              <ListItem>
+                <div className={classes.links}>
+                  <ListItemIcon>
+                    <a href="https://gongchat.github.io">
+                      <GongIcon />
+                    </a>
+                  </ListItemIcon>
+                  <ListItemIcon>
+                    <a href="https://github.com/gongchat/gong">
+                      <GithubIcon />
+                    </a>
+                  </ListItemIcon>
+                </div>
+              </ListItem>
             </List>
           </div>
           <div className={classes.content}>
@@ -196,6 +214,14 @@ const styles: any = (theme: any) => ({
   },
   icon: {
     marginRight: 0,
+  },
+  links: {
+    display: 'flex',
+    flexWrap: 'nowrap',
+    alignItems: 'flex-start',
+    '& a': {
+      color: theme.palette.text.primary,
+    },
   },
   content: {
     flexGrow: 1,
