@@ -8,7 +8,6 @@ import { sendMessage, setRoomNickname } from 'src/actions/dispatcher';
 import { withStyles } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-// import AddIcon from '@material-ui/icons/Add';
 
 // libs
 import * as MarkdownIt from 'markdown-it';
@@ -147,8 +146,6 @@ class Input extends React.Component<any, any> {
               (this.props.current.connectionError !== undefined &&
                 !this.props.current.isConnected)
             }
-            // inputProps={{ style: { maxHeight: 19 * 24 } }}
-            // inputProps={{ style: { minHeight: 19 * 3 } }}
           />
           <div className={classes.inputRightInline}>
             <div
@@ -474,48 +471,20 @@ const styles: any = (theme: any) => ({
     display: 'flex',
     flexWrap: 'nowrap',
     position: 'relative',
-    borderColor: theme.palette.backgroundInput,
-    transition:
-      'padding-left 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,border-color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,border-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms',
-    '&:hover': {
-      // borderColor: 'white',
-    },
   },
   focused: {
-    // borderColor: 'white',
-  },
-  add: {
-    display: 'flex',
-    alignItems: ' flex-end',
-    position: 'relative',
-    border: '1px solid transparent',
-    borderColor: 'inherit',
-    borderTopLeftRadius: theme.spacing.unit * 0.5,
-    borderBottomLeftRadius: theme.spacing.unit * 0.5,
-    '& p': {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '54px',
-      width: '54px',
-    },
+    // not sure if i want any styles when focused
   },
   textField: {
     width: '100%',
-    borderTop: '1px solid transparent',
-    borderLeft: '1px solid transparent',
-    borderBottom: '1px solid transparent',
     borderTopLeftRadius: theme.spacing.unit * 0.5,
     borderBottomLeftRadius: theme.spacing.unit * 0.5,
-    borderColor: 'inherit !important',
+    borderColor: `${theme.palette.backgroundInput} !important`,
     backgroundColor: theme.palette.backgroundInput,
   },
   textareaRoot: {
-    '& textarea': {
-      height: 21,
-    },
     '& fieldset': {
-      border: 'none',
+      borderColor: `${theme.palette.backgroundInput} !important`,
     },
   },
   inputRightInline: {
@@ -523,9 +492,7 @@ const styles: any = (theme: any) => ({
     alignItems: 'flex-start',
     borderTopRightRadius: theme.spacing.unit * 0.5,
     borderBottomRightRadius: theme.spacing.unit * 0.5,
-    border: '1px solid transparent',
-    borderLeft: 'none',
-    borderColor: 'inherit',
+    borderColor: `${theme.palette.backgroundInput} !important`,
     backgroundColor: theme.palette.backgroundInput,
   },
   inputRightInlineIcon: {
