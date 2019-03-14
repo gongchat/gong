@@ -7,6 +7,7 @@ import { autoLogin } from 'src/actions/dispatcher';
 
 // material ui
 import { withStyles } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 
 // components
 import LoadingIcon from './icons/LoadingIcon';
@@ -14,6 +15,7 @@ import LoadingIcon from './icons/LoadingIcon';
 class Loading extends React.Component<any, any> {
   public state = {
     text: 'Loading please wait...',
+    showLogin: false,
   };
 
   private reconnectTimer: any;
@@ -22,32 +24,33 @@ class Loading extends React.Component<any, any> {
     this.props.autoLogin();
   }
 
-  public componentWillReceiveProps(nextProps: any) {
-    if (
-      !nextProps.connection.isConnecting &&
-      nextProps.connection.isConnecting !== undefined
-    ) {
-      if (nextProps.connection.isConnected) {
-        this.props.history.push('/main');
-      } else if (!nextProps.connection.hasSavedCredentials) {
-        this.props.history.push('/login');
-      } else if (!nextProps.connection.isAuthenticated) {
-        if (
-          nextProps.connection.error === 'Cannot authorize your credentials'
-        ) {
-          // this.props.history.push('/login'); // TODO: this might 
-        } else {
-          this.setState({
-            text: 'Unable to find the server, retrying connection',
-          });
-          if (this.reconnectTimer) {
-            clearTimeout(this.reconnectTimer);
-            this.setState({ text: 'Server not found, retrying connection' });
+  public componentDidUpdate(prevProps: any) {
+    if (this.props.connection !== prevProps.connection) {
+      if (
+        !this.props.connection.isConnecting &&
+        this.props.connection.isConnecting !== undefined
+      ) {
+        if (this.props.connection.isConnected) {
+          this.props.history.push('/main');
+        } else if (!this.props.connection.hasSavedCredentials) {
+          this.props.history.push('/login');
+        } else if (!this.props.connection.isAuthenticated) {
+          if (
+            this.props.connection.error !== 'Cannot authorize your credentials'
+          ) {
+            this.setState({
+              text: 'Unable to find the server, retrying connection',
+              showLogin: true,
+            });
+            if (this.reconnectTimer) {
+              clearTimeout(this.reconnectTimer);
+              this.setState({ text: 'Server not found, retrying connection' });
+            }
+            this.reconnectTimer = setTimeout(() => {
+              this.setState({ text: 'Looking for the server' });
+              this.props.autoLogin();
+            }, 10000);
           }
-          this.reconnectTimer = setTimeout(() => {
-            this.setState({ text: 'Looking for the server' });
-            this.props.autoLogin();
-          }, 10000);
         }
       }
     }
@@ -55,16 +58,38 @@ class Loading extends React.Component<any, any> {
 
   public render() {
     const { classes } = this.props;
-    const { text } = this.state;
+    const { text, showLogin } = this.state;
 
     return (
-      <div className={['menu-bar', classes.root].join(' ')}>
-        <h1 className={classes.title}>GONG</h1>
-        <LoadingIcon />
-        <p className={classes.message}>{text}</p>
+      <div className={classes.root}>
+        <div className={classes.filler} />
+        <div className={classes.content}>
+          <h1 className={classes.title}>GONG</h1>
+          <LoadingIcon />
+          <p className={classes.message}>{text}</p>
+        </div>
+        {showLogin && (
+          <div className={classes.goToLogin}>
+            <div className={classes.filler} />
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={this.handleLoginClick}
+            >
+              Take me to login
+            </Button>
+            <div className={classes.filler} />
+          </div>
+        )}
+        <div className={classes.filler} />
       </div>
     );
   }
+
+  private handleLoginClick = () => {
+    clearTimeout(this.reconnectTimer);
+    this.props.history.push('/login');
+  };
 }
 
 const mapStateToProps = (state: any) => ({
@@ -81,7 +106,18 @@ const styles: any = (theme: any) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+  },
+  content: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    position: 'relative',
     overflow: 'hidden',
+    '-webkit-app-region': 'drag',
+  },
+  filler: {
+    flexGrow: 1,
+    '-webkit-app-region': 'drag',
   },
   title: {
     textAlign: 'center',
@@ -93,6 +129,11 @@ const styles: any = (theme: any) => ({
   message: {
     color: 'white',
     textAlign: 'center',
+  },
+  goToLogin: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: theme.spacing.unit * 2,
   },
 });
 
