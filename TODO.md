@@ -1,21 +1,24 @@
 # TODO
 
-- [ ] Have setting to load application on startup
-- [ ] Better styling on input (sometimes there is a weird dot at the start that blinks and text gets cut off)
-
-- [ ] Figure out why streams aren't closing properly (currently fixed with a bit of a hack, need to look into it some more)
-- [ ] Move to Context and Hooks and refactor code
-- [ ] PropTypes on all components
-
 - [ ] Get auto updater working
 - [ ] Put together a website to download etc
 
-Alpha
+release 0.1.0
+
+- [ ] Have setting to load application on startup
+- [ ] Figure out why streams aren't closing properly (currently fixed with a bit of a hack, need to look into it some more)
+- [ ] Move to Context and Hooks and refactor code
+- [ ] PropTypes on all components
+- [ ] Use Typescript with electron
+
+release 0.2.0
 
 - [ ] Flash icon in tray on message
 - [ ] Setup AppUserModelIDs, will fix notifications for Windows
 - [ ] After x min of inactivity set status to away
 - [ ] Confirm all message errors have been accounted for
+
+release 0.3.0
 
 - [ ] Encrypted channel passwords (not high priority, pidgin doesn't encrypt any passwords)
 - [ ] Emoji explorer when emoji icon is clicked
@@ -29,10 +32,10 @@ Alpha
 - [ ] Some type of log explorer
 - [ ] Fix scroll flicker when logs load
 
-Beta
+release 0.4.0
 
 - [ ] Make sure customization options do not causes bad spacing
 - [ ] Performance
 - [ ] Tests
 
-Release
+release 1.0.0
