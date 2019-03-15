@@ -68,7 +68,7 @@ class Settings extends React.Component<any, any> {
   };
 
   public render() {
-    const { classes, showSettings } = this.props;
+    const { classes, showSettings, app } = this.props;
     const { selectedTab } = this.state;
 
     return (
@@ -101,19 +101,20 @@ class Settings extends React.Component<any, any> {
                 }
               })}
               <Divider />
-              <ListItem>
-                <div className={classes.links}>
-                  <ListItemIcon>
-                    <a href="https://gongchat.github.io">
-                      <GongIcon />
-                    </a>
-                  </ListItemIcon>
-                  <ListItemIcon>
-                    <a href="https://github.com/gongchat/gong">
-                      <GithubIcon />
-                    </a>
-                  </ListItemIcon>
-                </div>
+              <ListItem className={classes.links}>
+                <ListItemIcon>
+                  <a href="https://gongchat.github.io">
+                    <GongIcon />
+                  </a>
+                </ListItemIcon>
+                <ListItemIcon>
+                  <a href="https://github.com/gongchat/gong">
+                    <GithubIcon />
+                  </a>
+                </ListItemIcon>
+              </ListItem>
+              <ListItem className={classes.version}>
+                <Typography variant="caption">v{app.version}</Typography>
               </ListItem>
             </List>
           </div>
@@ -181,6 +182,7 @@ class Settings extends React.Component<any, any> {
 }
 
 const mapStateToProps = (states: IStates) => ({
+  app: states.gong.app,
   showSettings: states.gong.showSettings,
 });
 
@@ -219,6 +221,7 @@ const styles: any = (theme: any) => ({
     display: 'flex',
     flexWrap: 'nowrap',
     alignItems: 'flex-start',
+    paddingBottom: 0,
     '& a': {
       color: theme.palette.text.primary,
     },
@@ -249,6 +252,10 @@ const styles: any = (theme: any) => ({
     '& p': {
       paddingBottom: theme.spacing.unit * 2,
     },
+  },
+  version: {
+    paddingTop: 0,
+    paddingBottom: 0,
   },
 });
 

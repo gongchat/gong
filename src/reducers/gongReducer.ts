@@ -1,4 +1,5 @@
 import {
+  APP_SET,
   CHANNEL_ADD,
   CHANNEL_GET_LOGGED_MESSAGES,
   CHANNEL_REMOVE,
@@ -37,6 +38,7 @@ import {
 import IState from 'src/interfaces/IState';
 
 // utils
+import App from 'src/actions/app';
 import Channel from 'src/actions/channel';
 import Connection from 'src/actions/connection';
 import Discover from 'src/actions/discover';
@@ -49,6 +51,11 @@ import Theme from 'src/actions/theme';
 import User from 'src/actions/user';
 
 export const initialState: IState = {
+  app: {
+    version: '',
+    hasUpdate: undefined,
+    isUpdateDownloaded: false,
+  },
   connection: {
     isConnecting: false,
     isConnected: false,
@@ -106,6 +113,9 @@ export const initialState: IState = {
 
 export default function(state = initialState, action: any) {
   switch (action.type) {
+    case APP_SET:
+      return App.set(state, action.payload);
+
     case MESSAGE_RECEIVE:
       return Message.receive(state, action.payload);
     case MESSAGE_SEND:

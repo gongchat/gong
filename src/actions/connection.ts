@@ -169,21 +169,21 @@ export default class Connection {
     };
   };
 
-  public static failed = (state: IState, error: string): IState => {
+  public static failed = (state: IState, payload: any): IState => {
     let snackbarNotifications = state.snackbarNotifications;
     if (state.connection.isAuthenticated) {
       const snackbarNotification: ISnackbarNotification = {
         id: new Date().getTime() + Math.random() + '',
         source: 'connection',
         variant: 'error',
-        message: error,
+        message: payload.error,
       };
       snackbarNotifications = [...snackbarNotifications, snackbarNotification];
     }
 
     if (
       state.connection.isAuthenticated &&
-      error === 'Cannot authorize your credentials'
+      payload.error === 'Cannot authorize your credentials'
     ) {
       ipcRenderer.send('xmpp-log-off');
       return { ...initialState };
@@ -195,7 +195,7 @@ export default class Connection {
         ...state.connection,
         isConnected: false,
         isConnecting: false,
-        connectionError: error,
+        connectionError: payload.error,
       },
       snackbarNotifications,
     };

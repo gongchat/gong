@@ -1,13 +1,13 @@
+const { ipcMain } = require('electron');
+const { autoUpdater } = require('electron-updater');
+
 const Settings = require('./settings');
 
 const Logger = require('./logger');
 const logger = new Logger();
 
 class IpcMainEvents {
-  attachEvents(ipcMain, xmppJsClient) {
-    // XMPP Events
-    // these are events dispatched by the react app.
-
+  attachEvents(xmppJsClient) {
     // this block of functions will be called one after another during startup
     ipcMain.on('xmpp-auto-connect', (event, arg) => {
       xmppJsClient.autoConnect(event, arg);
@@ -77,6 +77,10 @@ class IpcMainEvents {
 
     ipcMain.on('get-log', (event, arg) => {
       logger.get(event, arg);
+    });
+
+    ipcMain.on('app-update', (event, arg) => {
+      autoUpdater.quitAndInstall();
     });
   }
 }

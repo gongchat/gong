@@ -1,6 +1,14 @@
 const electron = require('electron');
 const { ipcMain } = require('electron');
+const { autoUpdater } = require('electron-updater');
+
 const isDev = require('electron-is-dev');
+const {
+  default: installExtension,
+  REACT_DEVELOPER_TOOLS,
+  REDUX_DEVTOOLS,
+} = require('electron-devtools-installer');
+
 const path = require('path');
 const url = require('url');
 
@@ -8,24 +16,19 @@ const XmppJsClient = require('./scripts/xmppJsClient');
 const IpcMainEvents = require('./scripts/ipcMainEvents');
 const Settings = require('./scripts/settings');
 
-const {
-  default: installExtension,
-  REACT_DEVELOPER_TOOLS,
-  REDUX_DEVTOOLS,
-} = require('electron-devtools-installer');
-
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const Menu = electron.Menu;
 const Tray = electron.Tray;
 
+const xmppJsClient = new XmppJsClient();
+const ipcMainEvents = new IpcMainEvents();
+
 let mainWindow;
 let tray;
 let isQuitting;
-let settings = { minimizeToTrayOnClose: true };
 
-const xmppJsClient = new XmppJsClient(settings);
-const ipcMainEvents = new IpcMainEvents();
+ipcMainEvents.attachEvents(xmppJsClient);
 
 function createWindow() {
   // background must be white, see: https://github.com/electron/electron/issues/6344
@@ -107,11 +110,6 @@ function createTray() {
   tray.setContextMenu(contextMenu);
 }
 
-app.on('ready', () => {
-  createWindow();
-  createTray();
-});
-
 app.on('before-quit', function() {
   isQuitting = true;
   tray = null;
@@ -132,4 +130,41 @@ app.on('activate', () => {
   }
 });
 
-ipcMainEvents.attachEvents(ipcMain, xmppJsClient);
+app.on('ready', () => {
+  createWindow();
+  createTray();
+});
+
+//
+// Auto Updater
+//
+
+autoUpdater.on('checking-for-update', () => {
+  mainWindow.webContents.send('app-set', { hasUpdate: true });
+})
+autoUpdater.on('update-available', (ev, info) => {
+  mainWindow.webContents.send('app-set', { hasUpdate: true });
+})
+autoUpdater.on('update-not-available', (ev, info) => {
+  mainWindow.webContents.send('app-set', { hasUpdate: false });
+})
+autoUpdater.on('error', (event, error) => {
+  console.log(error);
+  // mainWindow.webContents.on('did-finish-load', () => {
+  //   mainWindow.webContents.send('app-set', { version: app.getVersion() });
+  // });
+})
+// autoUpdater.on('download-progress', (ev, progressObj) => {})
+autoUpdater.on('update-downloaded', (event, info) => {
+  mainWindow.webContents.send('app-set', {
+    hasUpdate: true,
+    isUpdateDownloaded: true
+  });
+})
+
+app.on('ready', () => {
+  autoUpdater.checkForUpdates();
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.send('app-set', { version: app.getVersion() });
+  });
+});

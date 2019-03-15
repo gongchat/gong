@@ -1,3 +1,4 @@
+import IApp from './IApp';
 import IChannel from './IChannel';
 import IConnection from './IConnection';
 import IDiscoverRoom from './IDiscoverRoom';
@@ -9,6 +10,7 @@ import ISubdomain from './ISubdomain';
 import IUser from './IUser';
 
 export default interface IState {
+  app: IApp;
   connection: IConnection;
   settings: ISettings;
   profile: IProfile;

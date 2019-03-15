@@ -1,13 +1,14 @@
 {
-  "name": "Gong",
+  "name": "gong",
   "version": "0.1.0",
   "description": "XMPP Client",
-  "author": "David Lee",
+  "author": "Gong",
   "main": "public/electron.js",
-  "homepage": "./",
+  "homepage": "https://gongchat.github.io",
   "build": {
     "nodeVersion": "10.13.0",
-    "appId": "com.gong",
+    "appId": "com.github.gongchat.gong",
+    "productName": "Gong",
     "icon": "build/icons/",
     "files": [
       "build/**/*",
@@ -17,6 +18,11 @@
       "buildResources": "build",
       "output": "dist"
     },
+    "publish": [{
+      "provider": "github",
+      "owner": "gongchat",
+      "repo": "gong"
+    }],
     "win": {
       "target": "NSIS",
       "icon": "build/icons/"
@@ -37,6 +43,7 @@
     "start": "concurrently \"cross-env BROWSER=none npm run react\" \"wait-on http://localhost:3000 && electron .\" --kill-others",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
+    "publish": "build --win -p always",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },

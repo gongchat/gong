@@ -3,6 +3,7 @@ import store from 'src/store';
 import XmppJsMapper from 'src/utils/xmppJsMapper';
 
 import {
+  APP_SET,
   CHANNEL_SET_LOGGED_MESSAGES,
   CHANNELS_SET,
   MESSAGE_RECEIVE,
@@ -18,8 +19,12 @@ import {
 
 export default class IpcRenderer {
   public static attachEvents(ipcRenderer: any) {
+    ipcRenderer.on('app-set', (event: any, arg: any) => {
+      store.dispatch({ type: APP_SET, payload: arg });
+    });
+
     ipcRenderer.on('xmpp-connection-failed', (event: any, arg: any) => {
-      store.dispatch({ type: XMPP_CONNECTION_FAILED, payload: arg.error });
+      store.dispatch({ type: XMPP_CONNECTION_FAILED, payload: arg });
     });
 
     ipcRenderer.on('xmpp-connected', (event: any, arg: any) => {
