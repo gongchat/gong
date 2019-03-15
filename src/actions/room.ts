@@ -99,9 +99,15 @@ export default class Room {
   };
 
   public static selectUser = (state: IState, user: IChannelUser): IState => {
-    const channel = state.channels.find(
+    let channel = state.channels.find(
       (c: IChannel) => c.jid === user.jid && c.type === 'chat'
     );
+
+    if (!channel) {
+      channel = state.channels.find(
+        (c: IChannel) => c.jid === user.jid.split('/')[0] && c.type === 'chat'
+      );
+    }
 
     if (!channel) {
       const newChannel: IChannel = {

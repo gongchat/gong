@@ -47,8 +47,11 @@ class Messages extends React.Component<any, any> {
   }
 
   public componentDidUpdate(prevProps: any) {
-    if (this.props.current && this.root.current) {
-      // check for new messages
+    if (!this.props.current) {
+      if (this.props.current !== prevProps.current) {
+        this.setState({ messages: [] });
+      }
+    } else {
       if (
         this.props.current.messages &&
         (!prevProps.current ||
