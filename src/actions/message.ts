@@ -420,7 +420,7 @@ export default class Message {
       messages: [message],
       unreadMessages: message.isRead ? 1 : 0,
       hasUnreadMentionMe: message.isMentioningMe,
-      scrollPosition: 0,
+      scrollPosition: -1,
       hasNoMoreLogs: undefined,
       isRequestingLogs: false,
     };

@@ -27,7 +27,7 @@ export default class XmppJsMapper {
         hasNoMoreLogs: undefined,
         isRequestingLogs: false,
         connections: [],
-        scrollPosition: 0,
+        scrollPosition: -1,
         vCard: undefined,
       };
       return newUser;

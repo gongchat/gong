@@ -18,9 +18,12 @@ import IStates from 'src/interfaces/IStates';
 // components
 import Message from './Message';
 
+// TODO: Check for logged messages on window resize
+
 class Messages extends React.Component<any, any> {
   public state = {
     messages: [],
+    stayAtBottom: false,
   };
 
   private root: React.RefObject<HTMLDivElement>;
@@ -44,14 +47,6 @@ class Messages extends React.Component<any, any> {
   }
 
   public componentDidUpdate(prevProps: any) {
-    // check if at bottom or at top
-    let isAtBottom: boolean = false;
-    if (this.root.current) {
-      isAtBottom =
-        this.root.current.scrollTop + this.root.current.offsetHeight >=
-        this.root.current.scrollHeight - 5; // -5 is a buffer
-    }
-
     if (this.props.current && this.root.current) {
       // check for new messages
       if (
@@ -63,64 +58,8 @@ class Messages extends React.Component<any, any> {
       ) {
         this.setState({ messages: this.props.current.messages });
       }
-
-      // handle scroll position
-      if (
-        !prevProps.current ||
-        this.props.current.jid !== prevProps.current.jid
-      ) {
-        // update scroll position if new current channel
-        setTimeout(() => {
-          if (this.root.current) {
-            this.root.current.scrollTop = this.props.current.scrollPosition;
-          }
-        });
-      } else {
-        // if not a new channel and scroll is at bottom stay at bottom.
-        if (
-          this.props.current.messages.length !==
-          prevProps.current.messages.length
-        ) {
-          // if at bottom stay at bottom
-          if (isAtBottom) {
-            setTimeout(() => {
-              if (this.root.current) {
-                this.root.current.scrollTop =
-                  this.root.current.scrollHeight +
-                  this.root.current.offsetHeight;
-              }
-            });
-            // if the new messages are from logs
-          } else if (
-            prevProps.current.messages[0] &&
-            this.props.current.messages[0] &&
-            prevProps.current.messages[0].timestamp.diff(
-              this.props.current.messages[0].timestamp
-            ) > 0
-          ) {
-            const currentPositionFromBottom = this.root.current.scrollHeight;
-            setTimeout(() => {
-              if (this.root.current) {
-                this.root.current.scrollTop =
-                  this.root.current.scrollHeight - currentPositionFromBottom;
-              }
-            });
-          }
-        }
-      }
-
-      // determine if archived messages should be requested
-      setTimeout(() => {
-        if (
-          !this.props.current.hasNoMoreLogs &&
-          !this.props.current.isRequestingLogs &&
-          this.root.current &&
-          this.root.current.scrollTop === 0 &&
-          this.root.current.offsetHeight === this.root.current.scrollHeight
-        ) {
-          this.props.getLoggedMessages(this.props.current);
-        }
-      });
+      this.handleScrollPositionOnLoad(prevProps);
+      this.handleLoggedMessages();
     }
   }
 
@@ -208,6 +147,7 @@ class Messages extends React.Component<any, any> {
                     renderVideos={settings.renderVideos}
                     renderGetYarn={settings.renderGetYarn}
                     renderImages={settings.renderImages}
+                    onImageLoad={this.handleImageOnLoad}
                   />
                 </div>
               </React.Fragment>
@@ -223,26 +163,140 @@ class Messages extends React.Component<any, any> {
     );
   }
 
+  private handleScrollPositionOnLoad = (prevProps: any) => {
+    // handle scroll position
+    if (
+      !prevProps.current ||
+      this.props.current.jid !== prevProps.current.jid
+    ) {
+      this.handleScrollOnChannelChange();
+    } else {
+      // if not a new channel and scroll is at bottom stay at bottom.
+      if (
+        this.root.current &&
+        this.props.current.messages.length !== prevProps.current.messages.length
+      ) {
+        this.handleScrollOnNewMessages(prevProps);
+      }
+    }
+  };
+
+  private handleScrollOnChannelChange = () => {
+    if (this.root.current) {
+      this.setState({
+        stayAtBottom:
+          this.root.current.scrollTop + this.root.current.offsetHeight >=
+          this.root.current.scrollHeight - 5,
+      });
+    }
+
+    if (this.props.current.scrollPosition === -1) {
+      // default option is to start at bottom
+      setTimeout(() => {
+        if (this.root.current) {
+          this.root.current.scrollTop = this.root.current.scrollHeight;
+        }
+      });
+    } else {
+      // update scroll position if new current channel
+      setTimeout(() => {
+        if (this.root.current) {
+          this.root.current.scrollTop = this.props.current.scrollPosition;
+        }
+      });
+    }
+  };
+
+  private handleScrollOnNewMessages = (prevProps: any) => {
+    if (
+      this.root.current &&
+      this.root.current.scrollTop + this.root.current.offsetHeight >=
+        this.root.current.scrollHeight - 5
+    ) {
+      // if at bottom stay at bottom
+      setTimeout(() => {
+        if (this.root.current) {
+          this.root.current.scrollTop =
+            this.root.current.scrollHeight + this.root.current.offsetHeight;
+        }
+      });
+    } else if (
+      this.root.current &&
+      prevProps.current.messages[0] &&
+      this.props.current.messages[0] &&
+      prevProps.current.messages[0].timestamp.diff(
+        this.props.current.messages[0].timestamp
+      ) > 0
+    ) {
+      // if the new messages are from logs
+      const currentPositionFromBottom = this.root.current.scrollHeight;
+      setTimeout(() => {
+        if (this.root.current) {
+          this.root.current.scrollTop =
+            this.root.current.scrollHeight - currentPositionFromBottom;
+        }
+      });
+    }
+  };
+
+  private handleLoggedMessages = () => {
+    // determine if archived messages should be requested
+    setTimeout(() => {
+      if (
+        !this.props.current.hasNoMoreLogs &&
+        !this.props.current.isRequestingLogs &&
+        this.root.current &&
+        this.root.current.scrollTop === 0 &&
+        this.root.current.offsetHeight === this.root.current.scrollHeight
+      ) {
+        this.props.getLoggedMessages(this.props.current);
+      }
+    });
+  };
+
   private handleScroll = (event: any) => {
+    // check if scroll is at bottom
+    setTimeout(() => {
+      if (this.root.current) {
+        this.setState({
+          stayAtBottom:
+            this.root.current.scrollTop + this.root.current.offsetHeight >=
+            this.root.current.scrollHeight - 5,
+        });
+      }
+    });
+
+    // load messages if scroll is at top
+    if (
+      this.props.current &&
+      !this.props.current.hasNoMoreLogs &&
+      !this.props.current.isRequestingLogs &&
+      event.target.scrollTop === 0
+    ) {
+      this.props.getLoggedMessages(this.props.current);
+    }
+
+    // Saves the scroll position for when the channel is selected again
     if (this.scrollTimer) {
       clearTimeout(this.scrollTimer);
     }
     this.scrollTimer = setTimeout(() => {
       if (this.props.current) {
-        if (
-          this.props.current &&
-          !this.props.current.hasNoMoreLogs &&
-          !this.props.current.isRequestingLogs &&
-          event.target.scrollTop === 0
-        ) {
-          this.props.getLoggedMessages(this.props.current);
-        }
         this.props.setChannelScrollPosition(
           this.props.current.jid,
           event.target.scrollTop
         );
       }
     }, 100);
+  };
+
+  private handleImageOnLoad = () => {
+    if (this.state.stayAtBottom) {
+      if (this.root.current) {
+        this.root.current.scrollTop =
+          this.root.current.scrollHeight + this.root.current.offsetHeight;
+      }
+    }
   };
 }
 
