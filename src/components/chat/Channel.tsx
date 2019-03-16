@@ -41,10 +41,10 @@ class Channel extends React.Component<any, any> {
               : classes.notConnected,
             isSelected ? classes.active : '',
           ].join(' ')}
+          onClick={this.handleOnClick}
         >
           <div
             className={classes.content}
-            onClick={this.handleOnClick}
             onContextMenu={this.handleOnContextMenu}
           >
             <Typography
