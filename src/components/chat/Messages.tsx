@@ -42,7 +42,14 @@ class Messages extends React.Component<any, any> {
 
   public componentWillUnmount() {
     if (this.root.current) {
+      if (this.scrollTimer) {
+        clearTimeout(this.scrollTimer);
+      }
       this.root.current.removeEventListener('scroll', this.handleScroll);
+      this.props.setChannelScrollPosition(
+        this.props.current.jid,
+        this.root.current.scrollTop
+      );
     }
   }
 
