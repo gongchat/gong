@@ -109,9 +109,9 @@ class XmppJsClient {
       }
     });
 
-    this.client.on('status', status => console.log('STATUS:', status));
-    this.client.on('input', input => console.log('INPUT:', input));
-    this.client.on('output', output => console.log('OUTPUT:', output));
+    // this.client.on('status', status => console.log('STATUS:', status));
+    // this.client.on('input', input => console.log('INPUT:', input));
+    // this.client.on('output', output => console.log('OUTPUT:', output));
 
     this.client.on('online', jid => {
       console.log('ONLINE:', jid.toString());
