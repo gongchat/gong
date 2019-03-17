@@ -1,11 +1,15 @@
 import * as React from 'react';
 
+const { ipcRenderer } = window.require('electron');
+
 // redux & actions
 import { connect } from 'react-redux';
 import { addSnackbarNotification, autoLogin } from 'src/actions/dispatcher';
 
 // material
 import { withStyles } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
 
 // libs
 import * as WebFont from 'webfontloader';
@@ -25,6 +29,7 @@ import IStates from 'src/interfaces/IStates';
 class Main extends React.Component<any, any> {
   public state = {
     shouldReconnect: true,
+    updateOpen: false,
   };
 
   private reconnectTimer: any;
@@ -41,19 +46,19 @@ class Main extends React.Component<any, any> {
     if (this.props.theme) {
       this.loadFont(this.props.theme.typography.fontFamily);
     }
+    if (this.props.app && this.props.app.hasUpdate) {
+      this.setState({ updateOpen: true });
+    }
   }
 
   public componentDidUpdate(prevProps: any) {
     // TODO: need to handle errors better
-    let shouldReconnect = this.state.shouldReconnect;
-    if (shouldReconnect) {
+    if (this.state.shouldReconnect) {
       if (
         this.props.connection.connectionError === 'Connection has been aborted'
       ) {
-        shouldReconnect = false;
-        this.setState({ shouldReconnect });
+        this.setState({ shouldReconnect: false });
       } else if (
-        prevProps.connection &&
         this.props.connection &&
         this.props.connection.hasSavedCredentials !== undefined &&
         !this.props.connection.isConnecting &&
@@ -70,16 +75,25 @@ class Main extends React.Component<any, any> {
 
     if (
       this.props.theme &&
-      prevProps.theme &&
-      this.props.theme.typography.fontFamily !==
-        prevProps.theme.typography.fontFamily
+      (!prevProps.theme ||
+        this.props.theme.typography.fontFamily !==
+          prevProps.theme.typography.fontFamily)
     ) {
       this.loadFont(this.props.theme.typography.fontFamily);
+    }
+
+    if (
+      this.props.app &&
+      this.props.app.hasUpdate &&
+      (!prevProps.app || this.props.app.hasUpdate !== prevProps.app.hasUpdate)
+    ) {
+      this.setState({ updateOpen: true });
     }
   }
 
   public render() {
     const { classes, current, menuBarNotification, connection } = this.props;
+    const { updateOpen } = this.state;
 
     return (
       <div className={classes.root}>
@@ -105,6 +119,28 @@ class Main extends React.Component<any, any> {
         </div>
         <Discover />
         <Settings />
+        <Snackbar
+          open={updateOpen}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          message={'Update has been downloaded. Would you like to...'}
+          action={
+            <React.Fragment>
+              <Button color="primary" size="small" onClick={this.handleUpdate}>
+                Install Now
+              </Button>
+              <Button
+                color="secondary"
+                size="small"
+                onClick={this.handleUpdateClose}
+              >
+                Later
+              </Button>
+            </React.Fragment>
+          }
+        />
       </div>
     );
   }
@@ -117,10 +153,19 @@ class Main extends React.Component<any, any> {
       },
     });
   }
+
+  private handleUpdateClose = () => {
+    this.setState({ updateOpen: false });
+  };
+
+  private handleUpdate = () => {
+    ipcRenderer.send('app-update');
+  };
 }
 
 const mapStateToProps = (states: IStates) => {
   return {
+    app: states.gong.app,
     connection: states.gong.connection,
     current: states.gong.current,
     menuBarNotification: states.gong.menuBarNotification,

@@ -141,26 +141,22 @@ app.on('ready', () => {
 
 autoUpdater.on('checking-for-update', () => {
   mainWindow.webContents.send('app-set', { hasUpdate: true });
-})
+});
 autoUpdater.on('update-available', (ev, info) => {
   mainWindow.webContents.send('app-set', { hasUpdate: true });
-})
+});
 autoUpdater.on('update-not-available', (ev, info) => {
   mainWindow.webContents.send('app-set', { hasUpdate: false });
-})
+});
 autoUpdater.on('error', (event, error) => {
-  console.log(error);
-  // mainWindow.webContents.on('did-finish-load', () => {
-  //   mainWindow.webContents.send('app-set', { version: app.getVersion() });
-  // });
-})
-// autoUpdater.on('download-progress', (ev, progressObj) => {})
+  console.log('error'); // TODO: setup a messaging system
+});
 autoUpdater.on('update-downloaded', (event, info) => {
   mainWindow.webContents.send('app-set', {
     hasUpdate: true,
     isUpdateDownloaded: true
   });
-})
+});
 
 app.on('ready', () => {
   autoUpdater.checkForUpdates();
