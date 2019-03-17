@@ -27,6 +27,10 @@
       "target": "NSIS",
       "icon": "build/icons/"
     },
+    "linux": {
+      "target": ["AppImage"],
+      "icon": "build/icons/icon.ico"
+    },
     "nsis": {
       "oneClick": false,
       "allowElevation": true,
