@@ -12,6 +12,7 @@
 
 # misc
 .vscode
+electron-builder.yml
 
 .DS_Store
 .env.local
