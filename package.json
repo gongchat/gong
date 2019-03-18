@@ -21,11 +21,13 @@
       "buildResources": "build",
       "output": "dist"
     },
-    "publish": [{
-      "provider": "github",
-      "owner": "gongchat",
-      "repo": "gong"
-    }],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "gongchat",
+        "repo": "gong"
+      }
+    ],
     "win": {
       "target": "NSIS",
       "icon": "build/icons/"
