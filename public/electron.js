@@ -159,7 +159,7 @@ autoUpdater.on('update-downloaded', (event, info) => {
 });
 
 app.on('ready', () => {
-  autoUpdater.checkForUpdates();
+  // autoUpdater.checkForUpdates();
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.webContents.send('app-set', { version: app.getVersion() });
   });
