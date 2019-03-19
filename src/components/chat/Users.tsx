@@ -56,7 +56,7 @@ class Users extends React.Component<any, any> {
               </Group>
             );
           } else {
-            return; // TODO: make sure this is okay
+            return;
           }
         })}
       </div>

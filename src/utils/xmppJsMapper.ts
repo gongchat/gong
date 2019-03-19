@@ -17,7 +17,7 @@ export default class XmppJsMapper {
         order: 30,
         jid: item.attrs.jid.split('/')[0],
         username: item.attrs.name,
-        name: item.attrs.name, // TODO: get real name
+        name: item.attrs.name,
         group: item.children[0].children[0],
         status: 'offline',
         color: ColorUtil.stringToHexColor(item.attrs.name),

@@ -28,7 +28,6 @@ export default class IpcRenderer {
     });
 
     ipcRenderer.on('xmpp-connected', (event: any, arg: any) => {
-      // TODO: this will save for both login and auto login, need to make it so it saves on login only
       store.dispatch({ type: XMPP_CONNECTION_CONNECTED, payload: arg });
       store.dispatch({ type: CHANNELS_SET });
     });
