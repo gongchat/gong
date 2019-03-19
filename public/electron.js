@@ -175,7 +175,4 @@ app.on('ready', () => {
     mainWindow.webContents.send('app-set', { version: app.getVersion() });
   });
   log.info("Loading React");
-  mainWindow.webContents.openDevTools({
-    detach: true,
-  });
 });
