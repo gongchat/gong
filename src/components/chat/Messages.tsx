@@ -252,6 +252,7 @@ class Messages extends React.Component<any, any> {
     // determine if archived messages should be requested
     setTimeout(() => {
       if (
+        this.props.current &&
         !this.props.current.hasNoMoreLogs &&
         !this.props.current.isRequestingLogs &&
         this.root.current &&
