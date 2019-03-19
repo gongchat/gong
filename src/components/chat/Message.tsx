@@ -26,18 +26,22 @@ class Message extends React.Component<any, any> {
 
     return (
       <div className={classes.root}>
-        <div className={classes.text}>
-          <Typography
+        <Typography className={classes.message}>
+          <span
             className={[
+              'timestamp',
               classes.timestamp,
               showTime ? classes.timestamp : classes.timestampHide,
             ].join(' ')}
           >
+            <span className={classes.copyOnly}>[</span>
             {message.timestamp.format('h:mm A')}
-          </Typography>
-          <Typography className={classes.message}>
+            <span className={classes.copyOnly}>]</span>
+          </span>
+          <span className={classes.text}>
             <span className={classes.user} style={{ color: message.color }}>
               {message.userNickname}
+              <span className={classes.copyOnly}>: </span>
             </span>
             <span
               className={[classes.body, isMe && classes.me].join(' ')}
@@ -45,8 +49,8 @@ class Message extends React.Component<any, any> {
                 __html: isMe ? `*${message.body.substring(4)}*` : message.body,
               }}
             />
-          </Typography>
-        </div>
+          </span>
+        </Typography>
         {message.urls && (
           <React.Fragment>
             {renderVideos &&
@@ -101,20 +105,17 @@ class Message extends React.Component<any, any> {
 const styles: any = (theme: any) => ({
   root: {
     width: '100%',
-    paddingTop: theme.spacing.unit / 4,
-    paddingBottom: theme.spacing.unit / 4,
     display: 'flex',
     flexDirection: 'column',
     flexShrink: 0,
-    '&:hover p': {
+    '&:hover .timestamp': {
       opacity: '1 !important',
     },
   },
-  text: {
-    display: 'flex',
-    alignItems: 'baseline',
-    flexWrap: 'nowrap',
+  message: {
     width: '100%',
+    position: 'relative',
+    display: 'table',
   },
   timestamp: {
     color: theme.palette.text.secondary,
@@ -125,6 +126,7 @@ const styles: any = (theme: any) => ({
     width: '50px',
     textAlign: 'right',
     flexShrink: 0,
+    display: 'table-cell',
   },
   timestampHide: {
     opacity: 0,
@@ -133,8 +135,8 @@ const styles: any = (theme: any) => ({
     whiteSpace: 'nowrap',
     fontWeight: 'bold',
   },
-  message: {
-    width: `calc(100% - ${theme.spacing.unit + 50}px)`,
+  text: {
+    display: 'table-cell',
   },
   body: {
     paddingLeft: theme.spacing.unit,
@@ -177,6 +179,10 @@ const styles: any = (theme: any) => ({
   },
   me: {
     color: theme.palette.text.secondary,
+  },
+  copyOnly: {
+    position: 'absolute',
+    opacity: 0,
   },
 });
 
