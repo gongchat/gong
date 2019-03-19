@@ -66,10 +66,6 @@ const ALLOWED_ATTRIBUTES = {
 
 export default class Message {
   public static send = (state: IState, messageSend: IMessageSend): IState => {
-    // TODO: if message fails to send it will fail silently, need to add acknowledgement
-    // for some reason messages from yourself do not contain an id, need to look into this
-    // as this is what I was intending to use for acknowledgement.
-
     ipcRenderer.send('xmpp-send-message', messageSend);
 
     const newState: IState = { ...state };
