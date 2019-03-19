@@ -57,7 +57,7 @@ class Loading extends React.Component<any, any> {
   }
 
   public render() {
-    const { classes } = this.props;
+    const { classes, app } = this.props;
     const { text, showLogin } = this.state;
 
     return (
@@ -67,6 +67,7 @@ class Loading extends React.Component<any, any> {
           <h1 className={classes.title}>GONG</h1>
           <LoadingIcon />
           <p className={classes.message}>{text}</p>
+          <p className={classes.version}>v{app.version}</p>
         </div>
         {showLogin && (
           <div className={classes.goToLogin}>
@@ -93,6 +94,7 @@ class Loading extends React.Component<any, any> {
 }
 
 const mapStateToProps = (state: any) => ({
+  app: state.gong.app,
   connection: state.gong.connection,
 });
 
@@ -129,6 +131,14 @@ const styles: any = (theme: any) => ({
   message: {
     color: 'white',
     textAlign: 'center',
+    margin: theme.spacing.unit / 3,
+  },
+  version: {
+    color: 'white',
+    textAlign: 'center',
+    opacity: 0.25,
+    margin: theme.spacing.unit / 2,
+    fontSize: '0.9rem',
   },
   goToLogin: {
     display: 'flex',
