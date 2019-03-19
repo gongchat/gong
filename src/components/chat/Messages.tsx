@@ -54,21 +54,18 @@ class Messages extends React.Component<any, any> {
   }
 
   public componentDidUpdate(prevProps: any) {
-    if (!this.props.current) {
-      if (this.props.current !== prevProps.current) {
+    if (this.props.current !== prevProps.current) {
+      if (!this.props.current) {
         this.setState({ messages: [] });
-      }
-    } else {
-      if (
-        this.props.current.messages &&
-        (!prevProps.current ||
+      } else if (
+        !prevProps.current ||
+        (this.props.current.messages &&
           this.props.current.messages.length !==
-            prevProps.current.messages.length ||
-          this.props.current.jid !== prevProps.current.jid)
+            prevProps.current.messages.length)
       ) {
         this.setState({ messages: this.props.current.messages });
+        this.handleScrollPositionOnLoad(prevProps);
       }
-      this.handleScrollPositionOnLoad(prevProps);
       this.handleLoggedMessages();
     }
   }
@@ -153,7 +150,9 @@ class Messages extends React.Component<any, any> {
                   <Message
                     key={index}
                     message={message}
-                    showTime={previousUserNickname !== message.userNickname}
+                    showTime={
+                      isStartOfGroup || showDate || showNewMessageMarker
+                    }
                     renderVideos={settings.renderVideos}
                     renderGetYarn={settings.renderGetYarn}
                     renderImages={settings.renderImages}
@@ -265,17 +264,6 @@ class Messages extends React.Component<any, any> {
   };
 
   private handleScroll = (event: any) => {
-    // check if scroll is at bottom
-    setTimeout(() => {
-      if (this.root.current) {
-        this.setState({
-          stayAtBottom:
-            this.root.current.scrollTop + this.root.current.offsetHeight >=
-            this.root.current.scrollHeight - 5,
-        });
-      }
-    });
-
     // load messages if scroll is at top
     if (
       this.props.current &&
@@ -286,11 +274,20 @@ class Messages extends React.Component<any, any> {
       this.props.getLoggedMessages(this.props.current);
     }
 
-    // Saves the scroll position for when the channel is selected again
+    // handle on scroll
     if (this.scrollTimer) {
       clearTimeout(this.scrollTimer);
     }
     this.scrollTimer = setTimeout(() => {
+      // check if scroll is at bottom
+      if (this.root.current) {
+        this.setState({
+          stayAtBottom:
+            this.root.current.scrollTop + this.root.current.offsetHeight >=
+            this.root.current.scrollHeight - 5,
+        });
+      }
+      // Saves the scroll position for when the channel is selected again
       if (this.props.current) {
         this.props.setChannelScrollPosition(
           this.props.current.jid,
