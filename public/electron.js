@@ -1,6 +1,7 @@
 const electron = require('electron');
 const { ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
+const log = require('electron-log');
 
 const isDev = require('electron-is-dev');
 const {
@@ -30,7 +31,12 @@ let isQuitting;
 
 ipcMainEvents.attachEvents(xmppJsClient);
 
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
+log.info('App starting...');
+
 function createWindow() {
+  log.info('Creating the main window');
   // background must be white, see: https://github.com/electron/electron/issues/6344
   mainWindow = new BrowserWindow({
     width: 900,
@@ -92,10 +98,13 @@ function createWindow() {
       electron.shell.openExternal(targetUrl);
     }
   });
+
+  log.info('Main window has been created');
 }
 
 function createTray() {
-  tray = new Tray(path.join(__dirname, 'icons/16x16.png'));
+  log.info('Creating system tray');
+  tray = new Tray(path.join(__dirname, '/icons/16x16.png'));
   const contextMenu = Menu.buildFromTemplate([{
     label: 'Quit Gong',
     click: function() {
@@ -108,6 +117,7 @@ function createTray() {
   });
   tray.setToolTip('Gong');
   tray.setContextMenu(contextMenu);
+  log.info('System tray created');
 }
 
 app.on('before-quit', function() {
@@ -159,8 +169,13 @@ autoUpdater.on('update-downloaded', (event, info) => {
 });
 
 app.on('ready', () => {
+  log.info("Checking for updates");
   autoUpdater.checkForUpdates();
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.webContents.send('app-set', { version: app.getVersion() });
+  });
+  log.info("Loading React");
+  mainWindow.webContents.openDevTools({
+    detach: true,
   });
 });
