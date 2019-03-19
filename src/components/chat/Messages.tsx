@@ -59,6 +59,7 @@ class Messages extends React.Component<any, any> {
         this.setState({ messages: [] });
       } else if (
         !prevProps.current ||
+        this.props.current !== prevProps.current ||
         (this.props.current.messages &&
           this.props.current.messages.length !==
             prevProps.current.messages.length)
