@@ -4,6 +4,10 @@ Gong is a Electron + React XMPP Client. Currently under development and is in pr
 
 ## Running the Application
 
+### XMPP Server
+
+If you do not have an XMPP server [Openfire](https://www.igniterealtime.org/projects/openfire/) is a good option.
+
 ### Node
 
 1.  `xmpp.js@0.6.1` requires node 10.13.0+. I have tried versions 10.0.0 and 11.5.0 and was unable to run the project.
@@ -31,16 +35,10 @@ After `npm run dist` finishes you can find the installation file in the `/dist` 
 
 ## Updating Your Application
 
-Since the application is in a pre-alpha state there are little efforts for data migration. If your application is behaving strange deleting the `config.json` file may fix any issues. The location of the `config.json` file is different depending on your operating system. Typical locations are below.
+The app will update based off of GitHub releases. If you find that your application is behaving strange deleting the `config.json` file may fix any issues. This will reset any user credentials, custom theme settings, and saved rooms.
+
+The location of the `config.json` file is different depending on your operating system. Typical locations are below.
 
 - Windows: `C:\Users\<username>\AppData\Roaming\gong\config.json`
-- Linux:  `~/.config/gong/config.json`
+- Linux: `~/.config/gong/config.json`
 - Mac: `~/Library/Application Support/gong/config.json`
-
-## XMPP Struggles
-
-### Determining Unread Messages
-
-#### Timestamp
-
-Historical messages are the only messages that have a timestamp from the server. All other messages are timestamped when received or sent by the client. This can cause issues when determining if historical messages have been read as the server and client timestamps will not always be synced.
