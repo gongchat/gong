@@ -136,7 +136,7 @@ class Main extends React.Component<any, any> {
                 size="small"
                 onClick={this.handleUpdateClose}
               >
-                Later
+                Install After Restart
               </Button>
             </React.Fragment>
           }
