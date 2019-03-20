@@ -29,6 +29,20 @@ let mainWindow;
 let tray;
 let isQuitting;
 
+// only allow once instance of Gong
+const shouldQuit = app.makeSingleInstance(function(commandLine,
+  workingDirectory) {
+  // Someone tried to run a second instance, we should focus our window.
+  if (myWindow) {
+    if (myWindow.isMinimized()) myWindow.restore();
+    myWindow.focus();
+  }
+});
+if (shouldQuit) {
+  app.quit();
+  return;
+}
+
 ipcMainEvents.attachEvents(xmppJsClient);
 
 autoUpdater.logger = log;
