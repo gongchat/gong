@@ -120,12 +120,17 @@ function createTray() {
   log.info('Creating system tray');
   tray = new Tray(path.join(__dirname, '/icons/16x16.png'));
   const contextMenu = Menu.buildFromTemplate([{
+    label: 'Show Gong',
+    click: function() {
+      mainWindow.show();
+    }
+  }, {
     label: 'Quit Gong',
     click: function() {
       isQuitting = true;
       app.quit();
     }
-  }, ]);
+  }]);
   tray.on('double-click', () => {
     mainWindow.show();
   });
