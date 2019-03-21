@@ -53,6 +53,7 @@ import User from 'src/actions/user';
 export const initialState: IState = {
   app: {
     version: '',
+    operatingSystem: '',
     hasUpdate: undefined,
     isUpdateDownloaded: false,
   },

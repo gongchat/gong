@@ -85,19 +85,26 @@ class Settings extends React.Component<any, any> {
                 if (tab.name === 'divider') {
                   return <Divider key={index} />;
                 } else {
-                  return (
-                    <ListItem
-                      key={index}
-                      button={true}
-                      selected={tab.name === selectedTab.name}
-                      onClick={() => this.handleClickTab(tab)}
-                    >
-                      <ListItemIcon className={classes.icon}>
-                        {tab.icon}
-                      </ListItemIcon>
-                      <ListItemText>{tab.name}</ListItemText>
-                    </ListItem>
-                  );
+                  if (
+                    tab.name === 'System' &&
+                    app.operatingSystem !== 'win32'
+                  ) {
+                    return;
+                  } else {
+                    return (
+                      <ListItem
+                        key={index}
+                        button={true}
+                        selected={tab.name === selectedTab.name}
+                        onClick={() => this.handleClickTab(tab)}
+                      >
+                        <ListItemIcon className={classes.icon}>
+                          {tab.icon}
+                        </ListItemIcon>
+                        <ListItemText>{tab.name}</ListItemText>
+                      </ListItem>
+                    );
+                  }
                 }
               })}
               <Divider />

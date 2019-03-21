@@ -10,6 +10,7 @@ const {
   REDUX_DEVTOOLS,
 } = require('electron-devtools-installer');
 
+const operatingSystem = process.platform; // supported values: darwin (mac), linux, win32 (this is also 64bit)
 const path = require('path');
 const url = require('url');
 
@@ -69,7 +70,7 @@ function createWindow() {
   );
 
   mainWindow.on('close', (event) => {
-    if (Settings.get().minimizeToTrayOnClose && !isQuitting) {
+    if (operatingSystem === 'win32' && !isQuitting && Settings.get().minimizeToTrayOnClose) {
       event.preventDefault();
       mainWindow.hide();
       event.returnValue = false;
@@ -83,6 +84,7 @@ function createWindow() {
     mainWindow = null;
   });
 
+  // setup dev tools
   if (isDev) {
     [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS].forEach(extension => {
       installExtension(extension.id)
@@ -161,7 +163,9 @@ app.on('activate', () => {
 
 app.on('ready', () => {
   createWindow();
-  createTray();
+  if (operatingSystem === 'win32') {
+    createTray();
+  }
 });
 
 //
@@ -191,7 +195,10 @@ app.on('ready', () => {
   log.info("Checking for updates");
   autoUpdater.checkForUpdates();
   mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.webContents.send('app-set', { version: app.getVersion() });
+    mainWindow.webContents.send('app-set', {
+      version: app.getVersion(),
+      operatingSystem
+    });
   });
   log.info("Loading React");
 });

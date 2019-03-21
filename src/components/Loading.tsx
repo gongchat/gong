@@ -67,7 +67,9 @@ class Loading extends React.Component<any, any> {
           <h1 className={classes.title}>GONG</h1>
           <LoadingIcon />
           <p className={classes.message}>{text}</p>
-          <p className={classes.version}>v{app.version}</p>
+          {app.version !== '' && (
+            <p className={classes.version}>v{app.version}</p>
+          )}
         </div>
         {showLogin && (
           <div className={classes.goToLogin}>
