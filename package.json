@@ -1,6 +1,6 @@
 {
   "name": "gong",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "XMPP Client",
   "author": "Gong <gongxmpp@gmail.com>",
   "main": "public/electron.js",
