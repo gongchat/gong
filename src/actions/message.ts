@@ -72,7 +72,7 @@ export default class Message {
     if (newState.current && newState.current.type === 'chat') {
       const message: IMessage = {
         id: messageSend.id,
-        channelName: messageSend.to,
+        channelName: messageSend.channelName,
         to: messageSend.to,
         from: messageSend.from,
         body: messageSend.body,
@@ -144,6 +144,14 @@ export default class Message {
           channel = channel as IUser; // TODO: Need to type check
           userNickname = channel.username;
           color = channel.color;
+
+          // update session jid
+          if (channel.sessionJid !== messageReceive.from) {
+            channel.sessionJid = messageReceive.from;
+          }
+          if (newState.current && newState.current.jid === channel.jid) {
+            (newState.current as IUser).sessionJid = messageReceive.from;
+          }
         } else {
           channelName = messageReceive.from;
         }

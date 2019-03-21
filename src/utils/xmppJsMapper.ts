@@ -16,6 +16,7 @@ export default class XmppJsMapper {
         type: 'chat',
         order: 30,
         jid: item.attrs.jid.split('/')[0],
+        sessionJid: undefined,
         username: item.attrs.name,
         name: item.attrs.name,
         group: item.children[0].children[0],

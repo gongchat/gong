@@ -179,10 +179,15 @@ class Input extends React.Component<any, any> {
         newNickname: this.state.text.substring(6),
       });
     } else {
+      let to = this.props.current.jid;
+      if (this.props.current.type === 'chat' && this.props.current.sessionJid) {
+        to = this.props.current.sessionJid;
+      }
       const messageSend: IMessageSend = {
         id: StringUtil.makeId(7),
+        channelName: this.props.current.jid,
         type: this.props.current.type,
-        to: this.props.current.jid,
+        to,
         from: this.props.from,
         body: this.state.text,
       };

@@ -77,7 +77,16 @@ export default class Presence {
         connections,
       };
 
-      return { ...state, channels: [...channels, user] };
+      // update sessionJid
+      if (presence.status === 'offline') {
+        user.sessionJid = undefined;
+      }
+      let current = state.current as IUser;
+      if (current && current.jid === user.jid) {
+        current = { ...current, sessionJid: undefined };
+      }
+
+      return { ...state, current, channels: [...channels, user] };
     }
 
     return state;
