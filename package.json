@@ -2,7 +2,7 @@
   "name": "gong",
   "version": "0.1.1",
   "description": "XMPP Client",
-  "author": "Gong",
+  "author": "Gong <gongxmpp@gmail.com>",
   "main": "public/electron.js",
   "homepage": "./",
   "engines": {
@@ -33,9 +33,7 @@
       "icon": "build/icons/"
     },
     "linux": {
-      "target": [
-        "AppImage"
-      ],
+      "target": ["AppImage", "deb"],
       "icon": "build/icons/"
     },
     "mac": {
@@ -55,7 +53,8 @@
     "react": "npm-run-all -p start-js",
     "build": "npm-run-all build-js",
     "start": "concurrently \"cross-env BROWSER=none npm run react\" \"wait-on http://localhost:3000 && electron .\" --kill-others",
-    "dist": "electron-builder build",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
     "release:mac": "electron-builder build -m -p always",
     "release:linux-windows": "electron-builder build -l -w -p always",
     "test": "react-scripts test --env=jsdom",
