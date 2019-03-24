@@ -17,10 +17,12 @@ If you do not have an XMPP server [Openfire](https://www.igniterealtime.org/proj
 This application uses Keytar to encrypt and decrypt your password. A key is generated and saved to your operating systems password manager. The encrypted
 password is saved along with your settings in the `config.json` file.
 
+If you are on linux you will may need to run `sudo apt-get install libsecret-1-dev` before running `npm install`.
+
 If you are having issues with Keytar follow the steps below. See this github [issue](https://github.com/atom/node-keytar/issues/51) for more info.
 _I am using electron 3, node 10.13.0, and Windows 10_
 
-1. Run `npm install`
+1. Run `npm install electron-rebuild`
 2. Run `.\node_modules\.bin\electron-rebuild`
 3. Run `npm start`
 
