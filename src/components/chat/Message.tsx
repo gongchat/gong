@@ -142,7 +142,7 @@ const styles: any = (theme: any) => ({
     paddingLeft: theme.spacing.unit,
     color: theme.palette.text.primary,
     overflowWrap: 'break-word',
-    wordBreak: 'break-all',
+    wordBreak: 'break-word',
     '& .mention': {
       backgroundColor: fade(theme.palette.primary.light, 0.1),
       color: theme.palette.primary.light,
