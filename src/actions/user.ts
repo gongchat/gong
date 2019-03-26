@@ -43,7 +43,6 @@ export default class User {
   };
 
   public static addToChannels = (state: IState, users: IUser[]): IState => {
-    ipcRenderer.send('xmpp-initial-presence');
     users.forEach((user: IUser) => {
       ipcRenderer.send('xmpp-get-vcard', {
         from: state.profile.jid,

@@ -347,11 +347,6 @@ class XmppJsClient {
   //
   // Sending
   //
-
-  sendInitialPresence() {
-    this.client.send(xml('presence', {}));
-  }
-
   sendSubscribe(jid, nickname, password) {
     if (password) {
       this.client.send(
@@ -388,11 +383,16 @@ class XmppJsClient {
   }
 
   sendMyStatus(status) {
-    this.client.send(
-      xml('presence', {},
-        xml('show', {},
-          status))
-    );
+    if (status === 'online') {
+      this.client.send(
+        xml('presence', {}));
+    } else {
+      this.client.send(
+        xml('presence', {},
+          xml('show', {},
+            status))
+      );
+    }
   }
 
   sendRoomNickname(jid, nickname) {

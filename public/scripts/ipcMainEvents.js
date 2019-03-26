@@ -15,9 +15,6 @@ class IpcMainEvents {
     ipcMain.on('xmpp-connect', (event, arg) => {
       xmppJsClient.connect(event, arg);
     });
-    ipcMain.on('xmpp-initial-presence', () => {
-      xmppJsClient.sendInitialPresence();
-    });
     ipcMain.on('xmpp-roster', (event) => {
       xmppJsClient.sendGetRoster(event);
     });
