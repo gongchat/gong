@@ -85,6 +85,7 @@ class Login extends React.Component<any, any> {
               name="resource"
               onChange={this.handleOnChange}
               label="Resource"
+              placeholder="Resource (ex. work, home, laptop)"
               value={resource}
               variant="filled"
               validators={['required', 'matchRegexp:^[a-zA-Z0-9_.-]*$']}
