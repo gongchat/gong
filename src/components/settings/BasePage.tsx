@@ -1,24 +1,23 @@
 import * as React from 'react';
 
 // material ui
-import { withStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/styles';
 
-class BasePage extends React.Component<any, any> {
-  public render() {
-    const { classes, title, children } = this.props;
-    return (
-      <div className={classes.root}>
-        <Typography variant="h6" className={classes.title}>
-          {title}
-        </Typography>
-        {children}
-      </div>
-    );
-  }
-}
+const BasePage = (props: any) => {
+  const classes = useStyles();
 
-const styles: any = (theme: any) => ({
+  return (
+    <div className={classes.root}>
+      <Typography variant="h6" className={classes.title}>
+        {props.title}
+      </Typography>
+      {props.children}
+    </div>
+  );
+};
+
+const useStyles = makeStyles((theme: any) => ({
   root: {
     marginTop: theme.spacing.unit,
     marginLeft: '16px', // leave hard coded for when spacing is set to 0
@@ -32,6 +31,6 @@ const styles: any = (theme: any) => ({
     paddingBottom: theme.spacing.unit * 2,
     textTransform: 'uppercase',
   },
-});
+}));
 
-export default withStyles(styles)(BasePage);
+export default BasePage;

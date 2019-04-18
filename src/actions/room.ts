@@ -11,61 +11,10 @@ import IRoomJoin from 'src/interfaces/IRoomJoin';
 import IRoomSaved from 'src/interfaces/IRoomSaved';
 import IState from 'src/interfaces/IState';
 
-import Channel from './channel';
+import { saveRooms } from './channel';
 
-export default class Room {
-  public static addSavedToChannels = (state: IState): IState => {
-    let channels: IRoomSaved[] = electronStore.get('channels');
-
-    if (channels) {
-      channels.forEach((channel: IRoomSaved) => {
-        const channelJoin: IRoomJoin = {
-          jid: channel.jid,
-          channelName: channel.name,
-          nickname: channel.nickname,
-          password: channel.password,
-        };
-        ipcRenderer.send('xmpp-subscribe-to-room', channelJoin);
-      });
-    } else {
-      channels = [];
-    }
-
-    return {
-      ...state,
-      channels: [
-        ...state.channels,
-        ...channels.map((roomSaved: IRoomSaved) => {
-          const room: IRoom = {
-            type: 'groupchat',
-            order: 20,
-            jid: roomSaved.jid,
-            password: roomSaved.password,
-            name: roomSaved.name,
-            myNickname: roomSaved.nickname,
-            isConnected: false,
-            isConnecting: true,
-            connectionError: '',
-            messages: [],
-            users: [],
-            unreadMessages: 0,
-            hasUnreadMentionMe: false,
-            hasNoMoreLogs: undefined,
-            isRequestingLogs: false,
-            scrollPosition: -1,
-            lastReadTimestamp: moment(roomSaved.lastReadTimestamp),
-            lastReadMessageId: roomSaved.lastReadMessageId,
-          };
-          return room;
-        }),
-      ],
-    };
-  };
-
-  public static addToChannels = (
-    state: IState,
-    roomJoin: IRoomJoin
-  ): IState => {
+export const roomActions = {
+  addRoomToChannels(roomJoin: IRoomJoin, state: IState): IState {
     if (state.channels.find((c: IChannel) => c.jid === roomJoin.jid)) {
       return state;
     }
@@ -91,14 +40,13 @@ export default class Room {
     };
     const channels: IChannel[] = [...state.channels, room];
     ipcRenderer.send('xmpp-subscribe-to-room', roomJoin);
-    Channel.saveRooms(channels);
+    saveRooms(channels);
     return {
       ...state,
       channels,
     };
-  };
-
-  public static selectUser = (state: IState, user: IChannelUser): IState => {
+  },
+  selectRoomUser(user: IChannelUser, state: IState): IState {
     let channel = state.channels.find(
       (c: IChannel) => c.jid === user.jid && c.type === 'chat'
     );
@@ -133,23 +81,22 @@ export default class Room {
         current: channel,
       };
     }
-  };
-
-  public static edit = (state: IState, payload: any): IState => {
-    const channel = state.channels.find((c: IChannel) => c.jid === payload.jid);
+  },
+  editRoom(jid: string, payload: any, state: IState): IState {
+    const channel = state.channels.find((c: IChannel) => c.jid === jid);
     if (channel) {
       const room: IRoom = {
         type: 'groupchat',
         order: 20,
-        jid: payload.room.jid,
-        password: payload.room.password,
-        name: payload.room.channelName,
+        jid: payload.jid,
+        password: payload.password,
+        name: payload.channelName,
         messages: [],
         users: [],
         isConnected: false,
         isConnecting: true,
         connectionError: '',
-        myNickname: payload.room.nickname,
+        myNickname: payload.nickname,
         unreadMessages: 0,
         hasUnreadMentionMe: false,
         hasNoMoreLogs: undefined,
@@ -162,8 +109,8 @@ export default class Room {
         ...state.channels.filter((c: IChannel) => c !== channel),
         room,
       ];
-      ipcRenderer.send('xmpp-subscribe-to-room', payload.room);
-      Channel.saveRooms(channels);
+      ipcRenderer.send('xmpp-subscribe-to-room', payload);
+      saveRooms(channels);
       return {
         ...state,
         channels,
@@ -171,9 +118,8 @@ export default class Room {
     } else {
       return state;
     }
-  };
-
-  public static setNickname = (state: IState, payload: any): IState => {
+  },
+  setChannelNickname(payload: any, state: IState): IState {
     ipcRenderer.send('xmpp-set-room-nickname', {
       jid: payload.jid,
       nickname: payload.newNickname,
@@ -192,10 +138,58 @@ export default class Room {
       }
       return channel;
     });
-    Channel.saveRooms(channels);
+    saveRooms(channels);
     return {
       ...state,
       channels,
     };
+  },
+};
+
+export const addSavedRoomsToChannels = (state: IState): IState => {
+  let channels: IRoomSaved[] = electronStore.get('channels');
+
+  if (channels) {
+    channels.forEach((channel: IRoomSaved) => {
+      const channelJoin: IRoomJoin = {
+        jid: channel.jid,
+        channelName: channel.name,
+        nickname: channel.nickname,
+        password: channel.password,
+      };
+      ipcRenderer.send('xmpp-subscribe-to-room', channelJoin);
+    });
+  } else {
+    channels = [];
+  }
+
+  return {
+    ...state,
+    channels: [
+      ...state.channels,
+      ...channels.map((roomSaved: IRoomSaved) => {
+        const room: IRoom = {
+          type: 'groupchat',
+          order: 20,
+          jid: roomSaved.jid,
+          password: roomSaved.password,
+          name: roomSaved.name,
+          myNickname: roomSaved.nickname,
+          isConnected: false,
+          isConnecting: true,
+          connectionError: '',
+          messages: [],
+          users: [],
+          unreadMessages: 0,
+          hasUnreadMentionMe: false,
+          hasNoMoreLogs: undefined,
+          isRequestingLogs: false,
+          scrollPosition: -1,
+          lastReadTimestamp: moment(roomSaved.lastReadTimestamp),
+          lastReadMessageId: roomSaved.lastReadMessageId,
+        };
+        return room;
+      }),
+    ],
   };
-}
+};

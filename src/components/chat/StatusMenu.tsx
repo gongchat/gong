@@ -1,13 +1,10 @@
 import * as React from 'react';
-
-// redux & actions
-import { connect } from 'react-redux';
-import { setMyStatus } from 'src/actions/dispatcher';
+import { useContext } from 'src/context';
 
 // material ui
-import { withStyles } from '@material-ui/core';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/styles';
 
 // components
 import Status from './Status';
@@ -24,62 +21,55 @@ const STATUSES = [
   },
 ];
 
-class StatusMenu extends React.Component<any, any> {
-  public render() {
-    const { classes, open } = this.props;
+const StatusMenu = (props: any) => {
+  const classes = useStyles();
+  const [context, actions] = useContext();
 
-    return (
-      <Popover
-        open={open}
-        anchorEl={this.props.anchorEl}
-        onClose={this.props.onClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-      >
-        <div className={classes.root}>
-          {STATUSES.map((status: any, index: number) => (
-            <div
-              key={index}
-              onClick={() => this.handleStatusClick(status.value)}
-              className={classes.item}
-            >
-              <div className={classes.rowOne}>
-                <div className={classes.status}>
-                  <Status status={status.value} />
-                </div>
-                <Typography className={classes.title}>
-                  {status.title}
-                </Typography>
-              </div>
-              {status.description && (
-                <Typography className={classes.description} variant="caption">
-                  <small>{status.description}</small>
-                </Typography>
-              )}
-            </div>
-          ))}
-        </div>
-      </Popover>
-    );
-  }
-
-  private handleStatusClick = (status: string) => {
-    this.props.setMyStatus(status);
-    this.props.onClose();
+  const handleStatusClick = (status: string) => {
+    actions.setMyStatus(status);
+    props.onClose();
   };
-}
 
-const mapDispatchToProps = {
-  setMyStatus,
+  return (
+    <Popover
+      open={props.open}
+      anchorEl={props.anchorEl}
+      onClose={props.onClose}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'left',
+      }}
+      transformOrigin={{
+        vertical: 'bottom',
+        horizontal: 'left',
+      }}
+    >
+      <div className={classes.root}>
+        {STATUSES.map((status: any, index: number) => (
+          <div
+            key={index}
+            onClick={() => handleStatusClick(status.value)}
+            className={classes.item}
+          >
+            <div className={classes.rowOne}>
+              <div className={classes.status}>
+                <Status status={status.value} />
+              </div>
+              <Typography className={classes.title}>{status.title}</Typography>
+            </div>
+            {status.description && (
+              <Typography className={classes.description} variant="caption">
+                <small>{status.description}</small>
+              </Typography>
+            )}
+          </div>
+        ))}
+      </div>
+    </Popover>
+  );
 };
 
-const styles: any = (theme: any) => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     width: theme.sidebarWidth - theme.spacing.unit * 4,
   },
@@ -109,9 +99,6 @@ const styles: any = (theme: any) => ({
     padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
     paddingTop: 0,
   },
-});
+}));
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(withStyles(styles)(StatusMenu));
+export default StatusMenu;

@@ -1,17 +1,15 @@
 import * as React from 'react';
-
-// redux & actions
-import { connect } from 'react-redux';
-import { selectChannel } from 'src/actions/dispatcher';
+import { useState } from 'react';
+import { useContext } from 'src/context';
 
 // material ui
-import { withStyles } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Badge from '@material-ui/core/Badge';
 import Dialog from '@material-ui/core/Dialog';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/styles';
 
 // utils
 import StringUtil from 'src/utils/stringUtils';
@@ -20,127 +18,120 @@ import StringUtil from 'src/utils/stringUtils';
 import Status from './Status';
 import UserDetail from './UserDetail';
 
-class UserCard extends React.Component<any, any> {
-  public state = {
-    anchorEl: null,
-    isDetailsOpen: false,
+const User = (props: any) => {
+  const classes = useStyles();
+  const [context, actions] = useContext();
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
+  const displayName =
+    props.user.vCard && props.user.vCard.fullName
+      ? props.user.vCard.fullName
+      : props.user.username;
+
+  const handleOnClick = () => {
+    actions.selectChannel(props.user.jid);
   };
 
-  public render() {
-    const { classes, user, isSelected, showAvatar } = this.props;
-    const { anchorEl, isDetailsOpen } = this.state;
+  const handleOnContextMenu = (event: any) => {
+    event.preventDefault();
+    setAnchorEl(anchorEl ? null : event.currentTarget);
+  };
 
-    const displayName =
-      user.vCard && user.vCard.fullName ? user.vCard.fullName : user.username;
+  const handleContextMenuClose = () => {
+    setAnchorEl(null);
+  };
 
-    return (
-      <React.Fragment>
-        <div
-          className={[
-            classes.root,
-            isSelected ? classes.active : '',
-            showAvatar ? '' : classes.rootNarrow,
-          ].join(' ')}
-          onClick={this.handleOnClick}
-          onContextMenu={this.handleOnContextMenu}
-        >
-          <div className={classes.avatar}>
-            {showAvatar ? (
-              <div>
-                {user.vCard && user.vCard.photo ? (
-                  <Avatar
-                    className={classes.img}
-                    src={`data:${user.vCard.photoType};base64,${
-                      user.vCard.photo
-                    }`}
-                  />
-                ) : (
-                  <Avatar className={classes.img}>
-                    <Typography>
-                      {StringUtil.getAbbreviation(displayName)}
-                    </Typography>
-                  </Avatar>
-                )}
-                <div className={classes.status}>
-                  <Status status={user.status} />
-                </div>
+  const handleOnClickDetail = (event: any) => {
+    event.preventDefault();
+    setAnchorEl(null);
+    setIsDetailsOpen(true);
+  };
+
+  const handleDetailClose = () => {
+    setIsDetailsOpen(false);
+  };
+
+  return (
+    <React.Fragment>
+      <div
+        className={[
+          classes.root,
+          props.isSelected ? classes.active : '',
+          props.showAvatar ? '' : classes.rootNarrow,
+        ].join(' ')}
+        onClick={handleOnClick}
+        onContextMenu={handleOnContextMenu}
+      >
+        <div className={classes.avatar}>
+          {props.showAvatar ? (
+            <div>
+              {props.user.vCard && props.user.vCard.photo ? (
+                <Avatar
+                  className={classes.img}
+                  src={`data:${props.user.vCard.photoType};base64,${
+                    props.user.vCard.photo
+                  }`}
+                />
+              ) : (
+                <Avatar className={classes.img}>
+                  <Typography>
+                    {StringUtil.getAbbreviation(displayName)} WOOO!
+                  </Typography>
+                </Avatar>
+              )}
+              <div className={classes.status}>
+                <Status status={props.user.status} />
               </div>
-            ) : (
-              <div className={classes.statusOnly}>
-                <Status status={user.status} />
-              </div>
-            )}
-          </div>
-          <Typography className={classes.title}>{displayName}</Typography>
-          {user.unreadMessages > 0 && (
-            <Badge
-              badgeContent={user.unreadMessages}
-              classes={{ badge: classes.badge }}
-              color="error"
-            >
-              <span />
-            </Badge>
+            </div>
+          ) : (
+            <div className={classes.statusOnly}>
+              <Status status={props.user.status} />
+            </div>
           )}
         </div>
-        <Menu
-          id="context-menu"
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={this.handleContextMenuClose}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'left',
-          }}
-        >
-          <MenuItem onClick={this.handleOnClickDetail}>Details</MenuItem>
-        </Menu>
-        <Dialog
-          open={isDetailsOpen}
-          onClose={this.handleDetailClose}
-          className={classes.dialog}
-          BackdropProps={{ className: classes.dialog }}
-          aria-labelledby="detail-dialog-title"
-        >
-          <UserDetail user={user} />
-        </Dialog>
-      </React.Fragment>
-    );
-  }
-
-  private handleOnClick = () => {
-    this.props.selectChannel(this.props.user.jid);
-  };
-
-  private handleOnContextMenu = (event: any) => {
-    event.preventDefault();
-    this.setState({
-      anchorEl: this.state.anchorEl ? null : event.currentTarget,
-    });
-  };
-
-  private handleContextMenuClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
-  private handleOnClickDetail = (event: any) => {
-    event.preventDefault();
-    this.setState({ anchorEl: null, isDetailsOpen: true });
-  };
-
-  private handleDetailClose = () => {
-    this.setState({ isDetailsOpen: false });
-  };
-}
-
-const mapDispatchToProps = {
-  selectChannel,
+        <Typography className={classes.title}>{displayName}</Typography>
+        {props.user.unreadMessages > 0 && (
+          <Badge
+            badgeContent={props.user.unreadMessages}
+            classes={{ badge: classes.badge }}
+            color="error"
+          >
+            <span />
+          </Badge>
+        )}
+      </div>
+      <Menu
+        id="context-menu"
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleContextMenuClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+      >
+        <MenuItem onClick={handleOnClickDetail}>Details</MenuItem>
+      </Menu>
+      <Dialog
+        open={isDetailsOpen}
+        onClose={handleDetailClose}
+        className={classes.dialog}
+        BackdropProps={{ className: classes.dialog }}
+        aria-labelledby="detail-dialog-title"
+      >
+        <UserDetail user={props.user} />
+      </Dialog>
+    </React.Fragment>
+  );
 };
 
-const styles: any = (theme: any) => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     padding: theme.spacing.unit,
     borderRadius: '5px',
@@ -197,9 +188,6 @@ const styles: any = (theme: any) => ({
   dialog: {
     top: '23px',
   },
-});
+}));
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(withStyles(styles)(UserCard));
+export default User;

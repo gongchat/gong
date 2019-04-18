@@ -1,27 +1,24 @@
 import * as React from 'react';
 
-// material ui
-import { withStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
 // components
 import Input from './Input';
 import Messages from './Messages';
 
-class Chat extends React.Component<any, any> {
-  public render() {
-    const { classes } = this.props;
-    return (
-      <div className={classes.root}>
-        <div className={classes.chat}>
-          <Messages />
-        </div>
-        <Input />
+const Chat = (props: any) => {
+  const classes = useStyles();
+  return (
+    <div className={classes.root}>
+      <div className={classes.chat}>
+        <Messages />
       </div>
-    );
-  }
-}
+      <Input />
+    </div>
+  );
+};
 
-const styles: any = (theme: any) => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     flexGrow: 1,
     display: 'flex',
@@ -33,6 +30,6 @@ const styles: any = (theme: any) => ({
     flexDirection: 'column',
     justifyContent: 'flex-end',
   },
-});
+}));
 
-export default withStyles(styles)(Chat);
+export default Chat;

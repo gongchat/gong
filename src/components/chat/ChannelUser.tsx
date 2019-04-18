@@ -1,52 +1,45 @@
 import * as React from 'react';
-
-// redux & actions
-import { connect } from 'react-redux';
-import { channelSelectUser } from 'src/actions/dispatcher';
+import { useContext } from 'src/context';
 
 // material ui
-import { withStyles } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/styles';
 
 // utils
 import StringUtil from 'src/utils/stringUtils';
 
-class ChannelUser extends React.Component<any, any> {
-  public render() {
-    const { classes, user, showAvatar } = this.props;
+const ChannelUser = (props: any) => {
+  const classes = useStyles();
+  const [context, actions] = useContext();
 
-    return (
-      <div
-        className={[classes.root, showAvatar ? '' : classes.rootNarrow].join(
-          ' '
-        )}
-        onClick={this.handleOnClick}
-      >
-        {showAvatar && (
-          <div className={classes.avatar}>
-            <Avatar className={classes.img}>
-              {StringUtil.getAbbreviation(user.nickname)}
-            </Avatar>
-          </div>
-        )}
-        <Typography className={classes.title} style={{ color: user.color }}>
-          {user.nickname}
-        </Typography>
-      </div>
-    );
-  }
-
-  private handleOnClick = () => {
-    this.props.channelSelectUser(this.props.user);
+  const handleOnClick = () => {
+    actions.selectRoomUser(props.user);
   };
-}
 
-const mapDispatchToProps = {
-  channelSelectUser,
+  return (
+    <div
+      className={[
+        classes.root,
+        props.showAvatar ? '' : classes.rootNarrow,
+      ].join(' ')}
+      onClick={handleOnClick}
+    >
+      {props.showAvatar && (
+        <div className={classes.avatar}>
+          <Avatar className={classes.img}>
+            {StringUtil.getAbbreviation(props.user.nickname)}
+          </Avatar>
+        </div>
+      )}
+      <Typography className={classes.title} style={{ color: props.user.color }}>
+        {props.user.nickname}
+      </Typography>
+    </div>
+  );
 };
 
-const styles: any = (theme: any) => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     padding: theme.spacing.unit,
     borderRadius: '5px',
@@ -77,9 +70,6 @@ const styles: any = (theme: any) => ({
     fontSize: '.8rem',
     marginRight: theme.spacing.unit,
   },
-});
+}));
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(withStyles(styles)(ChannelUser));
+export default ChannelUser;

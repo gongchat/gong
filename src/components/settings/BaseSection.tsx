@@ -1,24 +1,22 @@
 import * as React from 'react';
 
 // material ui
-import { withStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/styles';
 
-class BaseSection extends React.Component<any, any> {
-  public render() {
-    const { classes, title, children } = this.props;
-    return (
-      <div className={classes.root}>
-        <Typography variant="subtitle2" className={classes.title}>
-          {title}
-        </Typography>
-        {children}
-      </div>
-    );
-  }
-}
+const BaseSection = (props: any) => {
+  const classes = useStyles();
+  return (
+    <div className={classes.root}>
+      <Typography variant="subtitle2" className={classes.title}>
+        {props.title}
+      </Typography>
+      {props.children}
+    </div>
+  );
+};
 
-const styles: any = (theme: any) => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit,
@@ -39,6 +37,6 @@ const styles: any = (theme: any) => ({
   title: {
     textTransform: 'uppercase',
   },
-});
+}));
 
-export default withStyles(styles)(BaseSection);
+export default BaseSection;

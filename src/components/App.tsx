@@ -1,25 +1,23 @@
 import * as React from 'react';
 
-// redux
-import { Provider } from 'react-redux';
-import store from 'src/store';
+import ContextProvider from 'src/context';
 
 // libs
 import { SnackbarProvider } from 'notistack';
 
 // components
-import Router from './Router';
+import IpcRenderer from './IpcRenderer';
+import Routes from './Routes';
 
-class App extends React.Component<any, any> {
-  public render() {
-    return (
-      <Provider store={store}>
-        <SnackbarProvider maxSnack={3}>
-          <Router />
-        </SnackbarProvider>
-      </Provider>
-    );
-  }
-}
+export const App = () => {
+  return (
+    <ContextProvider>
+      <IpcRenderer />
+      <SnackbarProvider maxSnack={3}>
+        <Routes />
+      </SnackbarProvider>
+    </ContextProvider>
+  );
+};
 
 export default App;

@@ -1,13 +1,14 @@
 const electron = require('electron');
-const { ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
+
+const debug = require('electron-debug');
+debug({ enabled: true });
 
 const isDev = require('electron-is-dev');
 const {
   default: installExtension,
   REACT_DEVELOPER_TOOLS,
-  REDUX_DEVTOOLS,
 } = require('electron-devtools-installer');
 
 const operatingSystem = process.platform; // supported values: darwin (mac), linux, win32 (this is also 64bit)
@@ -31,15 +32,16 @@ let tray;
 let isQuitting;
 
 // only allow once instance of Gong
-const shouldQuit = app.makeSingleInstance(function(commandLine,
-  workingDirectory) {
-  // Someone tried to run a second instance, we should focus our window.
-  if (myWindow) {
-    if (myWindow.isMinimized()) myWindow.restore();
-    myWindow.focus();
+const isLocked = app.requestSingleInstanceLock(
+  (commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
   }
-});
-if (shouldQuit) {
+);
+if (!isLocked) {
   app.quit();
   return;
 }
@@ -64,13 +66,17 @@ function createWindow() {
   });
 
   mainWindow.loadURL(
-    isDev ?
-    'http://localhost:3000' :
-    `file://${path.join(__dirname, '../build/index.html')}`
+    isDev
+      ? 'http://localhost:3000'
+      : `file://${path.join(__dirname, '../build/index.html')}`
   );
 
-  mainWindow.on('close', (event) => {
-    if (operatingSystem === 'win32' && !isQuitting && Settings.get().minimizeToTrayOnClose) {
+  mainWindow.on('close', event => {
+    if (
+      operatingSystem === 'win32' &&
+      !isQuitting &&
+      Settings.get().minimizeToTrayOnClose
+    ) {
       event.preventDefault();
       mainWindow.hide();
       event.returnValue = false;
@@ -84,14 +90,14 @@ function createWindow() {
     mainWindow = null;
   });
 
+  [REACT_DEVELOPER_TOOLS].forEach(extension => {
+    installExtension(extension.id)
+      .then(name => console.log(`Added Extension:  ${name}`))
+      .catch(err => console.log('An error occurred: ', err));
+  });
+
   // setup dev tools
   if (isDev) {
-    [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS].forEach(extension => {
-      installExtension(extension.id)
-        .then((name) => console.log(`Added Extension:  ${name}`))
-        .catch((err) => console.log('An error occurred: ', err));
-    });
-
     mainWindow.webContents.openDevTools({
       detach: true,
     });
@@ -100,7 +106,7 @@ function createWindow() {
   }
 
   // any messages with links open in browser, this is okay since
-  // react is using hash router for routing and does not register as a link to 
+  // react is using hash router for routing and does not register as a link to
   // a new page. on develop localhost:3000 is ignored for reloads on save.
   mainWindow.webContents.on('will-navigate', (event, targetUrl) => {
     if (!isDev || (isDev && !targetUrl.includes('localhost:3000'))) {
@@ -121,18 +127,21 @@ function createWindow() {
 function createTray() {
   log.info('Creating system tray');
   tray = new Tray(path.join(__dirname, '/icons/16x16.png'));
-  const contextMenu = Menu.buildFromTemplate([{
-    label: 'Show Gong',
-    click: function() {
-      mainWindow.show();
-    }
-  }, {
-    label: 'Quit Gong',
-    click: function() {
-      isQuitting = true;
-      app.quit();
-    }
-  }]);
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Show Gong',
+      click: function() {
+        mainWindow.show();
+      },
+    },
+    {
+      label: 'Quit Gong',
+      click: function() {
+        isQuitting = true;
+        app.quit();
+      },
+    },
+  ]);
   tray.on('double-click', () => {
     mainWindow.show();
   });
@@ -187,18 +196,18 @@ autoUpdater.on('error', (event, error) => {
 autoUpdater.on('update-downloaded', (event, info) => {
   mainWindow.webContents.send('app-set', {
     hasUpdate: true,
-    isUpdateDownloaded: true
+    isUpdateDownloaded: true,
   });
 });
 
 app.on('ready', () => {
-  log.info("Checking for updates");
+  log.info('Checking for updates');
   autoUpdater.checkForUpdates();
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.webContents.send('app-set', {
       version: app.getVersion(),
-      operatingSystem
+      operatingSystem,
     });
   });
-  log.info("Loading React");
+  log.info('Loading React');
 });

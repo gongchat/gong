@@ -1,8 +1,10 @@
 import * as React from 'react';
+import { useState } from 'react';
+import { useContext } from 'src/context';
 
 // material
-import { withStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/styles';
 
 import CloseIcon from '@material-ui/icons/Close';
 import CropSquareIcon from '@material-ui/icons/CropSquare';
@@ -10,93 +12,23 @@ import RemoveIcon from '@material-ui/icons/Remove';
 
 const { BrowserWindow } = (window as any).require('electron').remote;
 
-class MenuBar extends React.Component<any, any> {
-  public state = {
-    isFlashing: false,
-    menuBarNotification: this.props.menuBarNotification,
-  };
+export const MenuBar = (props: any) => {
+  const classes = useStyles();
+  const [context, actions] = useContext();
 
-  public componentDidUpdate(prevProps: any) {
-    if (this.props.menuBarNotification !== prevProps.menuBarNotification) {
-      if (this.props.menuBarNotification !== '') {
-        if (
-          this.props.menuBarNotification !== this.state.menuBarNotification &&
-          (!this.state.isFlashing ||
-            this.props.menuBarNotification.split(',')[0] === 'once')
-        ) {
-          this.setState({ menuBarNotification: '' });
-          setTimeout(() => {
-            this.setState({
-              menuBarNotification: this.props.menuBarNotification,
-              isFlashing:
-                this.props.menuBarNotification.split(',')[0] === 'repeat'
-                  ? true
-                  : false,
-            });
-          }, 1);
-        }
-      } else {
-        this.setState({ menuBarNotification: '', isFlashing: false });
-      }
-    }
-  }
+  const [isFlashing, setIsFlashing] = useState(false);
+  const [menuBarNotification, setMenuBarNotification] = useState('');
 
-  public render() {
-    const { classes, showOffline } = this.props;
-    const { menuBarNotification } = this.state;
-    const menuBarNotificationFrequency = menuBarNotification
-      ? menuBarNotification.split(',')[0]
-      : '';
+  const menuBarNotificationFrequency = menuBarNotification
+    ? menuBarNotification.split(',')[0]
+    : '';
 
-    return (
-      <div
-        className={[
-          classes.root,
-          menuBarNotificationFrequency === 'once'
-            ? classes.flashOnce
-            : menuBarNotificationFrequency === 'repeat'
-            ? classes.flashRepeat
-            : '',
-        ].join(' ')}
-      >
-        <div className={['menu-bar', classes.menuBar].join(' ')}>
-          <div className={classes.brand}>
-            <Typography>Gong{showOffline ? ' (offline)' : ''}</Typography>
-          </div>
-          <div className={['menu-bar--items', classes.menu].join(' ')}>
-            {/* <Typography>File</Typography> */}
-          </div>
-          <div className={['menu-bar--actions', classes.actions].join(' ')}>
-            <Typography
-              onClick={this.minimize}
-              className={[classes.actionItem].join(' ')}
-            >
-              <RemoveIcon />
-            </Typography>
-            <Typography
-              onClick={this.toggleMaximize}
-              className={[classes.actionItem].join(' ')}
-            >
-              <CropSquareIcon />
-            </Typography>
-            <Typography
-              onClick={this.close}
-              className={[classes.actionItem, classes.close].join(' ')}
-            >
-              <CloseIcon />
-            </Typography>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  private minimize = () => {
+  const minimize = () => {
     const focusedWindow = BrowserWindow.getFocusedWindow();
     focusedWindow.minimize();
   };
 
-  private toggleMaximize = () => {
+  const toggleMaximize = () => {
     const focusedWindow = BrowserWindow.getFocusedWindow();
     if (focusedWindow.isMaximized()) {
       focusedWindow.unmaximize();
@@ -105,13 +37,79 @@ class MenuBar extends React.Component<any, any> {
     }
   };
 
-  private close = () => {
+  const close = () => {
     const focusedWindow = BrowserWindow.getFocusedWindow();
     focusedWindow.close();
   };
-}
 
-const styles: any = (theme: any) => ({
+  React.useEffect(() => {
+    if (context.menuBarNotification !== '') {
+      if (
+        context.menuBarNotification !== context.menuBarNotification &&
+        (!isFlashing || context.menuBarNotification.split(',')[0] === 'once')
+      ) {
+        setMenuBarNotification('');
+        setTimeout(() => {
+          setMenuBarNotification(context.menuBarNotification);
+          setIsFlashing(
+            context.menuBarNotification.split(',')[0] === 'repeat'
+              ? true
+              : false
+          );
+        }, 1);
+      }
+    } else {
+      setMenuBarNotification('');
+      setIsFlashing(false);
+    }
+  }, [context.menuBarNotification]);
+
+  return (
+    <div
+      className={[
+        classes.root,
+        menuBarNotificationFrequency === 'once'
+          ? classes.flashOnce
+          : menuBarNotificationFrequency === 'repeat'
+          ? classes.flashRepeat
+          : '',
+      ].join(' ')}
+    >
+      <div className={['menu-bar', classes.menuBar].join(' ')}>
+        <div className={classes.brand}>
+          <Typography>
+            Gong{context.connection.isConnected ? '' : ' (offline)'}
+          </Typography>
+        </div>
+        <div className={['menu-bar--items', classes.menu].join(' ')}>
+          {/* <Typography>File</Typography> */}
+        </div>
+        <div className={['menu-bar--actions', classes.actions].join(' ')}>
+          <Typography
+            onClick={minimize}
+            className={[classes.actionItem].join(' ')}
+          >
+            <RemoveIcon />
+          </Typography>
+          <Typography
+            onClick={toggleMaximize}
+            className={[classes.actionItem].join(' ')}
+          >
+            <CropSquareIcon />
+          </Typography>
+          <Typography
+            onClick={close}
+            className={[classes.actionItem, classes.close].join(' ')}
+          >
+            <CloseIcon />
+          </Typography>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const useStyles = makeStyles((theme: any) => ({
   root: {
     background: theme.palette.backgroundAccent,
   },
@@ -175,6 +173,6 @@ const styles: any = (theme: any) => ({
       backgroundColor: theme.palette.backgroundAccent,
     },
   },
-});
+}));
 
-export default withStyles(styles)(MenuBar);
+export default MenuBar;

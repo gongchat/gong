@@ -10,17 +10,17 @@ import IRoom from 'src/interfaces/IRoom';
 import IRoomSaved from 'src/interfaces/IRoomSaved';
 import IState from 'src/interfaces/IState';
 
-import Notification from './notification';
+import { setMenuBarNotificationOnChannelSelect } from './notification';
 
-export default class Channel {
-  public static remove = (state: IState, jid: string): IState => {
+export const channelActions = {
+  removeChannel(jid: string, state: IState): IState {
     const channel: IChannel | undefined = state.channels.find(
       (c: IChannel) => c.jid === jid
     );
     if (channel) {
       const channels: IChannel[] = state.channels.filter(c => c !== channel);
       ipcRenderer.send('xmpp-unsubscribe-to-room', channel);
-      Channel.saveRooms(channels);
+      saveRooms(channels);
       return {
         ...state,
         channels,
@@ -32,9 +32,8 @@ export default class Channel {
     } else {
       return state;
     }
-  };
-
-  public static select = (state: IState, channelJid: string): IState => {
+  },
+  selectChannel(channelJid: string, state: IState): IState {
     const channels: IChannel[] = state.channels.map((channel: IChannel) => {
       if (channel.jid === channelJid) {
         const newChannel = {
@@ -70,12 +69,11 @@ export default class Channel {
       current: channels.find((channel: IChannel) => channel.jid === channelJid),
       channels,
     };
-    Channel.saveRooms(channels);
-    Notification.setMenuBarNotificationOnChannelSelect(newState);
+    saveRooms(channels);
+    setMenuBarNotificationOnChannelSelect(newState);
     return newState;
-  };
-
-  public static setScrollPosition = (state: IState, payload: any): IState => {
+  },
+  setChannelScrollPosition(payload: any, state: IState): IState {
     // do not need to update current as it only matters when we change channels
     return {
       ...state,
@@ -86,29 +84,8 @@ export default class Channel {
         return channel;
       }),
     };
-  };
-
-  public static saveRooms = (channels: IChannel[]) => {
-    electronStore.set(
-      'channels',
-      channels
-        .filter((channel: IChannel) => channel.type === 'groupchat')
-        .map((room: IRoom) => {
-          const roomSaved: IRoomSaved = {
-            jid: room.jid,
-            name: room.name,
-            type: room.type,
-            nickname: room.myNickname,
-            password: room.password,
-            lastReadTimestamp: room.lastReadTimestamp,
-            lastReadMessageId: room.lastReadMessageId,
-          };
-          return roomSaved;
-        })
-    );
-  };
-
-  public static getLogs = (state: IState, channel: IChannel) => {
+  },
+  getChannelLogs(channel: IChannel, state: IState) {
     ipcRenderer.send('get-log', {
       user: state.profile.jid,
       date:
@@ -142,9 +119,8 @@ export default class Channel {
       current,
       channels,
     };
-  };
-
-  public static setLogs = (state: IState, payload: any) => {
+  },
+  setChannelLogs(payload: any, state: IState) {
     const { channelJid, messages, hasNoMoreLogs } = payload;
 
     messages.forEach(message => {
@@ -184,5 +160,25 @@ export default class Channel {
       current,
       channels,
     };
-  };
-}
+  },
+};
+
+export const saveRooms = (channels: IChannel[]) => {
+  electronStore.set(
+    'channels',
+    channels
+      .filter((channel: IChannel) => channel.type === 'groupchat')
+      .map((room: IRoom) => {
+        const roomSaved: IRoomSaved = {
+          jid: room.jid,
+          name: room.name,
+          type: room.type,
+          nickname: room.myNickname,
+          password: room.password,
+          lastReadTimestamp: room.lastReadTimestamp,
+          lastReadMessageId: room.lastReadMessageId,
+        };
+        return roomSaved;
+      })
+  );
+};

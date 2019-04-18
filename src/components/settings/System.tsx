@@ -1,70 +1,45 @@
 import * as React from 'react';
-
-// redux & actions
-import { connect } from 'react-redux';
-import { setSettings } from 'src/actions/dispatcher';
+import { useState } from 'react';
+import { useContext } from 'src/context';
 
 // material ui
-import { withStyles } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
 // interface
-import IStates from 'src/interfaces/IStates';
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 
-class System extends React.Component<any, any> {
-  public state = {
-    minimizeToTrayOnClose: this.props.settings.minimizeToTrayOnClose,
+const System = (props: any) => {
+  const [context, actions] = useContext();
+
+  const [minimizeToTrayOnClose, setMinimizeToTrayOnClose] = useState(
+    context.settings.minimizeToTrayOnClose
+  );
+
+  const handleOnChange = (event: any, value: any, action: any) => {
+    action(value);
+    actions.setSettings({ [event.target.name]: value });
   };
 
-  public render() {
-    const { minimizeToTrayOnClose } = this.state;
-
-    return (
-      <BasePage title="System">
-        <BaseSection title="On Close">
-          <FormControlLabel
-            control={
-              <Switch
-                name="minimizeToTrayOnClose"
-                checked={minimizeToTrayOnClose}
-                onChange={this.handleOnChange}
-              />
-            }
-            label="Minimize to tray"
-          />
-        </BaseSection>
-      </BasePage>
-    );
-  }
-
-  private handleOnChange = (event: any, value: any) => {
-    const name = event.target.name;
-    this.setState({ [event.target.name]: value });
-    this.props.setSettings({
-      minimizeToTrayOnClose:
-        name === 'minimizeToTrayOnClose'
-          ? value
-          : this.state.minimizeToTrayOnClose,
-    });
-  };
-}
-
-const mapStateToProps = (states: IStates) => ({
-  settings: states.gong.settings,
-});
-
-const mapDispatchToProps = {
-  setSettings,
+  return (
+    <BasePage title="System">
+      <BaseSection title="On Close">
+        <FormControlLabel
+          control={
+            <Switch
+              name="minimizeToTrayOnClose"
+              checked={minimizeToTrayOnClose}
+              onChange={(event: any, value: any) =>
+                handleOnChange(event, value, setMinimizeToTrayOnClose)
+              }
+            />
+          }
+          label="Minimize to tray"
+        />
+      </BaseSection>
+    </BasePage>
+  );
 };
 
-const styles: any = (theme: any) => ({
-  root: {},
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles)(System));
+export default System;

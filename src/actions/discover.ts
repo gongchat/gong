@@ -4,30 +4,21 @@ import IDiscoverRoom from 'src/interfaces/IDiscoverRoom';
 import IState from 'src/interfaces/IState';
 import ISubdomain from 'src/interfaces/ISubdomain';
 
-export default class Discover {
-  public static setShow = (state: IState, value: boolean): IState => {
+export const discoverActions = {
+  setShowDiscover(value: boolean, state: IState): IState {
     if (value === true) {
       ipcRenderer.send('xmpp-discover-top-level-items');
     }
     return { ...state, showDiscover: value };
-  };
-
-  public static discoverItems = (state: IState, subdomain: string): IState => {
+  },
+  discoverItems(subdomain: string, state: IState): IState {
     ipcRenderer.send('xmpp-discover-sub-level-items', subdomain);
     return state;
-  };
-
-  public static setDiscoverRooms = (
-    state: IState,
-    rooms: IDiscoverRoom[]
-  ): IState => {
+  },
+  setDiscoverRooms(rooms: IDiscoverRoom[], state: IState): IState {
     return { ...state, rooms };
-  };
-
-  public static setSubdomains = (
-    state: IState,
-    subdomains: ISubdomain[]
-  ): IState => {
+  },
+  setDiscoverSubdomains(subdomains: ISubdomain[], state: IState): IState {
     return { ...state, subdomains };
-  };
-}
+  },
+};

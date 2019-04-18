@@ -1,88 +1,78 @@
 import * as React from 'react';
+import { useState } from 'react';
+import { useContext } from 'src/context';
 
-// redux & actions
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { removeSnackbarNotification } from 'src/actions/dispatcher';
-
-import { withStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
 // libs
-import { withSnackbar } from 'notistack';
+import { useSnackbar } from 'notistack';
 
 // interfaces
 import ISnackbarNotification from 'src/interfaces/ISnackbarNotification';
-import IStates from 'src/interfaces/IStates';
 
-class SnackbarNotifications extends React.Component<any, any> {
-  private displayed: any[] = [];
+const SnackbarNotifications = (props: any) => {
+  const classes = useStyles();
+  const [context, actions] = useContext();
+  const { enqueueSnackbar } = useSnackbar();
 
-  public shouldComponentUpdate(nextProps: any) {
-    const { snackbarNotifications: currentSnackbarNotifications } = this.props;
+  const [displayed, setDisplayed] = useState([]);
+
+  const storeDisplayed = (id: string) => {
+    setDisplayed([...displayed, id] as any);
+  };
+
+  React.useEffect(() => {
     let notExists = false;
-    if (nextProps.snackbarNotifications) {
-      nextProps.snackbarNotifications.forEach(
+    if (context.snackbarNotifications) {
+      context.snackbarNotifications.forEach(
         (notification: any, index: number) => {
           if (!notExists) {
             notExists =
               notExists ||
-              !currentSnackbarNotifications.filter(
-                ({ key }) => nextProps.snackbarNotifications[index].key === key
+              !context.snackbarNotifications.filter(
+                ({ key }) => context.snackbarNotifications[index].key === key
               ).length;
           }
         }
       );
     }
-    return notExists;
-  }
-
-  public componentDidUpdate() {
-    const { snackbarNotifications, classes } = this.props;
-
-    if (snackbarNotifications) {
-      snackbarNotifications.forEach((notification: ISnackbarNotification) => {
-        if (
-          !this.displayed.find(
-            (e: ISnackbarNotification) => e.id === notification.id
-          )
-        ) {
-          this.props.enqueueSnackbar(notification.message, {
-            variant: notification.variant,
-            anchorOrigin: { vertical: 'top', horizontal: 'right' },
-            className: classes.notification,
-          });
-          this.storeDisplayed(notification.id);
-          this.props.removeSnackbarNotification(notification.id);
+    if (context.snackbarNotifications) {
+      context.snackbarNotifications.forEach(
+        (notification: ISnackbarNotification) => {
+          if (
+            !displayed.find(
+              (e: ISnackbarNotification) => e.id === notification.id
+            )
+          ) {
+            enqueueSnackbar(notification.message, {
+              variant: notification.variant,
+              anchorOrigin: { vertical: 'top', horizontal: 'right' },
+              className: classes.notification,
+            } as any);
+            storeDisplayed(notification.id);
+            actions.removeSnackbarNotification(notification.id);
+          }
         }
-      });
+      );
     }
-  }
+  }, [props.snackbarNotifications]);
 
-  public render() {
-    return null;
-  }
+  return null;
+};
 
-  private storeDisplayed = (id: string) => {
-    this.displayed = [...this.displayed, id];
-  };
-}
+// const mapStateToProps = (states: IStates) => ({
+//   snackbarNotifications: states.gong.snackbarNotifications,
+// });
 
-const mapStateToProps = (states: IStates) => ({
-  snackbarNotifications: states.gong.snackbarNotifications,
-});
+// const mapDispatchToProps = (dispatch: any) =>
+//   bindActionCreators({ removeSnackbarNotification }, dispatch);
 
-const mapDispatchToProps = (dispatch: any) =>
-  bindActionCreators({ removeSnackbarNotification }, dispatch);
-
-const styles: any = (theme: any) => ({
+const useStyles = makeStyles((theme: any) => ({
   notification: {
     [theme.breakpoints.down('md')]: {
       left: 'auto',
     },
   },
-});
+}));
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles)(withSnackbar(SnackbarNotifications)));
+export default SnackbarNotifications;

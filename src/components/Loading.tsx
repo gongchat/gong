@@ -1,110 +1,101 @@
 import * as React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useState } from 'react';
+import { useContext } from 'src/context';
 
-// redux & actions
-import { connect } from 'react-redux';
-import { autoLogin } from 'src/actions/dispatcher';
+import { navigate } from '@reach/router';
 
 // material ui
-import { withStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/styles';
 
 // components
 import LoadingIcon from './icons/LoadingIcon';
 
-class Loading extends React.Component<any, any> {
-  public state = {
-    text: 'Loading please wait...',
-    showLogin: false,
+const Loading = (props: any) => {
+  const classes = useStyles();
+  const [context, actions] = useContext();
+
+  const [text, setText] = useState('Loading please wait...');
+  const [showLogin, setShowLogin] = useState(false);
+
+  let reconnectTimer: any;
+
+  const handleLoginClick = () => {
+    if (reconnectTimer) {
+      clearTimeout(reconnectTimer);
+    }
+    navigate('/login');
   };
 
-  private reconnectTimer: any;
+  React.useEffect(() => {
+    actions.autoConnect();
+  }, []);
 
-  public componentDidMount() {
-    this.props.autoLogin();
-  }
-
-  public componentDidUpdate(prevProps: any) {
-    if (this.props.connection !== prevProps.connection) {
-      if (
-        !this.props.connection.isConnecting &&
-        this.props.connection.isConnecting !== undefined
-      ) {
-        if (this.props.connection.isConnected) {
-          this.props.history.push('/main');
-        } else if (!this.props.connection.hasSavedCredentials) {
-          this.props.history.push('/login');
-        } else if (!this.props.connection.isAuthenticated) {
-          if (
-            this.props.connection.error !== 'Cannot authorize your credentials'
-          ) {
-            this.setState({
-              text: 'Unable to find the server, retrying connection',
-              showLogin: true,
-            });
-            if (this.reconnectTimer) {
-              clearTimeout(this.reconnectTimer);
-              this.setState({ text: 'Server not found, retrying connection' });
-            }
-            this.reconnectTimer = setTimeout(() => {
-              this.setState({ text: 'Looking for the server' });
-              this.props.autoLogin();
-            }, 10000);
+  React.useEffect(() => {
+    if (
+      !context.connection.isConnecting &&
+      context.connection.isConnecting !== undefined
+    ) {
+      if (context.connection.isConnected) {
+        navigate('/main');
+      } else if (context.connection.hasSavedCredentials === false) {
+        navigate('/login');
+      } else if (!context.connection.isAuthenticated) {
+        if (
+          context.connection.connectionError !==
+          'Cannot authorize your credentials'
+        ) {
+          setText('Unable to find the server, retrying connection');
+          setShowLogin(true);
+          if (reconnectTimer) {
+            clearTimeout(reconnectTimer);
+            setText('Server not found, retrying connection');
           }
+          reconnectTimer = setTimeout(() => {
+            setText('Looking for the server');
+            actions.autoConnect();
+          }, 10000);
         }
       }
     }
-  }
 
-  public render() {
-    const { classes, app } = this.props;
-    const { text, showLogin } = this.state;
+    return () => {
+      if (reconnectTimer) {
+        clearTimeout(reconnectTimer);
+      }
+    };
+  }, [context.connection]);
 
-    return (
-      <div className={classes.root}>
-        <div className={classes.filler} />
-        <div className={classes.content}>
-          <h1 className={classes.title}>GONG</h1>
-          <LoadingIcon />
-          <p className={classes.message}>{text}</p>
-          {app.version !== '' && (
-            <p className={classes.version}>v{app.version}</p>
-          )}
-        </div>
-        {showLogin && (
-          <div className={classes.goToLogin}>
-            <div className={classes.filler} />
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={this.handleLoginClick}
-            >
-              Take me to login
-            </Button>
-            <div className={classes.filler} />
-          </div>
+  return (
+    <div className={classes.root}>
+      <div className={classes.filler} />
+      <div className={classes.content}>
+        <h1 className={classes.title}>GONG</h1>
+        <LoadingIcon />
+        <p className={classes.message}>{text}</p>
+        {context.app.version !== '' && (
+          <p className={classes.version}>v{context.app.version}</p>
         )}
-        <div className={classes.filler} />
       </div>
-    );
-  }
-
-  private handleLoginClick = () => {
-    clearTimeout(this.reconnectTimer);
-    this.props.history.push('/login');
-  };
-}
-
-const mapStateToProps = (state: any) => ({
-  app: state.gong.app,
-  connection: state.gong.connection,
-});
-
-const mapDispatchToProps = {
-  autoLogin,
+      {showLogin && (
+        <div className={classes.goToLogin}>
+          <div className={classes.filler} />
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleLoginClick}
+          >
+            Take me to login
+          </Button>
+          <div className={classes.filler} />
+        </div>
+      )}
+      <div className={classes.filler} />
+    </div>
+  );
 };
 
-const styles: any = (theme: any) => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     height: '100%',
     display: 'flex',
@@ -147,9 +138,6 @@ const styles: any = (theme: any) => ({
     justifyContent: 'center',
     marginTop: theme.spacing.unit * 2,
   },
-});
+}));
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles)(withRouter(Loading)));
+export default Loading;

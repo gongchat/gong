@@ -1,69 +1,17 @@
 import * as React from 'react';
-
-// redux & actions
-import { connect } from 'react-redux';
-
-// material ui
-import { withStyles } from '@material-ui/core';
+import { useContext } from 'src/context';
 
 // interfaces
-import IStates from 'src/interfaces/IStates';
 import IUser from 'src/interfaces/IUser';
 
 // components
 import Group from './Group';
 import User from './User';
 
-class Users extends React.Component<any, any> {
-  public render() {
-    const { classes, theme } = this.props;
-    const groupedUsers = this.getGroupedUsers(this.props.users);
+const Users = (props: any) => {
+  const [context, actions] = useContext();
 
-    const totalUnreadMessages = this.props.users.reduce(
-      (a: number, b: IUser) => a + b.unreadMessages,
-      0
-    );
-
-    const hasUnreadMentionMe = this.props.users.some(
-      (user: IUser) => user.hasUnreadMentionMe
-    );
-
-    return (
-      <div className={classes.root}>
-        {groupedUsers.map((group: any) => {
-          if (group.users) {
-            return (
-              <Group
-                key={group.name}
-                title={group.name}
-                canAdd={false}
-                totalUnreadMessages={totalUnreadMessages}
-                hasUnreadMentionMe={hasUnreadMentionMe}
-              >
-                {group.users
-                  .sort((a: IUser, b: IUser) => a.name.localeCompare(b.name))
-                  .map((user: IUser) => (
-                    <User
-                      key={user.jid}
-                      user={user}
-                      showAvatar={theme.sidebarLeftShowAvatar}
-                      isSelected={
-                        this.props.current &&
-                        this.props.current.jid === user.jid
-                      }
-                    />
-                  ))}
-              </Group>
-            );
-          } else {
-            return;
-          }
-        })}
-      </div>
-    );
-  }
-
-  private getGroupedUsers(users: any) {
+  const getGroupedUsers = (users: any) => {
     return users.reduce((a: any, c: any) => {
       const group = a.find((g: any) => g.name === c.group);
       if (!group) {
@@ -73,18 +21,49 @@ class Users extends React.Component<any, any> {
       }
       return a;
     }, []);
-  }
-}
+  };
 
-const mapStateToProps = (states: IStates) => ({
-  theme: states.gong.theme,
-});
+  const groupedUsers = getGroupedUsers(props.users);
 
-const styles: any = (theme: any) => ({
-  root: {},
-});
+  const totalUnreadMessages = props.users.reduce(
+    (a: number, b: IUser) => a + b.unreadMessages,
+    0
+  );
 
-export default connect(
-  mapStateToProps,
-  null
-)(withStyles(styles)(Users));
+  const hasUnreadMentionMe = props.users.some(
+    (user: IUser) => user.hasUnreadMentionMe
+  );
+
+  return (
+    <div>
+      {groupedUsers.map((group: any) => {
+        if (group.users) {
+          return (
+            <Group
+              key={group.name}
+              title={group.name}
+              canAdd={false}
+              totalUnreadMessages={totalUnreadMessages}
+              hasUnreadMentionMe={hasUnreadMentionMe}
+            >
+              {group.users
+                .sort((a: IUser, b: IUser) => a.name.localeCompare(b.name))
+                .map((user: IUser) => (
+                  <User
+                    key={user.jid}
+                    user={user}
+                    showAvatar={context.theme.sidebarLeftShowAvatar}
+                    isSelected={props.current && props.current.jid === user.jid}
+                  />
+                ))}
+            </Group>
+          );
+        } else {
+          return;
+        }
+      })}
+    </div>
+  );
+};
+
+export default Users;

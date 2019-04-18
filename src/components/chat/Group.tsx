@@ -1,103 +1,78 @@
 import * as React from 'react';
-
-// redux & actions
-import { connect } from 'react-redux';
-import { setShowDiscover } from 'src/actions/dispatcher';
+import { useContext } from 'src/context';
 
 // material ui
-import { withStyles } from '@material-ui/core';
 import Badge from '@material-ui/core/Badge';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/styles';
 
 import AddIcon from '@material-ui/icons/Add';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
-class Group extends React.Component<any, any> {
-  public state = {
-    isExpanded: true,
+const Group = (props: any) => {
+  const classes = useStyles();
+  const [context, actions] = useContext();
+  const [isExpanded, setIsExpanded] = React.useState(true);
+
+  const handleChange = () => {
+    setIsExpanded(!isExpanded);
   };
 
-  constructor(props: any) {
-    super(props);
-  }
+  const handleClickAdd = () => {
+    actions.setShowDiscover(true);
+  };
 
-  public render() {
-    const {
-      classes,
-      canAdd,
-      children,
-      totalUnreadMessages,
-      hasUnreadMentionMe,
-    } = this.props;
-    const { isExpanded } = this.state;
-
-    return (
-      <div className={classes.root}>
-        <div className={classes.heading}>
-          <div className={classes.headingContent}>
-            <Typography
-              onClick={this.handleChange}
-              className={[classes.expandIcon, isExpanded ? 'flipped' : ''].join(
-                ' '
-              )}
+  return (
+    <div className={classes.root}>
+      <div className={classes.heading}>
+        <div className={classes.headingContent}>
+          <Typography
+            onClick={handleChange}
+            className={[classes.expandIcon, isExpanded ? 'flipped' : ''].join(
+              ' '
+            )}
+          >
+            <ExpandLessIcon />
+          </Typography>
+          <Typography className={classes.title} onClick={handleChange}>
+            {props.title}
+          </Typography>
+          {props.totalUnreadMessages > 0 && (
+            <Badge
+              badgeContent={props.totalUnreadMessages}
+              classes={{
+                badge: [
+                  classes.badge,
+                  props.hasUnreadMentionMe ? classes.badgeFlash : '',
+                ].join(' '),
+              }}
+              color="error"
             >
-              <ExpandLessIcon />
-            </Typography>
-            <Typography className={classes.title} onClick={this.handleChange}>
-              {this.props.title}
-            </Typography>
-            {totalUnreadMessages > 0 && (
-              <Badge
-                badgeContent={totalUnreadMessages}
-                classes={{
-                  badge: [
-                    classes.badge,
-                    hasUnreadMentionMe ? classes.badgeFlash : '',
-                  ].join(' '),
-                }}
-                color="error"
-              >
-                <span />
-              </Badge>
-            )}
-            {canAdd && (
-              <IconButton
-                className={classes.iconButton}
-                onClick={this.handleClickAdd}
-              >
-                <AddIcon />
-              </IconButton>
-            )}
-          </div>
+              <span />
+            </Badge>
+          )}
+          {props.canAdd && (
+            <IconButton className={classes.iconButton} onClick={handleClickAdd}>
+              <AddIcon />
+            </IconButton>
+          )}
         </div>
-        <ExpansionPanel className={classes.panel} expanded={isExpanded}>
-          <ExpansionPanelDetails className={classes.details}>
-            {/* Empty div is here incase the children is null, ExpansionPanelDetails expects something */}
-            <div />
-            {children}
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
       </div>
-    );
-  }
-
-  private handleChange = () => {
-    this.setState({ isExpanded: !this.state.isExpanded });
-  };
-
-  private handleClickAdd = () => {
-    this.props.setShowDiscover(true);
-  };
-}
-
-const mapDispatchToProps = {
-  setShowDiscover,
+      <ExpansionPanel className={classes.panel} expanded={isExpanded}>
+        <ExpansionPanelDetails className={classes.details}>
+          {/* Empty div is here incase the children is null, ExpansionPanelDetails expects something */}
+          <div />
+          {props.children}
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
+    </div>
+  );
 };
 
-const styles: any = (theme: any) => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     padding: theme.spacing.unit,
   },
@@ -174,9 +149,6 @@ const styles: any = (theme: any) => ({
       opacity: 1,
     },
   },
-});
+}));
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(withStyles(styles)(Group));
+export default Group;

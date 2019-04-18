@@ -1,92 +1,31 @@
 import * as React from 'react';
-
-// redux & actions
-import { connect } from 'react-redux';
-import { selectChannel, settingsToggle } from 'src/actions/dispatcher';
+import { useContext } from 'src/context';
 
 // material ui
-import { withStyles } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import SettingsIcon from '@material-ui/icons/Settings';
+import { makeStyles } from '@material-ui/styles';
 
 // interfaces
 import IChannel from 'src/interfaces/IChannel';
-import IStates from 'src/interfaces/IStates';
 
 // components
 import Channels from './Channels';
 import Me from './Me';
 import Users from './Users';
 
-class SidebarLeft extends React.Component<any, any> {
-  public componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyDown, false);
-  }
+const SidebarLeft = (props: any) => {
+  const classes = useStyles();
+  const [context, actions] = useContext();
 
-  public componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyDown, false);
-  }
-
-  public render() {
-    const { classes, profile, channels, current } = this.props;
-    return (
-      <div className={classes.root}>
-        <div className={classes.upper}>
-          <div className={classes.channels}>
-            <Channels
-              title="Open Channels"
-              hideIfEmpty={true}
-              canAdd={false}
-              prefix="@"
-              current={current}
-              channels={channels.filter(
-                (channel: IChannel) => channel.order === 10
-              )}
-            />
-            <Channels
-              title="Rooms"
-              hideIfEmpty={false}
-              canAdd={true}
-              prefix="#"
-              current={current}
-              channels={channels.filter(
-                (channel: IChannel) => channel.order === 20
-              )}
-            />
-            <Users
-              current={current}
-              users={channels.filter(
-                (channel: IChannel) => channel.order === 30
-              )}
-            />
-          </div>
-        </div>
-        <div className={classes.profile}>
-          <div className={classes.me}>
-            <div className={classes.groupItem}>
-              <Me profile={profile} showAvatar={true} isColored={false} />
-            </div>
-            <IconButton
-              disableRipple={true}
-              className={classes.iconButton}
-              onClick={this.props.settingsToggle}
-            >
-              <SettingsIcon />
-            </IconButton>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  private handleKeyDown = (event: any) => {
+  const handleKeyDown = (event: any) => {
     if (
-      this.props.channels &&
+      context.channels &&
       event.ctrlKey &&
       (event.key === 'PageUp' || event.key === 'PageDown')
     ) {
       event.preventDefault();
-      const sortedChannels = this.props.channels.sort(
+      const sortedChannels = context.channels.sort(
         (a: IChannel, b: IChannel) => {
           if (a.type > b.type) return -1;
           if (a.type < b.type) return 1;
@@ -95,38 +34,83 @@ class SidebarLeft extends React.Component<any, any> {
           return 0;
         }
       );
-      const maxIndex = this.props.channels.length - 1;
-      const index = this.props.current
+      const maxIndex = context.channels.length - 1;
+      const index = context.current
         ? sortedChannels.findIndex(
-            (channel: IChannel) => channel.jid === this.props.current.jid
+            (channel: IChannel) => channel.jid === context.current.jid
           )
         : -1;
 
       if (event.key === 'PageUp') {
-        this.props.selectChannel(
+        actions.selectChannel(
           sortedChannels[index > 0 ? index - 1 : maxIndex].jid
         );
       } else if (event.key === 'PageDown') {
-        this.props.selectChannel(
+        actions.selectChannel(
           sortedChannels[index < maxIndex ? index + 1 : 0].jid
         );
       }
     }
   };
-}
 
-const mapStateToProps = (states: IStates) => ({
-  profile: states.gong.profile,
-  channels: states.gong.channels,
-  current: states.gong.current,
-});
+  React.useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown, false);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown, false);
+    };
+  }, []);
 
-const mapDispatchToProps = {
-  settingsToggle,
-  selectChannel,
+  return (
+    <div className={classes.root}>
+      <div className={classes.upper}>
+        <div className={classes.channels}>
+          <Channels
+            title="Open Channels"
+            hideIfEmpty={true}
+            canAdd={false}
+            prefix="@"
+            current={context.current}
+            channels={context.channels.filter(
+              (channel: IChannel) => channel.order === 10
+            )}
+          />
+          <Channels
+            title="Rooms"
+            hideIfEmpty={false}
+            canAdd={true}
+            prefix="#"
+            current={context.current}
+            channels={context.channels.filter(
+              (channel: IChannel) => channel.order === 20
+            )}
+          />
+          <Users
+            current={context.current}
+            users={context.channels.filter(
+              (channel: IChannel) => channel.order === 30
+            )}
+          />
+        </div>
+      </div>
+      <div className={classes.profile}>
+        <div className={classes.me}>
+          <div className={classes.groupItem}>
+            <Me profile={context.profile} showAvatar={true} isColored={false} />
+          </div>
+          <IconButton
+            disableRipple={true}
+            className={classes.iconButton}
+            onClick={() => actions.toggleShowSettings()}
+          >
+            <SettingsIcon />
+          </IconButton>
+        </div>
+      </div>
+    </div>
+  );
 };
 
-const styles: any = (theme: any) => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     flexGrow: 1,
     display: 'flex',
@@ -158,9 +142,6 @@ const styles: any = (theme: any) => ({
   iconButton: {
     padding: '0 !important',
   },
-});
+}));
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles)(SidebarLeft));
+export default SidebarLeft;

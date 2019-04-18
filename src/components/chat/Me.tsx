@@ -1,9 +1,11 @@
 import * as React from 'react';
+import { useState } from 'react';
+import { useContext } from 'src/context';
 
 // material ui
-import { withStyles } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/styles';
 
 // utils
 import StringUtil from 'src/utils/stringUtils';
@@ -12,63 +14,59 @@ import StringUtil from 'src/utils/stringUtils';
 import Status from './Status';
 import StatusMenu from './StatusMenu';
 
-class Me extends React.Component<any, any> {
-  public state = {
-    showStatusMenu: false,
+const Me = (props: any) => {
+  const classes = useStyles();
+  const [context, actions] = useContext();
+
+  const [showStatusMenu, setShowStatusMenu] = useState(false);
+
+  const displayName =
+    context.profile.vCard && context.profile.vCard.fullName
+      ? context.profile.vCard.fullName
+      : context.profile.username;
+
+  const meRef = React.useRef<HTMLDivElement>(null);
+
+  const toggleStatusMenu = () => {
+    setShowStatusMenu(!showStatusMenu);
   };
 
-  private meRef = React.createRef<HTMLDivElement>();
+  const handleCloseStatusMenu = () => {
+    setShowStatusMenu(false);
+  };
 
-  public render() {
-    const { classes, profile } = this.props;
-    const { showStatusMenu } = this.state;
-
-    const displayName =
-      profile.vCard && profile.vCard.fullName
-        ? profile.vCard.fullName
-        : profile.username;
-
-    return (
-      <div className={classes.root}>
-        <div ref={this.meRef} className={classes.me}>
-          <div className={classes.avatar} onClick={this.toggleStatusMenu}>
-            {profile.vCard && profile.vCard.photoType ? (
-              <Avatar
-                className={classes.img}
-                src={`data:${profile.vCard.photoType};base64,${
-                  profile.vCard.photo
-                }`}
-              />
-            ) : (
-              <Avatar className={classes.img}>
-                {StringUtil.getAbbreviation(displayName)}
-              </Avatar>
-            )}
-            <div className={classes.status}>
-              <Status status={profile.status} />
-            </div>
+  return (
+    <div className={classes.root}>
+      <div ref={meRef} className={classes.me}>
+        <div className={classes.avatar} onClick={toggleStatusMenu}>
+          {context.profile.vCard && context.profile.vCard.photoType ? (
+            <Avatar
+              className={classes.img}
+              src={`data:${context.profile.vCard.photoType};base64,${
+                context.profile.vCard.photo
+              }`}
+            />
+          ) : (
+            <Avatar className={classes.img}>
+              {StringUtil.getAbbreviation(displayName)}
+            </Avatar>
+          )}
+          <div className={classes.status}>
+            <Status status={context.profile.status} />
           </div>
-          <Typography className={classes.title}>{displayName}</Typography>
         </div>
-        <StatusMenu
-          anchorEl={this.meRef.current}
-          open={showStatusMenu}
-          onClose={this.handleCloseStatusMenu}
-        />
+        <Typography className={classes.title}>{displayName}</Typography>
       </div>
-    );
-  }
+      <StatusMenu
+        anchorEl={meRef.current}
+        open={showStatusMenu}
+        onClose={handleCloseStatusMenu}
+      />
+    </div>
+  );
+};
 
-  private toggleStatusMenu = () => {
-    this.setState({ showStatusMenu: !this.state.showStatusMenu });
-  };
-
-  private handleCloseStatusMenu = () => {
-    this.setState({ showStatusMenu: false });
-  };
-}
-
-const styles: any = (theme: any) => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     position: 'relative',
   },
@@ -101,6 +99,6 @@ const styles: any = (theme: any) => ({
     border: '2px solid ' + theme.palette.backgroundAccent,
     borderRadius: '50%',
   },
-});
+}));
 
-export default withStyles(styles)(Me);
+export default Me;

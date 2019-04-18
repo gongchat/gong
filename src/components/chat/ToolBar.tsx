@@ -1,74 +1,67 @@
 import * as React from 'react';
-
-// redux & actions
-import { connect } from 'react-redux';
+import { useContext } from 'src/context';
 
 // material ui
-import { withStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-
-// interfaces
-import IStates from 'src/interfaces/IStates';
+import { makeStyles } from '@material-ui/styles';
 
 // components
 import Status from './Status';
 
-class ToolBar extends React.Component<any, any> {
-  public render() {
-    const { classes, domain, current } = this.props;
-    let chatName = '';
-    let chatStatus = '';
+const ToolBar = (props: any) => {
+  const classes = useStyles();
+  const [context, actions] = useContext();
 
-    if (current) {
-      switch (current.type) {
-        case 'groupchat':
-          chatName =
-            current.name.startsWith('#') && current.name.length > 1
-              ? current.name.substring(1)
-              : current.name;
-          chatStatus = current.isConnected ? 'online' : 'offline';
-          break;
-        case 'chat':
-          chatName =
-            current.vCard && current.vCard.fullName
-              ? current.vCard.fullName
-              : current.name;
-          chatStatus = current.status;
-          break;
-      }
+  let chatName = '';
+  let chatStatus = '';
+
+  if (context.current) {
+    switch (context.current.type) {
+      case 'groupchat':
+        chatName =
+          context.current.name.startsWith('#') &&
+          context.current.name.length > 1
+            ? context.current.name.substring(1)
+            : context.current.name;
+        chatStatus = context.current.isConnected ? 'online' : 'offline';
+        break;
+      case 'chat':
+        chatName =
+          context.current.vCard && context.current.vCard.fullName
+            ? context.current.vCard.fullName
+            : context.current.name;
+        chatStatus = context.current.status;
+        break;
     }
-
-    return (
-      <div className={classes.root}>
-        <div className={classes.left}>
-          <Typography>{domain}</Typography>
-        </div>
-        <div className={classes.right}>
-          <Typography>
-            <span className={classes.symbol}>
-              {current && current.type === 'groupchat' && '# '}
-              {current && current.type === 'chat' && '@ '}
-            </span>
-            {chatName}
-          </Typography>
-          {current && current.connectionError && (
-            <Typography color="error">({current.connectionError})</Typography>
-          )}
-          {current && current.type === 'chat' && current.order !== 10 && (
-            <Status status={chatStatus} />
-          )}
-        </div>
-      </div>
-    );
   }
-}
 
-const mapStateToProps = (states: IStates) => ({
-  domain: states.gong.settings.domain,
-  current: states.gong.current,
-});
+  return (
+    <div className={classes.root}>
+      <div className={classes.left}>
+        <Typography>{context.settings.domain}</Typography>
+      </div>
+      <div className={classes.right}>
+        <Typography>
+          <span className={classes.symbol}>
+            {context.current && context.current.type === 'groupchat' && '# '}
+            {context.current && context.current.type === 'chat' && '@ '}
+          </span>
+          {chatName}
+        </Typography>
+        {context.current && context.current.connectionError && (
+          <Typography color="error">
+            ({context.current.connectionError})
+          </Typography>
+        )}
+        {context.current &&
+          context.current.type === 'chat' &&
+          context.current.order !== 10 && <Status status={chatStatus} />}
+      </div>
+    </div>
+  );
+};
 
-const styles: any = (theme: any) => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     display: 'flex',
     flexWrap: 'nowrap',
@@ -100,9 +93,6 @@ const styles: any = (theme: any) => ({
   symbol: {
     opacity: 0.5,
   },
-});
+}));
 
-export default connect(
-  mapStateToProps,
-  null
-)(withStyles(styles)(ToolBar));
+export default ToolBar;

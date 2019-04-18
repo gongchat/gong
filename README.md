@@ -25,32 +25,37 @@ After you get your XMPP server running and the required packages installed run `
 
 ### Troubleshooting
 
-If you are having issues with Keytar follow the steps below. See this github [issue](https://github.com/atom/node-keytar/issues/51) for more info.
+- If you are having issues with Keytar follow the steps below. See this github [issue](https://github.com/atom/node-keytar/issues/51) for more info.
 
-1. Run `npm install electron-rebuild`
-2. Run `.\node_modules\.bin\electron-rebuild`
-3. Run `npm start`
+  1. Run `npm install electron-rebuild`
+  2. Run `.\node_modules\.bin\electron-rebuild`
+  3. Run `npm start`
 
-On Linux, if you get the error below run the commands above.
+#### Linux
 
-```
-events.js:174
-        throw er; // Unhandled 'error' event
-        ^
+- If you get the error below run the keytar commands above.
 
-Error: spawn /<project directory>/gong/node_modules/electron/dist EACCES
-    at Process.ChildProcess._handle.onexit (internal/child_process.js:240:19)
-    at onErrorNT (internal/child_process.js:415:16)
-    at process._tickCallback (internal/process/next_tick.js:63:19)
-    at Function.Module.runMain (internal/modules/cjs/loader.js:757:11)
-    at startup (internal/bootstrap/node.js:283:19)
-    at bootstrapNodeJSCore (internal/bootstrap/node.js:622:3)
-Emitted 'error' event at:
-    at Process.ChildProcess._handle.onexit (internal/child_process.js:246:12)
-    at onErrorNT (internal/child_process.js:415:16)
-    [... lines matching original stack trace ...]
-    at bootstrapNodeJSCore (internal/bootstrap/node.js:622:3)
-```
+    ```
+    events.js:174
+            throw er; // Unhandled 'error' event
+            ^
+
+    Error: spawn /<project directory>/gong/node_modules/electron/dist EACCES
+        at Process.ChildProcess._handle.onexit (internal/child_process.js:240:19)
+        at onErrorNT (internal/child_process.js:415:16)
+        at process._tickCallback (internal/process/next_tick.js:63:19)
+        at Function.Module.runMain (internal/modules/cjs/loader.js:757:11)
+        at startup (internal/bootstrap/node.js:283:19)
+        at bootstrapNodeJSCore (internal/bootstrap/node.js:622:3)
+    Emitted 'error' event at:
+        at Process.ChildProcess._handle.onexit (internal/child_process.js:246:12)
+        at onErrorNT (internal/child_process.js:415:16)
+        [... lines matching original stack trace ...]
+        at bootstrapNodeJSCore (internal/bootstrap/node.js:622:3)
+    ```
+
+- If you run into `Error: ENOSPC: System limit for number of file watchers reached, watch` run `echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p`
+
 
 ## Building the Application
 
@@ -60,6 +65,7 @@ Emitted 'error' event at:
 After `npm run dist` finishes you can find the installation file in the `/dist` folder.
 
 ### Troubleshooting
+
 1. If you get a `Error: Chunk.entrypoints: Use Chunks.addGroup instead` you may have to run `npm install -D extract-text-webpack-plugin@next`. See this github [issue](https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/701#issuecomment-398103246) for more info.
 2. If you get a `...\app.asar: The process cannot access the file because it is being used by another process.` Close any IDEs that have this project open and run the command from terminal. See this github [issue](https://github.com/electron-userland/electron-builder/issues/3666) for more info.
 

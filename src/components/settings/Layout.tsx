@@ -1,19 +1,15 @@
 import * as React from 'react';
-
-// redux & actions
-import { connect } from 'react-redux';
-import { setTheme } from 'src/actions/dispatcher';
+import { useState } from 'react';
+import { useContext } from 'src/context';
 
 // material ui
-import { withStyles } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
-
 import Slider from '@material-ui/lab/Slider';
+import { makeStyles } from '@material-ui/styles';
 
 // interface
-import IStates from 'src/interfaces/IStates';
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 import SliderMarkers from './SliderMarkers';
@@ -22,123 +18,27 @@ const MIN_SIDEBAR_WIDTH = 150;
 const MAX_SIDEBAR_WIDTH = 250;
 const DEFAULT_SIDEBAR_WIDTH = 225;
 
-const MIN_SPACING = 0;
-const MAX_SPACING = 16;
+const MIN_SPACING = 2;
+const MAX_SPACING = 10;
 const DEFAULT_SPACING = 8;
 
-class Layout extends React.Component<any, any> {
-  public state = {
-    spacing: this.props.theme.spacing.unit,
-    sidebarWidth: this.props.theme.sidebarWidth,
-    sidebarLeftShowAvatar: this.props.theme.sidebarLeftShowAvatar,
-    sidebarRightShowAvatar: this.props.theme.sidebarRightShowAvatar,
-  };
+let spacingTimer: any;
+let sidebarWidthTimer: any;
 
-  private spacingTimer: any;
-  private sidebarWidthTimer: any;
+const Layout = (props: any) => {
+  const classes = useStyles();
+  const [context, actions] = useContext();
 
-  public render() {
-    const { classes } = this.props;
-    const {
-      spacing,
-      sidebarWidth,
-      sidebarLeftShowAvatar,
-      sidebarRightShowAvatar,
-    } = this.state;
+  const [spacing, setSpacing] = useState(context.theme.spacing.unit);
+  const [sidebarWidth, setSidebarWidth] = useState(context.theme.sidebarWidth);
+  const [sidebarLeftShowAvatar, setSidebarLeftShowAvatar] = useState(
+    context.theme.sidebarLeftShowAvatar
+  );
+  const [sidebarRightShowAvatar, setSidebarRightShowAvatar] = useState(
+    context.theme.sidebarRightShowAvatar
+  );
 
-    return (
-      <BasePage title="Layout">
-        <BaseSection title="Spacing">
-          <div className={classes.slider}>
-            <Slider
-              value={spacing === '' ? 0 : parseInt(spacing, 10)}
-              min={MIN_SPACING}
-              max={MAX_SPACING}
-              step={1}
-              onChange={this.handleSpacingChangeSlider}
-            />
-            <SliderMarkers
-              minSize={MIN_SPACING}
-              maxSize={MAX_SPACING}
-              defaultSize={DEFAULT_SPACING}
-            />
-          </div>
-          <div>
-            <TextField
-              name="spacing"
-              label="Spacing"
-              value={spacing}
-              onChange={this.handleSpacingChangeInput}
-              onKeyDown={this.handleKeyDown}
-              type="number"
-              margin="normal"
-              variant="filled"
-              inputProps={{
-                min: MIN_SPACING,
-                max: MAX_SPACING,
-              }}
-            />
-          </div>
-        </BaseSection>
-        <BaseSection title="Sidebar Width">
-        <div className={classes.slider}>
-            <Slider
-              value={sidebarWidth === '' ? 0 : parseInt(sidebarWidth, 10)}
-              min={MIN_SIDEBAR_WIDTH}
-              max={MAX_SIDEBAR_WIDTH}
-              step={1}
-              onChange={this.handleSidebarWidthChangeSlider}
-            />
-            <SliderMarkers
-              minSize={MIN_SIDEBAR_WIDTH}
-              maxSize={MAX_SIDEBAR_WIDTH}
-              defaultSize={DEFAULT_SIDEBAR_WIDTH}
-            />
-          </div>
-          <div>
-            <TextField
-              name="sidebarWidth"
-              label="Sidebar Width"
-              value={sidebarWidth}
-              onChange={this.handleSidebarWidthChangeInput}
-              onKeyDown={this.handleKeyDown}
-              type="number"
-              margin="normal"
-              variant="filled"
-              inputProps={{
-                min: MIN_SIDEBAR_WIDTH,
-                max: MAX_SIDEBAR_WIDTH,
-              }}
-            />
-          </div>
-        </BaseSection>
-        <BaseSection title="Avatars">
-          <FormControlLabel
-            control={
-              <Switch
-                name="sidebarLeftShowAvatar"
-                checked={sidebarLeftShowAvatar}
-                onChange={this.handleSidebarAvatarChange}
-              />
-            }
-            label="Show avatars in the left sidebar"
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                name="sidebarRightShowAvatar"
-                checked={sidebarRightShowAvatar}
-                onChange={this.handleSidebarAvatarChange}
-              />
-            }
-            label="Show avatars in the right sidebar"
-          />
-        </BaseSection>
-      </BasePage>
-    );
-  }
-
-  private handleKeyDown = (event: any) => {
+  const handleKeyDown = (event: any) => {
     const key = String.fromCharCode(
       !event.charCode ? event.which : event.charCode
     );
@@ -165,81 +65,152 @@ class Layout extends React.Component<any, any> {
     }
   };
 
-  private handleSpacingChangeSlider = (event: any, value: any) => {
-    this.updateSpacing(value);
-  };
-
-  private handleSpacingChangeInput = (event: any) => {
-    this.updateSpacing(event.target.value);
-  };
-
-  private updateSpacing = (value: any) => {
-    this.setState({ spacing: value });
-    if (this.spacingTimer) {
-      clearTimeout(this.spacingTimer);
+  const updateSpacing = (value: any) => {
+    setSpacing(value);
+    if (spacingTimer) {
+      clearTimeout(spacingTimer);
     }
-    this.spacingTimer = setTimeout(() => {
-      const spacing =
-        this.state.spacing < MIN_SPACING || this.state.spacing > MAX_SPACING
-          ? DEFAULT_SPACING
-          : this.state.spacing;
-      this.props.setTheme({
+    spacingTimer = setTimeout(() => {
+      value =
+        value < MIN_SPACING
+          ? MIN_SPACING
+          : value > MAX_SPACING
+          ? MAX_SPACING
+          : value;
+      actions.setTheme({
         themeKey: 'theme.spacing.unit',
-        value: parseInt(spacing, 10),
+        value,
       });
-      this.setState({ spacing });
+      setSpacing(value);
     }, 1000);
   };
 
-  private handleSidebarWidthChangeSlider = (event: any, value: any) => {
-    this.updateSidebarWidth(value);
-  };
-
-  private handleSidebarWidthChangeInput = (event: any) => {
-    this.updateSidebarWidth(event.target.value);
-  };
-
-  private updateSidebarWidth = (value: any) => {
-    this.setState({ sidebarWidth: value });
-    if (this.sidebarWidthTimer) {
-      clearTimeout(this.sidebarWidthTimer);
+  const updateSidebarWidth = (value: any) => {
+    setSidebarWidth(value);
+    if (sidebarWidthTimer) {
+      clearTimeout(sidebarWidthTimer);
     }
-    this.sidebarWidthTimer = setTimeout(() => {
-      const sidebarWidth =
-        this.state.sidebarWidth < MIN_SIDEBAR_WIDTH ||
-        this.state.sidebarWidth > MAX_SIDEBAR_WIDTH
-          ? DEFAULT_SIDEBAR_WIDTH
-          : this.state.sidebarWidth;
-      this.props.setTheme({
+    sidebarWidthTimer = setTimeout(() => {
+      value =
+        value < MIN_SIDEBAR_WIDTH
+          ? MIN_SIDEBAR_WIDTH
+          : value > MAX_SIDEBAR_WIDTH
+          ? MAX_SIDEBAR_WIDTH
+          : value;
+      actions.setTheme({
         themeKey: 'sidebarWidth',
-        value: parseInt(sidebarWidth, 10),
+        value,
       });
-      this.setState({ sidebarWidth });
+      setSidebarWidth(value);
     }, 1000);
   };
 
-  private handleSidebarAvatarChange = (event: any) => {
-    this.setState({ [event.target.name]: event.target.checked });
-    this.props.setTheme({
+  const handleSidebarAvatarChange = (event: any, action: any) => {
+    action(event.target.checked);
+    actions.setTheme({
       themeKey: event.target.name,
       value: event.target.checked,
     });
   };
-}
 
-const mapStateToProps = (states: IStates) => ({
-  theme: states.gong.theme,
-});
-
-const mapDispatchToProps = {
-  setTheme,
+  return (
+    <BasePage title="Layout">
+      <BaseSection title="Spacing">
+        <div className={classes.slider}>
+          <Slider
+            value={spacing === '' ? 0 : parseInt(spacing, 10)}
+            min={MIN_SPACING}
+            max={MAX_SPACING}
+            step={1}
+            onChange={(event: any, value: any) => updateSpacing(value)}
+          />
+          <SliderMarkers
+            minSize={MIN_SPACING}
+            maxSize={MAX_SPACING}
+            defaultSize={DEFAULT_SPACING}
+          />
+        </div>
+        <div>
+          <TextField
+            name="spacing"
+            label="Spacing"
+            value={spacing}
+            onChange={(event: any) => updateSpacing(event.target.value)}
+            onKeyDown={handleKeyDown}
+            type="number"
+            margin="normal"
+            variant="filled"
+            inputProps={{
+              min: MIN_SPACING,
+              max: MAX_SPACING,
+            }}
+          />
+        </div>
+      </BaseSection>
+      <BaseSection title="Sidebar Width">
+        <div className={classes.slider}>
+          <Slider
+            value={sidebarWidth === '' ? 0 : parseInt(sidebarWidth, 10)}
+            min={MIN_SIDEBAR_WIDTH}
+            max={MAX_SIDEBAR_WIDTH}
+            step={1}
+            onChange={(event: any, value: any) => updateSidebarWidth(value)}
+          />
+          <SliderMarkers
+            minSize={MIN_SIDEBAR_WIDTH}
+            maxSize={MAX_SIDEBAR_WIDTH}
+            defaultSize={DEFAULT_SIDEBAR_WIDTH}
+          />
+        </div>
+        <div>
+          <TextField
+            name="sidebarWidth"
+            label="Sidebar Width"
+            value={sidebarWidth}
+            onChange={(event: any) => updateSidebarWidth(event.target.value)}
+            onKeyDown={handleKeyDown}
+            type="number"
+            margin="normal"
+            variant="filled"
+            inputProps={{
+              min: MIN_SIDEBAR_WIDTH,
+              max: MAX_SIDEBAR_WIDTH,
+            }}
+          />
+        </div>
+      </BaseSection>
+      <BaseSection title="Avatars">
+        <FormControlLabel
+          control={
+            <Switch
+              name="sidebarLeftShowAvatar"
+              checked={sidebarLeftShowAvatar}
+              onChange={(event: any) =>
+                handleSidebarAvatarChange(event, setSidebarLeftShowAvatar)
+              }
+            />
+          }
+          label="Show avatars in the left sidebar"
+        />
+        <FormControlLabel
+          control={
+            <Switch
+              name="sidebarRightShowAvatar"
+              checked={sidebarRightShowAvatar}
+              onChange={(event: any) =>
+                handleSidebarAvatarChange(event, setSidebarRightShowAvatar)
+              }
+            />
+          }
+          label="Show avatars in the right sidebar"
+        />
+      </BaseSection>
+    </BasePage>
+  );
 };
 
-const styles: any = (theme: any) => ({
+const useStyles = makeStyles((theme: any) => ({
   slider: { position: 'relative' },
-});
+}));
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles)(Layout));
+export default Layout;

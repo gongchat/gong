@@ -1,10 +1,8 @@
 import * as React from 'react';
-
-// redux & actions
-import { connect } from 'react-redux';
+import { useContext } from 'src/context';
 
 // material ui
-import { withStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
 // interfaces
 import IChannelUser from 'src/interfaces/IChannelUser';
@@ -12,47 +10,40 @@ import IChannelUser from 'src/interfaces/IChannelUser';
 // components
 import ChannelUsers from './ChannelUsers';
 
-class SidebarRight extends React.Component<any, any> {
-  public render() {
-    const { classes, current } = this.props;
-    return (
-      <div className={classes.root}>
-        <ChannelUsers
-          title="Moderators"
-          users={
-            current &&
-            current.users.filter(
-              (user: IChannelUser) => user.role === 'moderator'
-            )
-          }
-        />
-        <ChannelUsers
-          title="Participants"
-          users={
-            current &&
-            current.users.filter(
-              (user: IChannelUser) => user.role === 'participant'
-            )
-          }
-        />
-      </div>
-    );
-  }
-}
+const SidebarRight = (props: any) => {
+  const classes = useStyles();
+  const [context, actions] = useContext();
 
-const mapStateToProps = (state: any) => ({
-  current: state.gong.current,
-});
+  return (
+    <div className={classes.root}>
+      <ChannelUsers
+        title="Moderators"
+        users={
+          context.current &&
+          context.current.users.filter(
+            (user: IChannelUser) => user.role === 'moderator'
+          )
+        }
+      />
+      <ChannelUsers
+        title="Participants"
+        users={
+          context.current &&
+          context.current.users.filter(
+            (user: IChannelUser) => user.role === 'participant'
+          )
+        }
+      />
+    </div>
+  );
+};
 
-const styles: any = (theme: any) => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     padding: theme.spacing.unit * 2,
     overflowY: 'auto',
     height: '100%',
   },
-});
+}));
 
-export default connect(
-  mapStateToProps,
-  null
-)(withStyles(styles)(SidebarRight));
+export default SidebarRight;

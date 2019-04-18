@@ -11,12 +11,13 @@ import ISnackbarNotification from 'src/interfaces/ISnackbarNotification';
 import IState from 'src/interfaces/IState';
 
 import ColorUtil from 'src/utils/colorUtil';
-import Settings from './settings';
+import { addSavedRoomsToChannels } from './room';
+import { mapSettingsSavedToSettings } from './settings';
 
-import { initialState } from 'src/reducers/gongReducer';
+import { initialState } from 'src/context';
 
-export default class Connection {
-  public static autoConnect = (state: IState): IState => {
+export const connectionActions = {
+  autoConnect(state: IState): IState {
     const settingsSaved: ISettingsSaved = electronStore.get('settings');
     if (settingsSaved === undefined) {
       return {
@@ -69,12 +70,8 @@ export default class Connection {
         snackbarNotifications,
       };
     }
-  };
-
-  public static connecting = (
-    state: IState,
-    credentials: ICredentials
-  ): IState => {
+  },
+  connecting(credentials: ICredentials, state: IState): IState {
     // gets called from login
     ipcRenderer.send('xmpp-connect', credentials);
     return {
@@ -86,10 +83,9 @@ export default class Connection {
         connectionError: '',
       },
     };
-  };
-
+  },
   // TODO: turn payload into an interface
-  public static connected = (state: IState, payload: any): IState => {
+  connected(payload: any, state: IState): IState {
     let settingsSaved: ISettingsSaved = electronStore.get('settings');
 
     // if no saved settings should be first log in.
@@ -140,9 +136,7 @@ export default class Connection {
       vCard: undefined,
     };
 
-    const settings: ISettings = Settings.mapSettingsSavedToSettings(
-      settingsSaved
-    );
+    const settings: ISettings = mapSettingsSavedToSettings(settingsSaved);
 
     ipcRenderer.send('xmpp-roster');
     ipcRenderer.send('xmpp-get-vcard', { from: payload.jid });
@@ -159,17 +153,17 @@ export default class Connection {
       snackbarNotifications = [...snackbarNotifications, snackbarNotification];
     }
 
+    state = addSavedRoomsToChannels(state);
+
     return {
       ...state,
       connection,
       settings,
       profile,
       snackbarNotifications,
-      channels: [], // TODO: need to check if this is okay
     };
-  };
-
-  public static failed = (state: IState, payload: any): IState => {
+  },
+  connectionFailed(payload: any, state: IState): IState {
     let snackbarNotifications = state.snackbarNotifications;
     if (state.connection.isAuthenticated) {
       const snackbarNotification: ISnackbarNotification = {
@@ -199,10 +193,9 @@ export default class Connection {
       },
       snackbarNotifications,
     };
-  };
-
-  public static logOff = (): IState => {
+  },
+  logOff(): IState {
     ipcRenderer.send('xmpp-log-off');
     return { ...initialState };
-  };
-}
+  },
+};

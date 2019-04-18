@@ -1,10 +1,10 @@
 import IState from 'src/interfaces/IState';
 
-export default class App {
-  public static set = (state: IState, payload: any): IState => {
+export const appActions = {
+  setApp(payload: any, state: IState): IState {
     return {
       ...state,
       app: { ...state.app, ...payload },
     };
-  };
-}
+  },
+};

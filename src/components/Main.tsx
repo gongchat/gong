@@ -1,15 +1,13 @@
-import * as React from 'react';
-
 const { ipcRenderer } = window.require('electron');
 
-// redux & actions
-import { connect } from 'react-redux';
-import { addSnackbarNotification, autoLogin } from 'src/actions/dispatcher';
+import * as React from 'react';
+import { useState } from 'react';
+import { useContext } from 'src/context';
 
 // material
-import { withStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
+import { makeStyles } from '@material-ui/styles';
 
 // libs
 import * as WebFont from 'webfontloader';
@@ -23,162 +21,128 @@ import Discover from './discover/Discover';
 import MenuBar from './MenuBar';
 import Settings from './settings/Settings';
 
-// interfaces
-import IStates from 'src/interfaces/IStates';
+const Main = (props: any) => {
+  const classes = useStyles();
+  const [context, actions] = useContext();
 
-class Main extends React.Component<any, any> {
-  public state = {
-    shouldReconnect: true,
-    updateOpen: false,
-  };
+  const [shouldReconnect, setShouldReconnect] = useState(true);
+  const [updateOpen, setUpdateOpen] = useState(false);
 
-  private reconnectTimer: any;
+  let reconnectTimer: any;
 
-  public componentDidMount() {
-    if (this.props.connection) {
-      if (
-        !this.props.connection.isConnecting &&
-        !this.props.connection.isConnected
-      ) {
-        this.props.autoLogin();
-      }
-    }
-    if (this.props.theme) {
-      this.loadFont(this.props.theme.typography.fontFamily);
-    }
-    if (this.props.app && this.props.app.hasUpdate) {
-      this.setState({ updateOpen: true });
-    }
-  }
-
-  public componentDidUpdate(prevProps: any) {
-    // TODO: need to handle errors better
-    if (this.state.shouldReconnect) {
-      if (
-        this.props.connection.connectionError === 'Connection has been aborted'
-      ) {
-        this.setState({ shouldReconnect: false });
-      } else if (
-        this.props.connection &&
-        this.props.connection.hasSavedCredentials !== undefined &&
-        !this.props.connection.isConnecting &&
-        !this.props.connection.isConnected
-      ) {
-        if (this.reconnectTimer) {
-          clearTimeout(this.reconnectTimer);
-        }
-        this.reconnectTimer = setTimeout(() => {
-          this.props.autoLogin();
-        }, 10000);
-      }
-    }
-
-    if (
-      this.props.theme &&
-      (!prevProps.theme ||
-        this.props.theme.typography.fontFamily !==
-          prevProps.theme.typography.fontFamily)
-    ) {
-      this.loadFont(this.props.theme.typography.fontFamily);
-    }
-
-    if (
-      this.props.app &&
-      this.props.app.hasUpdate &&
-      (!prevProps.app || this.props.app.hasUpdate !== prevProps.app.hasUpdate)
-    ) {
-      this.setState({ updateOpen: true });
-    }
-  }
-
-  public render() {
-    const { classes, current, menuBarNotification, connection } = this.props;
-    const { updateOpen } = this.state;
-
-    return (
-      <div className={classes.root}>
-        <div className={classes.bars}>
-          <MenuBar
-            showOffline={connection ? !connection.isConnected : true}
-            menuBarNotification={menuBarNotification}
-          />
-          <ToolBar />
-        </div>
-        <div className={classes.content}>
-          <div className={classes.left}>
-            <SidebarLeft />
-          </div>
-          <div className={classes.middle}>
-            <Chat />
-          </div>
-          {(current && current.type) === 'groupchat' && (
-            <div className={classes.right}>
-              <SidebarRight />
-            </div>
-          )}
-        </div>
-        <Discover />
-        <Settings />
-        <Snackbar
-          open={updateOpen}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-          message={'Update has been downloaded. Would you like to...'}
-          action={
-            <React.Fragment>
-              <Button color="primary" size="small" onClick={this.handleUpdate}>
-                Install Now
-              </Button>
-              <Button
-                color="secondary"
-                size="small"
-                onClick={this.handleUpdateClose}
-              >
-                Install After Restart
-              </Button>
-            </React.Fragment>
-          }
-        />
-      </div>
-    );
-  }
-
-  private loadFont(fontFamily: string) {
+  const loadFont = (fontFamily: string) => {
     const font: string = fontFamily.split(',')[0].replace(/"/g, '');
     WebFont.load({
       google: {
         families: [`${font}:400,700`, 'sans-serif'],
       },
     });
-  }
-
-  private handleUpdateClose = () => {
-    this.setState({ updateOpen: false });
   };
 
-  private handleUpdate = () => {
+  const handleUpdateClose = () => {
+    setUpdateOpen(false);
+  };
+
+  const handleUpdate = () => {
     ipcRenderer.send('app-update');
   };
-}
 
-const mapStateToProps = (states: IStates) => {
-  return {
-    app: states.gong.app,
-    connection: states.gong.connection,
-    current: states.gong.current,
-    menuBarNotification: states.gong.menuBarNotification,
-    theme: states.gong.theme,
-  };
+  React.useEffect(() => {
+    if (context.connection) {
+      if (!context.connection.isConnecting && !context.connection.isConnected) {
+        actions.autoConnect();
+      }
+    }
+    if (context.theme) {
+      loadFont(context.theme.typography.fontFamily);
+    }
+    if (context.app && context.app.hasUpdate) {
+      setUpdateOpen(true);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    // TODO: need to handle errors better
+    if (shouldReconnect) {
+      if (
+        context.connection.connectionError === 'Connection has been aborted'
+      ) {
+        setShouldReconnect(false);
+      } else if (
+        context.connection &&
+        context.connection.hasSavedCredentials !== undefined &&
+        !context.connection.isConnecting &&
+        !context.connection.isConnected
+      ) {
+        if (reconnectTimer) {
+          clearTimeout(reconnectTimer);
+        }
+        reconnectTimer = setTimeout(() => {
+          actions.autoConnect();
+        }, 10000);
+      }
+    }
+  }, [context.connection]);
+
+  React.useEffect(() => {
+    loadFont(context.theme.typography.fontFamily);
+  }, [context.theme.typography.fontFamily]);
+
+  React.useEffect(() => {
+    if (context.app.hasUpdate) {
+      setUpdateOpen(true);
+    }
+  }, [context.app.hasUpdate]);
+
+  return (
+    <div className={classes.root}>
+      <div className={classes.bars}>
+        <MenuBar
+          showOffline={
+            context.connection ? !context.connection.isConnected : true
+          }
+          menuBarNotification={context.menuBarNotification}
+        />
+        <ToolBar />
+      </div>
+      <div className={classes.content}>
+        <div className={classes.left}>
+          <SidebarLeft />
+        </div>
+        <div className={classes.middle}>
+          <Chat />
+        </div>
+        {(context.current && context.current.type) === 'groupchat' && (
+          <div className={classes.right}>
+            <SidebarRight />
+          </div>
+        )}
+      </div>
+      <Discover />
+      <Settings />
+      <Snackbar
+        open={updateOpen}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        message={'Update has been downloaded. Would you like to...'}
+        action={
+          <React.Fragment>
+            <Button color="primary" size="small" onClick={handleUpdate}>
+              Install Now
+            </Button>
+            <Button color="secondary" size="small" onClick={handleUpdateClose}>
+              Install After Restart
+            </Button>
+          </React.Fragment>
+        }
+      />
+    </div>
+  );
 };
 
-const mapDispatchToProps = {
-  addSnackbarNotification,
-  autoLogin,
-};
-
-const styles: any = (theme: any) => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
@@ -213,9 +177,6 @@ const styles: any = (theme: any) => ({
     backgroundColor: theme.palette.background.default,
     overflowX: 'hidden',
   },
-});
+}));
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles)(Main));
+export default Main;

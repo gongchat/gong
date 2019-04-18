@@ -1,42 +1,38 @@
 import * as React from 'react';
 
 // material ui
-import { withStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
 // utils
 import MaterialColors from 'src/utils/materialColors';
 
-class ColorPicker extends React.Component<any, any> {
-  public render() {
-    const { classes } = this.props;
+const ColorPicker = (props: any) => {
+  const classes = useStyles();
 
-    return (
-      <div className={classes.root}>
-        {MaterialColors.colors.map((color, colorIndex) => (
-          <div key={colorIndex} className={classes.colorRow}>
-            {MaterialColors.shades.map((shade, shadeIndex) => (
-              <div
-                key={`${colorIndex}-${shadeIndex}`}
-                className={[
-                  classes.color,
-                  this.props.item.color === color.color[shade]
-                    ? classes.selected
-                    : '',
-                ].join(' ')}
-                style={{ backgroundColor: color.color[shade] || 'transparent' }}
-                onClick={() =>
-                  this.props.onSelection(color.color[shade], color.name, shade)
-                }
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-    );
-  }
-}
+  return (
+    <div className={classes.root}>
+      {MaterialColors.colors.map((color, colorIndex) => (
+        <div key={colorIndex} className={classes.colorRow}>
+          {MaterialColors.shades.map((shade, shadeIndex) => (
+            <div
+              key={`${colorIndex}-${shadeIndex}`}
+              className={[
+                classes.color,
+                props.item.color === color.color[shade] ? classes.selected : '',
+              ].join(' ')}
+              style={{ backgroundColor: color.color[shade] || 'transparent' }}
+              onClick={() =>
+                props.onSelection(color.color[shade], color.name, shade)
+              }
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+};
 
-const styles: any = (theme: any) => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
@@ -76,6 +72,6 @@ const styles: any = (theme: any) => ({
   selected: {
     borderRadius: '14px !important',
   },
-});
+}));
 
-export default withStyles(styles)(ColorPicker);
+export default ColorPicker;
