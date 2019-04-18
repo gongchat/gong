@@ -5,6 +5,11 @@
   "author": "Gong <gongxmpp@gmail.com>",
   "main": "public/electron.js",
   "homepage": "./",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gongchat/gong.git"
+  },
+  "license": "Apache-2.0",
   "engines": {
     "node": "10.13.0"
   },
