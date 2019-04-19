@@ -12,6 +12,8 @@ import IMessageSend from 'src/interfaces/IMessageSend';
 
 // utils
 import StringUtil from 'src/utils/stringUtils';
+import { usePrevious } from 'src/utils/usePrevious';
+
 import ListSelectors from './ListSelectors';
 
 const Input = (props: any) => {
@@ -89,9 +91,17 @@ const Input = (props: any) => {
     }
   };
 
+  const prevCurrent = usePrevious(context.current);
   React.useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
+    if (
+      !prevCurrent ||
+      (context.current && prevCurrent.jid !== context.current.jid)
+    ) {
+      // This must be in useEffect so the inputRef is initialized before calling
+      // the block below.
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
     }
   }, [context.current]);
 
