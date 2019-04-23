@@ -9,18 +9,21 @@ const ListSelectorEmojis = (props: any) => {
   const [term, setTerm] = useState('');
   const [emojis, setEmojis] = useState();
 
-  const handleSelection = (index: number) => {
-    const emoji: any = emojis[index];
-    props.setText(
-      `${props.text.substring(
-        0,
-        props.text.length === 0
-          ? 0
-          : props.text.lastIndexOf(' ') === -1
-          ? props.text.length - 1
-          : props.text.lastIndexOf(' ') + 1
-      )}:${emoji.key}: `
-    );
+  const handleSelection = (object: any) => {
+    if (props.text === '') {
+      props.setText(`:${object.key}: `);
+    } else {
+      props.setText(
+        `${props.text.substring(
+          0,
+          props.text.length === 0
+            ? 0
+            : props.text.lastIndexOf(' ') === -1
+            ? props.text.length - 1
+            : props.text.lastIndexOf(' ') + 1
+        )}:${object.key}: `
+      );
+    }
     props.setSelectorIndex(-1);
     props.focusInput();
   };
@@ -51,6 +54,7 @@ const ListSelectorEmojis = (props: any) => {
             props.text.substring(emojiCommandPrevIndex + 1, emojiCommandIndex)
           ]
         ) {
+          props.setSelectorIndex(0);
           const emojiWord = props.text.substring(emojiCommandIndex);
           const newTerm = emojiWord.substring(1);
           const matchingEmojis = Emojis.filter(
@@ -68,7 +72,6 @@ const ListSelectorEmojis = (props: any) => {
                     .slice(0, 20)
                 : matchingEmojis
             );
-            props.setSelectorIndex(0);
           }
         }
       }
@@ -88,11 +91,15 @@ const ListSelectorEmojis = (props: any) => {
           suffix={':'}
           term={term}
           list={emojis}
+          showKey={true}
           keyProp={'key'}
+          showValue={true}
           valueProp={'value'}
           handleSelection={handleSelection}
           setText={props.setText}
           setSelectorIndex={props.setSelectorIndex}
+          itemPrefix={':'}
+          itemSuffix={':'}
         />
       )}
     </React.Fragment>

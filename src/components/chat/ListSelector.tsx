@@ -15,7 +15,6 @@ const ListSelector = (props: any) => {
   let currListIndex = 0;
 
   React.useEffect(() => {
-    // TODO: Figure out why handleKeyDown wont pick up new values from the state
     const handleKeyDown = (event: any) => {
       const maxIndex = props.list.length - 1;
       let itemHeight = 0;
@@ -59,7 +58,7 @@ const ListSelector = (props: any) => {
             break;
           case 'Tab':
           case 'Enter':
-            props.handleSelection(currListIndex);
+            props.handleSelection(props.list[currListIndex]);
             break;
           case 'Escape':
             props.setSelectorIndex(-1);
@@ -72,7 +71,7 @@ const ListSelector = (props: any) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [props.list]);
 
   React.useEffect(() => {
     setTerm(props.term);
@@ -94,10 +93,18 @@ const ListSelector = (props: any) => {
                 classes.listItem,
                 listIndex === index ? classes.current : '',
               ].join(' ')}
-              onClick={() => props.handleSelection(index)}
+              onClick={() => props.handleSelection(obj)}
             >
-              <span className={classes.icon}>{obj[props.valueProp]}</span>
-              <Typography>:{obj[props.keyProp]}:</Typography>
+              {props.showValue && (
+                <span className={classes.icon}>{obj[props.valueProp]}</span>
+              )}
+              {props.showKey && (
+                <Typography>
+                  {props.itemPrefix}
+                  {obj[props.keyProp]}
+                  {props.itemSuffix}
+                </Typography>
+              )}
             </div>
           ))}
       </div>
