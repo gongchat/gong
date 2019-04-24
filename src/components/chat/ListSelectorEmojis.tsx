@@ -24,8 +24,8 @@ const ListSelectorEmojis = (props: any) => {
         )}:${object.key}: `
       );
     }
-    props.setSelectorIndex(-1);
     props.focusInput();
+    props.setSelectorIndex(-1);
   };
 
   React.useEffect(() => {

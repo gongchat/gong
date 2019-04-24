@@ -58,6 +58,7 @@ const ListSelector = (props: any) => {
             break;
           case 'Tab':
           case 'Enter':
+            event.preventDefault();
             props.handleSelection(props.list[currListIndex]);
             break;
           case 'Escape':

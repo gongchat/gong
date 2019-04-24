@@ -23,21 +23,19 @@ const ListSelectorUsers = (props: any) => {
           props.setText(`@${user.nickname} `);
         } else {
           const indexOfLastAt = props.text.lastIndexOf('@');
-          if (indexOfLastAt !== -1) {
+          if (indexOfLastAt === -1) {
+            props.setText(`${props.text}@${user.nickname} `);
+          } else {
             const charsBeforeLastAt = props.text.substring(
               indexOfLastAt,
               length
-            );
-            console.log(
-              charsBeforeLastAt,
-              obj.nickname.substring(0, charsBeforeLastAt.length)
             );
             if (
               charsBeforeLastAt.length - 1 > obj.nickname.length ||
               `@${obj.nickname.substring(0, charsBeforeLastAt.length - 1)}` !==
                 charsBeforeLastAt
             ) {
-              props.setText(`${props.text} @${user.nickname} `);
+              props.setText(`${props.text}@${user.nickname} `);
             } else {
               props.setText(
                 `${props.text.substring(0, indexOfLastAt)}@${user.nickname} `
@@ -46,8 +44,8 @@ const ListSelectorUsers = (props: any) => {
           }
         }
       }
-      props.setSelectorIndex(-1);
       props.focusInput();
+      props.setSelectorIndex(-1);
     }
   };
 
