@@ -9,18 +9,14 @@ import { useSnackbar } from 'notistack';
 
 // interfaces
 import ISnackbarNotification from 'src/interfaces/ISnackbarNotification';
+import { usePrevious } from 'src/utils/usePrevious';
 
 const SnackbarNotifications = (props: any) => {
   const classes = useStyles();
   const [context, actions] = useContext();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [displayed, setDisplayed] = useState([]);
-
-  const storeDisplayed = (id: string) => {
-    setDisplayed([...displayed, id] as any);
-  };
-
+  const prevSnackbarNotifications = usePrevious(context.snackbarNotifications);
   React.useEffect(() => {
     let notExists = false;
     if (context.snackbarNotifications) {
@@ -29,48 +25,38 @@ const SnackbarNotifications = (props: any) => {
           if (!notExists) {
             notExists =
               notExists ||
-              !context.snackbarNotifications.filter(
+              !prevSnackbarNotifications.filter(
                 ({ key }) => context.snackbarNotifications[index].key === key
               ).length;
           }
         }
       );
     }
-    if (context.snackbarNotifications) {
+    if (notExists && context.snackbarNotifications) {
       context.snackbarNotifications.forEach(
         (notification: ISnackbarNotification) => {
-          if (
-            !displayed.find(
-              (e: ISnackbarNotification) => e.id === notification.id
-            )
-          ) {
-            enqueueSnackbar(notification.message, {
-              variant: notification.variant,
-              anchorOrigin: { vertical: 'top', horizontal: 'right' },
-              className: classes.notification,
-            } as any);
-            storeDisplayed(notification.id);
-            actions.removeSnackbarNotification(notification.id);
-          }
+          enqueueSnackbar(notification.message, {
+            variant: notification.variant,
+            anchorOrigin: { vertical: 'top', horizontal: 'right' },
+            className: classes.notification,
+          } as any);
+          actions.removeFromSnackbar(notification.id);
         }
       );
     }
-  }, [props.snackbarNotifications]);
+  }, [context.snackbarNotifications]);
 
   return null;
 };
-
-// const mapStateToProps = (states: IStates) => ({
-//   snackbarNotifications: states.gong.snackbarNotifications,
-// });
-
-// const mapDispatchToProps = (dispatch: any) =>
-//   bindActionCreators({ removeSnackbarNotification }, dispatch);
 
 const useStyles = makeStyles((theme: any) => ({
   notification: {
     [theme.breakpoints.down('md')]: {
       left: 'auto',
+    },
+    // TODO: Figure out why it is not picking up the correct text color
+    '& span': {
+      color: theme.palette.text.primary,
     },
   },
 }));
