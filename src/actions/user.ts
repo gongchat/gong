@@ -1,5 +1,6 @@
 const { ipcRenderer } = window.require('electron');
 
+import IChannel from 'src/interfaces/IChannel';
 import IState from 'src/interfaces/IState';
 import IUser from 'src/interfaces/IUser';
 import IVCard from 'src/interfaces/IVCard';
@@ -51,7 +52,12 @@ export const userActions = {
     return {
       ...state,
       profile: { ...state.profile, status: 'online' },
-      channels: [...state.channels, ...users],
+      channels: [
+        ...state.channels.filter(
+          (channel: IChannel) => channel.type === 'groupchat'
+        ),
+        ...users,
+      ],
     };
   },
 };

@@ -166,7 +166,7 @@ export const addSavedRoomsToChannels = (state: IState): IState => {
   return {
     ...state,
     channels: [
-      ...state.channels,
+      ...state.channels.filter((channel: IChannel) => channel.type === 'chat'),
       ...channels.map((roomSaved: IRoomSaved) => {
         const room: IRoom = {
           type: 'groupchat',
