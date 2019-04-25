@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 // material ui
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
 // interfaces
-import IMessage from 'src/interfaces/IMessage';
+import IMessage from '../../interfaces/IMessage';
 
 // components
 import Message from './Message';
@@ -14,7 +14,7 @@ import MessagesScroller from './MessagesScroller';
 
 const Messages = (props: any) => {
   const classes = useStyles();
-  const [context, actions] = useContext();
+  const [context] = useContext();
 
   let previousDate = '';
   let previousUserNickname = '';

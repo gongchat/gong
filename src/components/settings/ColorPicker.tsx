@@ -4,7 +4,7 @@ import * as React from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 // utils
-import MaterialColors from 'src/utils/materialColors';
+import MaterialColors from '../../utils/materialColors';
 
 const ColorPicker = (props: any) => {
   const classes = useStyles();

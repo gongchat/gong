@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../context';
 
 import { makeStyles } from '@material-ui/styles';
 
@@ -8,8 +7,8 @@ import { makeStyles } from '@material-ui/styles';
 import { useSnackbar } from 'notistack';
 
 // interfaces
-import ISnackbarNotification from 'src/interfaces/ISnackbarNotification';
-import { usePrevious } from 'src/utils/usePrevious';
+import ISnackbarNotification from '../interfaces/ISnackbarNotification';
+import { usePrevious } from '../utils/usePrevious';
 
 const SnackbarNotifications = (props: any) => {
   const classes = useStyles();

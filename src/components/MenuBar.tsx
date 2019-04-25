@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../context';
+import { usePrevious } from '../utils/usePrevious';
 
 // material
 import Typography from '@material-ui/core/Typography';
@@ -14,10 +15,12 @@ const { BrowserWindow } = (window as any).require('electron').remote;
 
 export const MenuBar = (props: any) => {
   const classes = useStyles();
-  const [context, actions] = useContext();
+  const [context] = useContext();
 
   const [isFlashing, setIsFlashing] = useState(false);
   const [menuBarNotification, setMenuBarNotification] = useState('');
+
+  const prevMenuBarNotification = usePrevious(context.menuBarNotification);
 
   const menuBarNotificationFrequency = menuBarNotification
     ? menuBarNotification.split(',')[0]
@@ -45,7 +48,7 @@ export const MenuBar = (props: any) => {
   React.useEffect(() => {
     if (context.menuBarNotification !== '') {
       if (
-        context.menuBarNotification !== context.menuBarNotification &&
+        context.menuBarNotification !== prevMenuBarNotification &&
         (!isFlashing || context.menuBarNotification.split(',')[0] === 'once')
       ) {
         setMenuBarNotification('');

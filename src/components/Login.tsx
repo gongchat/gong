@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../context';
 
 import { navigate } from '@reach/router';
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 // material ui
 import Link from '@material-ui/core/Link';
@@ -53,6 +53,8 @@ const Font = (props: any) => {
           return;
         }
         regex = new RegExp('^[0-9]+$');
+        break;
+      default:
         break;
     }
 

@@ -1,6 +1,3 @@
-const ElectronStore = window.require('electron-store');
-const electronStore = new ElectronStore();
-
 // material ui
 import cyan from '@material-ui/core/colors/cyan';
 import orange from '@material-ui/core/colors/orange';
@@ -8,10 +5,13 @@ import red from '@material-ui/core/colors/red';
 import { createMuiTheme } from '@material-ui/core/styles';
 
 // interfaces
-import IState from 'src/interfaces/IState';
+import IState from '../interfaces/IState';
 
 // utils
-import MaterialColorsUtil from 'src/utils/materialColors';
+import MaterialColorsUtil from '../utils/materialColors';
+
+const ElectronStore = window.require('electron-store');
+const electronStore = new ElectronStore();
 
 const DEFAULT: any = {
   palette: {
@@ -125,7 +125,7 @@ export const getTheme = () => {
 };
 
 const updatePrimaryColor = (theme: any, item: any) => {
-  const color = MaterialColorsUtil.colors.find(
+  const color: any = MaterialColorsUtil.colors.find(
     (c: any) => c.name === item.name
   );
   const baseShadeIndex = MaterialColorsUtil.shades.indexOf(item.shade);
@@ -150,7 +150,7 @@ const updatePrimaryColor = (theme: any, item: any) => {
 };
 
 const updateSecondaryColor = (theme: any, item: any) => {
-  const color = MaterialColorsUtil.colors.find(
+  const color: any = MaterialColorsUtil.colors.find(
     (c: any) => c.name === item.name
   );
   const baseShadeIndex = MaterialColorsUtil.shades.indexOf(item.shade);

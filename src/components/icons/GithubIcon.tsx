@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 // material ui
 import { makeStyles } from '@material-ui/styles';
 
 const GithubIcon = () => {
   const classes = useStyles();
-  const [context, actions] = useContext();
+  const [context] = useContext();
 
   return (
     <div className={classes.svg}>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 // material ui
 import Badge from '@material-ui/core/Badge';
@@ -15,7 +15,7 @@ import EditRoom from './EditRoom';
 
 const Channel = (props: any) => {
   const classes = useStyles();
-  const [context, actions] = useContext();
+  const actions = useContext()[1];
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);

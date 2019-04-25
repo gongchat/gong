@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 // material ui
 import Button from '@material-ui/core/Button';
@@ -13,11 +13,11 @@ import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/styles';
 
 // interfaces
-import IRoomJoin from 'src/interfaces/IRoomJoin';
+import IRoomJoin from '../../interfaces/IRoomJoin';
 
 const EditRoom = (props: any) => {
   const classes = useStyles();
-  const [context, actions] = useContext();
+  const actions = useContext()[1];
 
   const [jid, setJid] = useState(props.channel.jid);
   const [channelName, setChannelName] = useState(props.channel.name);
@@ -35,8 +35,8 @@ const EditRoom = (props: any) => {
     props.onClose();
   };
 
-  const handleOnChange = (event: any, action: any) => {
-    action(event.target.value);
+  const handleOnChange = (e: any, action: any) => {
+    action(e.target.value);
   };
 
   return (
@@ -53,7 +53,7 @@ const EditRoom = (props: any) => {
         <div className={classes.inputs}>
           <TextField
             name="jid"
-            onChange={() => handleOnChange(event, setJid)}
+            onChange={(e: any) => handleOnChange(e, setJid)}
             label="JID"
             variant="filled"
             margin="dense"
@@ -61,7 +61,7 @@ const EditRoom = (props: any) => {
           />
           <TextField
             name="channelName"
-            onChange={() => handleOnChange(event, setChannelName)}
+            onChange={(e: any) => handleOnChange(e, setChannelName)}
             label="Channel Name"
             variant="filled"
             margin="dense"
@@ -69,7 +69,7 @@ const EditRoom = (props: any) => {
           />
           <TextField
             name="nickname"
-            onChange={() => handleOnChange(event, setNickname)}
+            onChange={(e: any) => handleOnChange(e, setNickname)}
             label="Nickname"
             variant="filled"
             margin="dense"
@@ -77,7 +77,7 @@ const EditRoom = (props: any) => {
           />
           <TextField
             name="password"
-            onChange={() => handleOnChange(event, setPassword)}
+            onChange={(e: any) => handleOnChange(e, setPassword)}
             label="Password"
             variant="filled"
             margin="dense"

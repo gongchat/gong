@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/styles';
 import ReactPlayer from 'react-player';
 
 // interfaces
-import IMessageUrl from 'src/interfaces/IMessageUrl';
+import IMessageUrl from '../../interfaces/IMessageUrl';
 
 const Message = (props: any) => {
   const classes = useStyles();
@@ -68,6 +68,7 @@ const Message = (props: any) => {
                   return (
                     <div key={index} className={classes.getYarn}>
                       <iframe
+                        title="get yarn clip"
                         width={300}
                         height={185}
                         src={`https://getyarn.io/yarn-clip/embed/${
@@ -85,7 +86,7 @@ const Message = (props: any) => {
               .filter((url: IMessageUrl) => url.type === 'image')
               .map((url: IMessageUrl, index: number) => (
                 <div key={index} className={classes.image}>
-                  <img src={url.url} onLoad={props.onImageLoad} />
+                  <img alt="shared" src={url.url} onLoad={props.onImageLoad} />
                 </div>
               ))}
         </React.Fragment>

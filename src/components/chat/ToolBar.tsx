@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 // material ui
 import Typography from '@material-ui/core/Typography';
@@ -10,7 +10,7 @@ import Status from './Status';
 
 const ToolBar = (props: any) => {
   const classes = useStyles();
-  const [context, actions] = useContext();
+  const [context] = useContext();
 
   let chatName = '';
   let chatStatus = '';
@@ -31,6 +31,8 @@ const ToolBar = (props: any) => {
             ? context.current.vCard.fullName
             : context.current.name;
         chatStatus = context.current.status;
+        break;
+      default:
         break;
     }
   }

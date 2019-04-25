@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 // material ui
 import Avatar from '@material-ui/core/Avatar';
@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
 // utils
-import StringUtil from 'src/utils/stringUtils';
+import StringUtil from '../../utils/stringUtils';
 
 // components
 import Status from './Status';
@@ -20,7 +20,7 @@ import UserDetail from './UserDetail';
 
 const User = (props: any) => {
   const classes = useStyles();
-  const [context, actions] = useContext();
+  const actions = useContext()[1];
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);

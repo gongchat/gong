@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 // material ui
 import TextField from '@material-ui/core/TextField';
@@ -8,11 +8,11 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
 // interfaces
-import IMessageSend from 'src/interfaces/IMessageSend';
+import IMessageSend from '../../interfaces/IMessageSend';
 
 // utils
-import StringUtil from 'src/utils/stringUtils';
-import { usePrevious } from 'src/utils/usePrevious';
+import StringUtil from '../../utils/stringUtils';
+import { usePrevious } from '../../utils/usePrevious';
 
 import ListSelectors from './ListSelectors';
 
@@ -160,7 +160,9 @@ const Input = (props: any) => {
                   classes.emojiIcon,
                 ].join(' ')}
               >
-                😄
+                <span role="img" aria-label="smile emoji">
+                  😄
+                </span>
               </div>
             </div>
           </div>

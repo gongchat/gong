@@ -1,30 +1,31 @@
+import moment from 'moment';
+import sanitizeHtml from 'sanitize-html';
+
+import MarkdownIt from 'markdown-it';
+
+import IChannel from '../interfaces/IChannel';
+import IChannelUser from '../interfaces/IChannelUser';
+import IMessage from '../interfaces/IMessage';
+import IMessageReceive from '../interfaces/IMessageReceive';
+import IMessageSend from '../interfaces/IMessageSend';
+import IMessageUrl from '../interfaces/IMessageUrl';
+import IRoom from '../interfaces/IRoom';
+import IState from '../interfaces/IState';
+import IUser from '../interfaces/IUser';
+
+import { saveRooms } from './channel';
+import { handleOnMessage } from './notification';
+
+import ColorUtil from '../utils/colorUtil';
+
 const { ipcRenderer } = window.require('electron');
 
-import * as moment from 'moment';
-import * as sanitizeHtml from 'sanitize-html';
-
-import * as MarkdownIt from 'markdown-it';
 const markdownIt = new MarkdownIt({
   linkify: true,
   html: true,
   typographer: true,
 });
 const emoji = require('markdown-it-emoji'); // tslint:disable-line
-
-import IChannel from 'src/interfaces/IChannel';
-import IChannelUser from 'src/interfaces/IChannelUser';
-import IMessage from 'src/interfaces/IMessage';
-import IMessageReceive from 'src/interfaces/IMessageReceive';
-import IMessageSend from 'src/interfaces/IMessageSend';
-import IMessageUrl from 'src/interfaces/IMessageUrl';
-import IRoom from 'src/interfaces/IRoom';
-import IState from 'src/interfaces/IState';
-import IUser from 'src/interfaces/IUser';
-
-import { saveRooms } from './channel';
-import { handleOnMessage } from './notification';
-
-import ColorUtil from 'src/utils/colorUtil';
 
 const ALLOWED_TAGS = [
   'h3',
@@ -152,6 +153,8 @@ export const messageActions = {
           channelName = messageReceive.from;
         }
         break;
+      default:
+        break;
     }
 
     const message: IMessage = {
@@ -207,7 +210,7 @@ const processMessage = (
     const htmlWithAt = `<span class="${isMe ? 'mention-me' : 'mention'}">@${
       user.nickname
     }</span>`;
-    const regExpWithAt = new RegExp(`\@${user.nickname}\\b`, 'gi');
+    const regExpWithAt = new RegExp(`@${user.nickname}\\b`, 'gi');
 
     // handle mentions without @
     const htmlWithoutAt = `<span class="${isMe ? 'mention-me' : 'mention'}">${
@@ -252,7 +255,7 @@ const processMessage = (
 const getVideoUrls = (text: string): IMessageUrl[] => {
   // find youtube videos, regExp from: https://github.com/regexhq/youtube-regex/blob/master/index.js
   const youtubeRegExp = new RegExp(
-    /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/g
+    /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/g
   );
   const scannedYoutubeUrls = text.match(youtubeRegExp);
   if (scannedYoutubeUrls) {

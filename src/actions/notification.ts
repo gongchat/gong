@@ -1,7 +1,7 @@
-import IChannel from 'src/interfaces/IChannel';
-import IMessage from 'src/interfaces/IMessage';
-import ISnackbarNotifications from 'src/interfaces/ISnackbarNotification';
-import IState from 'src/interfaces/IState';
+import IChannel from '../interfaces/IChannel';
+import IMessage from '../interfaces/IMessage';
+import ISnackbarNotifications from '../interfaces/ISnackbarNotification';
+import IState from '../interfaces/IState';
 
 export const SOUNDS = [
   {

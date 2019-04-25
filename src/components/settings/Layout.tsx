@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 // material ui
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -56,6 +56,8 @@ const Layout = (props: any) => {
           return;
         }
         regex = new RegExp('^[0-9]+$');
+        break;
+      default:
         break;
     }
 

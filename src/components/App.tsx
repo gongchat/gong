@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useContext } from 'src/context';
+import React from 'react';
+import { useContext } from '../context';
 
 // material ui
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,7 +12,7 @@ import IpcRenderer from './IpcRenderer';
 import Routes from './Routes';
 import SnackbarNotifications from './SnackbarNotifications';
 
-export const App = () => {
+const App: React.FC = () => {
   const [context] = useContext();
 
   return (

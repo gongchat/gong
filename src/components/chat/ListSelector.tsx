@@ -64,6 +64,8 @@ const ListSelector = (props: any) => {
           case 'Escape':
             props.setSelectorIndex(-1);
             break;
+          default:
+            break;
         }
       }
     };

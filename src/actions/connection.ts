@@ -1,20 +1,20 @@
-const ElectronStore = window.require('electron-store');
-const electronStore = new ElectronStore();
-const { ipcRenderer } = window.require('electron');
+import IConnection from '../interfaces/IConnection';
+import ICredentials from '../interfaces/ICredentials';
+import IProfile from '../interfaces/IProfile';
+import ISettings from '../interfaces/ISettings';
+import ISettingsSaved from '../interfaces/ISettingsSaved';
+import ISnackbarNotification from '../interfaces/ISnackbarNotification';
+import IState from '../interfaces/IState';
 
-import IConnection from 'src/interfaces/IConnection';
-import ICredentials from 'src/interfaces/ICredentials';
-import IProfile from 'src/interfaces/IProfile';
-import ISettings from 'src/interfaces/ISettings';
-import ISettingsSaved from 'src/interfaces/ISettingsSaved';
-import ISnackbarNotification from 'src/interfaces/ISnackbarNotification';
-import IState from 'src/interfaces/IState';
-
-import ColorUtil from 'src/utils/colorUtil';
+import ColorUtil from '../utils/colorUtil';
 import { addSavedRoomsToChannels } from './room';
 import { mapSettingsSavedToSettings } from './settings';
 
-import { initialState } from 'src/context';
+import { initialState } from '../context';
+
+const ElectronStore = window.require('electron-store');
+const electronStore = new ElectronStore();
+const { ipcRenderer } = window.require('electron');
 
 export const connectionActions = {
   autoConnect(state: IState): IState {

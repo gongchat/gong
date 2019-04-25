@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 import ListSelector from './ListSelector';
 
-import IChannelUser from 'src/interfaces/IChannelUser';
+import IChannelUser from '../../interfaces/IChannelUser';
 
 const ListSelectorUsers = (props: any) => {
   const [term, setTerm] = useState('');

@@ -1,9 +1,9 @@
-const { ipcRenderer } = window.require('electron');
+import IChannel from '../interfaces/IChannel';
+import IState from '../interfaces/IState';
+import IUser from '../interfaces/IUser';
+import IVCard from '../interfaces/IVCard';
 
-import IChannel from 'src/interfaces/IChannel';
-import IState from 'src/interfaces/IState';
-import IUser from 'src/interfaces/IUser';
-import IVCard from 'src/interfaces/IVCard';
+const { ipcRenderer } = window.require('electron');
 
 export const userActions = {
   setMyStatus(status: string, state: IState): IState {
@@ -20,7 +20,7 @@ export const userActions = {
         profile: { ...state.profile, vCard },
       };
     } else {
-      const channels = state.channels.map((c: IUser) => {
+      const channels = state.channels.map((c: IChannel) => {
         if (c.type === 'chat' && c.jid === vCard.jid.split('/')[0]) {
           return { ...c, vCard };
         } else {

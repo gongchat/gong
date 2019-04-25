@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 import { navigate } from '@reach/router';
 
@@ -27,8 +27,8 @@ import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import { makeStyles } from '@material-ui/styles';
 
-import GithubIcon from 'src/components/icons/GithubIcon';
-import GongIcon from 'src/components/icons/GongIcon';
+import GithubIcon from '../icons/GithubIcon';
+import GongIcon from '../icons/GongIcon';
 
 // components
 import Account from './Account';
@@ -86,7 +86,7 @@ const Settings = (props: any) => {
                   tab.name === 'System' &&
                   context.app.operatingSystem !== 'win32'
                 ) {
-                  return;
+                  return null;
                 } else {
                   return (
                     <ListItem

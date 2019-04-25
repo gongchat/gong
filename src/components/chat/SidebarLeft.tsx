@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 // material ui
 import IconButton from '@material-ui/core/IconButton';
@@ -7,7 +7,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import { makeStyles } from '@material-ui/styles';
 
 // interfaces
-import IChannel from 'src/interfaces/IChannel';
+import IChannel from '../../interfaces/IChannel';
 
 // components
 import Channels from './Channels';

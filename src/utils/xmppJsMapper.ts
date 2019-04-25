@@ -1,11 +1,11 @@
-import * as moment from 'moment';
+import moment from 'moment';
 
-import IDiscoverRoom from 'src/interfaces/IDiscoverRoom';
-import IMessageReceive from 'src/interfaces/IMessageReceive';
-import IPresence from 'src/interfaces/IPresence';
-import ISubdomain from 'src/interfaces/ISubdomain';
-import IUser from 'src/interfaces/IUser';
-import IVCard from 'src/interfaces/IVCard';
+import IDiscoverRoom from '../interfaces/IDiscoverRoom';
+import IMessageReceive from '../interfaces/IMessageReceive';
+import IPresence from '../interfaces/IPresence';
+import ISubdomain from '../interfaces/ISubdomain';
+import IUser from '../interfaces/IUser';
+import IVCard from '../interfaces/IVCard';
 
 import ColorUtil from './colorUtil';
 

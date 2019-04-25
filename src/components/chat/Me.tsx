@@ -1,6 +1,7 @@
+import PropTypes from 'prop-types';
 import * as React from 'react';
 import { useState } from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 // material ui
 import Avatar from '@material-ui/core/Avatar';
@@ -8,15 +9,15 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
 // utils
-import StringUtil from 'src/utils/stringUtils';
+import StringUtil from '../../utils/stringUtils';
 
 // components
 import Status from './Status';
 import StatusMenu from './StatusMenu';
 
-const Me = (props: any) => {
+const Me = () => {
   const classes = useStyles();
-  const [context, actions] = useContext();
+  const [context] = useContext();
 
   const [showStatusMenu, setShowStatusMenu] = useState(false);
 
@@ -100,5 +101,11 @@ const useStyles = makeStyles((theme: any) => ({
     borderRadius: '50%',
   },
 }));
+
+Me.propTypes = {
+  profile: PropTypes.object,
+  showAvatar: PropTypes.bool,
+  isColored: PropTypes.bool,
+};
 
 export default Me;

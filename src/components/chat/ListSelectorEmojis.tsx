@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import ListSelector from './ListSelector';
 
-import Emojis, { emojis as emojisObj } from 'src/utils/emojis';
+import Emojis, { emojis as emojisObj } from '../../utils/emojis';
 
 const ListSelectorEmojis = (props: any) => {
   const [term, setTerm] = useState('');

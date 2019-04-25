@@ -3,30 +3,21 @@
   "version": "0.1.3",
   "description": "XMPP Client",
   "author": "Gong <gongxmpp@gmail.com>",
-  "main": "public/electron.js",
-  "homepage": "./",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/gongchat/gong.git"
   },
-  "license": "Apache-2.0",
-  "engines": {
-    "node": "10.13.0"
-  },
+  "main": "public/electron.js",
   "scripts": {
-    "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
-    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
-    "start-js": "react-scripts-ts start",
-    "build-js": "react-scripts-ts build",
-    "react": "npm-run-all -p start-js",
-    "build": "npm-run-all build-js",
+    "react": "react-scripts start",
+    "build": "react-scripts build",
     "start": "concurrently \"cross-env BROWSER=none npm run react\" \"wait-on http://localhost:3000 && electron .\" --kill-others",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "release:mac": "electron-builder build -m -p always",
     "release:linux-windows": "electron-builder build -l -w -p always",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "test": "react-scripts test"
   },
   "dependencies": {
     "@material-ui/core": "3.9.3",
@@ -36,25 +27,25 @@
     "@reach/router": "1.2.1",
     "@techempower/react-governor": "0.3.0",
     "crypto-js": "3.1.9-1",
-    "electron-debug": "^2.2.0",
+    "electron-debug": "2.2.0",
     "electron-devtools-installer": "2.2.4",
     "electron-is-dev": "1.1.0",
     "electron-log": "3.0.5",
     "electron-store": "3.2.0",
     "electron-updater": "4.0.6",
-    "keytar": "4.4.1",
+    "keytar": "4.5.0",
     "markdown-it": "8.4.2",
     "markdown-it-emoji": "1.4.0",
     "moment": "2.24.0",
     "notistack": "0.7.0",
     "react": "16.8.6",
-    "react-dev-utils": "8.0.0",
+    "react-dev-utils": "9.0.0",
     "react-dom": "16.8.6",
-    "react-material-ui-form-validator": "2.0.7",
+    "react-material-ui-form-validator": "2.0.8",
     "react-player": "1.11.0",
     "sanitize-html": "1.20.0",
     "webfontloader": "1.6.28",
-    "xmpp.js": "0.7.0"
+    "xmpp.js": "0.7.1"
   },
   "devDependencies": {
     "@types/jest": "24.0.11",
@@ -66,14 +57,32 @@
     "@types/webfontloader": "1.6.29",
     "concurrently": "4.1.0",
     "cross-env": "5.2.0",
-    "electron": "4.1.4",
+    "electron": "4.1.5",
     "electron-builder": "20.39.0",
-    "node-sass-chokidar": "1.3.4",
-    "npm-run-all": "4.1.5",
-    "react-scripts": "2.1.8",
-    "react-scripts-ts": "3.1.0",
-    "typescript": "3.4.3",
+    "electron-rebuild": "1.8.4",
+    "node-sass": "^4.11.0",
+    "react-scripts": "3.0.0",
+    "typescript": "3.4.5",
     "wait-on": "3.2.0"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "homepage": "./",
+  "engines": {
+    "node": "10.13.0"
   },
   "build": {
     "nodeVersion": "10.13.0",

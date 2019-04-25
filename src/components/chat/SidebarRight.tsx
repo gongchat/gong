@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 // material ui
 import { makeStyles } from '@material-ui/styles';
 
 // interfaces
-import IChannelUser from 'src/interfaces/IChannelUser';
+import IChannelUser from '../../interfaces/IChannelUser';
 
 // components
 import ChannelUsers from './ChannelUsers';
 
 const SidebarRight = (props: any) => {
   const classes = useStyles();
-  const [context, actions] = useContext();
+  const [context] = useContext();
 
   return (
     <div className={classes.root}>

@@ -1,16 +1,16 @@
+import moment from 'moment';
+
+import IChannel from '../interfaces/IChannel';
+import IMessage from '../interfaces/IMessage';
+import IRoom from '../interfaces/IRoom';
+import IRoomSaved from '../interfaces/IRoomSaved';
+import IState from '../interfaces/IState';
+
+import { setMenuBarNotificationOnChannelSelect } from './notification';
+
 const { ipcRenderer } = window.require('electron');
 const ElectronStore = window.require('electron-store');
 const electronStore = new ElectronStore();
-
-import * as moment from 'moment';
-
-import IChannel from 'src/interfaces/IChannel';
-import IMessage from 'src/interfaces/IMessage';
-import IRoom from 'src/interfaces/IRoom';
-import IRoomSaved from 'src/interfaces/IRoomSaved';
-import IState from 'src/interfaces/IState';
-
-import { setMenuBarNotificationOnChannelSelect } from './notification';
 
 export const channelActions = {
   removeChannel(jid: string, state: IState): IState {
@@ -127,7 +127,7 @@ export const channelActions = {
   setChannelLogs(payload: any, state: IState) {
     const { channelJid, messages, hasNoMoreLogs } = payload;
 
-    messages.forEach(message => {
+    messages.forEach((message: IMessage) => {
       message.timestamp = moment(message.timestamp);
       message.isRead = true;
     });
@@ -172,7 +172,8 @@ export const saveRooms = (channels: IChannel[]) => {
     'channels',
     channels
       .filter((channel: IChannel) => channel.type === 'groupchat')
-      .map((room: IRoom) => {
+      .map((channel: IChannel) => {
+        const room = channel as IRoom;
         const roomSaved: IRoomSaved = {
           jid: room.jid,
           name: room.name,

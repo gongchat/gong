@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 // interfaces
-import IUser from 'src/interfaces/IUser';
+import IUser from '../../interfaces/IUser';
 
 // components
 import Group from './Group';
 import User from './User';
 
 const Users = (props: any) => {
-  const [context, actions] = useContext();
+  const [context] = useContext();
 
   const getGroupedUsers = (users: any) => {
     return users.reduce((a: any, c: any) => {
@@ -59,7 +59,7 @@ const Users = (props: any) => {
             </Group>
           );
         } else {
-          return;
+          return null;
         }
       })}
     </div>

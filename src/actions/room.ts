@@ -1,17 +1,17 @@
+import moment from 'moment';
+
+import IChannel from '../interfaces/IChannel';
+import IChannelUser from '../interfaces/IChannelUser';
+import IRoom from '../interfaces/IRoom';
+import IRoomJoin from '../interfaces/IRoomJoin';
+import IRoomSaved from '../interfaces/IRoomSaved';
+import IState from '../interfaces/IState';
+
+import { saveRooms } from './channel';
+
 const ElectronStore = window.require('electron-store');
 const electronStore = new ElectronStore();
 const { ipcRenderer } = window.require('electron');
-
-import * as moment from 'moment';
-
-import IChannel from 'src/interfaces/IChannel';
-import IChannelUser from 'src/interfaces/IChannelUser';
-import IRoom from 'src/interfaces/IRoom';
-import IRoomJoin from 'src/interfaces/IRoomJoin';
-import IRoomSaved from 'src/interfaces/IRoomSaved';
-import IState from 'src/interfaces/IState';
-
-import { saveRooms } from './channel';
 
 export const roomActions = {
   addRoomToChannels(roomJoin: IRoomJoin, state: IState): IState {

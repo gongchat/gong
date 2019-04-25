@@ -1,8 +1,8 @@
-const { ipcRenderer } = window.require('electron');
+import IDiscoverRoom from '../interfaces/IDiscoverRoom';
+import IState from '../interfaces/IState';
+import ISubdomain from '../interfaces/ISubdomain';
 
-import IDiscoverRoom from 'src/interfaces/IDiscoverRoom';
-import IState from 'src/interfaces/IState';
-import ISubdomain from 'src/interfaces/ISubdomain';
+const { ipcRenderer } = window.require('electron');
 
 export const discoverActions = {
   setShowDiscover(value: boolean, state: IState): IState {

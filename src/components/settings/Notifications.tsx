@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 // material ui
 import FilledInput from '@material-ui/core/FilledInput';
@@ -11,7 +11,7 @@ import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/styles';
 
 // actions
-import { playAudio, SOUNDS } from 'src/actions/notification';
+import { playAudio, SOUNDS } from '../../actions/notification';
 
 // components
 import BasePage from './BasePage';
@@ -64,12 +64,13 @@ const NotificationSettings = (props: any) => {
     context.settings.systemNotificationOnChat
   );
 
-  const handleChange = (event: any, action: any) => {
+  const handleChange = (e: any, action: any) => {
+    // eslint-disable-next-line
     if (name === 'soundName') {
-      playAudio(event.target.value);
+      playAudio(e.target.value);
     }
-    action(event.target.value);
-    actions.setSettings({ [event.target.name]: event.target.value });
+    action(e.target.value);
+    actions.setSettings({ [e.target.name]: e.target.value });
   };
 
   return (
@@ -79,7 +80,7 @@ const NotificationSettings = (props: any) => {
           <InputLabel htmlFor="soundName">Sound</InputLabel>
           <Select
             value={soundName}
-            onChange={(event: any) => handleChange(event, setSoundName)}
+            onChange={(e: any) => handleChange(e, setSoundName)}
             input={<FilledInput name="soundName" id="soundName" />}
           >
             {SOUNDS.map((sound: any) => (
@@ -95,9 +96,7 @@ const NotificationSettings = (props: any) => {
           </InputLabel>
           <Select
             value={playAudioOnGroupchat}
-            onChange={(event: any) =>
-              handleChange(event, setPlayAudioOnGroupchat)
-            }
+            onChange={(e: any) => handleChange(e, setPlayAudioOnGroupchat)}
             input={
               <FilledInput
                 name="playAudioOnGroupchat"
@@ -114,7 +113,7 @@ const NotificationSettings = (props: any) => {
           <InputLabel htmlFor="playAudioOnChat">On Chat Message</InputLabel>
           <Select
             value={playAudioOnChat}
-            onChange={(event: any) => handleChange(event, setPlayAudioOnChat)}
+            onChange={(e: any) => handleChange(e, setPlayAudioOnChat)}
             input={<FilledInput name="playAudioOnChat" id="playAudioOnChat" />}
           >
             <MenuItem value="always">Always</MenuItem>
@@ -126,9 +125,7 @@ const NotificationSettings = (props: any) => {
           <InputLabel htmlFor="playAudioOnMentionMe">On Mention Me</InputLabel>
           <Select
             value={playAudioOnMentionMe}
-            onChange={(event: any) =>
-              handleChange(event, setPlayAudioOnMentionMe)
-            }
+            onChange={(e: any) => handleChange(e, setPlayAudioOnMentionMe)}
             input={
               <FilledInput
                 name="playAudioOnMentionMe"
@@ -150,9 +147,7 @@ const NotificationSettings = (props: any) => {
             </InputLabel>
             <Select
               value={flashMenuBarOnGroupchat}
-              onChange={(event: any) =>
-                handleChange(event, setFlashMenuBarOnGroupchat)
-              }
+              onChange={(e: any) => handleChange(e, setFlashMenuBarOnGroupchat)}
               input={
                 <FilledInput
                   name="flashMenuBarOnGroupchat"
@@ -172,8 +167,8 @@ const NotificationSettings = (props: any) => {
               </InputLabel>
               <Select
                 value={flashMenuBarOnGroupchatFrequency}
-                onChange={(event: any) =>
-                  handleChange(event, setFlashMenuBarOnGroupchatFrequency)
+                onChange={(e: any) =>
+                  handleChange(e, setFlashMenuBarOnGroupchatFrequency)
                 }
                 input={
                   <FilledInput
@@ -195,9 +190,7 @@ const NotificationSettings = (props: any) => {
             </InputLabel>
             <Select
               value={flashMenuBarOnMentionMe}
-              onChange={(event: any) =>
-                handleChange(event, setFlashMenuBarOnMentionMe)
-              }
+              onChange={(e: any) => handleChange(e, setFlashMenuBarOnMentionMe)}
               input={
                 <FilledInput
                   name="flashMenuBarOnMentionMe"
@@ -217,8 +210,8 @@ const NotificationSettings = (props: any) => {
               </InputLabel>
               <Select
                 value={flashMenuBarOnMentionMeFrequency}
-                onChange={(event: any) =>
-                  handleChange(event, setFlashMenuBarOnMentionMeFrequency)
+                onChange={(e: any) =>
+                  handleChange(e, setFlashMenuBarOnMentionMeFrequency)
                 }
                 input={
                   <FilledInput
@@ -240,9 +233,7 @@ const NotificationSettings = (props: any) => {
             </InputLabel>
             <Select
               value={flashMenuBarOnChat}
-              onChange={(event: any) =>
-                handleChange(event, setFlashMenuBarOnChat)
-              }
+              onChange={(e: any) => handleChange(e, setFlashMenuBarOnChat)}
               input={
                 <FilledInput
                   name="flashMenuBarOnChat"
@@ -262,8 +253,8 @@ const NotificationSettings = (props: any) => {
               </InputLabel>
               <Select
                 value={flashMenuBarOnChatFrequency}
-                onChange={(event: any) =>
-                  handleChange(event, setFlashMenuBarOnChatFrequency)
+                onChange={(e: any) =>
+                  handleChange(e, setFlashMenuBarOnChatFrequency)
                 }
                 input={
                   <FilledInput
@@ -286,8 +277,8 @@ const NotificationSettings = (props: any) => {
           </InputLabel>
           <Select
             value={systemNotificationOnGroupchat}
-            onChange={(event: any) =>
-              handleChange(event, setSystemNotificationOnGroupchat)
+            onChange={(e: any) =>
+              handleChange(e, setSystemNotificationOnGroupchat)
             }
             input={
               <FilledInput
@@ -307,8 +298,8 @@ const NotificationSettings = (props: any) => {
           </InputLabel>
           <Select
             value={systemNotificationOnMentionMe}
-            onChange={(event: any) =>
-              handleChange(event, setSystemNotificationOnMentionMe)
+            onChange={(e: any) =>
+              handleChange(e, setSystemNotificationOnMentionMe)
             }
             input={
               <FilledInput
@@ -326,9 +317,7 @@ const NotificationSettings = (props: any) => {
           <InputLabel htmlFor="systemNotificationOnChat">On Chat</InputLabel>
           <Select
             value={systemNotificationOnChat}
-            onChange={(event: any) =>
-              handleChange(event, setSystemNotificationOnChat)
-            }
+            onChange={(e: any) => handleChange(e, setSystemNotificationOnChat)}
             input={
               <FilledInput
                 name="systemNotificationOnChat"

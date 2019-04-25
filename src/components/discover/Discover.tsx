@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 // material ui
 import Button from '@material-ui/core/Button';
@@ -20,9 +20,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/styles';
 
 // interfaces
-import IDiscoverRoom from 'src/interfaces/IDiscoverRoom';
-import IRoomJoin from 'src/interfaces/IRoomJoin';
-import ISubdomain from 'src/interfaces/ISubdomain';
+import IDiscoverRoom from '../../interfaces/IDiscoverRoom';
+import IRoomJoin from '../../interfaces/IRoomJoin';
+import ISubdomain from '../../interfaces/ISubdomain';
 
 const Discover = () => {
   const classes = useStyles();

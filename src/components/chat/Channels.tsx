@@ -4,7 +4,7 @@ import * as React from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 // interfaces
-import IChannel from 'src/interfaces/IChannel';
+import IChannel from '../../interfaces/IChannel';
 
 // components
 import Channel from './Channel';

@@ -1,6 +1,6 @@
 // taken from: https://github.com/markdown-it/markdown-it-emoji/blob/master/lib/data/full.json
 
-export const emojis = {
+export const emojis: any = {
   '100': '💯',
   '1234': '🔢',
   grinning: '😀',

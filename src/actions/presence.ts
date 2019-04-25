@@ -1,12 +1,12 @@
-import IChannel from 'src/interfaces/IChannel';
-import IChannelUser from 'src/interfaces/IChannelUser';
-import IPresence from 'src/interfaces/IPresence';
-import IRoom from 'src/interfaces/IRoom';
-import IState from 'src/interfaces/IState';
-import IUser from 'src/interfaces/IUser';
-import IUserConnection from 'src/interfaces/IUserConnection';
+import IChannel from '../interfaces/IChannel';
+import IChannelUser from '../interfaces/IChannelUser';
+import IPresence from '../interfaces/IPresence';
+import IRoom from '../interfaces/IRoom';
+import IState from '../interfaces/IState';
+import IUser from '../interfaces/IUser';
+import IUserConnection from '../interfaces/IUserConnection';
 
-import ColorUtil from 'src/utils/colorUtil';
+import ColorUtil from '../utils/colorUtil';
 
 export const presenceActions = {
   setPresence(payload: IPresence, state: IState): IState {

@@ -1,8 +1,6 @@
-const { ipcRenderer } = window.require('electron');
-
 import * as React from 'react';
 import { useState } from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../context';
 
 // material
 import Button from '@material-ui/core/Button';
@@ -20,6 +18,8 @@ import ToolBar from './chat/ToolBar';
 import Discover from './discover/Discover';
 import MenuBar from './MenuBar';
 import Settings from './settings/Settings';
+
+const { ipcRenderer } = window.require('electron');
 
 const Main = (props: any) => {
   const classes = useStyles();

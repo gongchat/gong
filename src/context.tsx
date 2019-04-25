@@ -2,21 +2,21 @@ import * as React from 'react';
 
 import { useGovernor } from '@techempower/react-governor';
 
-import IState from 'src/interfaces/IState';
+import IState from './interfaces/IState';
 
-import { appActions } from 'src/actions/app';
-import { channelActions } from 'src/actions/channel';
-import { connectionActions } from 'src/actions/connection';
-import { discoverActions } from 'src/actions/discover';
-import { messageActions } from 'src/actions/message';
-import { notificationActions } from 'src/actions/notification';
-import { presenceActions } from 'src/actions/presence';
-import { roomActions } from 'src/actions/room';
-import { settingsActions } from 'src/actions/settings';
-import { themeActions } from 'src/actions/theme';
-import { userActions } from 'src/actions/user';
+import { appActions } from './actions/app';
+import { channelActions } from './actions/channel';
+import { connectionActions } from './actions/connection';
+import { discoverActions } from './actions/discover';
+import { messageActions } from './actions/message';
+import { notificationActions } from './actions/notification';
+import { presenceActions } from './actions/presence';
+import { roomActions } from './actions/room';
+import { settingsActions } from './actions/settings';
+import { themeActions } from './actions/theme';
+import { userActions } from './actions/user';
 
-import { getTheme } from 'src/actions/theme';
+import { getTheme } from './actions/theme';
 
 export const initialState: IState = {
   app: {

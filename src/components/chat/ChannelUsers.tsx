@@ -1,19 +1,19 @@
 import * as React from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 // material ui
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
 // interfaces
-import IChannelUser from 'src/interfaces/IChannelUser';
+import IChannelUser from '../../interfaces/IChannelUser';
 
 // components
 import ChannelUser from './ChannelUser';
 
 const ChannelUsers = (props: any) => {
   const classes = useStyles();
-  const [context, actions] = useContext();
+  const [context] = useContext();
 
   return (
     <div className={classes.root}>

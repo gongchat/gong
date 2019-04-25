@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
 // material ui
 import Popover from '@material-ui/core/Popover';
@@ -23,7 +23,7 @@ const STATUSES = [
 
 const StatusMenu = (props: any) => {
   const classes = useStyles();
-  const [context, actions] = useContext();
+  const actions = useContext()[1];
 
   const handleStatusClick = (status: string) => {
     actions.setMyStatus(status);

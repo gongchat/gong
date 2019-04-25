@@ -1,11 +1,11 @@
+import * as React from 'react';
+import { useContext } from '../context';
+import XmppJsMapper from '../utils/xmppJsMapper';
+
 const { ipcRenderer } = window.require('electron');
 
-import * as React from 'react';
-import { useContext } from 'src/context';
-import XmppJsMapper from 'src/utils/xmppJsMapper';
-
 const IpcRenderer = () => {
-  const [context, actions] = useContext();
+  const actions = useContext()[1];
 
   React.useEffect(() => {
     // Do not call multiple actions inside an ipcRenderer event. This will

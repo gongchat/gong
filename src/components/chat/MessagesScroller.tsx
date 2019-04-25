@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useContext } from 'src/context';
+import { useContext } from '../../context';
 
-import { usePrevious } from 'src/utils/usePrevious';
+import { usePrevious } from '../../utils/usePrevious';
 
 // material ui
 import { makeStyles } from '@material-ui/styles';

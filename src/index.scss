@@ -12,7 +12,6 @@ body {
   background-color: #333;
 }
 
-// allows menu bar drag
 .menu-bar {
   -webkit-user-select: none;
   -webkit-app-region: drag;
@@ -23,7 +22,6 @@ body {
   -webkit-app-region: no-drag;
 }
 
-// scroll bar styles
 ::-webkit-scrollbar {
   width: 8px;
 }
