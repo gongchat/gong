@@ -6,21 +6,10 @@ import { usePrevious } from 'src/utils/usePrevious';
 // material ui
 import { makeStyles } from '@material-ui/styles';
 
-// TODO: Check for logged messages on window resize
-
-/*
-  Scroll Specs:
-  1. If scroll is at bottom, stay at the bottom.
-  2. If scroll is not at the bottom, keep it where it is.
-      - When a new channel is selected.
-      - When new messages are received.
-  3. If scroll reaches the top, get archived messages
-  4. When selecting a channel scroll so the first new message is at the top
-*/
-
 let wasAtBottom = true;
 let scrollTimer: any;
 let positionBeforeGettingLogs: any;
+let prevWindowInnerWidth: any;
 
 const MessagesScroller = (props: any) => {
   const classes = useStyles();
@@ -141,13 +130,22 @@ const MessagesScroller = (props: any) => {
       }, 100);
     };
 
+    const handleResizeWidth = (event: any) => {
+      if (window.innerWidth !== prevWindowInnerWidth) {
+        handleScroll(event);
+      }
+      prevWindowInnerWidth = window.innerWidth;
+    };
+
     if (root.current) {
       root.current.addEventListener('scroll', handleScroll);
+      window.addEventListener('resize', handleResizeWidth);
     }
     return () => {
       if (root.current) {
         clearTimeout(scrollTimer);
         root.current.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('resize', handleResizeWidth);
       }
     };
   }, [context.current]);
