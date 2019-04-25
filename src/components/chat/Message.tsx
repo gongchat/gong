@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 // material ui
 import { fade } from '@material-ui/core/styles/colorManipulator';

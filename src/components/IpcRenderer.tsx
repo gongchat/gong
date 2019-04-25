@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useContext } from '../context';
 import XmppJsMapper from '../utils/xmppJsMapper';
 

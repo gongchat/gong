@@ -1,8 +1,8 @@
 // TODO: Remove on material-ui@4.0.0
 import './bootstrap';
 
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 import ContextProvider from './context';
 

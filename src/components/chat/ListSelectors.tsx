@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 // utils
 import ListSelectorEmojis from './ListSelectorEmojis';
