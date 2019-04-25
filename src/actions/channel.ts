@@ -34,6 +34,7 @@ export const channelActions = {
     }
   },
   selectChannel(channelJid: string, state: IState): IState {
+    console.log('SELECTING channel ', channelJid);
     const channels: IChannel[] = state.channels.map((channel: IChannel) => {
       if (channel.jid === channelJid) {
         const newChannel = {
@@ -73,13 +74,17 @@ export const channelActions = {
     setMenuBarNotificationOnChannelSelect(newState);
     return newState;
   },
-  setChannelScrollPosition(payload: any, state: IState): IState {
+  setChannelScrollPosition(
+    channelJid: string,
+    position: number,
+    state: IState
+  ): IState {
     // do not need to update current as it only matters when we change channels
     return {
       ...state,
       channels: state.channels.map((channel: IChannel) => {
-        if (channel.jid === payload.jid) {
-          return { ...channel, scrollPosition: payload.position };
+        if (channel.jid === channelJid) {
+          return { ...channel, scrollPosition: position };
         }
         return channel;
       }),

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useState } from 'react';
 import { useContext } from 'src/context';
 
 // material ui
@@ -11,227 +10,11 @@ import IMessage from 'src/interfaces/IMessage';
 
 // components
 import Message from './Message';
-
-// TODO: Check for logged messages on window resize
-// let scrollTimer: any;
+import MessagesScroller from './MessagesScroller';
 
 const Messages = (props: any) => {
   const classes = useStyles();
   const [context, actions] = useContext();
-
-  // let stayAtBottom = false;
-
-  const root = React.useRef<HTMLDivElement>(null);
-
-  const scrollToBottom = () => {
-    if (root.current) {
-      root.current.scrollTop =
-        root.current.scrollHeight + root.current.offsetHeight;
-    }
-  };
-
-  const handleScroll = () => {
-    handleLoggedMessages();
-  };
-
-  const handleLoggedMessages = () => {
-    // determine if archived messages should be requested
-    // setTimeout(() => {
-    if (
-      root.current &&
-      context.current &&
-      !context.current.hasNoMoreLogs &&
-      !context.current.isRequestingLogs &&
-      root.current.scrollTop === 0 &&
-      root.current.offsetHeight === root.current.scrollHeight
-    ) {
-      actions.getChannelLogs(context.current);
-    }
-    // });
-  };
-
-  React.useEffect(() => {
-    if (root.current) {
-      root.current.addEventListener('scroll', handleScroll);
-    }
-    return () => {
-      if (root.current) {
-        root.current.removeEventListener('scroll', handleScroll);
-        // if (scrollTimer) {
-        //   clearTimeout(scrollTimer);
-        // }
-        if (context.current) {
-          actions.setChannelScrollPosition(
-            context.current.jid,
-            root.current.scrollTop
-          );
-        }
-      }
-    };
-  }, []);
-
-  React.useEffect(() => {
-    if (context.current) {
-      // scroll to bottom
-      scrollToBottom();
-      // get logs
-      handleLoggedMessages();
-    }
-  }, [context.current]);
-
-  // const handleScrollPositionOnLoad = () => {
-  //   // handle scroll position
-  //   if (!context.current) {
-  //     handleScrollOnChannelChange();
-  //   } else {
-  //     // if not a new channel and scroll is at bottom stay at bottom.
-  //     if (root.current) {
-  //       handleScrollOnNewMessages();
-  //     }
-  //   }
-  // };
-
-  // const handleScrollOnChannelChange = () => {
-  //   if (root.current) {
-  //     // setStayAtBottom(
-  //     //   root.current.scrollTop + root.current.offsetHeight >=
-  //     //     root.current.scrollHeight - 5
-  //     // );
-  //   }
-
-  //   if (context.current.scrollPosition === -1) {
-  //     // default option is to start at bottom
-  //     setTimeout(() => {
-  //       if (root.current) {
-  //         root.current.scrollTop = root.current.scrollHeight;
-  //       }
-  //     });
-  //   } else {
-  //     // update scroll position if new current channel
-  //     setTimeout(() => {
-  //       if (root.current) {
-  //         root.current.scrollTop = context.current.scrollPosition;
-  //       }
-  //     });
-  //   }
-  // };
-
-  // const handleScrollOnNewMessages = () => {
-  //   if (
-  //     root.current &&
-  //     root.current.scrollTop + root.current.offsetHeight >=
-  //       root.current.scrollHeight - 5
-  //   ) {
-  //     // if at bottom stay at bottom
-  //     setTimeout(() => {
-  //       if (root.current) {
-  //         root.current.scrollTop =
-  //           root.current.scrollHeight + root.current.offsetHeight;
-  //       }
-  //     });
-  //   } else if (
-  //     root.current &&
-  //     context.current.messages[0]
-  //     // TODO: need to check if messages are from logs
-  //   ) {
-  //     // if the new messages are from logs
-  //     const currentPositionFromBottom = root.current.scrollHeight;
-  //     setTimeout(() => {
-  //       if (root.current) {
-  //         root.current.scrollTop =
-  //           root.current.scrollHeight - currentPositionFromBottom;
-  //       }
-  //     });
-  //   }
-  // };
-
-  // const handleLoggedMessages = () => {
-  //   // determine if archived messages should be requested
-  //   setTimeout(() => {
-  //     if (
-  //       context.current &&
-  //       !context.current.hasNoMoreLogs &&
-  //       !context.current.isRequestingLogs &&
-  //       root.current &&
-  //       root.current.scrollTop === 0 &&
-  //       root.current.offsetHeight === root.current.scrollHeight
-  //     ) {
-  //       actions.getChannelLogs(context.current);
-  //     }
-  //   });
-  // };
-
-  // const handleScroll = (event: any) => {
-  //   // load messages if scroll is at top
-  //   if (
-  //     context.current &&
-  //     !context.current.hasNoMoreLogs &&
-  //     !context.current.isRequestingLogs &&
-  //     event.target.scrollTop === 0
-  //   ) {
-  //     actions.getChannelLogs(context.current);
-  //   }
-
-  //   // handle on scroll
-  //   if (scrollTimer) {
-  //     clearTimeout(scrollTimer);
-  //   }
-  //   scrollTimer = setTimeout(() => {
-  //     // check if scroll is at bottom
-  //     if (root.current) {
-  //       // setStayAtBottom(
-  //       //   root.current.scrollTop + root.current.offsetHeight >=
-  //       //     root.current.scrollHeight - 5
-  //       // );
-  //     }
-  //     // Saves the scroll position for when the channel is selected again
-  //     if (context.current) {
-  //       actions.setChannelScrollPosition(
-  //         context.current.jid,
-  //         event.target.scrollTop
-  //       );
-  //     }
-  //   }, 100);
-  // };
-
-  // const handleImageOnLoad = () => {
-  //   // if (stayAtBottom) {
-  //   //   if (root.current) {
-  //   //     root.current.scrollTop =
-  //   //       root.current.scrollHeight + root.current.offsetHeight;
-  //   //   }
-  //   // }
-  // };
-
-  // React.useEffect(() => {
-  //   if (root.current) {
-  //     root.current.addEventListener('scroll', handleScroll);
-  //   }
-  //   return () => {
-  //     if (root.current) {
-  //       if (scrollTimer) {
-  //         clearTimeout(scrollTimer);
-  //       }
-  //       root.current.removeEventListener('scroll', handleScroll);
-  //       if (context.current) {
-  //         actions.setChannelScrollPosition(
-  //           context.current.jid,
-  //           root.current.scrollTop
-  //         );
-  //       }
-  //     }
-  //   };
-  // }, []);
-
-  // React.useEffect(() => {
-  //   if (!context.current) {
-  //     // setMessages([]);
-  //   } else {
-  //     // setMessages(context.current.messages);
-  //     handleScrollPositionOnLoad();
-  //   }
-  //   handleLoggedMessages();
-  // }, [context.current]);
 
   let previousDate = '';
   let previousUserNickname = '';
@@ -239,9 +22,7 @@ const Messages = (props: any) => {
   let hasNewMessageMarker = false;
 
   return (
-    <div className={classes.root} ref={root}>
-      {/* this is here so the messages start below first */}
-      <div className={classes.filler} />
+    <MessagesScroller>
       {context.current &&
         context.current.messages &&
         context.current.messages.map((message: IMessage, index: number) => {
@@ -324,24 +105,11 @@ const Messages = (props: any) => {
 
           return returnVal;
         })}
-    </div>
+    </MessagesScroller>
   );
 };
 
 const useStyles = makeStyles((theme: any) => ({
-  root: {
-    flexGrow: 1,
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
-    paddingTop: theme.spacing.unit,
-    overflowY: 'scroll',
-    display: 'flex',
-    flexDirection: 'column',
-    overflowAnchor: 'auto',
-  },
-  filler: {
-    flexGrow: 1,
-  },
   marker: {
     paddingTop: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
