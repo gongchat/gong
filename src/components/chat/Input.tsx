@@ -16,10 +16,11 @@ import { usePrevious } from '../../utils/usePrevious';
 
 import ListSelectors from './ListSelectors';
 
-const Input = (props: any) => {
+const Input = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const classes = useStyles();
   const [context, actions] = useContext();
+  const { current } = context;
 
   const [text, setText] = useState('');
   const [isFocused, setIsFocused] = useState(false);
@@ -29,19 +30,19 @@ const Input = (props: any) => {
     if (text !== '') {
       if (text.startsWith('/nick')) {
         actions.setRoomNickname({
-          jid: context.current.jid,
-          currentNickname: context.current.myNickname,
+          jid: current.jid,
+          currentNickname: current.myNickname,
           newNickname: text.substring(6),
         });
       } else {
-        let to = context.current.jid;
-        if (context.current.type === 'chat' && context.current.sessionJid) {
-          to = context.current.sessionJid;
+        let to = current.jid;
+        if (current.type === 'chat' && current.sessionJid) {
+          to = current.sessionJid;
         }
         const messageSend: IMessageSend = {
           id: StringUtil.makeId(7),
-          channelName: context.current.jid,
-          type: context.current.type,
+          channelName: current.jid,
+          type: current.type,
           to,
           from: context.settings.jid,
           body: text,
@@ -91,11 +92,11 @@ const Input = (props: any) => {
     }
   };
 
-  const prevCurrent = usePrevious(context.current);
+  const prevCurrent = usePrevious(current);
   React.useEffect(() => {
     if (
       !prevCurrent ||
-      (context.current && prevCurrent.jid !== context.current.jid)
+      (current && prevCurrent.jid !== current.jid)
     ) {
       // This must be in useEffect so the inputRef is initialized before calling
       // the block below.
@@ -103,16 +104,16 @@ const Input = (props: any) => {
         inputRef.current.focus();
       }
     }
-  }, [context.current]);
+  }, [current, prevCurrent]);
 
   return (
     <React.Fragment>
-      {context.current && (
+      {current && (
         <div className={classes.root}>
           <ListSelectors
             text={text}
             setText={setText}
-            current={context.current}
+            current={current}
             selectorIndex={listSelectorIndex}
             setSelectorIndex={setListSelectorIndex}
             focusInput={focusInput}
@@ -139,8 +140,8 @@ const Input = (props: any) => {
               inputRef={inputRef}
               disabled={
                 !context.connection.isConnected ||
-                (context.current.connectionError !== undefined &&
-                  !context.current.isConnected)
+                (current.connectionError !== undefined &&
+                  !current.isConnected)
               }
             />
             <div className={classes.inputRightInline}>

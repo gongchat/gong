@@ -5,14 +5,14 @@ import { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
+let currListIndex = 0;
+
 const ListSelector = (props: any) => {
   const listRef = React.useRef<HTMLDivElement>(null);
   const classes = useStyles();
 
   const [term, setTerm] = useState(props.term);
   const [listIndex, setListIndex] = useState(0);
-
-  let currListIndex = 0;
 
   React.useEffect(() => {
     const handleKeyDown = (event: any) => {
@@ -74,7 +74,7 @@ const ListSelector = (props: any) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [props.list]);
+  }, [props, props.list]);
 
   React.useEffect(() => {
     setTerm(props.term);

@@ -13,37 +13,43 @@ import { usePrevious } from '../utils/usePrevious';
 const SnackbarNotifications = (props: any) => {
   const classes = useStyles();
   const [context, actions] = useContext();
+  const { snackbarNotifications } = context;
+  const { removeFromSnackbar } = actions;
+
   const { enqueueSnackbar } = useSnackbar();
 
-  const prevSnackbarNotifications = usePrevious(context.snackbarNotifications);
+  const prevSnackbarNotifications = usePrevious(snackbarNotifications);
   React.useEffect(() => {
     let notExists = false;
-    if (context.snackbarNotifications) {
-      context.snackbarNotifications.forEach(
-        (notification: any, index: number) => {
-          if (!notExists) {
-            notExists =
-              notExists ||
-              !prevSnackbarNotifications.filter(
-                ({ key }) => context.snackbarNotifications[index].key === key
-              ).length;
-          }
+    if (snackbarNotifications) {
+      snackbarNotifications.forEach((notification: any, index: number) => {
+        if (!notExists) {
+          notExists =
+            notExists ||
+            !prevSnackbarNotifications.filter(
+              ({ key }) => snackbarNotifications[index].key === key
+            ).length;
         }
-      );
+      });
     }
-    if (notExists && context.snackbarNotifications) {
-      context.snackbarNotifications.forEach(
-        (notification: ISnackbarNotification) => {
-          enqueueSnackbar(notification.message, {
-            variant: notification.variant,
-            anchorOrigin: { vertical: 'top', horizontal: 'right' },
-            className: classes.notification,
-          } as any);
-          actions.removeFromSnackbar(notification.id);
-        }
-      );
+    if (notExists && snackbarNotifications) {
+      snackbarNotifications.forEach((notification: ISnackbarNotification) => {
+        enqueueSnackbar(notification.message, {
+          variant: notification.variant,
+          anchorOrigin: { vertical: 'top', horizontal: 'right' },
+          className: classes.notification,
+        } as any);
+        removeFromSnackbar(notification.id);
+      });
     }
-  }, [context.snackbarNotifications]);
+  }, [
+    actions,
+    classes.notification,
+    snackbarNotifications,
+    enqueueSnackbar,
+    prevSnackbarNotifications,
+    removeFromSnackbar,
+  ]);
 
   return null;
 };

@@ -27,11 +27,13 @@ import ISubdomain from '../../interfaces/ISubdomain';
 const Discover = () => {
   const classes = useStyles();
   const [context, actions] = useContext();
+  const { profile, subdomains, rooms, showDiscover } = context;
+  const { setShowDiscover, discoverItems, addRoomToChannels } = actions;
 
   const nickname =
-    context.profile.vCard && context.profile.vCard.nickname
-      ? context.profile.vCard.nickname
-      : context.profile.username;
+    profile.vCard && profile.vCard.nickname
+      ? profile.vCard.nickname
+      : profile.username;
 
   const [open, setOpen] = useState(false);
   const [selectedSubdomainJid, setSelectedSubdomainJid] = useState('');
@@ -45,12 +47,12 @@ const Discover = () => {
 
   const handleClose = () => {
     setOpen(false);
-    actions.setShowDiscover(false);
+    setShowDiscover(false);
   };
 
   const handleSelectSubdomain = (jid: string) => {
     setSelectedSubdomainJid(jid);
-    actions.discoverItems(jid.split('.')[0]);
+    discoverItems(jid.split('.')[0]);
   };
 
   const handleClickAddRoom = () => {
@@ -60,7 +62,7 @@ const Discover = () => {
       nickname: form.nickname,
       password: form.password,
     };
-    actions.addRoomToChannels(roomJoin);
+    addRoomToChannels(roomJoin);
     setTabIndex(0);
     setForm({ ...form, password: '' });
   };
@@ -96,11 +98,11 @@ const Discover = () => {
   };
 
   React.useEffect(() => {
-    if (open !== context.showDiscover) {
-      setOpen(context.showDiscover);
+    if (open !== showDiscover) {
+      setOpen(showDiscover);
       setTabIndex(0);
     }
-  }, [context.showDiscover]);
+  }, [open, showDiscover]);
 
   return (
     <Dialog
@@ -132,13 +134,13 @@ const Discover = () => {
                 <ListItem button={true} dense={true} onClick={manuallyAddARoom}>
                   <ListItemText>Manually Add a Room</ListItemText>
                 </ListItem>
-                {context.subdomains.length === 0 && (
+                {subdomains.length === 0 && (
                   <ListItem>
                     <ListItemText>Looking for subdomains...</ListItemText>
                   </ListItem>
                 )}
-                {context.subdomains.length > 0 &&
-                  context.subdomains.map((subdomain: ISubdomain) => (
+                {subdomains.length > 0 &&
+                  subdomains.map((subdomain: ISubdomain) => (
                     <ListItem
                       key={subdomain.jid}
                       button={true}
@@ -158,15 +160,15 @@ const Discover = () => {
                   there are no items to discover. Need to implement a away to 
                   check if it comes back empty 
                 */}
-                {context.subdomains.length > 0 &&
+                {subdomains.length > 0 &&
                   selectedSubdomainJid !== '' &&
-                  context.rooms.length === 0 && (
+                  rooms.length === 0 && (
                     <ListItem>
                       <ListItemText>Looking for rooms...</ListItemText>
                     </ListItem>
                   )}
-                {context.rooms.length > 0 &&
-                  context.rooms.map((room: any) => (
+                {rooms.length > 0 &&
+                  rooms.map((room: any) => (
                     <ListItem
                       key={room.jid}
                       button={true}

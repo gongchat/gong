@@ -11,14 +11,16 @@ import { makeStyles } from '@material-ui/styles';
 // components
 import LoadingIcon from './icons/LoadingIcon';
 
+let reconnectTimer: any;
+
 const Loading = (props: any) => {
   const classes = useStyles();
   const [context, actions] = useContext();
+  const { app, connection } = context;
+  const { autoConnect } = actions;
 
   const [text, setText] = useState('Loading please wait...');
   const [showLogin, setShowLogin] = useState(false);
-
-  let reconnectTimer: any;
 
   const handleLoginClick = () => {
     if (reconnectTimer) {
@@ -28,22 +30,18 @@ const Loading = (props: any) => {
   };
 
   React.useEffect(() => {
-    actions.autoConnect();
-  }, []);
+    autoConnect();
+  }, [autoConnect]);
 
   React.useEffect(() => {
-    if (
-      !context.connection.isConnecting &&
-      context.connection.isConnecting !== undefined
-    ) {
-      if (context.connection.isConnected) {
+    if (!connection.isConnecting && connection.isConnecting !== undefined) {
+      if (connection.isConnected) {
         navigate('/main');
-      } else if (context.connection.hasSavedCredentials === false) {
+      } else if (connection.hasSavedCredentials === false) {
         navigate('/login');
-      } else if (!context.connection.isAuthenticated) {
+      } else if (!connection.isAuthenticated) {
         if (
-          context.connection.connectionError !==
-          'Cannot authorize your credentials'
+          connection.connectionError !== 'Cannot authorize your credentials'
         ) {
           setText('Unable to find the server, retrying connection');
           setShowLogin(true);
@@ -53,7 +51,7 @@ const Loading = (props: any) => {
           }
           reconnectTimer = setTimeout(() => {
             setText('Looking for the server');
-            actions.autoConnect();
+            autoConnect();
           }, 10000);
         }
       }
@@ -64,7 +62,7 @@ const Loading = (props: any) => {
         clearTimeout(reconnectTimer);
       }
     };
-  }, [context.connection]);
+  }, [autoConnect, connection]);
 
   return (
     <div className={classes.root}>
@@ -73,8 +71,8 @@ const Loading = (props: any) => {
         <h1 className={classes.title}>GONG</h1>
         <LoadingIcon />
         <p className={classes.message}>{text}</p>
-        {context.app.version !== '' && (
-          <p className={classes.version}>v{context.app.version}</p>
+        {app.version !== '' && (
+          <p className={classes.version}>v{app.version}</p>
         )}
       </div>
       {showLogin && (

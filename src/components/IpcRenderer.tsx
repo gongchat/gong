@@ -50,7 +50,7 @@ const IpcRenderer = () => {
     ipcRenderer.on('get-log', (event: any, arg: any) => {
       actions.setChannelLogs(arg);
     });
-  }, []);
+  }, [actions]);
 
   return null;
 };

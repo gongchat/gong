@@ -21,14 +21,16 @@ import Settings from './settings/Settings';
 
 const { ipcRenderer } = window.require('electron');
 
+let reconnectTimer: any;
+
 const Main = (props: any) => {
   const classes = useStyles();
   const [context, actions] = useContext();
+  const { connection, theme, app, current, menuBarNotification } = context;
+  const { autoConnect } = actions;
 
   const [shouldReconnect, setShouldReconnect] = useState(true);
   const [updateOpen, setUpdateOpen] = useState(false);
-
-  let reconnectTimer: any;
 
   const loadFont = (fontFamily: string) => {
     const font: string = fontFamily.split(',')[0].replace(/"/g, '');
@@ -48,60 +50,56 @@ const Main = (props: any) => {
   };
 
   React.useEffect(() => {
-    if (context.connection) {
-      if (!context.connection.isConnecting && !context.connection.isConnected) {
-        actions.autoConnect();
+    if (connection) {
+      if (!connection.isConnecting && !connection.isConnected) {
+        autoConnect();
       }
     }
-    if (context.theme) {
-      loadFont(context.theme.typography.fontFamily);
+    if (theme) {
+      loadFont(theme.typography.fontFamily);
     }
-    if (context.app && context.app.hasUpdate) {
+    if (app && app.hasUpdate) {
       setUpdateOpen(true);
     }
-  }, []);
+  }, [actions, app, autoConnect, connection, theme]);
 
   React.useEffect(() => {
     // TODO: need to handle errors better
     if (shouldReconnect) {
-      if (
-        context.connection.connectionError === 'Connection has been aborted'
-      ) {
+      if (connection.connectionError === 'Connection has been aborted') {
         setShouldReconnect(false);
       } else if (
-        context.connection &&
-        context.connection.hasSavedCredentials !== undefined &&
-        !context.connection.isConnecting &&
-        !context.connection.isConnected
+        connection &&
+        connection.hasSavedCredentials !== undefined &&
+        !connection.isConnecting &&
+        !connection.isConnected
       ) {
         if (reconnectTimer) {
           clearTimeout(reconnectTimer);
         }
         reconnectTimer = setTimeout(() => {
-          actions.autoConnect();
+          autoConnect();
         }, 10000);
       }
     }
-  }, [context.connection]);
+  }, [autoConnect, connection, shouldReconnect]);
 
   React.useEffect(() => {
-    loadFont(context.theme.typography.fontFamily);
-  }, [context.theme.typography.fontFamily]);
+    loadFont(theme.typography.fontFamily);
+  }, [theme.typography.fontFamily]);
 
   React.useEffect(() => {
-    if (context.app.hasUpdate) {
+    if (app.hasUpdate) {
       setUpdateOpen(true);
     }
-  }, [context.app.hasUpdate]);
+  }, [app.hasUpdate]);
 
   return (
     <div className={classes.root}>
       <div className={classes.bars}>
         <MenuBar
-          showOffline={
-            context.connection ? !context.connection.isConnected : true
-          }
-          menuBarNotification={context.menuBarNotification}
+          showOffline={connection ? !connection.isConnected : true}
+          menuBarNotification={menuBarNotification}
         />
         <ToolBar />
       </div>
@@ -112,7 +110,7 @@ const Main = (props: any) => {
         <div className={classes.middle}>
           <Chat />
         </div>
-        {(context.current && context.current.type) === 'groupchat' && (
+        {(current && current.type) === 'groupchat' && (
           <div className={classes.right}>
             <SidebarRight />
           </div>

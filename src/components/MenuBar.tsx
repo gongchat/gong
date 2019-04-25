@@ -16,14 +16,15 @@ const { BrowserWindow } = (window as any).require('electron').remote;
 export const MenuBar = (props: any) => {
   const classes = useStyles();
   const [context] = useContext();
+  const { connection, menuBarNotification } = context;
 
   const [isFlashing, setIsFlashing] = useState(false);
-  const [menuBarNotification, setMenuBarNotification] = useState('');
+  const [notification, setNotification] = useState('');
 
-  const prevMenuBarNotification = usePrevious(context.menuBarNotification);
+  const prevMenuBarNotification = usePrevious(menuBarNotification);
 
-  const menuBarNotificationFrequency = menuBarNotification
-    ? menuBarNotification.split(',')[0]
+  const menuBarNotificationFrequency = notification
+    ? notification.split(',')[0]
     : '';
 
   const minimize = () => {
@@ -46,26 +47,24 @@ export const MenuBar = (props: any) => {
   };
 
   React.useEffect(() => {
-    if (context.menuBarNotification !== '') {
+    if (menuBarNotification !== '') {
       if (
-        context.menuBarNotification !== prevMenuBarNotification &&
-        (!isFlashing || context.menuBarNotification.split(',')[0] === 'once')
+        menuBarNotification !== prevMenuBarNotification &&
+        (!isFlashing || menuBarNotification.split(',')[0] === 'once')
       ) {
-        setMenuBarNotification('');
+        setNotification('');
         setTimeout(() => {
-          setMenuBarNotification(context.menuBarNotification);
+          setNotification(menuBarNotification);
           setIsFlashing(
-            context.menuBarNotification.split(',')[0] === 'repeat'
-              ? true
-              : false
+            menuBarNotification.split(',')[0] === 'repeat' ? true : false
           );
         }, 1);
       }
     } else {
-      setMenuBarNotification('');
+      setNotification('');
       setIsFlashing(false);
     }
-  }, [context.menuBarNotification]);
+  }, [menuBarNotification, isFlashing, prevMenuBarNotification]);
 
   return (
     <div
@@ -81,7 +80,7 @@ export const MenuBar = (props: any) => {
       <div className={['menu-bar', classes.menuBar].join(' ')}>
         <div className={classes.brand}>
           <Typography>
-            Gong{context.connection.isConnected ? '' : ' (offline)'}
+            Gong{connection.isConnected ? '' : ' (offline)'}
           </Typography>
         </div>
         <div className={['menu-bar--items', classes.menu].join(' ')}>

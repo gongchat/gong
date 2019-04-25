@@ -17,48 +17,44 @@ import Users from './Users';
 const SidebarLeft = (props: any) => {
   const classes = useStyles();
   const [context, actions] = useContext();
+  const { channels, current, profile } = context;
+  const { selectChannel, toggleShowSettings } = actions;
 
-  const handleKeyDown = (event: any) => {
-    if (
-      context.channels &&
-      event.ctrlKey &&
-      (event.key === 'PageUp' || event.key === 'PageDown')
-    ) {
-      event.preventDefault();
-      const sortedChannels = context.channels.sort(
-        (a: IChannel, b: IChannel) => {
+  React.useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      if (
+        channels &&
+        event.ctrlKey &&
+        (event.key === 'PageUp' || event.key === 'PageDown')
+      ) {
+        event.preventDefault();
+        const sortedChannels = channels.sort((a: IChannel, b: IChannel) => {
           if (a.type > b.type) return -1;
           if (a.type < b.type) return 1;
           if (a.name > b.name) return 1;
           if (a.name < b.name) return -1;
           return 0;
+        });
+        const maxIndex = channels.length - 1;
+        const index = current
+          ? sortedChannels.findIndex(
+              (channel: IChannel) => channel.jid === current.jid
+            )
+          : -1;
+
+        if (event.key === 'PageUp') {
+          selectChannel(sortedChannels[index > 0 ? index - 1 : maxIndex].jid);
+        } else if (event.key === 'PageDown') {
+          selectChannel(sortedChannels[index < maxIndex ? index + 1 : 0].jid);
         }
-      );
-      const maxIndex = context.channels.length - 1;
-      const index = context.current
-        ? sortedChannels.findIndex(
-            (channel: IChannel) => channel.jid === context.current.jid
-          )
-        : -1;
-
-      if (event.key === 'PageUp') {
-        actions.selectChannel(
-          sortedChannels[index > 0 ? index - 1 : maxIndex].jid
-        );
-      } else if (event.key === 'PageDown') {
-        actions.selectChannel(
-          sortedChannels[index < maxIndex ? index + 1 : 0].jid
-        );
       }
-    }
-  };
+    };
 
-  React.useEffect(() => {
     document.addEventListener('keydown', handleKeyDown, false);
     return () => {
       document.removeEventListener('keydown', handleKeyDown, false);
     };
-  }, []);
+  }, [actions, channels, context, current, selectChannel]);
 
   return (
     <div className={classes.root}>
@@ -69,8 +65,8 @@ const SidebarLeft = (props: any) => {
             hideIfEmpty={true}
             canAdd={false}
             prefix="@"
-            current={context.current}
-            channels={context.channels.filter(
+            current={current}
+            channels={channels.filter(
               (channel: IChannel) => channel.order === 10
             )}
           />
@@ -79,28 +75,26 @@ const SidebarLeft = (props: any) => {
             hideIfEmpty={false}
             canAdd={true}
             prefix="#"
-            current={context.current}
-            channels={context.channels.filter(
+            current={current}
+            channels={channels.filter(
               (channel: IChannel) => channel.order === 20
             )}
           />
           <Users
-            current={context.current}
-            users={context.channels.filter(
-              (channel: IChannel) => channel.order === 30
-            )}
+            current={current}
+            users={channels.filter((channel: IChannel) => channel.order === 30)}
           />
         </div>
       </div>
       <div className={classes.profile}>
         <div className={classes.me}>
           <div className={classes.groupItem}>
-            <Me profile={context.profile} showAvatar={true} isColored={false} />
+            <Me profile={profile} showAvatar={true} isColored={false} />
           </div>
           <IconButton
             disableRipple={true}
             className={classes.iconButton}
-            onClick={() => actions.toggleShowSettings()}
+            onClick={() => toggleShowSettings()}
           >
             <SettingsIcon />
           </IconButton>

@@ -11,6 +11,8 @@ const ListSelectorUsers = (props: any) => {
   const [channelUsers, setChannelUsers] = useState([]);
 
   const [context] = useContext();
+  const { current } = context;
+  const { selectorIndex, text, setSelectorIndex } = props;
 
   const handleSelection = (obj: any) => {
     const user: any = channelUsers.find((u: IChannelUser) => u.jid === obj.jid);
@@ -50,32 +52,28 @@ const ListSelectorUsers = (props: any) => {
   };
 
   React.useEffect(() => {
-    if (
-      props.selectorIndex === 1 &&
-      context.current &&
-      context.current.type === 'groupchat'
-    ) {
+    if (selectorIndex === 1 && current && current.type === 'groupchat') {
       setTerm('');
-      setChannelUsers(context.current.users);
+      setChannelUsers(current.users);
     }
-  }, [props.selectorIndex]);
+  }, [current, selectorIndex]);
 
   React.useEffect(() => {
     let setVisibility = false;
-    if (props.text && context.current) {
-      if (context.current.type === 'groupchat') {
-        const channelCommandIndex = props.text.lastIndexOf('@');
+    if (text && current) {
+      if (current.type === 'groupchat') {
+        const channelCommandIndex = text.lastIndexOf('@');
         if (channelCommandIndex !== -1) {
-          const channelUserWord = props.text.substring(channelCommandIndex);
+          const channelUserWord = text.substring(channelCommandIndex);
           if (channelCommandIndex !== -1 && channelUserWord) {
             const newTerm = channelUserWord.substring(1);
-            const matchingChannelUsers = context.current.users.filter(
+            const matchingChannelUsers = current.users.filter(
               (user: IChannelUser) =>
                 user.nickname.toLowerCase().startsWith(newTerm.toLowerCase()) ||
                 user.nickname.toLowerCase() === newTerm.toLowerCase()
             );
             if (matchingChannelUsers.length > 0) {
-              props.setSelectorIndex(1);
+              setSelectorIndex(1);
               setVisibility = true;
               setTerm(newTerm);
               setChannelUsers(matchingChannelUsers);
@@ -85,10 +83,10 @@ const ListSelectorUsers = (props: any) => {
       }
     }
 
-    if (!setVisibility && props.selectorIndex === 1) {
-      props.setSelectorIndex(-1);
+    if (!setVisibility && selectorIndex === 1) {
+      setSelectorIndex(-1);
     }
-  }, [props.text]);
+  }, [current, selectorIndex, setSelectorIndex, text]);
 
   return (
     <React.Fragment>

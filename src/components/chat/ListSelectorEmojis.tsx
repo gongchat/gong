@@ -8,6 +8,7 @@ import Emojis, { emojis as emojisObj } from '../../utils/emojis';
 const ListSelectorEmojis = (props: any) => {
   const [term, setTerm] = useState('');
   const [emojis, setEmojis] = useState();
+  const { selectorIndex } = props;
 
   const handleSelection = (object: any) => {
     if (props.text === '') {
@@ -29,7 +30,7 @@ const ListSelectorEmojis = (props: any) => {
   };
 
   React.useEffect(() => {
-    if (props.selectorIndex === 0) {
+    if (selectorIndex === 0) {
       setTerm('');
       setEmojis(
         Emojis.map((x: any) => ({ x, r: Math.random() }))
@@ -38,7 +39,7 @@ const ListSelectorEmojis = (props: any) => {
           .slice(0, 20)
       );
     }
-  }, [props.selectorIndex]);
+  }, [selectorIndex]);
 
   React.useEffect(() => {
     let setVisibility = false;
@@ -80,7 +81,7 @@ const ListSelectorEmojis = (props: any) => {
     if (!setVisibility && props.selectorIndex === 0) {
       props.setSelectorIndex(-1);
     }
-  }, [props.text]);
+  }, [props, props.text]);
 
   return (
     <React.Fragment>

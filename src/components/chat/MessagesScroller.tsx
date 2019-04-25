@@ -14,90 +14,85 @@ let prevWindowInnerWidth: any;
 const MessagesScroller = (props: any) => {
   const classes = useStyles();
   const [context, actions] = useContext();
+  const { profile, current } = context;
+  const { getChannelLogs, setChannelScrollPosition } = actions;
 
-  const prevChannel = usePrevious(context.current);
+  const prevChannel = usePrevious(current);
 
   const root = React.useRef<HTMLDivElement>(null);
 
-  const isUpdateForLoggedMessages = () => {
-    return (
-      prevChannel &&
-      context.current &&
-      prevChannel.jid === context.current.jid &&
-      prevChannel.messages.length > 0 &&
-      context.current.messages.length > 0 &&
-      prevChannel.messages[0].timestamp.diff(
-        context.current.messages[0].timestamp
-      ) > 0
-    );
-  };
+  React.useEffect(() => {
+    const rootCurrent = root.current;
 
-  const isLastMessageMe = () => {
-    return (
-      prevChannel &&
-      context.current &&
-      prevChannel.jid === context.current.jid &&
-      context.current.messages.length > 0 &&
-      prevChannel.messages.length !== context.current.messages.length &&
-      ((context.current.type === 'chat' &&
-        context.current.messages[context.current.messages.length - 1].from ===
-          context.profile.jid) ||
-        (context.current.type === 'groupchat' &&
-          context.current.messages[context.current.messages.length - 1]
-            .nickname === context.current.nickname))
-    );
-  };
-
-  const shouldUpdateToSavedPosition = () => {
-    return (
-      (context.current && !prevChannel) ||
-      (context.current &&
+    const isUpdateForLoggedMessages = () => {
+      return (
         prevChannel &&
-        context.current.scrollPosition !== -1 &&
-        context.current.jid !== prevChannel.jid)
-    );
-  };
+        current &&
+        prevChannel.jid === current.jid &&
+        prevChannel.messages.length > 0 &&
+        current.messages.length > 0 &&
+        prevChannel.messages[0].timestamp.diff(current.messages[0].timestamp) >
+          0
+      );
+    };
 
-  const handleInitialPosition = () => {
+    const isLastMessageMe = () => {
+      return (
+        prevChannel &&
+        current &&
+        prevChannel.jid === current.jid &&
+        current.messages.length > 0 &&
+        prevChannel.messages.length !== current.messages.length &&
+        ((current.type === 'chat' &&
+          current.messages[current.messages.length - 1].from === profile.jid) ||
+          (current.type === 'groupchat' &&
+            current.messages[current.messages.length - 1].nickname ===
+              current.nickname))
+      );
+    };
+
+    const shouldUpdateToSavedPosition = () => {
+      return (
+        (current && !prevChannel) ||
+        (current &&
+          prevChannel &&
+          current.scrollPosition !== -1 &&
+          current.jid !== prevChannel.jid)
+      );
+    };
+
+    const canRequestLoggedMessage = () => {
+      return (
+        current &&
+        !current.hasNoMoreLogs &&
+        !current.isRequestingLogs &&
+        root.current &&
+        root.current.scrollTop === 0
+      );
+    };
+
+    // Handle initial scroll position
     if (root.current) {
       if (isUpdateForLoggedMessages()) {
         root.current.scrollTop =
           root.current.scrollHeight - positionBeforeGettingLogs;
       } else if (shouldUpdateToSavedPosition()) {
-        root.current.scrollTop = context.current.scrollPosition;
-      } else if (wasAtBottom) {
-        root.current.scrollTop =
-          root.current.scrollHeight + root.current.offsetHeight;
-      } else if (isLastMessageMe()) {
+        root.current.scrollTop = current.scrollPosition;
+      } else if (wasAtBottom || isLastMessageMe()) {
         root.current.scrollTop =
           root.current.scrollHeight + root.current.offsetHeight;
       }
     }
-  };
 
-  const canRequestLoggedMessage = () => {
-    return (
-      context.current &&
-      !context.current.hasNoMoreLogs &&
-      !context.current.isRequestingLogs &&
-      root.current &&
-      root.current.scrollTop === 0
-    );
-  };
-
-  const getLoggedMessages = () => {
+    // Check for logged messages
     if (canRequestLoggedMessage()) {
-      actions.getChannelLogs(context.current);
+      getChannelLogs(current);
       if (root.current) {
         positionBeforeGettingLogs = root.current.scrollHeight;
       }
     }
-  };
 
-  React.useEffect(() => {
-    handleInitialPosition();
-    getLoggedMessages();
-
+    // Event listener functions
     const handleScroll = (event: any) => {
       // record if at bottom
       if (
@@ -117,15 +112,12 @@ const MessagesScroller = (props: any) => {
         // get logged message if at top
         if (canRequestLoggedMessage()) {
           positionBeforeGettingLogs = event.target.scrollHeight;
-          actions.getChannelLogs(context.current);
+          getChannelLogs(current);
         }
 
         // Saves the scroll position for when the channel is selected again
-        if (context.current) {
-          actions.setChannelScrollPosition(
-            context.current.jid,
-            event.target.scrollTop
-          );
+        if (current) {
+          setChannelScrollPosition(current.jid, event.target.scrollTop);
         }
       }, 100);
     };
@@ -142,13 +134,19 @@ const MessagesScroller = (props: any) => {
       window.addEventListener('resize', handleResizeWidth);
     }
     return () => {
-      if (root.current) {
-        clearTimeout(scrollTimer);
-        root.current.removeEventListener('scroll', handleScroll);
-        window.removeEventListener('resize', handleResizeWidth);
+      clearTimeout(scrollTimer);
+      if (rootCurrent) {
+        rootCurrent.removeEventListener('scroll', handleScroll);
       }
+      window.removeEventListener('resize', handleResizeWidth);
     };
-  }, [context.current]);
+  }, [
+    current,
+    getChannelLogs,
+    prevChannel,
+    profile.jid,
+    setChannelScrollPosition,
+  ]);
 
   return (
     <div className={classes.root} ref={root}>
