@@ -34,7 +34,6 @@ export const channelActions = {
     }
   },
   selectChannel(channelJid: string, state: IState): IState {
-    console.log('SELECTING channel ', channelJid);
     const channels: IChannel[] = state.channels.map((channel: IChannel) => {
       if (channel.jid === channelJid) {
         const newChannel = {

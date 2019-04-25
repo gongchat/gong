@@ -25,7 +25,6 @@ let positionBeforeGettingLogs: any;
 const MessagesScroller = (props: any) => {
   const classes = useStyles();
   const [context, actions] = useContext();
-  console.log('RE-RENDERING ', context);
 
   const prevChannel = usePrevious(context.current);
 
@@ -75,24 +74,14 @@ const MessagesScroller = (props: any) => {
       if (isUpdateForLoggedMessages()) {
         root.current.scrollTop =
           root.current.scrollHeight - positionBeforeGettingLogs;
-        console.log('update for logged messages ', root.current.scrollTop);
       } else if (shouldUpdateToSavedPosition()) {
         root.current.scrollTop = context.current.scrollPosition;
-        console.log(
-          'update for previous scroll position ',
-          root.current.scrollTop
-        );
       } else if (wasAtBottom) {
         root.current.scrollTop =
           root.current.scrollHeight + root.current.offsetHeight;
-        console.log(
-          'update was at bottom, staying at bottom ',
-          root.current.scrollTop
-        );
       } else if (isLastMessageMe()) {
         root.current.scrollTop =
           root.current.scrollHeight + root.current.offsetHeight;
-        console.log('update for last message as me ', root.current.scrollTop);
       }
     }
   };
@@ -109,7 +98,6 @@ const MessagesScroller = (props: any) => {
 
   const getLoggedMessages = () => {
     if (canRequestLoggedMessage()) {
-      console.log('getting logged messages from component load');
       actions.getChannelLogs(context.current);
       if (root.current) {
         positionBeforeGettingLogs = root.current.scrollHeight;
@@ -139,18 +127,12 @@ const MessagesScroller = (props: any) => {
       scrollTimer = setTimeout(() => {
         // get logged message if at top
         if (canRequestLoggedMessage()) {
-          console.log(
-            'getting logged messages from scroll ',
-            context.current,
-            prevChannel
-          );
           positionBeforeGettingLogs = event.target.scrollHeight;
           actions.getChannelLogs(context.current);
         }
 
         // Saves the scroll position for when the channel is selected again
         if (context.current) {
-          console.log('saving scroll position to ', event.target.scrollTop);
           actions.setChannelScrollPosition(
             context.current.jid,
             event.target.scrollTop
@@ -165,9 +147,7 @@ const MessagesScroller = (props: any) => {
     return () => {
       if (root.current) {
         clearTimeout(scrollTimer);
-        console.log('removing scroll listener');
         root.current.removeEventListener('scroll', handleScroll);
-        console.log('listener removed');
       }
     };
   }, [context.current]);
