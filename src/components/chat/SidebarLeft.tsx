@@ -1,23 +1,20 @@
 import React from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import IconButton from '@material-ui/core/IconButton';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { makeStyles } from '@material-ui/styles';
 
-// interfaces
-import IChannel from '../../interfaces/IChannel';
-
-// components
 import Channels from './Channels';
 import Me from './Me';
 import Users from './Users';
+import IChannel from '../../interfaces/IChannel';
 
-const SidebarLeft = (props: any) => {
+const SidebarLeft: React.FC = () => {
   const classes = useStyles();
   const [context, actions] = useContext();
-  const { channels, current, profile } = context;
+
+  const { channels, current } = context;
   const { selectChannel, toggleShowSettings } = actions;
 
   React.useEffect(() => {
@@ -89,7 +86,7 @@ const SidebarLeft = (props: any) => {
       <div className={classes.profile}>
         <div className={classes.me}>
           <div className={classes.groupItem}>
-            <Me profile={profile} showAvatar={true} isColored={false} />
+            <Me />
           </div>
           <IconButton
             disableRipple={true}

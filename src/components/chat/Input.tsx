@@ -2,34 +2,32 @@ import React from 'react';
 import { useState } from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
-// interfaces
+import ListSelectors from './ListSelectors';
 import IMessageSend from '../../interfaces/IMessageSend';
-
-// utils
 import StringUtil from '../../utils/stringUtils';
 import { usePrevious } from '../../utils/usePrevious';
 
-import ListSelectors from './ListSelectors';
-
-const Input = () => {
-  const inputRef = React.useRef<HTMLInputElement>(null);
+const Input: React.FC = () => {
   const classes = useStyles();
   const [context, actions] = useContext();
-  const { current } = context;
+
+  const { current, settings, connection } = context;
+  const { sendMessage, setRoomNickname } = actions;
 
   const [text, setText] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [listSelectorIndex, setListSelectorIndex] = useState(-1);
 
-  const sendMessage = () => {
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  const send = () => {
     if (text !== '') {
       if (text.startsWith('/nick')) {
-        actions.setRoomNickname({
+        setRoomNickname({
           jid: current.jid,
           currentNickname: current.myNickname,
           newNickname: text.substring(6),
@@ -44,10 +42,10 @@ const Input = () => {
           channelName: current.jid,
           type: current.type,
           to,
-          from: context.settings.jid,
+          from: settings.jid,
           body: text,
         };
-        actions.sendMessage(messageSend);
+        sendMessage(messageSend);
       }
       setText('');
     }
@@ -64,7 +62,7 @@ const Input = () => {
       event.preventDefault();
     } else if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
-      sendMessage();
+      send();
     }
   };
 
@@ -94,10 +92,7 @@ const Input = () => {
 
   const prevCurrent = usePrevious(current);
   React.useEffect(() => {
-    if (
-      !prevCurrent ||
-      (current && prevCurrent.jid !== current.jid)
-    ) {
+    if (!prevCurrent || (current && prevCurrent.jid !== current.jid)) {
       // This must be in useEffect so the inputRef is initialized before calling
       // the block below.
       if (inputRef.current) {
@@ -113,7 +108,6 @@ const Input = () => {
           <ListSelectors
             text={text}
             setText={setText}
-            current={current}
             selectorIndex={listSelectorIndex}
             setSelectorIndex={setListSelectorIndex}
             focusInput={focusInput}
@@ -139,9 +133,8 @@ const Input = () => {
               rowsMax={8}
               inputRef={inputRef}
               disabled={
-                !context.connection.isConnected ||
-                (current.connectionError !== undefined &&
-                  !current.isConnected)
+                !connection.isConnected ||
+                (current.connectionError !== undefined && !current.isConnected)
               }
             />
             <div className={classes.inputRightInline}>

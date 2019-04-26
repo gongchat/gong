@@ -1,39 +1,43 @@
 import React from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
-// utils
+import IChannelUser from '../../interfaces/IChannelUser';
 import StringUtil from '../../utils/stringUtils';
 
-const ChannelUser = (props: any) => {
+interface IProps {
+  user: IChannelUser;
+  showAvatar: boolean;
+}
+
+const ChannelUser: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
   const actions = useContext()[1];
 
+  const { user, showAvatar } = props;
+  const { selectRoomUser } = actions;
+
   const handleOnClick = () => {
-    actions.selectRoomUser(props.user);
+    selectRoomUser(user);
   };
 
   return (
     <div
-      className={[
-        classes.root,
-        props.showAvatar ? '' : classes.rootNarrow,
-      ].join(' ')}
+      className={[classes.root, showAvatar ? '' : classes.rootNarrow].join(' ')}
       onClick={handleOnClick}
     >
-      {props.showAvatar && (
+      {showAvatar && (
         <div className={classes.avatar}>
           <Avatar className={classes.img}>
-            {StringUtil.getAbbreviation(props.user.nickname)}
+            {StringUtil.getAbbreviation(user.nickname)}
           </Avatar>
         </div>
       )}
-      <Typography className={classes.title} style={{ color: props.user.color }}>
-        {props.user.nickname}
+      <Typography className={classes.title} style={{ color: user.color }}>
+        {user.nickname}
       </Typography>
     </div>
   );

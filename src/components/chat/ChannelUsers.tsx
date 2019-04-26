@@ -1,27 +1,31 @@
 import React from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
-// interfaces
+import ChannelUser from './ChannelUser';
 import IChannelUser from '../../interfaces/IChannelUser';
 
-// components
-import ChannelUser from './ChannelUser';
+interface IProps {
+  users: IChannelUser[];
+  title: string;
+}
 
-const ChannelUsers = (props: any) => {
+const ChannelUsers: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
   const [context] = useContext();
+
+  const { users, title } = props;
+  const { theme } = context;
 
   return (
     <div className={classes.root}>
       <Typography className={classes.title}>
-        {props.title} - {props.users && props.users.length}
+        {title} - {users && users.length}
       </Typography>
       <div className={classes.users}>
-        {props.users
+        {users
           .sort((a: IChannelUser, b: IChannelUser) =>
             b.nickname.localeCompare(a.nickname)
           )
@@ -30,7 +34,7 @@ const ChannelUsers = (props: any) => {
             <ChannelUser
               key={user.jid}
               user={user}
-              showAvatar={context.theme.sidebarRightShowAvatar}
+              showAvatar={theme.sidebarRightShowAvatar}
             />
           ))}
       </div>

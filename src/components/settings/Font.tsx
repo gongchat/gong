@@ -2,14 +2,12 @@ import React from 'react';
 import { useState } from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/lab/Slider';
 import { makeStyles } from '@material-ui/styles';
 
-// interfaces
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 import SliderMarkers from './SliderMarkers';
@@ -21,14 +19,17 @@ const DEFAULT_SIZE = 15;
 let fontTimer: any;
 let sizeTimer: any;
 
-const Font = (props: any) => {
+const Font: React.FC = () => {
   const classes = useStyles();
   const [context, actions] = useContext();
 
+  const { theme } = context;
+  const { setTheme } = actions;
+
   const [font, setFont] = useState(
-    context.theme.typography.fontFamily.split(',')[0].replace(/"/g, '')
+    theme.typography.fontFamily.split(',')[0].replace(/"/g, '')
   );
-  const [size, setSize] = useState(context.theme.typography.fontSize);
+  const [size, setSize] = useState(theme.typography.fontSize);
 
   const handleKeyDown = (event: any) => {
     const key = String.fromCharCode(
@@ -70,7 +71,7 @@ const Font = (props: any) => {
       clearTimeout(fontTimer);
     }
     fontTimer = setTimeout(() => {
-      actions.setTheme({
+      setTheme({
         themeKey: 'typography.fontFamily',
         value: font,
       });
@@ -84,7 +85,7 @@ const Font = (props: any) => {
     }
     sizeTimer = setTimeout(() => {
       value = value < MIN_SIZE ? MIN_SIZE : value > MAX_SIZE ? MAX_SIZE : value;
-      actions.setTheme({
+      setTheme({
         themeKey: 'typography.fontSize',
         value,
       });

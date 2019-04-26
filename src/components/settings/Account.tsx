@@ -4,7 +4,6 @@ import { useContext } from '../../context';
 
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 
-// material ui
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Tab from '@material-ui/core/Tab';
@@ -12,77 +11,66 @@ import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
-const Account = (props: any) => {
+const Account: React.FC = () => {
   const classes = useStyles();
   const [context, actions] = useContext();
 
+  const { profile } = context;
+  const { setMyVCard } = actions;
+
   const [index, setIndex] = useState(0);
   const [fullName, setFullName] = useState(
-    context.profile.vCard ? context.profile.vCard.fullName : ''
+    profile.vCard ? profile.vCard.fullName : ''
   );
   const [firstName, setFirstName] = useState(
-    context.profile.vCard ? context.profile.vCard.firstName : ''
+    profile.vCard ? profile.vCard.firstName : ''
   );
   const [lastName, setLastName] = useState(
-    context.profile.vCard ? context.profile.vCard.lastName : ''
+    profile.vCard ? profile.vCard.lastName : ''
   );
   const [middleName, setMiddleName] = useState(
-    context.profile.vCard ? context.profile.vCard.middleName : ''
+    profile.vCard ? profile.vCard.middleName : ''
   );
   const [nickname, setNickname] = useState(
-    context.profile.vCard ? context.profile.vCard.nickname : ''
+    profile.vCard ? profile.vCard.nickname : ''
   );
-  const [url, setUrl] = useState(
-    context.profile.vCard ? context.profile.vCard.url : ''
-  );
+  const [url, setUrl] = useState(profile.vCard ? profile.vCard.url : '');
   const [birthday, setBirthday] = useState(
-    context.profile.vCard ? context.profile.vCard.birthday : ''
+    profile.vCard ? profile.vCard.birthday : ''
   );
   const [organizationName, setOrganizationName] = useState(
-    context.profile.vCard ? context.profile.vCard.organizationName : ''
+    profile.vCard ? profile.vCard.organizationName : ''
   );
   const [organizationUnit, setOrganizationUnit] = useState(
-    context.profile.vCard ? context.profile.vCard.organizationUnit : ''
+    profile.vCard ? profile.vCard.organizationUnit : ''
   );
-  const [title, setTitle] = useState(
-    context.profile.vCard ? context.profile.vCard.title : ''
-  );
-  const [role, setRole] = useState(
-    context.profile.vCard ? context.profile.vCard.role : ''
-  );
+  const [title, setTitle] = useState(profile.vCard ? profile.vCard.title : '');
+  const [role, setRole] = useState(profile.vCard ? profile.vCard.role : '');
   const [phoneNumber, setPhoneNumber] = useState(
-    context.profile.vCard ? context.profile.vCard.phoneNumber : ''
+    profile.vCard ? profile.vCard.phoneNumber : ''
   );
   const [street, setStreet] = useState(
-    context.profile.vCard ? context.profile.vCard.street : ''
+    profile.vCard ? profile.vCard.street : ''
   );
   const [streetExtended, setStreetExtended] = useState(
-    context.profile.vCard ? context.profile.vCard.streetExtended : ''
+    profile.vCard ? profile.vCard.streetExtended : ''
   );
-  const [city, setCity] = useState(
-    context.profile.vCard ? context.profile.vCard.city : ''
-  );
-  const [state, setState] = useState(
-    context.profile.vCard ? context.profile.vCard.state : ''
-  );
+  const [city, setCity] = useState(profile.vCard ? profile.vCard.city : '');
+  const [state, setState] = useState(profile.vCard ? profile.vCard.state : '');
   const [zipCode, setZipCode] = useState(
-    context.profile.vCard ? context.profile.vCard.zipCode : ''
+    profile.vCard ? profile.vCard.zipCode : ''
   );
   const [country, setCountry] = useState(
-    context.profile.vCard ? context.profile.vCard.country : ''
+    profile.vCard ? profile.vCard.country : ''
   );
-  const [email, setEmail] = useState(
-    context.profile.vCard ? context.profile.vCard.email : ''
-  );
+  const [email, setEmail] = useState(profile.vCard ? profile.vCard.email : '');
   const [description, setDescription] = useState(
-    context.profile.vCard ? context.profile.vCard.description : ''
+    profile.vCard ? profile.vCard.description : ''
   );
   const [photoType, setPhotoType] = useState(
-    context.profile.vCard ? context.profile.vCard.photoType : ''
+    profile.vCard ? profile.vCard.photoType : ''
   );
-  const [photo, setPhoto] = useState(
-    context.profile.vCard ? context.profile.vCard.photo : ''
-  );
+  const [photo, setPhoto] = useState(profile.vCard ? profile.vCard.photo : '');
 
   const fileInput = React.useRef<HTMLInputElement>(null);
 
@@ -113,7 +101,7 @@ const Account = (props: any) => {
       photoType,
       photo,
     };
-    actions.setMyVCard(data);
+    setMyVCard(data);
   };
 
   const handleOnAvatarClick = (event: any) => {
@@ -146,31 +134,31 @@ const Account = (props: any) => {
   };
 
   React.useEffect(() => {
-    if (context.profile && context.profile.vCard) {
-      setFullName(context.profile.vCard.fullName);
-      setFirstName(context.profile.vCard.firstName);
-      setLastName(context.profile.vCard.lastName);
-      setMiddleName(context.profile.vCard.middleName);
-      setNickname(context.profile.vCard.nickname);
-      setUrl(context.profile.vCard.url);
-      setBirthday(context.profile.vCard.birthday);
-      setOrganizationName(context.profile.vCard.organizationName);
-      setOrganizationUnit(context.profile.vCard.organizationUnit);
-      setTitle(context.profile.vCard.title);
-      setRole(context.profile.vCard.role);
-      setPhoneNumber(context.profile.vCard.phoneNumber);
-      setStreet(context.profile.vCard.street);
-      setStreetExtended(context.profile.vCard.streetExtended);
-      setCity(context.profile.vCard.city);
-      setState(context.profile.vCard.state);
-      setZipCode(context.profile.vCard.zipCode);
-      setCountry(context.profile.vCard.country);
-      setEmail(context.profile.vCard.email);
-      setDescription(context.profile.vCard.description);
-      setPhotoType(context.profile.vCard.photoType);
-      setPhoto(context.profile.vCard.photo);
+    if (profile && profile.vCard) {
+      setFullName(profile.vCard.fullName);
+      setFirstName(profile.vCard.firstName);
+      setLastName(profile.vCard.lastName);
+      setMiddleName(profile.vCard.middleName);
+      setNickname(profile.vCard.nickname);
+      setUrl(profile.vCard.url);
+      setBirthday(profile.vCard.birthday);
+      setOrganizationName(profile.vCard.organizationName);
+      setOrganizationUnit(profile.vCard.organizationUnit);
+      setTitle(profile.vCard.title);
+      setRole(profile.vCard.role);
+      setPhoneNumber(profile.vCard.phoneNumber);
+      setStreet(profile.vCard.street);
+      setStreetExtended(profile.vCard.streetExtended);
+      setCity(profile.vCard.city);
+      setState(profile.vCard.state);
+      setZipCode(profile.vCard.zipCode);
+      setCountry(profile.vCard.country);
+      setEmail(profile.vCard.email);
+      setDescription(profile.vCard.description);
+      setPhotoType(profile.vCard.photoType);
+      setPhoto(profile.vCard.photo);
     }
-  }, [context.profile]);
+  }, [profile]);
 
   return (
     <div className={classes.root}>
@@ -196,13 +184,13 @@ const Account = (props: any) => {
           />
         </div>
         <div className={classes.userInfo}>
-          <Typography variant="h5">{context.profile.username}</Typography>
-          <Typography>{context.profile.group}</Typography>
-          <Typography>{context.profile.jid}</Typography>
+          <Typography variant="h5">{profile.username}</Typography>
+          <Typography>{profile.group}</Typography>
+          <Typography>{profile.jid}</Typography>
         </div>
       </div>
       {/* TODO: fix regex */}
-      {props.vCard ? (
+      {profile.vCard ? (
         <Typography>Getting your details, please wait...</Typography>
       ) : (
         <ValidatorForm onSubmit={handleSubmit} className={classes.form}>

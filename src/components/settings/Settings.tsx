@@ -1,10 +1,8 @@
 import React from 'react';
 import { useState } from 'react';
 import { useContext } from '../../context';
-
 import { navigate } from '@reach/router';
 
-// material ui
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -27,10 +25,6 @@ import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import { makeStyles } from '@material-ui/styles';
 
-import GithubIcon from '../icons/GithubIcon';
-import GongIcon from '../icons/GongIcon';
-
-// components
 import Account from './Account';
 import Font from './Font';
 import Layout from './Layout';
@@ -38,6 +32,8 @@ import Messages from './Messages';
 import Notifications from './Notifications';
 import System from './System';
 import Theme from './Theme';
+import GithubIcon from '../icons/GithubIcon';
+import GongIcon from '../icons/GongIcon';
 
 const TABS = [
   { name: 'Account', icon: <AccountCircleIcon /> },
@@ -47,31 +43,34 @@ const TABS = [
   { name: 'Messages', icon: <HorizontalSplitIcon /> },
   { name: 'Notifications', icon: <NotificationsIcon /> },
   { name: 'System', icon: <SettingsApplicationsIcon /> },
-  { name: 'divider' },
+  null,
   { name: 'Reset', icon: <FormatColorResetIcon /> },
-  { name: 'divider' },
+  null,
   { name: 'Log Off', icon: <PowerSettingsNewIcon /> },
 ];
 
-const Settings = (props: any) => {
+const Settings: React.FC = () => {
   const classes = useStyles();
   const [context, actions] = useContext();
+
+  const { showSettings, app } = context;
+  const { toggleShowSettings, logOff, setThemeToDefault } = actions;
 
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
 
   const handleClickClose = () => {
-    actions.toggleShowSettings();
+    toggleShowSettings();
   };
 
   const handleLogOff = () => {
-    actions.logOff();
+    logOff();
     navigate('/login');
   };
 
   return (
     <Dialog
       fullScreen={true}
-      open={context.showSettings}
+      open={showSettings}
       className={classes.dialog}
       BackdropProps={{ className: classes.dialog }}
     >
@@ -79,12 +78,10 @@ const Settings = (props: any) => {
         <div className={classes.nav}>
           <List>
             {TABS.map((tab: any, index: number) => {
-              if (tab.name === 'divider') {
-                return <Divider key={index} />;
-              } else {
+              if (tab) {
                 if (
-                  tab.name === 'System' &&
-                  context.app.operatingSystem !== 'win32'
+                  !selectedTab ||
+                  (tab.name === 'System' && app.operatingSystem !== 'win32')
                 ) {
                   return null;
                 } else {
@@ -102,6 +99,8 @@ const Settings = (props: any) => {
                     </ListItem>
                   );
                 }
+              } else {
+                return <Divider key={index} />;
               }
             })}
             <Divider />
@@ -118,19 +117,21 @@ const Settings = (props: any) => {
               </ListItemIcon>
             </ListItem>
             <ListItem className={classes.version}>
-              <Typography variant="caption">v{context.app.version}</Typography>
+              <Typography variant="caption">v{app.version}</Typography>
             </ListItem>
           </List>
         </div>
         <div className={classes.content}>
-          {selectedTab.name === 'Account' && <Account />}
-          {selectedTab.name === 'Theme' && <Theme />}
-          {selectedTab.name === 'Font' && <Font />}
-          {selectedTab.name === 'Layout' && <Layout />}
-          {selectedTab.name === 'Messages' && <Messages />}
-          {selectedTab.name === 'Notifications' && <Notifications />}
-          {selectedTab.name === 'System' && <System />}
-          {selectedTab.name === 'Reset' && (
+          {selectedTab && selectedTab.name === 'Account' && <Account />}
+          {selectedTab && selectedTab.name === 'Theme' && <Theme />}
+          {selectedTab && selectedTab.name === 'Font' && <Font />}
+          {selectedTab && selectedTab.name === 'Layout' && <Layout />}
+          {selectedTab && selectedTab.name === 'Messages' && <Messages />}
+          {selectedTab && selectedTab.name === 'Notifications' && (
+            <Notifications />
+          )}
+          {selectedTab && selectedTab.name === 'System' && <System />}
+          {selectedTab && selectedTab.name === 'Reset' && (
             <div className={classes.section}>
               <Typography>
                 This will reset your colors, font, and font size to the default
@@ -139,13 +140,13 @@ const Settings = (props: any) => {
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={() => actions.setThemeToDefault()}
+                onClick={() => setThemeToDefault()}
               >
                 Reset all Styles
               </Button>
             </div>
           )}
-          {selectedTab.name === 'Log Off' && (
+          {selectedTab && selectedTab.name === 'Log Off' && (
             <div className={classes.section}>
               <Typography>
                 This will log you off of your current account. All data

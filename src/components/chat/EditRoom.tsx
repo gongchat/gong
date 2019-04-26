@@ -2,7 +2,6 @@ import React from 'react';
 import { useState } from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -12,27 +11,30 @@ import TextField from '@material-ui/core/TextField';
 import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/styles';
 
-// interfaces
 import IRoomJoin from '../../interfaces/IRoomJoin';
+import IRoom from '../../interfaces/IRoom';
 
-const EditRoom = (props: any) => {
+interface IProps {
+  channel: IRoom;
+  onClose: any;
+}
+
+const EditRoom: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
   const actions = useContext()[1];
 
-  const [jid, setJid] = useState(props.channel.jid);
-  const [channelName, setChannelName] = useState(props.channel.name);
-  const [nickname, setNickname] = useState(props.channel.myNickname);
-  const [password, setPassword] = useState(props.channel.password);
+  const { channel, onClose } = props;
+  const { editRoom } = actions;
+
+  const [jid, setJid] = useState(channel.jid);
+  const [channelName, setChannelName] = useState(channel.name);
+  const [nickname, setNickname] = useState(channel.myNickname);
+  const [password, setPassword] = useState(channel.password);
 
   const handleClickEditRoom = () => {
-    const channelJoin: IRoomJoin = {
-      jid,
-      channelName,
-      nickname,
-      password,
-    };
-    actions.editRoom(props.channel.jid, channelJoin);
-    props.onClose();
+    const channelJoin: IRoomJoin = { jid, channelName, nickname, password };
+    editRoom(channel.jid, channelJoin);
+    onClose();
   };
 
   const handleOnChange = (e: any, action: any) => {
@@ -44,7 +46,7 @@ const EditRoom = (props: any) => {
       <DialogTitle className={classes.dialogTitle}>
         <span className={classes.title}>
           <span>Edit Room</span>
-          <IconButton onClick={props.onClose}>
+          <IconButton onClick={onClose}>
             <CloseIcon />
           </IconButton>
         </span>
@@ -89,7 +91,7 @@ const EditRoom = (props: any) => {
         </div>
       </DialogContent>
       <DialogActions>
-        <Button onClick={props.onClose}>Back</Button>
+        <Button onClick={onClose}>Back</Button>
         <Button
           onClick={handleClickEditRoom}
           variant="contained"

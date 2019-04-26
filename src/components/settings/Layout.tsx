@@ -2,14 +2,12 @@ import React from 'react';
 import { useState } from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/lab/Slider';
 import { makeStyles } from '@material-ui/styles';
 
-// interface
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 import SliderMarkers from './SliderMarkers';
@@ -25,17 +23,20 @@ const DEFAULT_SPACING = 8;
 let spacingTimer: any;
 let sidebarWidthTimer: any;
 
-const Layout = (props: any) => {
+const Layout: React.FC = () => {
   const classes = useStyles();
   const [context, actions] = useContext();
 
-  const [spacing, setSpacing] = useState(context.theme.spacing.unit);
-  const [sidebarWidth, setSidebarWidth] = useState(context.theme.sidebarWidth);
+  const { theme } = context;
+  const { setTheme } = actions;
+
+  const [spacing, setSpacing] = useState(theme.spacing.unit);
+  const [sidebarWidth, setSidebarWidth] = useState(theme.sidebarWidth);
   const [sidebarLeftShowAvatar, setSidebarLeftShowAvatar] = useState(
-    context.theme.sidebarLeftShowAvatar
+    theme.sidebarLeftShowAvatar
   );
   const [sidebarRightShowAvatar, setSidebarRightShowAvatar] = useState(
-    context.theme.sidebarRightShowAvatar
+    theme.sidebarRightShowAvatar
   );
 
   const handleKeyDown = (event: any) => {
@@ -79,7 +80,7 @@ const Layout = (props: any) => {
           : value > MAX_SPACING
           ? MAX_SPACING
           : value;
-      actions.setTheme({
+      setTheme({
         themeKey: 'theme.spacing.unit',
         value,
       });
@@ -99,7 +100,7 @@ const Layout = (props: any) => {
           : value > MAX_SIDEBAR_WIDTH
           ? MAX_SIDEBAR_WIDTH
           : value;
-      actions.setTheme({
+      setTheme({
         themeKey: 'sidebarWidth',
         value,
       });
@@ -109,7 +110,7 @@ const Layout = (props: any) => {
 
   const handleSidebarAvatarChange = (event: any, action: any) => {
     action(event.target.checked);
-    actions.setTheme({
+    setTheme({
       themeKey: event.target.name,
       value: event.target.checked,
     });

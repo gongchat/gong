@@ -1,23 +1,28 @@
 import React from 'react';
 import { useState } from 'react';
 import { useContext } from '../context';
-
 import { navigate } from '@reach/router';
 
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 
-// material ui
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
-// components
 import MenuBar from './MenuBar';
 
-const Login = (props: any) => {
+interface IProps {
+  path: string;
+  noThrow: boolean;
+}
+
+const Login: React.FC<IProps> = () => {
   const classes = useStyles();
   const [context, actions] = useContext();
+
+  const { connection } = context;
+  const { connecting } = actions;
 
   const [domain, setDomain] = useState('');
   const [username, setUsername] = useState('');
@@ -29,24 +34,18 @@ const Login = (props: any) => {
   const handleSubmit = (event: any) => {
     event.preventDefault();
     setErrorMessage('');
-    actions.connecting({
-      domain,
-      username,
-      password,
-      port,
-      resource,
-    });
+    connecting({ domain, username, password, port, resource });
   };
 
   React.useEffect(() => {
-    if (context.connection.isConnected) {
+    if (connection.isConnected) {
       navigate('/main');
     }
-  }, [context.connection.isConnected]);
+  }, [connection.isConnected]);
 
   React.useEffect(() => {
-    setErrorMessage(context.connection.connectionError);
-  }, [context.connection.connectionError]);
+    setErrorMessage(connection.connectionError);
+  }, [connection.connectionError]);
 
   return (
     <div className={classes.root}>

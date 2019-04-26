@@ -1,18 +1,16 @@
 import React from 'react';
 import { useContext } from '../context';
+import { useSnackbar } from 'notistack';
 
 import { makeStyles } from '@material-ui/styles';
 
-// libs
-import { useSnackbar } from 'notistack';
-
-// interfaces
 import ISnackbarNotification from '../interfaces/ISnackbarNotification';
 import { usePrevious } from '../utils/usePrevious';
 
-const SnackbarNotifications = (props: any) => {
+const SnackbarNotifications: React.FC = () => {
   const classes = useStyles();
   const [context, actions] = useContext();
+
   const { snackbarNotifications } = context;
   const { removeFromSnackbar } = actions;
 

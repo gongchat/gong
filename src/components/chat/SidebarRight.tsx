@@ -1,26 +1,24 @@
 import React from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import { makeStyles } from '@material-ui/styles';
 
-// interfaces
+import ChannelUsers from './ChannelUsers';
 import IChannelUser from '../../interfaces/IChannelUser';
 
-// components
-import ChannelUsers from './ChannelUsers';
-
-const SidebarRight = (props: any) => {
+const SidebarRight: React.FC = () => {
   const classes = useStyles();
   const [context] = useContext();
+
+  const { current } = context;
 
   return (
     <div className={classes.root}>
       <ChannelUsers
         title="Moderators"
         users={
-          context.current &&
-          context.current.users.filter(
+          current &&
+          current.users.filter(
             (user: IChannelUser) => user.role === 'moderator'
           )
         }
@@ -28,8 +26,8 @@ const SidebarRight = (props: any) => {
       <ChannelUsers
         title="Participants"
         users={
-          context.current &&
-          context.current.users.filter(
+          current &&
+          current.users.filter(
             (user: IChannelUser) => user.role === 'participant'
           )
         }

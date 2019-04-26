@@ -1,9 +1,8 @@
 import React from 'react';
 
-// material ui
 import { makeStyles } from '@material-ui/styles';
 
-const GithubIcon = (props: any) => {
+const GithubIcon: React.FC = () => {
   const classes = useStyles();
 
   return (

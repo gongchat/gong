@@ -4,7 +4,7 @@ import XmppJsMapper from '../utils/xmppJsMapper';
 
 const { ipcRenderer } = window.require('electron');
 
-const IpcRenderer = () => {
+const IpcRenderer: React.FC = () => {
   const actions = useContext()[1];
 
   React.useEffect(() => {

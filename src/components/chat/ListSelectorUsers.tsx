@@ -3,51 +3,54 @@ import { useState } from 'react';
 import { useContext } from '../../context';
 
 import ListSelector from './ListSelector';
-
 import IChannelUser from '../../interfaces/IChannelUser';
 
-const ListSelectorUsers = (props: any) => {
-  const [term, setTerm] = useState('');
-  const [channelUsers, setChannelUsers] = useState([]);
+interface IProps {
+  selectorIndex: number;
+  text: string;
+  setText: any;
+  focusInput: any;
+  setSelectorIndex: any;
+}
 
+const ListSelectorUsers: React.FC<IProps> = (props: IProps) => {
   const [context] = useContext();
+
+  const { selectorIndex, text, setText, focusInput, setSelectorIndex } = props;
   const { current } = context;
-  const { selectorIndex, text, setSelectorIndex } = props;
+
+  const [term, setTerm] = useState('');
+  const [channelUsers, setChannelUsers] = useState([] as any);
 
   const handleSelection = (obj: any) => {
     const user: any = channelUsers.find((u: IChannelUser) => u.jid === obj.jid);
     if (user) {
-      if (props.text === '') {
-        props.setText(`@${user.nickname} `);
+      if (text === '') {
+        setText(`@${user.nickname} `);
       } else {
-        const length = props.text.length;
+        const length = text.length;
         if (length === 0) {
-          props.setText(`@${user.nickname} `);
+          setText(`@${user.nickname} `);
         } else {
-          const indexOfLastAt = props.text.lastIndexOf('@');
+          const indexOfLastAt = text.lastIndexOf('@');
           if (indexOfLastAt === -1) {
-            props.setText(`${props.text}@${user.nickname} `);
+            setText(`${text}@${user.nickname} `);
           } else {
-            const charsBeforeLastAt = props.text.substring(
-              indexOfLastAt,
-              length
-            );
+            const charsBeforeLastAt = text.substring(indexOfLastAt, length);
             if (
               charsBeforeLastAt.length - 1 > obj.nickname.length ||
               `@${obj.nickname.substring(0, charsBeforeLastAt.length - 1)}` !==
                 charsBeforeLastAt
             ) {
-              props.setText(`${props.text}@${user.nickname} `);
+              setText(`${text}@${user.nickname} `);
             } else {
-              props.setText(
-                `${props.text.substring(0, indexOfLastAt)}@${user.nickname} `
-              );
+              setText(`${text.substring(0, indexOfLastAt)}@${user.nickname} `);
             }
           }
         }
       }
-      props.focusInput();
-      props.setSelectorIndex(-1);
+      focusInput();
+      setSelectorIndex(-1);
     }
   };
 
@@ -90,11 +93,9 @@ const ListSelectorUsers = (props: any) => {
 
   return (
     <React.Fragment>
-      {props.selectorIndex === 1 && (
+      {selectorIndex === 1 && (
         <ListSelector
           title={'USERS MATCHING'}
-          prefix={'@'}
-          suffix={''}
           term={term}
           list={channelUsers}
           showKey={true}
@@ -102,9 +103,9 @@ const ListSelectorUsers = (props: any) => {
           showValue={false}
           valueProp={'nickname'}
           handleSelection={handleSelection}
-          setText={props.setText}
-          setSelectorIndex={props.setSelectorIndex}
+          setSelectorIndex={setSelectorIndex}
           itemPrefix={'@'}
+          itemSuffix={''}
         />
       )}
     </React.Fragment>

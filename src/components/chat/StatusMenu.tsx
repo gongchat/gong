@@ -1,12 +1,10 @@
 import React from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
-// components
 import Status from './Status';
 
 const STATUSES = [
@@ -20,21 +18,29 @@ const STATUSES = [
     description: 'Will mute sounds',
   },
 ];
+interface IProps {
+  open: boolean;
+  anchorEl: any;
+  onClose: any;
+}
 
-const StatusMenu = (props: any) => {
+const StatusMenu: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
   const actions = useContext()[1];
 
+  const { open, anchorEl, onClose } = props;
+  const { setMyStatus } = actions;
+
   const handleStatusClick = (status: string) => {
-    actions.setMyStatus(status);
-    props.onClose();
+    setMyStatus(status);
+    onClose();
   };
 
   return (
     <Popover
-      open={props.open}
-      anchorEl={props.anchorEl}
-      onClose={props.onClose}
+      open={open}
+      anchorEl={anchorEl}
+      onClose={onClose}
       anchorOrigin={{
         vertical: 'top',
         horizontal: 'left',

@@ -2,7 +2,6 @@ import React from 'react';
 import { useState } from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import FilledInput from '@material-ui/core/FilledInput';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -10,58 +9,58 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/styles';
 
-// actions
-import { playAudio, SOUNDS } from '../../actions/notification';
-
-// components
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
+import { playAudio, SOUNDS } from '../../actions/notification';
 
-const NotificationSettings = (props: any) => {
+const NotificationSettings: React.FC = () => {
   const classes = useStyles();
   const [context, actions] = useContext();
 
-  const [soundName, setSoundName] = useState(context.settings.soundName);
+  const { settings } = context;
+  const { setSettings } = actions;
+
+  const [soundName, setSoundName] = useState(settings.soundName);
   const [playAudioOnGroupchat, setPlayAudioOnGroupchat] = useState(
-    context.settings.playAudioOnGroupchat
+    settings.playAudioOnGroupchat
   );
   const [playAudioOnChat, setPlayAudioOnChat] = useState(
-    context.settings.playAudioOnChat
+    settings.playAudioOnChat
   );
   const [playAudioOnMentionMe, setPlayAudioOnMentionMe] = useState(
-    context.settings.playAudioOnMentionMe
+    settings.playAudioOnMentionMe
   );
   const [flashMenuBarOnGroupchat, setFlashMenuBarOnGroupchat] = useState(
-    context.settings.flashMenuBarOnGroupchat
+    settings.flashMenuBarOnGroupchat
   );
   const [
     flashMenuBarOnGroupchatFrequency,
     setFlashMenuBarOnGroupchatFrequency,
-  ] = useState(context.settings.flashMenuBarOnGroupchatFrequency);
+  ] = useState(settings.flashMenuBarOnGroupchatFrequency);
   const [flashMenuBarOnMentionMe, setFlashMenuBarOnMentionMe] = useState(
-    context.settings.flashMenuBarOnMentionMe
+    settings.flashMenuBarOnMentionMe
   );
   const [
     flashMenuBarOnMentionMeFrequency,
     setFlashMenuBarOnMentionMeFrequency,
-  ] = useState(context.settings.flashMenuBarOnMentionMeFrequency);
+  ] = useState(settings.flashMenuBarOnMentionMeFrequency);
   const [flashMenuBarOnChat, setFlashMenuBarOnChat] = useState(
-    context.settings.flashMenuBarOnChat
+    settings.flashMenuBarOnChat
   );
   const [
     flashMenuBarOnChatFrequency,
     setFlashMenuBarOnChatFrequency,
-  ] = useState(context.settings.flashMenuBarOnChatFrequency);
+  ] = useState(settings.flashMenuBarOnChatFrequency);
   const [
     systemNotificationOnGroupchat,
     setSystemNotificationOnGroupchat,
-  ] = useState(context.settings.systemNotificationOnGroupchat);
+  ] = useState(settings.systemNotificationOnGroupchat);
   const [
     systemNotificationOnMentionMe,
     setSystemNotificationOnMentionMe,
-  ] = useState(context.settings.systemNotificationOnMentionMe);
+  ] = useState(settings.systemNotificationOnMentionMe);
   const [systemNotificationOnChat, setSystemNotificationOnChat] = useState(
-    context.settings.systemNotificationOnChat
+    settings.systemNotificationOnChat
   );
 
   const handleChange = (e: any, action: any) => {
@@ -70,7 +69,7 @@ const NotificationSettings = (props: any) => {
       playAudio(e.target.value);
     }
     action(e.target.value);
-    actions.setSettings({ [e.target.name]: e.target.value });
+    setSettings({ [e.target.name]: e.target.value });
   };
 
   return (

@@ -1,21 +1,24 @@
 import React from 'react';
 import { useState } from 'react';
 import { useContext } from '../context';
-
 import { navigate } from '@reach/router';
 
-// material ui
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
 
-// components
 import LoadingIcon from './icons/LoadingIcon';
 
 let reconnectTimer: any;
 
-const Loading = (props: any) => {
+interface IProps {
+  path: string;
+  noThrow: boolean;
+}
+
+const Loading: React.FC<IProps> = () => {
   const classes = useStyles();
   const [context, actions] = useContext();
+
   const { app, connection } = context;
   const { autoConnect } = actions;
 

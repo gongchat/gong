@@ -2,13 +2,11 @@ import React from 'react';
 import { useState } from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles } from '@material-ui/styles';
 
-// components
 import ColorPicker from './ColorPicker';
 
 const ITEMS = [
@@ -62,9 +60,12 @@ const ITEMS = [
   },
 ];
 
-const Theme = (props: any) => {
+const Theme: React.FC = () => {
   const classes = useStyles();
   const [context, actions] = useContext();
+
+  const { theme } = context;
+  const { setTheme } = actions;
 
   const [items, setItems] = useState(ITEMS);
   const [selectedItem, setSelectedItem] = useState(ITEMS[0]);
@@ -77,7 +78,7 @@ const Theme = (props: any) => {
       value: color,
     };
     setSelectedItem({ ...selectedItem, color });
-    actions.setTheme(updatedItem);
+    setTheme(updatedItem);
   };
 
   const getItemsFromTheme = (theme: any) => {
@@ -100,8 +101,8 @@ const Theme = (props: any) => {
   };
 
   React.useEffect(() => {
-    setItems(getItemsFromTheme(context.theme));
-  }, [context.theme]);
+    setItems(getItemsFromTheme(theme));
+  }, [theme]);
 
   return (
     <React.Fragment>

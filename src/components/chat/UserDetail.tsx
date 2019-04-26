@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
 
-// material ui
 import Avatar from '@material-ui/core/Avatar';
 import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
@@ -10,9 +9,17 @@ import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
-const UserDetail = (props: any) => {
+import IUser from '../../interfaces/IUser';
+
+interface IProps {
+  user: IUser;
+}
+
+const UserDetail: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
   const [index, setIndex] = useState(0);
+
+  const { user } = props;
 
   const handleOnTabChange = (event: any, value: number) => {
     setIndex(value);
@@ -21,19 +28,17 @@ const UserDetail = (props: any) => {
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        {props.user.vCard && props.user.vCard.photo ? (
+        {user.vCard && user.vCard.photo ? (
           <Avatar
             className={classes.avatar}
-            src={`data:${props.user.vCard.photoType};base64,${
-              props.user.vCard.photo
-            }`}
+            src={`data:${user.vCard.photoType};base64,${user.vCard.photo}`}
           />
         ) : (
           <Avatar className={classes.avatar} />
         )}
         <div className={classes.headerText}>
-          <Typography variant="h6">{props.user.username}</Typography>
-          <Typography>{props.user.jid.split('@')[1]}</Typography>
+          <Typography variant="h6">{user.username}</Typography>
+          <Typography>{user.jid.split('@')[1]}</Typography>
         </div>
       </div>
       <Paper square={true}>
@@ -49,127 +54,119 @@ const UserDetail = (props: any) => {
       </Paper>
       <div className={classes.content}>
         {/* User Info */}
-        {index === 0 && props.user.vCard && (
+        {index === 0 && user.vCard && (
           <React.Fragment>
             <div>
-              {props.user.vCard.fullName && (
+              {user.vCard.fullName && (
                 <div className={classes.section}>
                   <Typography className={classes.name}>Name</Typography>
-                  <Typography>{props.user.vCard.fullName}</Typography>
+                  <Typography>{user.vCard.fullName}</Typography>
                 </div>
               )}
-              {props.user.vCard.nickname && (
+              {user.vCard.nickname && (
                 <div className={classes.section}>
                   <Typography className={classes.name}>Nickname</Typography>
-                  <Typography>{props.user.vCard.nickname}</Typography>
+                  <Typography>{user.vCard.nickname}</Typography>
                 </div>
               )}
-              {props.user.vCard.description && (
+              {user.vCard.description && (
                 <div className={classes.section}>
                   <Typography className={classes.name}>Description</Typography>
-                  <Typography>{props.user.vCard.description}</Typography>
+                  <Typography>{user.vCard.description}</Typography>
                 </div>
               )}
-              {props.user.vCard.birthday && (
+              {user.vCard.birthday && (
                 <div className={classes.section}>
                   <Typography className={classes.name}>Birthday</Typography>
-                  <Typography>{props.user.vCard.birthday}</Typography>
+                  <Typography>{user.vCard.birthday}</Typography>
                 </div>
               )}
             </div>
             <div>
-              {props.user.vCard.organizationName && (
+              {user.vCard.organizationName && (
                 <div className={classes.section}>
                   <Typography className={classes.name}>
                     Organization Name
                   </Typography>
-                  <Typography>{props.user.vCard.organizationName}</Typography>
+                  <Typography>{user.vCard.organizationName}</Typography>
                 </div>
               )}
-              {props.user.vCard.organizationUnit && (
+              {user.vCard.organizationUnit && (
                 <div className={classes.section}>
                   <Typography className={classes.name}>
                     Organization Unit
                   </Typography>
-                  <Typography>{props.user.vCard.organizationUnit}</Typography>
+                  <Typography>{user.vCard.organizationUnit}</Typography>
                 </div>
               )}
-              {props.user.vCard.title && (
+              {user.vCard.title && (
                 <div className={classes.section}>
                   <Typography className={classes.name}>Title</Typography>
-                  <Typography>{props.user.vCard.title}</Typography>
+                  <Typography>{user.vCard.title}</Typography>
                 </div>
               )}
-              {props.user.vCard.role && (
+              {user.vCard.role && (
                 <div className={classes.section}>
                   <Typography className={classes.name}>Role</Typography>
-                  <Typography>{props.user.vCard.role}</Typography>
+                  <Typography>{user.vCard.role}</Typography>
                 </div>
               )}
             </div>
           </React.Fragment>
         )}
-        {index === 1 && props.user.vCard && (
+        {index === 1 && user.vCard && (
           <React.Fragment>
             <div>
-              {props.user.vCard.url && (
+              {user.vCard.url && (
                 <div className={classes.section}>
                   <Typography className={classes.name}>URL</Typography>
-                  <Link href={props.user.vCard.url} target="_blank">
-                    {props.user.vCard.url}
+                  <Link href={user.vCard.url} target="_blank">
+                    {user.vCard.url}
                   </Link>
                 </div>
               )}
-              {props.user.vCard.phoneNumber && (
+              {user.vCard.phoneNumber && (
                 <div className={classes.section}>
                   <Typography className={classes.name}>Phone #</Typography>
-                  <Link
-                    href={`tel:${props.user.vCard.phoneNumber}`}
-                    target="_blank"
-                  >
-                    {props.user.vCard.phoneNumber}
+                  <Link href={`tel:${user.vCard.phoneNumber}`} target="_blank">
+                    {user.vCard.phoneNumber}
                   </Link>
                 </div>
               )}
-              {props.user.vCard.email && (
+              {user.vCard.email && (
                 <div className={classes.section}>
                   <Typography className={classes.name}>Email</Typography>
-                  <Link
-                    href={`mailto:${props.user.vCard.email}`}
-                    target="_blank"
-                  >
-                    {props.user.vCard.email}
+                  <Link href={`mailto:${user.vCard.email}`} target="_blank">
+                    {user.vCard.email}
                   </Link>
                 </div>
               )}
             </div>
             <div>
-              {(props.user.vCard.street ||
-                props.user.vCard.streetExtended ||
-                props.user.vCard.city ||
-                props.user.vCard.state ||
-                props.user.vCard.zipCode) && (
+              {(user.vCard.street ||
+                user.vCard.streetExtended ||
+                user.vCard.city ||
+                user.vCard.state ||
+                user.vCard.zipCode) && (
                 <div className={classes.section}>
                   <Typography className={classes.name}>Address</Typography>
                   <Typography>
-                    {props.user.vCard.street}
-                    {props.user.vCard.streetExtended ? (
+                    {user.vCard.street}
+                    {user.vCard.streetExtended ? (
                       <span>
                         <br />
-                        {props.user.vCard.streetExtended}
+                        {user.vCard.streetExtended}
                       </span>
                     ) : (
                       ''
                     )}
-                    {props.user.vCard.city ||
-                    props.user.vCard.state ||
-                    props.user.vCard.zipCode ? (
+                    {user.vCard.city ||
+                    user.vCard.state ||
+                    user.vCard.zipCode ? (
                       <span>
                         <br />
-                        {props.user.vCard.city
-                          ? props.user.vCard.city + ', '
-                          : ''}{' '}
-                        {props.user.vCard.state} {props.user.zipCode}
+                        {user.vCard.city ? user.vCard.city + ', ' : ''}{' '}
+                        {user.vCard.state} {user.vCard.zipCode}
                       </span>
                     ) : (
                       ''

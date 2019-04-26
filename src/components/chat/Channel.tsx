@@ -2,7 +2,6 @@ import React from 'react';
 import { useState } from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import Badge from '@material-ui/core/Badge';
 import Dialog from '@material-ui/core/Dialog';
 import Menu from '@material-ui/core/Menu';
@@ -12,21 +11,31 @@ import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/styles';
 
 import EditRoom from './EditRoom';
+import IRoom from '../../interfaces/IRoom';
 
-const Channel = (props: any) => {
+interface IProps {
+  channel: IRoom;
+  isSelected: boolean;
+  prefix: string;
+}
+
+const Channel: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
   const actions = useContext()[1];
+
+  const { channel, isSelected, prefix } = props;
+  const { selectChannel, removeChannel } = actions;
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
 
   const name =
-    props.channel.name.startsWith('#') && props.channel.name.length > 1
-      ? props.channel.name.substring(1)
-      : props.channel.name;
+    channel.name.startsWith('#') && channel.name.length > 1
+      ? channel.name.substring(1)
+      : channel.name;
 
   const handleOnClick = () => {
-    actions.selectChannel(props.channel.jid);
+    selectChannel(channel.jid);
   };
 
   const handleOnContextMenu = (event: any) => {
@@ -53,10 +62,10 @@ const Channel = (props: any) => {
       <div
         className={[
           classes.root,
-          props.channel.isConnected || props.channel.type === 'chat'
+          channel.isConnected || channel.type === 'chat'
             ? classes.connected
             : classes.notConnected,
-          props.isSelected ? classes.active : '',
+          isSelected ? classes.active : '',
         ].join(' ')}
       >
         <div
@@ -66,18 +75,18 @@ const Channel = (props: any) => {
         >
           <Typography
             className={classes.hashtag}
-            color={props.channel.connectionError ? 'error' : 'default'}
+            color={channel.connectionError ? 'error' : 'default'}
           >
-            {props.prefix}
+            {prefix}
           </Typography>
           <Typography className={classes.name}>{name}</Typography>
-          {props.channel.unreadMessages > 0 && (
+          {channel.unreadMessages > 0 && (
             <Badge
-              badgeContent={props.channel.unreadMessages}
+              badgeContent={channel.unreadMessages}
               classes={{
                 badge: [
                   classes.badge,
-                  props.channel.hasUnreadMentionMe ? classes.badgeFlash : '',
+                  channel.hasUnreadMentionMe ? classes.badgeFlash : '',
                 ].join(' '),
               }}
               color="error"
@@ -88,7 +97,7 @@ const Channel = (props: any) => {
         </div>
         <Typography
           className={classes.close}
-          onClick={() => actions.removeChannel(props.channel.jid)}
+          onClick={() => removeChannel(channel.jid)}
         >
           <CloseIcon className={classes.closeIcon} />
         </Typography>
@@ -116,7 +125,7 @@ const Channel = (props: any) => {
         BackdropProps={{ className: classes.dialog }}
         aria-labelledby="room-edit-dialog-title"
       >
-        <EditRoom onClose={handleEditClose} channel={props.channel} />
+        <EditRoom onClose={handleEditClose} channel={channel} />
       </Dialog>
     </React.Fragment>
   );

@@ -2,12 +2,11 @@ import React from 'react';
 
 import { Router } from '@reach/router';
 
-// components
 import Loading from './Loading';
 import Login from './Login';
 import Main from './Main';
 
-const Routes = () => {
+const Routes: React.FC = () => {
   return (
     <Router style={{ height: '100%' }}>
       <Loading path="/" noThrow={true} />

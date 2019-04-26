@@ -1,11 +1,17 @@
 import React from 'react';
 
-// material ui
 import { makeStyles } from '@material-ui/styles';
 
-const Status = (props: any) => {
+interface IProps {
+  status: string;
+}
+
+const Status: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
-  switch (props.status) {
+
+  const { status } = props;
+
+  switch (status) {
     case 'online':
       return <div className={[classes.root, classes.online].join(' ')} />;
     case 'chat':

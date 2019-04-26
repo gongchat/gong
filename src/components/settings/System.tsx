@@ -2,24 +2,25 @@ import React from 'react';
 import { useState } from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
-// interface
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 
-const System = (props: any) => {
+const System: React.FC = () => {
   const [context, actions] = useContext();
 
+  const { settings } = context;
+  const { setSettings } = actions;
+
   const [minimizeToTrayOnClose, setMinimizeToTrayOnClose] = useState(
-    context.settings.minimizeToTrayOnClose
+    settings.minimizeToTrayOnClose
   );
 
   const handleOnChange = (event: any, value: any, action: any) => {
     action(value);
-    actions.setSettings({ [event.target.name]: value });
+    setSettings({ [event.target.name]: value });
   };
 
   return (

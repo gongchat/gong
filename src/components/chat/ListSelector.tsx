@@ -1,22 +1,49 @@
 import React from 'react';
 import { useState } from 'react';
 
-// material ui
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
 let currListIndex = 0;
 
-const ListSelector = (props: any) => {
-  const listRef = React.useRef<HTMLDivElement>(null);
+interface IProps {
+  handleSelection: any;
+  setSelectorIndex: any;
+  list: any;
+  term: string;
+  title: string;
+  showKey: boolean;
+  keyProp: string;
+  showValue: boolean;
+  valueProp: string;
+  itemPrefix: string;
+  itemSuffix: string;
+}
+
+const ListSelector: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
 
-  const [term, setTerm] = useState(props.term);
+  const {
+    handleSelection,
+    setSelectorIndex,
+    list,
+    term,
+    title,
+    showKey,
+    keyProp,
+    showValue,
+    valueProp,
+    itemPrefix,
+    itemSuffix,
+  } = props;
+
   const [listIndex, setListIndex] = useState(0);
+
+  const listRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     const handleKeyDown = (event: any) => {
-      const maxIndex = props.list.length - 1;
+      const maxIndex = list.length - 1;
       let itemHeight = 0;
       let scrollTop = 0; // position of the top of the viewable height
       let offsetHeight = 0; // viewable height
@@ -59,10 +86,10 @@ const ListSelector = (props: any) => {
           case 'Tab':
           case 'Enter':
             event.preventDefault();
-            props.handleSelection(props.list[currListIndex]);
+            handleSelection(list[currListIndex]);
             break;
           case 'Escape':
-            props.setSelectorIndex(-1);
+            setSelectorIndex(-1);
             break;
           default:
             break;
@@ -74,38 +101,37 @@ const ListSelector = (props: any) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [props, props.list]);
+  }, [handleSelection, setSelectorIndex, list]);
 
   React.useEffect(() => {
-    setTerm(props.term);
     setListIndex(0);
-  }, [props.term]);
+  }, [term]);
 
   return (
     <div className={classes.root}>
       <Typography>
-        <span>{props.title}</span>
+        <span>{title}</span>
         <span className={classes.term}>{term}</span>
       </Typography>
       <div className={classes.list} ref={listRef}>
-        {props.list &&
-          props.list.map((obj: any, index: number) => (
+        {list &&
+          list.map((obj: any, index: number) => (
             <div
-              key={obj[props.keyProp]}
+              key={obj[keyProp]}
               className={[
                 classes.listItem,
                 listIndex === index ? classes.current : '',
               ].join(' ')}
-              onClick={() => props.handleSelection(obj)}
+              onClick={() => handleSelection(obj)}
             >
-              {props.showValue && (
-                <span className={classes.icon}>{obj[props.valueProp]}</span>
+              {showValue && (
+                <span className={classes.icon}>{obj[valueProp]}</span>
               )}
-              {props.showKey && (
+              {showKey && (
                 <Typography>
-                  {props.itemPrefix}
-                  {obj[props.keyProp]}
-                  {props.itemSuffix}
+                  {itemPrefix}
+                  {obj[keyProp]}
+                  {itemSuffix}
                 </Typography>
               )}
             </div>

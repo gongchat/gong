@@ -1,47 +1,51 @@
 import React from 'react';
 
-// material ui
 import { makeStyles } from '@material-ui/styles';
 
-// interfaces
-import IChannel from '../../interfaces/IChannel';
-
-// components
 import Channel from './Channel';
 import Group from './Group';
+import IChannel from '../../interfaces/IChannel';
+import IRoom from '../../interfaces/IRoom';
 
-const Channels = (props: any) => {
+interface IProps {
+  channels: IChannel[];
+  current: IChannel;
+  hideIfEmpty: boolean;
+  title: string;
+  canAdd: boolean;
+  prefix: string;
+}
+
+const Channels: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
 
-  if (props.hideIfEmpty && (!props.channels || props.channels.length <= 0)) {
-    return <div />;
+  const { channels, current, hideIfEmpty, title, canAdd, prefix } = props;
+
+  if (hideIfEmpty && (!channels || channels.length <= 0)) {
+    return null;
   }
-
-  const totalUnreadMessages = props.channels.reduce(
-    (a: number, b: IChannel) => a + b.unreadMessages,
-    0
-  );
-
-  const hasUnreadMentionMe = props.channels.some(
-    (channel: IChannel) => channel.hasUnreadMentionMe
-  );
 
   return (
     <div className={classes.root}>
       <Group
-        title={props.title}
-        canAdd={props.canAdd}
-        totalUnreadMessages={totalUnreadMessages}
-        hasUnreadMentionMe={hasUnreadMentionMe}
+        title={title}
+        canAdd={canAdd}
+        totalUnreadMessages={channels.reduce(
+          (a: number, b: IChannel) => a + b.unreadMessages,
+          0
+        )}
+        hasUnreadMentionMe={channels.some(
+          (channel: IChannel) => channel.hasUnreadMentionMe
+        )}
       >
-        {props.channels
+        {channels
           .sort((a: IChannel, b: IChannel) => a.name.localeCompare(b.name))
           .map((channel: IChannel) => (
             <Channel
               key={channel.jid}
-              prefix={props.prefix}
-              channel={channel}
-              isSelected={props.current && props.current.jid === channel.jid}
+              prefix={prefix}
+              channel={channel as IRoom}
+              isSelected={current && current.jid === channel.jid}
             />
           ))}
       </Group>

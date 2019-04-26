@@ -1,15 +1,21 @@
 import React from 'react';
 import { useContext } from '../../context';
 
-// interfaces
-import IUser from '../../interfaces/IUser';
-
-// components
 import Group from './Group';
 import User from './User';
+import IChannel from '../../interfaces/IChannel';
+import IUser from '../../interfaces/IUser';
 
-const Users = (props: any) => {
+interface IProps {
+  users: IUser[];
+  current: IChannel;
+}
+
+const Users: React.FC<IProps> = (props: any) => {
   const [context] = useContext();
+
+  const { users, current } = props;
+  const { theme } = context;
 
   const getGroupedUsers = (users: any) => {
     return users.reduce((a: any, c: any) => {
@@ -23,28 +29,22 @@ const Users = (props: any) => {
     }, []);
   };
 
-  const groupedUsers = getGroupedUsers(props.users);
-
-  const totalUnreadMessages = props.users.reduce(
-    (a: number, b: IUser) => a + b.unreadMessages,
-    0
-  );
-
-  const hasUnreadMentionMe = props.users.some(
-    (user: IUser) => user.hasUnreadMentionMe
-  );
-
   return (
     <div>
-      {groupedUsers.map((group: any) => {
+      {getGroupedUsers(users).map((group: any) => {
         if (group.users) {
           return (
             <Group
               key={group.name}
               title={group.name}
               canAdd={false}
-              totalUnreadMessages={totalUnreadMessages}
-              hasUnreadMentionMe={hasUnreadMentionMe}
+              totalUnreadMessages={users.reduce(
+                (a: number, b: IUser) => a + b.unreadMessages,
+                0
+              )}
+              hasUnreadMentionMe={users.some(
+                (user: IUser) => user.hasUnreadMentionMe
+              )}
             >
               {group.users
                 .sort((a: IUser, b: IUser) => a.name.localeCompare(b.name))
@@ -52,8 +52,8 @@ const Users = (props: any) => {
                   <User
                     key={user.jid}
                     user={user}
-                    showAvatar={context.theme.sidebarLeftShowAvatar}
-                    isSelected={props.current && props.current.jid === user.jid}
+                    showAvatar={theme.sidebarLeftShowAvatar}
+                    isSelected={current && current.jid === user.jid}
                   />
                 ))}
             </Group>

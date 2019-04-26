@@ -1,16 +1,12 @@
 import React from 'react';
 import { useState } from 'react';
 import { useContext } from '../context';
+import * as WebFont from 'webfontloader';
 
-// material
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/styles';
 
-// libs
-import * as WebFont from 'webfontloader';
-
-// components
 import Chat from './chat/Chat';
 import SidebarLeft from './chat/SidebarLeft';
 import SidebarRight from './chat/SidebarRight';
@@ -23,10 +19,16 @@ const { ipcRenderer } = window.require('electron');
 
 let reconnectTimer: any;
 
-const Main = (props: any) => {
+interface IProps {
+  path: string;
+  noThrow: boolean;
+}
+
+const Main: React.FC<IProps> = () => {
   const classes = useStyles();
   const [context, actions] = useContext();
-  const { connection, theme, app, current, menuBarNotification } = context;
+
+  const { connection, theme, app, current } = context;
   const { autoConnect } = actions;
 
   const [shouldReconnect, setShouldReconnect] = useState(true);
@@ -97,10 +99,7 @@ const Main = (props: any) => {
   return (
     <div className={classes.root}>
       <div className={classes.bars}>
-        <MenuBar
-          showOffline={connection ? !connection.isConnected : true}
-          menuBarNotification={menuBarNotification}
-        />
+        <MenuBar showOffline={true} />
         <ToolBar />
       </div>
       <div className={classes.content}>

@@ -1,13 +1,18 @@
 import React from 'react';
 
-// material ui
 import { makeStyles } from '@material-ui/styles';
 
-// utils
 import MaterialColors from '../../utils/materialColors';
 
-const ColorPicker = (props: any) => {
+interface IProps {
+  item: any;
+  onSelection: any;
+}
+
+const ColorPicker: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
+
+  const { item, onSelection } = props;
 
   return (
     <div className={classes.root}>
@@ -18,12 +23,10 @@ const ColorPicker = (props: any) => {
               key={`${colorIndex}-${shadeIndex}`}
               className={[
                 classes.color,
-                props.item.color === color.color[shade] ? classes.selected : '',
+                item.color === color.color[shade] ? classes.selected : '',
               ].join(' ')}
               style={{ backgroundColor: color.color[shade] || 'transparent' }}
-              onClick={() =>
-                props.onSelection(color.color[shade], color.name, shade)
-              }
+              onClick={() => onSelection(color.color[shade], color.name, shade)}
             />
           ))}
         </div>

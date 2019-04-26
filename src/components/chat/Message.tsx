@@ -1,19 +1,35 @@
 import React from 'react';
+import ReactPlayer from 'react-player';
 
-// material ui
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
-// libs
-import ReactPlayer from 'react-player';
-
-// interfaces
+import IMessage from '../../interfaces/IMessage';
 import IMessageUrl from '../../interfaces/IMessageUrl';
 
-const Message = (props: any) => {
+interface IProps {
+  message: IMessage;
+  showTime: boolean;
+  // onImageLoad: any;
+  renderImages: boolean;
+  renderVideos: boolean;
+  renderGetYarn: boolean;
+}
+
+const Message: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
-  const isMe = props.message.body.startsWith('/me ');
+
+  const {
+    message,
+    showTime,
+    // onImageLoad,
+    renderImages,
+    renderVideos,
+    renderGetYarn,
+  } = props;
+
+  const isMe = message.body.startsWith('/me ');
 
   return (
     <div className={classes.root}>
@@ -22,32 +38,30 @@ const Message = (props: any) => {
           className={[
             'timestamp',
             classes.timestamp,
-            props.showTime ? classes.timestamp : classes.timestampHide,
+            showTime ? classes.timestamp : classes.timestampHide,
           ].join(' ')}
         >
           <span className={classes.copyOnly}>[</span>
-          {props.message.timestamp.format('h:mm A')}
+          {message.timestamp.format('h:mm A')}
           <span className={classes.copyOnly}>]</span>
         </span>
         <span className={classes.text}>
-          <span className={classes.user} style={{ color: props.message.color }}>
-            {props.message.userNickname}
+          <span className={classes.user} style={{ color: message.color }}>
+            {message.userNickname}
             <span className={classes.copyOnly}>: </span>
           </span>
           <span
             className={[classes.body, isMe && classes.me].join(' ')}
             dangerouslySetInnerHTML={{
-              __html: isMe
-                ? `*${props.message.body.substring(4)}*`
-                : props.message.body,
+              __html: isMe ? `*${message.body.substring(4)}*` : message.body,
             }}
           />
         </span>
       </Typography>
-      {props.message.urls && (
+      {message.urls && (
         <React.Fragment>
-          {props.renderVideos &&
-            props.message.urls
+          {renderVideos &&
+            message.urls
               .filter((url: IMessageUrl) => url.type === 'video')
               .map((url: IMessageUrl, index: number) => (
                 <div key={index} className={classes.video}>
@@ -59,8 +73,8 @@ const Message = (props: any) => {
                   />
                 </div>
               ))}
-          {props.renderGetYarn &&
-            props.message.urls
+          {renderGetYarn &&
+            message.urls
               .filter((url: IMessageUrl) => url.type === 'getyarn')
               .map((url: IMessageUrl, index: number) => {
                 const values = url.url.split('/');
@@ -81,12 +95,13 @@ const Message = (props: any) => {
                   return '';
                 }
               })}
-          {props.renderImages &&
-            props.message.urls
+          {renderImages &&
+            message.urls
               .filter((url: IMessageUrl) => url.type === 'image')
               .map((url: IMessageUrl, index: number) => (
                 <div key={index} className={classes.image}>
-                  <img alt="shared" src={url.url} onLoad={props.onImageLoad} />
+                  {/* TODO: <img alt="shared" src={url.url} onLoad={onImageLoad} /> */}
+                  <img alt="shared" src={url.url} />
                 </div>
               ))}
         </React.Fragment>

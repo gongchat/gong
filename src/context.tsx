@@ -94,9 +94,11 @@ const Context = React.createContext(initialState);
 export default function ContextProvider(props: any) {
   const [context, actions] = useGovernor(initialState, contract);
 
+  const { children } = props;
+
   return (
     <Context.Provider value={[context, actions] as any}>
-      {props.children}
+      {children}
     </Context.Provider>
   );
 }

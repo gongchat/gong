@@ -1,7 +1,6 @@
 import React from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import Badge from '@material-ui/core/Badge';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -12,9 +11,27 @@ import { makeStyles } from '@material-ui/styles';
 import AddIcon from '@material-ui/icons/Add';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
-const Group = (props: any) => {
+interface IProps {
+  title: string;
+  totalUnreadMessages: number;
+  hasUnreadMentionMe: boolean;
+  canAdd: boolean;
+  children: any;
+}
+
+const Group: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
   const actions = useContext()[1];
+
+  const {
+    title,
+    totalUnreadMessages,
+    hasUnreadMentionMe,
+    canAdd,
+    children,
+  } = props;
+  const { setShowDiscover } = actions;
+
   const [isExpanded, setIsExpanded] = React.useState(true);
 
   const handleChange = () => {
@@ -22,7 +39,7 @@ const Group = (props: any) => {
   };
 
   const handleClickAdd = () => {
-    actions.setShowDiscover(true);
+    setShowDiscover(true);
   };
 
   return (
@@ -38,15 +55,15 @@ const Group = (props: any) => {
             <ExpandLessIcon />
           </Typography>
           <Typography className={classes.title} onClick={handleChange}>
-            {props.title}
+            {title}
           </Typography>
-          {props.totalUnreadMessages > 0 && (
+          {totalUnreadMessages > 0 && (
             <Badge
-              badgeContent={props.totalUnreadMessages}
+              badgeContent={totalUnreadMessages}
               classes={{
                 badge: [
                   classes.badge,
-                  props.hasUnreadMentionMe ? classes.badgeFlash : '',
+                  hasUnreadMentionMe ? classes.badgeFlash : '',
                 ].join(' '),
               }}
               color="error"
@@ -54,7 +71,7 @@ const Group = (props: any) => {
               <span />
             </Badge>
           )}
-          {props.canAdd && (
+          {canAdd && (
             <IconButton className={classes.iconButton} onClick={handleClickAdd}>
               <AddIcon />
             </IconButton>
@@ -65,7 +82,7 @@ const Group = (props: any) => {
         <ExpansionPanelDetails className={classes.details}>
           {/* Empty div is here incase the children is null, ExpansionPanelDetails expects something */}
           <div />
-          {props.children}
+          {children}
         </ExpansionPanelDetails>
       </ExpansionPanel>
     </div>

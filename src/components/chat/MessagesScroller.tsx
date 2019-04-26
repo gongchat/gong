@@ -1,19 +1,24 @@
 import React from 'react';
 import { useContext } from '../../context';
 
-import { usePrevious } from '../../utils/usePrevious';
-
-// material ui
 import { makeStyles } from '@material-ui/styles';
+
+import { usePrevious } from '../../utils/usePrevious';
 
 let wasAtBottom = true;
 let scrollTimer: any;
 let positionBeforeGettingLogs: any;
 let prevWindowInnerWidth: any;
 
-const MessagesScroller = (props: any) => {
+interface IProps {
+  children: any;
+}
+
+const MessagesScroller: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
   const [context, actions] = useContext();
+
+  const { children } = props;
   const { profile, current } = context;
   const { getChannelLogs, setChannelScrollPosition } = actions;
 
@@ -152,7 +157,7 @@ const MessagesScroller = (props: any) => {
     <div className={classes.root} ref={root}>
       {/* this is here so the messages start below first */}
       <div className={classes.filler} />
-      {props.children}
+      {children}
     </div>
   );
 };

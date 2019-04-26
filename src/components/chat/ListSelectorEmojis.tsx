@@ -2,31 +2,39 @@ import React from 'react';
 import { useState } from 'react';
 
 import ListSelector from './ListSelector';
-
 import Emojis, { emojis as emojisObj } from '../../utils/emojis';
 
-const ListSelectorEmojis = (props: any) => {
+interface IProps {
+  selectorIndex: number;
+  text: string;
+  setText: any;
+  setSelectorIndex: any;
+  focusInput: any;
+}
+
+const ListSelectorEmojis: React.FC<IProps> = (props: IProps) => {
+  const { selectorIndex, text, setText, setSelectorIndex, focusInput } = props;
+
   const [term, setTerm] = useState('');
   const [emojis, setEmojis] = useState();
-  const { selectorIndex } = props;
 
   const handleSelection = (object: any) => {
-    if (props.text === '') {
-      props.setText(`:${object.key}: `);
+    if (text === '') {
+      setText(`:${object.key}: `);
     } else {
-      props.setText(
-        `${props.text.substring(
+      setText(
+        `${text.substring(
           0,
-          props.text.length === 0
+          text.length === 0
             ? 0
-            : props.text.lastIndexOf(' ') === -1
-            ? props.text.length - 1
-            : props.text.lastIndexOf(' ') + 1
+            : text.lastIndexOf(' ') === -1
+            ? text.length - 1
+            : text.lastIndexOf(' ') + 1
         )}:${object.key}: `
       );
     }
-    props.focusInput();
-    props.setSelectorIndex(-1);
+    focusInput();
+    setSelectorIndex(-1);
   };
 
   React.useEffect(() => {
@@ -43,20 +51,20 @@ const ListSelectorEmojis = (props: any) => {
 
   React.useEffect(() => {
     let setVisibility = false;
-    if (props.text) {
-      const emojiCommandIndex = props.text.lastIndexOf(':');
+    if (text) {
+      const emojiCommandIndex = text.lastIndexOf(':');
       if (emojiCommandIndex !== -1) {
-        const emojiCommandPrevIndex = props.text
+        const emojiCommandPrevIndex = text
           .substring(0, emojiCommandIndex)
           .lastIndexOf(':');
         if (
           emojiCommandIndex !== -1 &&
           !emojisObj[
-            props.text.substring(emojiCommandPrevIndex + 1, emojiCommandIndex)
+            text.substring(emojiCommandPrevIndex + 1, emojiCommandIndex)
           ]
         ) {
-          props.setSelectorIndex(0);
-          const emojiWord = props.text.substring(emojiCommandIndex);
+          setSelectorIndex(0);
+          const emojiWord = text.substring(emojiCommandIndex);
           const newTerm = emojiWord.substring(1);
           const matchingEmojis = Emojis.filter(
             (emoji: any) =>
@@ -78,18 +86,16 @@ const ListSelectorEmojis = (props: any) => {
       }
     }
 
-    if (!setVisibility && props.selectorIndex === 0) {
-      props.setSelectorIndex(-1);
+    if (!setVisibility && selectorIndex === 0) {
+      setSelectorIndex(-1);
     }
-  }, [props, props.text]);
+  }, [selectorIndex, setSelectorIndex, text]);
 
   return (
     <React.Fragment>
-      {props.selectorIndex === 0 && (
+      {selectorIndex === 0 && (
         <ListSelector
           title={'EMOJIS MATCHING'}
-          prefix={':'}
-          suffix={':'}
           term={term}
           list={emojis}
           showKey={true}
@@ -97,8 +103,7 @@ const ListSelectorEmojis = (props: any) => {
           showValue={true}
           valueProp={'value'}
           handleSelection={handleSelection}
-          setText={props.setText}
-          setSelectorIndex={props.setSelectorIndex}
+          setSelectorIndex={setSelectorIndex}
           itemPrefix={':'}
           itemSuffix={':'}
         />

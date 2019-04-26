@@ -1,20 +1,17 @@
 import React from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
-// interfaces
-import IMessage from '../../interfaces/IMessage';
-
-// components
 import Message from './Message';
 import MessagesScroller from './MessagesScroller';
+import IMessage from '../../interfaces/IMessage';
 
-const Messages = (props: any) => {
+const Messages: React.FC = () => {
   const classes = useStyles();
   const [context] = useContext();
+  const { current, settings } = context;
 
   let previousDate = '';
   let previousUserNickname = '';
@@ -23,17 +20,17 @@ const Messages = (props: any) => {
 
   return (
     <MessagesScroller>
-      {context.current &&
-        context.current.messages &&
-        context.current.messages.map((message: IMessage, index: number) => {
+      {current &&
+        current.messages &&
+        current.messages.map((message: IMessage, index: number) => {
           const showDate = previousDate !== message.timestamp.format('L');
           const showNewMessageMarker =
             !hasNewMessageMarker && previousMessageStatus !== message.isRead;
 
           const nextMessage: any =
-            index + 1 > context.current.messages.length
+            index + 1 > current.messages.length
               ? undefined
-              : context.current.messages[index + 1];
+              : current.messages[index + 1];
           const isNextShowDate = nextMessage
             ? nextMessage.timestamp.format('L') !==
               message.timestamp.format('L')
@@ -90,9 +87,9 @@ const Messages = (props: any) => {
                   key={index}
                   message={message}
                   showTime={isStartOfGroup || showDate || showNewMessageMarker}
-                  renderVideos={context.settings.renderVideos}
-                  renderGetYarn={context.settings.renderGetYarn}
-                  renderImages={context.settings.renderImages}
+                  renderVideos={settings.renderVideos}
+                  renderGetYarn={settings.renderGetYarn}
+                  renderImages={settings.renderImages}
                   // onImageLoad={handleImageOnLoad}
                 />
               </div>

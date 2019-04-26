@@ -1,13 +1,9 @@
-// material ui
 import cyan from '@material-ui/core/colors/cyan';
 import orange from '@material-ui/core/colors/orange';
 import red from '@material-ui/core/colors/red';
 import { createMuiTheme } from '@material-ui/core/styles';
 
-// interfaces
 import IState from '../interfaces/IState';
-
-// utils
 import MaterialColorsUtil from '../utils/materialColors';
 
 const ElectronStore = window.require('electron-store');

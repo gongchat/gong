@@ -1,13 +1,10 @@
 import React from 'react';
 import { useContext } from '../context';
+import { SnackbarProvider } from 'notistack';
 
-// material ui
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 
-import { SnackbarProvider } from 'notistack';
-
-// components
 import IpcRenderer from './IpcRenderer';
 import Routes from './Routes';
 import SnackbarNotifications from './SnackbarNotifications';
@@ -15,8 +12,10 @@ import SnackbarNotifications from './SnackbarNotifications';
 const App: React.FC = () => {
   const [context] = useContext();
 
+  const { theme } = context;
+
   return (
-    <ThemeProvider theme={context.theme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <IpcRenderer />
       <SnackbarProvider maxSnack={3}>

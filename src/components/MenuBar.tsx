@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useContext } from '../context';
 import { usePrevious } from '../utils/usePrevious';
 
-// material
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
@@ -13,9 +12,15 @@ import RemoveIcon from '@material-ui/icons/Remove';
 
 const { BrowserWindow } = (window as any).require('electron').remote;
 
-export const MenuBar = (props: any) => {
+interface IProps {
+  showOffline: boolean;
+}
+
+const MenuBar: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
   const [context] = useContext();
+
+  const { showOffline } = props;
   const { connection, menuBarNotification } = context;
 
   const [isFlashing, setIsFlashing] = useState(false);
@@ -80,7 +85,7 @@ export const MenuBar = (props: any) => {
       <div className={['menu-bar', classes.menuBar].join(' ')}>
         <div className={classes.brand}>
           <Typography>
-            Gong{connection.isConnected ? '' : ' (offline)'}
+            Gong{connection.isConnected && showOffline ? '' : ' (offline)'}
           </Typography>
         </div>
         <div className={['menu-bar--items', classes.menu].join(' ')}>

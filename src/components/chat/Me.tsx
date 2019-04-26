@@ -1,30 +1,27 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { useState } from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
-// utils
-import StringUtil from '../../utils/stringUtils';
-
-// components
 import Status from './Status';
 import StatusMenu from './StatusMenu';
+import StringUtil from '../../utils/stringUtils';
 
-const Me = () => {
+const Me: React.FC = () => {
   const classes = useStyles();
   const [context] = useContext();
+
+  const { profile } = context;
 
   const [showStatusMenu, setShowStatusMenu] = useState(false);
 
   const displayName =
-    context.profile.vCard && context.profile.vCard.fullName
-      ? context.profile.vCard.fullName
-      : context.profile.username;
+    profile.vCard && profile.vCard.fullName
+      ? profile.vCard.fullName
+      : profile.username;
 
   const meRef = React.useRef<HTMLDivElement>(null);
 
@@ -40,11 +37,11 @@ const Me = () => {
     <div className={classes.root}>
       <div ref={meRef} className={classes.me}>
         <div className={classes.avatar} onClick={toggleStatusMenu}>
-          {context.profile.vCard && context.profile.vCard.photoType ? (
+          {profile.vCard && profile.vCard.photoType ? (
             <Avatar
               className={classes.img}
-              src={`data:${context.profile.vCard.photoType};base64,${
-                context.profile.vCard.photo
+              src={`data:${profile.vCard.photoType};base64,${
+                profile.vCard.photo
               }`}
             />
           ) : (
@@ -53,7 +50,7 @@ const Me = () => {
             </Avatar>
           )}
           <div className={classes.status}>
-            <Status status={context.profile.status} />
+            <Status status={profile.status} />
           </div>
         </div>
         <Typography className={classes.title}>{displayName}</Typography>
@@ -101,11 +98,5 @@ const useStyles = makeStyles((theme: any) => ({
     borderRadius: '50%',
   },
 }));
-
-Me.propTypes = {
-  profile: PropTypes.object,
-  showAvatar: PropTypes.bool,
-  isColored: PropTypes.bool,
-};
 
 export default Me;

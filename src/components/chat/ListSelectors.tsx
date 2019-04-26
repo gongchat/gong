@@ -1,25 +1,34 @@
 import React from 'react';
 
-// utils
 import ListSelectorEmojis from './ListSelectorEmojis';
 import ListSelectorUsers from './ListSelectorUsers';
 
-const ListSelectors = (props: any) => {
+interface IProps {
+  selectorIndex: number;
+  text: string;
+  setText: any;
+  setSelectorIndex: any;
+  focusInput: any;
+}
+
+const ListSelectors: React.FC<IProps> = (props: IProps) => {
   return (
     <React.Fragment>
       <ListSelectorEmojis
-        text={props.text}
-        setText={props.setText}
-        focusInput={props.focusInput}
-        selectorIndex={props.selectorIndex}
-        setSelectorIndex={props.setSelectorIndex}
+        {...props}
+        // text={text}
+        // setText={setText}
+        // focusInput={focusInput}
+        // selectorIndex={selectorIndex}
+        // setSelectorIndex={setSelectorIndex}
       />
       <ListSelectorUsers
-        text={props.text}
-        setText={props.setText}
-        focusInput={props.focusInput}
-        selectorIndex={props.selectorIndex}
-        setSelectorIndex={props.setSelectorIndex}
+        {...props}
+        // text={text}
+        // setText={setText}
+        // focusInput={focusInput}
+        // selectorIndex={selectorIndex}
+        // setSelectorIndex={setSelectorIndex}
       />
     </React.Fragment>
   );

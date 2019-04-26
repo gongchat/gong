@@ -1,17 +1,24 @@
 import React from 'react';
 
-// material ui
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
-const BaseSection = (props: any) => {
+interface IProps {
+  title: string;
+  children: any;
+}
+
+const BaseSection: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
+
+  const { title, children } = props;
+
   return (
     <div className={classes.root}>
       <Typography variant="subtitle2" className={classes.title}>
-        {props.title}
+        {title}
       </Typography>
-      {props.children}
+      {children}
     </div>
   );
 };

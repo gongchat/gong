@@ -1,36 +1,35 @@
 import React from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
-// components
 import Status from './Status';
 
-const ToolBar = (props: any) => {
+const ToolBar: React.FC = () => {
   const classes = useStyles();
   const [context] = useContext();
+
+  const { current, settings } = context;
 
   let chatName = '';
   let chatStatus = '';
 
-  if (context.current) {
-    switch (context.current.type) {
+  if (current) {
+    switch (current.type) {
       case 'groupchat':
         chatName =
-          context.current.name.startsWith('#') &&
-          context.current.name.length > 1
-            ? context.current.name.substring(1)
-            : context.current.name;
-        chatStatus = context.current.isConnected ? 'online' : 'offline';
+          current.name.startsWith('#') && current.name.length > 1
+            ? current.name.substring(1)
+            : current.name;
+        chatStatus = current.isConnected ? 'online' : 'offline';
         break;
       case 'chat':
         chatName =
-          context.current.vCard && context.current.vCard.fullName
-            ? context.current.vCard.fullName
-            : context.current.name;
-        chatStatus = context.current.status;
+          current.vCard && current.vCard.fullName
+            ? current.vCard.fullName
+            : current.name;
+        chatStatus = current.status;
         break;
       default:
         break;
@@ -40,24 +39,22 @@ const ToolBar = (props: any) => {
   return (
     <div className={classes.root}>
       <div className={classes.left}>
-        <Typography>{context.settings.domain}</Typography>
+        <Typography>{settings.domain}</Typography>
       </div>
       <div className={classes.right}>
         <Typography>
           <span className={classes.symbol}>
-            {context.current && context.current.type === 'groupchat' && '# '}
-            {context.current && context.current.type === 'chat' && '@ '}
+            {current && current.type === 'groupchat' && '# '}
+            {current && current.type === 'chat' && '@ '}
           </span>
           {chatName}
         </Typography>
-        {context.current && context.current.connectionError && (
-          <Typography color="error">
-            ({context.current.connectionError})
-          </Typography>
+        {current && current.connectionError && (
+          <Typography color="error">({current.connectionError})</Typography>
         )}
-        {context.current &&
-          context.current.type === 'chat' &&
-          context.current.order !== 10 && <Status status={chatStatus} />}
+        {current && current.type === 'chat' && current.order !== 10 && (
+          <Status status={chatStatus} />
+        )}
       </div>
     </div>
   );

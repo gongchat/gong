@@ -2,7 +2,6 @@ import React from 'react';
 import { useState } from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import Avatar from '@material-ui/core/Avatar';
 import Badge from '@material-ui/core/Badge';
 import Dialog from '@material-ui/core/Dialog';
@@ -11,27 +10,32 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
-// utils
-import StringUtil from '../../utils/stringUtils';
-
-// components
 import Status from './Status';
 import UserDetail from './UserDetail';
+import IUser from '../../interfaces/IUser';
+import StringUtil from '../../utils/stringUtils';
 
-const User = (props: any) => {
+interface IProps {
+  user: IUser;
+  isSelected: boolean;
+  showAvatar: boolean;
+}
+
+const User: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
   const actions = useContext()[1];
+
+  const { user, isSelected, showAvatar } = props;
+  const { selectChannel } = actions;
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   const displayName =
-    props.user.vCard && props.user.vCard.fullName
-      ? props.user.vCard.fullName
-      : props.user.username;
+    user.vCard && user.vCard.fullName ? user.vCard.fullName : user.username;
 
   const handleOnClick = () => {
-    actions.selectChannel(props.user.jid);
+    selectChannel(user.jid);
   };
 
   const handleOnContextMenu = (event: any) => {
@@ -58,20 +62,20 @@ const User = (props: any) => {
       <div
         className={[
           classes.root,
-          props.isSelected ? classes.active : '',
-          props.showAvatar ? '' : classes.rootNarrow,
+          isSelected ? classes.active : '',
+          showAvatar ? '' : classes.rootNarrow,
         ].join(' ')}
         onClick={handleOnClick}
         onContextMenu={handleOnContextMenu}
       >
         <div className={classes.avatar}>
-          {props.showAvatar ? (
+          {showAvatar ? (
             <div>
-              {props.user.vCard && props.user.vCard.photo ? (
+              {user.vCard && user.vCard.photo ? (
                 <Avatar
                   className={classes.img}
-                  src={`data:${props.user.vCard.photoType};base64,${
-                    props.user.vCard.photo
+                  src={`data:${user.vCard.photoType};base64,${
+                    user.vCard.photo
                   }`}
                 />
               ) : (
@@ -82,19 +86,19 @@ const User = (props: any) => {
                 </Avatar>
               )}
               <div className={classes.status}>
-                <Status status={props.user.status} />
+                <Status status={user.status} />
               </div>
             </div>
           ) : (
             <div className={classes.statusOnly}>
-              <Status status={props.user.status} />
+              <Status status={user.status} />
             </div>
           )}
         </div>
         <Typography className={classes.title}>{displayName}</Typography>
-        {props.user.unreadMessages > 0 && (
+        {user.unreadMessages > 0 && (
           <Badge
-            badgeContent={props.user.unreadMessages}
+            badgeContent={user.unreadMessages}
             classes={{ badge: classes.badge }}
             color="error"
           >
@@ -125,7 +129,7 @@ const User = (props: any) => {
         BackdropProps={{ className: classes.dialog }}
         aria-labelledby="detail-dialog-title"
       >
-        <UserDetail user={props.user} />
+        <UserDetail user={user} />
       </Dialog>
     </React.Fragment>
   );

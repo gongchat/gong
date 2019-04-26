@@ -1,33 +1,40 @@
 import React from 'react';
 
-// material ui
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
-const SliderMarkers = (props: any) => {
+interface IProps {
+  minSize: number;
+  maxSize: number;
+  defaultSize: number;
+}
+
+const SliderMarkers: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
+
+  const { minSize, maxSize, defaultSize } = props;
+
   const getMarkers = () => {
     const markers: any[] = [];
-    for (let i = props.minSize; i <= props.maxSize; i++) {
+    for (let i = minSize; i <= maxSize; i++) {
       markers.push(
         <div
           key={i}
           style={{
-            width: `${(1.0 / (props.maxSize - props.minSize)) * 500.0}px`,
+            width: `${(1.0 / (maxSize - minSize)) * 500.0}px`,
           }}
           className={classes.marker}
         >
           <span className={classes.dot} />
-          {i === props.minSize && <Typography>{props.minSize}</Typography>}
-          {i === props.defaultSize && (
-            <Typography>{props.defaultSize}</Typography>
-          )}
-          {i === props.maxSize && <Typography>{props.maxSize}</Typography>}
+          {i === minSize && <Typography>{minSize}</Typography>}
+          {i === defaultSize && <Typography>{defaultSize}</Typography>}
+          {i === maxSize && <Typography>{maxSize}</Typography>}
         </div>
       );
     }
     return markers;
   };
+
   return (
     <div className={classes.root}>
       <div className={classes.markers}>{getMarkers()}</div>

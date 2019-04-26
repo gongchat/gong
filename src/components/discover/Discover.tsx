@@ -2,7 +2,6 @@ import React from 'react';
 import { useState } from 'react';
 import { useContext } from '../../context';
 
-// material ui
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -19,14 +18,14 @@ import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/styles';
 
-// interfaces
 import IDiscoverRoom from '../../interfaces/IDiscoverRoom';
 import IRoomJoin from '../../interfaces/IRoomJoin';
 import ISubdomain from '../../interfaces/ISubdomain';
 
-const Discover = () => {
+const Discover: React.FC = () => {
   const classes = useStyles();
   const [context, actions] = useContext();
+
   const { profile, subdomains, rooms, showDiscover } = context;
   const { setShowDiscover, discoverItems, addRoomToChannels } = actions;
 
