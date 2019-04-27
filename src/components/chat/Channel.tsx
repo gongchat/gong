@@ -15,7 +15,7 @@ import IRoom from '../../interfaces/IRoom';
 
 interface IProps {
   channel: IRoom;
-  isSelected: boolean;
+  isSelected: boolean | undefined;
   prefix: string;
 }
 

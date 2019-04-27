@@ -6,5 +6,5 @@ export default interface IProfile {
   group: string;
   status: string;
   color: string;
-  vCard: IVCard | undefined;
+  vCard: IVCard;
 }

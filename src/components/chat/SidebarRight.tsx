@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import ChannelUsers from './ChannelUsers';
 import IChannelUser from '../../interfaces/IChannelUser';
+import IRoom from '../../interfaces/IRoom';
 
 const SidebarRight: React.FC = () => {
   const classes = useStyles();
@@ -18,7 +19,7 @@ const SidebarRight: React.FC = () => {
         title="Moderators"
         users={
           current &&
-          current.users.filter(
+          (current as IRoom).users.filter(
             (user: IChannelUser) => user.role === 'moderator'
           )
         }
@@ -27,7 +28,7 @@ const SidebarRight: React.FC = () => {
         title="Participants"
         users={
           current &&
-          current.users.filter(
+          (current as IRoom).users.filter(
             (user: IChannelUser) => user.role === 'participant'
           )
         }

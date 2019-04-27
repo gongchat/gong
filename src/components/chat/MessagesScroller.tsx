@@ -3,6 +3,7 @@ import { useContext } from '../../context';
 
 import { makeStyles } from '@material-ui/styles';
 
+import IRoom from '../../interfaces/IRoom';
 import { usePrevious } from '../../utils/usePrevious';
 
 let wasAtBottom = true;
@@ -51,8 +52,8 @@ const MessagesScroller: React.FC<IProps> = (props: IProps) => {
         ((current.type === 'chat' &&
           current.messages[current.messages.length - 1].from === profile.jid) ||
           (current.type === 'groupchat' &&
-            current.messages[current.messages.length - 1].nickname ===
-              current.nickname))
+            current.messages[current.messages.length - 1].userNickname ===
+              (current as IRoom).myNickname))
       );
     };
 
@@ -81,7 +82,7 @@ const MessagesScroller: React.FC<IProps> = (props: IProps) => {
       if (isUpdateForLoggedMessages()) {
         root.current.scrollTop =
           root.current.scrollHeight - positionBeforeGettingLogs;
-      } else if (shouldUpdateToSavedPosition()) {
+      } else if (shouldUpdateToSavedPosition() && current) {
         root.current.scrollTop = current.scrollPosition;
       } else if (wasAtBottom || isLastMessageMe()) {
         root.current.scrollTop =

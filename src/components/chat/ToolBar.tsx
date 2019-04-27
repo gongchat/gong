@@ -5,6 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
 import Status from './Status';
+import IRoom from '../../interfaces/IRoom';
+import IUser from '../../interfaces/IUser';
 
 const ToolBar: React.FC = () => {
   const classes = useStyles();
@@ -18,18 +20,18 @@ const ToolBar: React.FC = () => {
   if (current) {
     switch (current.type) {
       case 'groupchat':
+        const room = current as IRoom;
         chatName =
           current.name.startsWith('#') && current.name.length > 1
             ? current.name.substring(1)
             : current.name;
-        chatStatus = current.isConnected ? 'online' : 'offline';
+        chatStatus = room.isConnected ? 'online' : 'offline';
         break;
       case 'chat':
+        const user = current as IUser;
         chatName =
-          current.vCard && current.vCard.fullName
-            ? current.vCard.fullName
-            : current.name;
-        chatStatus = current.status;
+          user.vCard && user.vCard.fullName ? user.vCard.fullName : user.name;
+        chatStatus = user.status;
         break;
       default:
         break;
@@ -49,9 +51,13 @@ const ToolBar: React.FC = () => {
           </span>
           {chatName}
         </Typography>
-        {current && current.connectionError && (
-          <Typography color="error">({current.connectionError})</Typography>
-        )}
+        {current &&
+          current.type === 'groupchat' &&
+          (current as IRoom).connectionError && (
+            <Typography color="error">
+              ({(current as IRoom).connectionError})
+            </Typography>
+          )}
         {current && current.type === 'chat' && current.order !== 10 && (
           <Status status={chatStatus} />
         )}

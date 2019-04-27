@@ -1,4 +1,5 @@
 import { addSavedRoomsToChannels } from './room';
+import { defaultVCard } from './user';
 import { mapSettingsSavedToSettings, defaultSettings } from './settings';
 import { initialState } from '../context';
 import IConnection from '../interfaces/IConnection';
@@ -115,7 +116,7 @@ export const connectionActions = {
       group: '',
       status: 'online',
       color: ColorUtil.stringToHexColor(payload.username),
-      vCard: undefined,
+      vCard: defaultVCard,
     };
 
     const settings: ISettings = mapSettingsSavedToSettings(settingsSaved);

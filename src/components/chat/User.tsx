@@ -17,7 +17,7 @@ import StringUtil from '../../utils/stringUtils';
 
 interface IProps {
   user: IUser;
-  isSelected: boolean;
+  isSelected: boolean | undefined;
   showAvatar: boolean;
 }
 

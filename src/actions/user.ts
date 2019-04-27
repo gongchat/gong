@@ -61,3 +61,29 @@ export const userActions = {
     };
   },
 };
+
+export const defaultVCard: IVCard = {
+  jid: '',
+  fullName: '',
+  firstName: '',
+  lastName: '',
+  middleName: '',
+  nickname: '',
+  url: '',
+  birthday: '',
+  organizationName: '',
+  organizationUnit: '',
+  title: '',
+  role: '',
+  phoneNumber: '',
+  street: '',
+  streetExtended: '',
+  city: '',
+  state: '',
+  zipCode: '',
+  country: '',
+  email: '',
+  description: '',
+  photoType: '',
+  photo: '',
+};

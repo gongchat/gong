@@ -8,7 +8,7 @@ import ChannelUser from './ChannelUser';
 import IChannelUser from '../../interfaces/IChannelUser';
 
 interface IProps {
-  users: IChannelUser[];
+  users: IChannelUser[] | undefined;
   title: string;
 }
 
@@ -25,18 +25,19 @@ const ChannelUsers: React.FC<IProps> = (props: IProps) => {
         {title} - {users && users.length}
       </Typography>
       <div className={classes.users}>
-        {users
-          .sort((a: IChannelUser, b: IChannelUser) =>
-            b.nickname.localeCompare(a.nickname)
-          )
-          .reverse()
-          .map((user: IChannelUser) => (
-            <ChannelUser
-              key={user.jid}
-              user={user}
-              showAvatar={theme.sidebarRightShowAvatar}
-            />
-          ))}
+        {users &&
+          users
+            .sort((a: IChannelUser, b: IChannelUser) =>
+              b.nickname.localeCompare(a.nickname)
+            )
+            .reverse()
+            .map((user: IChannelUser) => (
+              <ChannelUser
+                key={user.jid}
+                user={user}
+                showAvatar={theme.sidebarRightShowAvatar}
+              />
+            ))}
       </div>
     </div>
   );

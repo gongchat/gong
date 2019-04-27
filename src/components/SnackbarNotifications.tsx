@@ -25,7 +25,7 @@ const SnackbarNotifications: React.FC = () => {
           notExists =
             notExists ||
             !prevSnackbarNotifications.filter(
-              ({ key }) => snackbarNotifications[index].key === key
+              ({ key }) => snackbarNotifications[index].id === key
             ).length;
         }
       });

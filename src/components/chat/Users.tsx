@@ -3,19 +3,17 @@ import { useContext } from '../../context';
 
 import Group from './Group';
 import User from './User';
-import IChannel from '../../interfaces/IChannel';
 import IUser from '../../interfaces/IUser';
 
 interface IProps {
   users: IUser[];
-  current: IChannel;
 }
 
 const Users: React.FC<IProps> = (props: any) => {
   const [context] = useContext();
 
-  const { users, current } = props;
-  const { theme } = context;
+  const { users } = props;
+  const { theme, current } = context;
 
   const getGroupedUsers = (users: any) => {
     return users.reduce((a: any, c: any) => {

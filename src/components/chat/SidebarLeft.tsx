@@ -9,6 +9,7 @@ import Channels from './Channels';
 import Me from './Me';
 import Users from './Users';
 import IChannel from '../../interfaces/IChannel';
+import IUser from '../../interfaces/IUser';
 
 const SidebarLeft: React.FC = () => {
   const classes = useStyles();
@@ -62,7 +63,6 @@ const SidebarLeft: React.FC = () => {
             hideIfEmpty={true}
             canAdd={false}
             prefix="@"
-            current={current}
             channels={channels.filter(
               (channel: IChannel) => channel.order === 10
             )}
@@ -72,14 +72,16 @@ const SidebarLeft: React.FC = () => {
             hideIfEmpty={false}
             canAdd={true}
             prefix="#"
-            current={current}
             channels={channels.filter(
               (channel: IChannel) => channel.order === 20
             )}
           />
           <Users
-            current={current}
-            users={channels.filter((channel: IChannel) => channel.order === 30)}
+            users={
+              channels.filter(
+                (channel: IChannel) => channel.order === 30
+              ) as IUser[]
+            }
           />
         </div>
       </div>

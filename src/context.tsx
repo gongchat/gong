@@ -12,7 +12,7 @@ import { presenceActions } from './actions/presence';
 import { roomActions } from './actions/room';
 import { settingsActions, defaultSettings } from './actions/settings';
 import { themeActions } from './actions/theme';
-import { userActions } from './actions/user';
+import { userActions, defaultVCard } from './actions/user';
 import IState from './interfaces/IState';
 import { getTheme } from './actions/theme';
 
@@ -39,7 +39,7 @@ export const initialState: IState = {
     group: '',
     status: '',
     color: '',
-    vCard: undefined,
+    vCard: defaultVCard,
   },
   snackbarNotifications: [],
   showDiscover: false,
@@ -78,6 +78,6 @@ export default function ContextProvider(props: any) {
   );
 }
 
-export function useContext(): any {
-  return React.useContext(Context);
+export function useContext(): [IState, any] {
+  return React.useContext(Context) as any;
 }

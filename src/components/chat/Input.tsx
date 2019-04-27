@@ -8,6 +8,8 @@ import { makeStyles } from '@material-ui/styles';
 
 import ListSelectors from './ListSelectors';
 import IMessageSend from '../../interfaces/IMessageSend';
+import IRoom from '../../interfaces/IRoom';
+import IUser from '../../interfaces/IUser';
 import StringUtil from '../../utils/stringUtils';
 import { usePrevious } from '../../utils/usePrevious';
 
@@ -25,29 +27,33 @@ const Input: React.FC = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const send = () => {
-    if (text !== '') {
-      if (text.startsWith('/nick')) {
-        setRoomNickname({
-          jid: current.jid,
-          currentNickname: current.myNickname,
-          newNickname: text.substring(6),
-        });
-      } else {
-        let to = current.jid;
-        if (current.type === 'chat' && current.sessionJid) {
-          to = current.sessionJid;
+    if (current) {
+      if (text !== '') {
+        if (current.type === 'groupchat' && text.startsWith('/nick')) {
+          const room = current as IRoom;
+          setRoomNickname({
+            jid: current.jid,
+            currentNickname: room.myNickname,
+            newNickname: text.substring(6),
+          });
+        } else {
+          const user = current as IUser;
+          let to = current.jid;
+          if (current.type === 'chat' && user.sessionJid) {
+            to = user.sessionJid;
+          }
+          const messageSend: IMessageSend = {
+            id: StringUtil.makeId(7),
+            channelName: current.jid,
+            type: current.type,
+            to,
+            from: settings.jid,
+            body: text,
+          };
+          sendMessage(messageSend);
         }
-        const messageSend: IMessageSend = {
-          id: StringUtil.makeId(7),
-          channelName: current.jid,
-          type: current.type,
-          to,
-          from: settings.jid,
-          body: text,
-        };
-        sendMessage(messageSend);
+        setText('');
       }
-      setText('');
     }
   };
 
@@ -134,7 +140,8 @@ const Input: React.FC = () => {
               inputRef={inputRef}
               disabled={
                 !connection.isConnected ||
-                (current.connectionError !== undefined && !current.isConnected)
+                (current.type === 'groupchat' &&
+                  !(current as IRoom).isConnected)
               }
             />
             <div className={classes.inputRightInline}>

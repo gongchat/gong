@@ -1,4 +1,5 @@
 import React from 'react';
+import { useContext } from '../../context';
 
 import { makeStyles } from '@material-ui/styles';
 
@@ -9,7 +10,6 @@ import IRoom from '../../interfaces/IRoom';
 
 interface IProps {
   channels: IChannel[];
-  current: IChannel;
   hideIfEmpty: boolean;
   title: string;
   canAdd: boolean;
@@ -18,8 +18,10 @@ interface IProps {
 
 const Channels: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
+  const [context] = useContext();
 
-  const { channels, current, hideIfEmpty, title, canAdd, prefix } = props;
+  const { channels, hideIfEmpty, title, canAdd, prefix } = props;
+  const { current } = context;
 
   if (hideIfEmpty && (!channels || channels.length <= 0)) {
     return null;
