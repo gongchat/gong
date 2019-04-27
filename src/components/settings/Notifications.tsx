@@ -77,8 +77,7 @@ const NotificationSettings: React.FC = () => {
   );
 
   const handleChange = (e: any, action: any) => {
-    // eslint-disable-next-line
-    if (name === 'soundName') {
+    if (e.target.name === 'soundName') {
       playAudio(e.target.value);
     }
     action(e.target.value);

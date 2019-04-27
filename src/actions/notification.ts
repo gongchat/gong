@@ -4,18 +4,17 @@ import ISnackbarNotifications from '../interfaces/ISnackbarNotification';
 import IState from '../interfaces/IState';
 
 export const SOUNDS = [
-  {
-    name: 'Gong 1',
-    fileName: '56241__q-k__gong-center-mute.wav',
-  },
-  {
-    name: 'Gong 2',
-    fileName: '94199__peter-lustig__sch-03-stumpf.wav',
-  },
-  {
-    name: 'Wow',
-    fileName: 'wowc.mp3',
-  },
+  { name: '!', fileName: '!.mp3' },
+  { name: 'AYAYA', fileName: 'ayaya-ayaya.mp3' },
+  { name: 'AYAYA AYAYA', fileName: 'ayaya-ayaya.mp3' },
+  { name: 'Chewbacca', fileName: 'chewbacca.mp3' },
+  { name: 'Gong 1', fileName: 'gong-1.wav' },
+  { name: 'Gong 2', fileName: 'gong-2.wav' },
+  { name: 'Meow', fileName: 'meow.wav' },
+  { name: 'Rare Candy', fileName: 'rare-candy.mp3' },
+  { name: 'Wow', fileName: 'wowc.mp3' },
+  { name: 'XP Error', fileName: 'xp-error.mp3' },
+  { name: 'Yahoo', fileName: 'yahoo.wav' },
 ];
 
 export const notificationActions = {
