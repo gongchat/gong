@@ -15,7 +15,7 @@ export default interface IState {
   settings: ISettings;
   profile: IProfile;
 
-  channels: IChannel[];
+  channels: (IChannel | IRoom | IUser)[];
   current?: IChannel | IRoom | IUser;
 
   showDiscover: boolean;
