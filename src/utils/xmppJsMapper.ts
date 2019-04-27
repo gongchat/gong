@@ -178,33 +178,63 @@ export default class XmppJsMapper {
 
     const vCard: IVCard = {
       jid,
-      fullName: fullName ? fullName.children[0] : '',
-      firstName: firstName ? firstName.children[0] : '',
-      middleName: middleName ? middleName.children[0] : '',
-      lastName: lastName ? lastName.children[0] : '',
-      nickname: nickname ? nickname.children[0] : '',
-      url: url ? url.children[0] : '',
-      birthday: birthday ? birthday.children[0] : '',
-      organizationName: organizationName ? organizationName.children[0] : '',
-      organizationUnit: organizationUnit ? organizationUnit.children[0] : '',
-      title: title ? title.children[0] : '',
-      role: role ? role.children[0] : '',
+      fullName:
+        fullName && fullName.children.length >= 0 ? fullName.children[0] : '',
+      firstName:
+        firstName && firstName.children.length >= 0
+          ? firstName.children[0]
+          : '',
+      middleName:
+        middleName && middleName.children.length >= 0
+          ? middleName.children[0]
+          : '',
+      lastName:
+        lastName && lastName.children.length >= 0 ? lastName.children[0] : '',
+      nickname:
+        nickname && nickname.children.length >= 0 ? nickname.children[0] : '',
+      url: url && url.children.length >= 0 ? url.children[0] : '',
+      birthday:
+        birthday && birthday.children.length >= 0 ? birthday.children[0] : '',
+      organizationName:
+        organizationName && organizationName.children.length >= 0
+          ? organizationName.children[0]
+          : '',
+      organizationUnit:
+        organizationUnit && organizationUnit.children.length >= 0
+          ? organizationUnit.children[0]
+          : '',
+      title: title && title.children.length >= 0 ? title.children[0] : '',
+      role: role && role.children.length >= 0 ? role.children[0] : '',
       phoneNumber: phoneNumber
         ? phoneNumber.children.find((c: any) => c.name === 'NUMBER').attrs.xmlns
         : '',
-      street: street ? street.children[0] : '',
-      streetExtended: streetExtended ? streetExtended.children[0] : '',
-      city: city ? city.children[0] : '',
-      state: state ? state.children[0] : '',
-      zipCode: zip ? zip.children[0] : '',
-      country: country ? country.children[0] : '',
+      street: street && street.children.length >= 0 ? street.children[0] : '',
+      streetExtended:
+        streetExtended && streetExtended.children.length >= 0
+          ? streetExtended.children[0]
+          : '',
+      city: city && city.children.length >= 0 ? city.children[0] : '',
+      state: state && state.children.length >= 0 ? state.children[0] : '',
+      zipCode: zip && zip.children.length >= 0 ? zip.children[0] : '',
+      country:
+        country && country.children.length >= 0 ? country.children[0] : '',
       email: email
         ? email.children.find((c: any) => c.name === 'USERID').children[0]
         : '',
-      description: description ? description.children[0] : '',
-      photoType: photoType ? photoType.children[0] : '',
-      photo: photoBase64 ? photoBase64.children[0] : '',
+      description:
+        description && description.children.length >= 0
+          ? description.children[0]
+          : '',
+      photoType:
+        photoType && photoType.children.length >= 0
+          ? photoType.children[0]
+          : '',
+      photo:
+        photoBase64 && photoBase64.children.length >= 0
+          ? photoBase64.children[0]
+          : '',
     };
+
     return vCard;
   }
 }

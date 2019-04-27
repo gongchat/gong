@@ -19,65 +19,41 @@ const Account: React.FC = () => {
   const { setMyVCard } = actions;
 
   const [index, setIndex] = useState(0);
-  const [fullName, setFullName] = useState(
-    profile.vCard ? profile.vCard.fullName : ''
-  );
-  const [firstName, setFirstName] = useState(
-    profile.vCard ? profile.vCard.firstName : ''
-  );
-  const [lastName, setLastName] = useState(
-    profile.vCard ? profile.vCard.lastName : ''
-  );
-  const [middleName, setMiddleName] = useState(
-    profile.vCard ? profile.vCard.middleName : ''
-  );
-  const [nickname, setNickname] = useState(
-    profile.vCard ? profile.vCard.nickname : ''
-  );
-  const [url, setUrl] = useState(profile.vCard ? profile.vCard.url : '');
-  const [birthday, setBirthday] = useState(
-    profile.vCard ? profile.vCard.birthday : ''
-  );
+  const [fullName, setFullName] = useState(profile.vCard.fullName);
+  const [firstName, setFirstName] = useState(profile.vCard.firstName);
+  const [lastName, setLastName] = useState(profile.vCard.lastName);
+  const [middleName, setMiddleName] = useState(profile.vCard.middleName);
+  const [nickname, setNickname] = useState(profile.vCard.nickname);
+  const [url, setUrl] = useState(profile.vCard.url);
+  const [birthday, setBirthday] = useState(profile.vCard.birthday);
   const [organizationName, setOrganizationName] = useState(
-    profile.vCard ? profile.vCard.organizationName : ''
+    profile.vCard.organizationName
   );
   const [organizationUnit, setOrganizationUnit] = useState(
-    profile.vCard ? profile.vCard.organizationUnit : ''
+    profile.vCard.organizationUnit
   );
-  const [title, setTitle] = useState(profile.vCard ? profile.vCard.title : '');
-  const [role, setRole] = useState(profile.vCard ? profile.vCard.role : '');
-  const [phoneNumber, setPhoneNumber] = useState(
-    profile.vCard ? profile.vCard.phoneNumber : ''
-  );
-  const [street, setStreet] = useState(
-    profile.vCard ? profile.vCard.street : ''
-  );
+  const [title, setTitle] = useState(profile.vCard.title);
+  const [role, setRole] = useState(profile.vCard.role);
+  const [phoneNumber, setPhoneNumber] = useState(profile.vCard.phoneNumber);
+  const [street, setStreet] = useState(profile.vCard.street);
   const [streetExtended, setStreetExtended] = useState(
-    profile.vCard ? profile.vCard.streetExtended : ''
+    profile.vCard.streetExtended
   );
-  const [city, setCity] = useState(profile.vCard ? profile.vCard.city : '');
-  const [state, setState] = useState(profile.vCard ? profile.vCard.state : '');
-  const [zipCode, setZipCode] = useState(
-    profile.vCard ? profile.vCard.zipCode : ''
-  );
-  const [country, setCountry] = useState(
-    profile.vCard ? profile.vCard.country : ''
-  );
-  const [email, setEmail] = useState(profile.vCard ? profile.vCard.email : '');
-  const [description, setDescription] = useState(
-    profile.vCard ? profile.vCard.description : ''
-  );
-  const [photoType, setPhotoType] = useState(
-    profile.vCard ? profile.vCard.photoType : ''
-  );
-  const [photo, setPhoto] = useState(profile.vCard ? profile.vCard.photo : '');
+  const [city, setCity] = useState(profile.vCard.city);
+  const [state, setState] = useState(profile.vCard.state);
+  const [zipCode, setZipCode] = useState(profile.vCard.zipCode);
+  const [country, setCountry] = useState(profile.vCard.country);
+  const [email, setEmail] = useState(profile.vCard.email);
+  const [description, setDescription] = useState(profile.vCard.description);
+  const [photoType, setPhotoType] = useState(profile.vCard.photoType);
+  const [photo, setPhoto] = useState(profile.vCard.photo);
 
   const fileInput = React.useRef<HTMLInputElement>(null);
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
     const data = {
-      jid: state.profile.jid,
+      jid: profile.jid,
       fullName,
       firstName,
       lastName,
@@ -190,7 +166,7 @@ const Account: React.FC = () => {
         </div>
       </div>
       {/* TODO: fix regex */}
-      {profile.vCard ? (
+      {!profile.vCard ? (
         <Typography>Getting your details, please wait...</Typography>
       ) : (
         <ValidatorForm onSubmit={handleSubmit} className={classes.form}>
@@ -198,7 +174,7 @@ const Account: React.FC = () => {
             value={index}
             indicatorColor="primary"
             textColor="primary"
-            onChange={(event: any) => setIndex(event.target.value)}
+            onChange={(event: any, value: number) => setIndex(value)}
           >
             <Tab label="User Info" />
             <Tab label="Contact Info" />
