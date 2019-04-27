@@ -4,6 +4,7 @@ import { useContext } from '../../context';
 
 import ListSelector from './ListSelector';
 import IChannelUser from '../../interfaces/IChannelUser';
+import moment = require('moment');
 
 interface IProps {
   selectorIndex: number;
@@ -55,18 +56,35 @@ const ListSelectorUsers: React.FC<IProps> = (props: IProps) => {
   };
 
   const sortUsers = (users: IChannelUser[]) => {
-    return users.sort((a: IChannelUser, b: IChannelUser) => {
-      if (
-        (a.lastTimeMentionedMe && !b.lastTimeMentionedMe) ||
-        (!a.lastTimeMentionedMe && b.lastTimeMentionedMe)
-      ) {
-        return 0;
-      } else if (a.lastTimeMentionedMe && b.lastTimeMentionedMe) {
-        return a.lastTimeMentionedMe.diff(b.lastTimeMentionedMe);
-      } else {
-        return a.nickname.localeCompare(b.nickname);
-      }
-    });
+    let sortedUsers: any[] = [];
+    const today = moment();
+    const sortedRecentMentions = users
+      .filter(
+        (user: IChannelUser) =>
+          user.lastTimeMentionedMe && user.lastTimeMentionedMe.diff(today)
+      )
+      .sort((a: IChannelUser, b: IChannelUser) =>
+        // Need to do ternary operator this to shut up Typescript, it is not
+        // smart enough to know that I checked for null in the filter
+        b.lastTimeMentionedMe
+          ? b.lastTimeMentionedMe.diff(a.lastTimeMentionedMe)
+          : 0
+      );
+    const sortedNonRecentMentions = users
+      .filter(
+        (user: IChannelUser) =>
+          !user.lastTimeMentionedMe || !user.lastTimeMentionedMe.diff(today)
+      )
+      .sort((a: IChannelUser, b: IChannelUser) =>
+        a.nickname.localeCompare(b.nickname)
+      );
+    if (sortedRecentMentions.length > 0) {
+      sortedUsers = sortedRecentMentions;
+      sortedUsers.push(null);
+    }
+    if (sortedNonRecentMentions.length > 0) {
+      sortedUsers = sortedUsers.concat(sortedNonRecentMentions);
+    }
   };
 
   React.useEffect(() => {
