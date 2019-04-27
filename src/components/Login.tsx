@@ -134,55 +134,53 @@ const Login: React.FC<IProps> = () => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => {
-  return {
-    root: {
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
+const useStyles = makeStyles((theme: any) => ({
+  root: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  title: {
+    fontSize: '2rem',
+    textAlign: 'center',
+    marginTop: theme.spacing.unit * 4,
+    marginBottom: theme.spacing.unit * 4,
+  },
+  form: {
+    overflowY: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexGrow: 1,
+    flexShrink: 0,
+    flex: 1,
+    '& div, & button': {
+      marginBottom: theme.spacing.unit * 0.5,
+      width: '100%',
+      maxWidth: '400px',
     },
-    title: {
-      fontSize: '2rem',
-      textAlign: 'center',
-      marginTop: theme.spacing.unit * 4,
+  },
+  content: {
+    display: 'flex',
+    flexDirection: 'column',
+    '& > *:last-child': {
       marginBottom: theme.spacing.unit * 4,
     },
-    form: {
-      overflowY: 'auto',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexGrow: 1,
-      flexShrink: 0,
-      flex: 1,
-      '& div, & button': {
-        marginBottom: theme.spacing.unit * 0.5,
-        width: '100%',
-        maxWidth: '400px',
-      },
-    },
-    content: {
-      display: 'flex',
-      flexDirection: 'column',
-      '& > *:last-child': {
-        marginBottom: theme.spacing.unit * 4,
-      },
-    },
-    input: {
-      flexShrink: 0,
-    },
-    helperText: {
-      margin: 0,
-      marginBottom: theme.spacing.unit / 2,
-    },
-    button: {
-      flexShrink: 0,
-    },
-    error: {
-      marginTop: theme.spacing.unit,
-    },
-  };
-});
+  },
+  input: {
+    flexShrink: 0,
+  },
+  helperText: {
+    margin: 0,
+    marginBottom: theme.spacing.unit / 2,
+  },
+  button: {
+    flexShrink: 0,
+  },
+  error: {
+    marginTop: theme.spacing.unit,
+  },
+}));
 
 export default Login;
