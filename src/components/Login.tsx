@@ -60,10 +60,7 @@ const Login: React.FC<IProps> = () => {
             value={domain}
             variant="filled"
             validators={['required', 'matchRegexp:^[a-zA-Z0-9_.-]*$']}
-            errorMessages={[
-              'Please input a domain',
-              'Please enter a valid domain',
-            ]}
+            errorMessages={['domain is required', 'domain is invalid']}
             FormHelperTextProps={{ className: classes.helperText }}
             className={classes.input}
           />
@@ -74,10 +71,7 @@ const Login: React.FC<IProps> = () => {
             value={username}
             variant="filled"
             validators={['required', 'matchRegexp:^[a-zA-Z0-9_.-]*$']}
-            errorMessages={[
-              'Please input a username',
-              'Please enter a valid username',
-            ]}
+            errorMessages={['username is required', 'username is invalid']}
             FormHelperTextProps={{ className: classes.helperText }}
             className={classes.input}
           />
@@ -89,10 +83,7 @@ const Login: React.FC<IProps> = () => {
             value={resource}
             variant="filled"
             validators={['required', 'matchRegexp:^[a-zA-Z0-9_.-]*$']}
-            errorMessages={[
-              'Please input a resource',
-              'Please enter a valid resource',
-            ]}
+            errorMessages={['resource is required', 'resource is invalid']}
             FormHelperTextProps={{ className: classes.helperText }}
             className={classes.input}
           />
@@ -103,7 +94,7 @@ const Login: React.FC<IProps> = () => {
             value={port}
             variant="filled"
             validators={['matchRegexp:^[0-9]*$']}
-            errorMessages={['Please enter a valid port']}
+            errorMessages={['port is invalid']}
             FormHelperTextProps={{ className: classes.helperText }}
             helperText="If empty will default to 5222"
             className={classes.input}
@@ -116,7 +107,7 @@ const Login: React.FC<IProps> = () => {
             value={password}
             variant="filled"
             validators={['required']}
-            errorMessages={['Please input a password']}
+            errorMessages={['password is required']}
             FormHelperTextProps={{ className: classes.helperText }}
             className={classes.input}
           />

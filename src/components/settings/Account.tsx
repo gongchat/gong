@@ -224,7 +224,7 @@ const Account: React.FC = () => {
                 value={nickname}
                 variant="filled"
                 validators={['matchRegexp:^[a-zA-Z0-9_\\.\\- ]*$']}
-                errorMessages={['Please enter a valid nickname']}
+                errorMessages={['nickname is invalid']}
                 FormHelperTextProps={{ className: classes.helperText }}
                 className={classes.input}
               />

@@ -2,6 +2,8 @@ import React from 'react';
 import { useState } from 'react';
 import { useContext } from '../../context';
 
+import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
+
 import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -37,8 +39,8 @@ const EditRoom: React.FC<IProps> = (props: IProps) => {
     onClose();
   };
 
-  const handleOnChange = (e: any, action: any) => {
-    action(e.target.value);
+  const handleOnChange = (event: any, action: any) => {
+    action(event.target.value);
   };
 
   return (
@@ -51,55 +53,65 @@ const EditRoom: React.FC<IProps> = (props: IProps) => {
           </IconButton>
         </span>
       </DialogTitle>
-      <DialogContent>
-        <div className={classes.inputs}>
-          <TextField
-            name="jid"
-            onChange={(e: any) => handleOnChange(e, setJid)}
-            label="JID"
-            variant="filled"
-            margin="dense"
-            value={jid}
-          />
-          <TextField
-            name="channelName"
-            onChange={(e: any) => handleOnChange(e, setChannelName)}
-            label="Channel Name"
-            variant="filled"
-            margin="dense"
-            value={channelName}
-          />
-          <TextField
-            name="nickname"
-            onChange={(e: any) => handleOnChange(e, setNickname)}
-            label="Nickname"
-            variant="filled"
-            margin="dense"
-            value={nickname}
-          />
-          <TextField
-            name="password"
-            onChange={(e: any) => handleOnChange(e, setPassword)}
-            label="Password"
-            variant="filled"
-            margin="dense"
-            helperText="Leave empty if no password"
-            FormHelperTextProps={{ className: classes.helperText }}
-            type="password"
-            value={password}
-          />
-        </div>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Back</Button>
-        <Button
-          onClick={handleClickEditRoom}
-          variant="contained"
-          color="primary"
-        >
-          Save
-        </Button>
-      </DialogActions>
+      <ValidatorForm onSubmit={handleClickEditRoom}>
+        <DialogContent>
+          <div className={classes.inputs}>
+            <TextValidator
+              name="jid"
+              onChange={(event: any) => handleOnChange(event, setJid)}
+              label="JID"
+              variant="filled"
+              margin="dense"
+              value={jid}
+              validators={['required']}
+              errorMessages={['jid is rquired']}
+              FormHelperTextProps={{ className: classes.helperText }}
+              className={classes.input}
+            />
+            <TextValidator
+              name="channelName"
+              onChange={(event: any) => handleOnChange(event, setChannelName)}
+              label="Channel Name"
+              variant="filled"
+              margin="dense"
+              value={channelName}
+              validators={['required']}
+              errorMessages={['channel name is required']}
+              FormHelperTextProps={{ className: classes.helperText }}
+              className={classes.input}
+            />
+            <TextValidator
+              name="nickname"
+              onChange={(event: any) => handleOnChange(event, setNickname)}
+              label="Nickname"
+              variant="filled"
+              margin="dense"
+              value={nickname}
+              validators={['required']}
+              errorMessages={['nickname is required']}
+              FormHelperTextProps={{ className: classes.helperText }}
+              className={classes.input}
+            />
+            <TextField
+              name="password"
+              onChange={(event: any) => handleOnChange(event, setPassword)}
+              label="Password"
+              variant="filled"
+              margin="dense"
+              helperText="Leave empty if no password"
+              FormHelperTextProps={{ className: classes.helperText }}
+              type="password"
+              value={password}
+            />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose}>Back</Button>
+          <Button type="submit" variant="contained" color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </ValidatorForm>
     </React.Fragment>
   );
 };
@@ -128,6 +140,9 @@ const useStyles = makeStyles((theme: any) => ({
     alignItems: 'center',
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit,
+  },
+  input: {
+    flexShrink: 0,
   },
   helperText: {
     marginLeft: 0,
