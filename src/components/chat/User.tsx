@@ -57,6 +57,8 @@ const User: React.FC<IProps> = (props: IProps) => {
     setIsDetailsOpen(false);
   };
 
+  console.log(user);
+
   return (
     <React.Fragment>
       <div

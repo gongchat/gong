@@ -153,7 +153,7 @@ const useStyles = makeStyles((theme: any) => ({
     borderRadius: '5px',
   },
   badgeFlash: {
-    animation: 'flash 1s linear infinite',
+    animation: '$flash 1s linear infinite',
   },
   '@keyframes flash': {
     '0%': {

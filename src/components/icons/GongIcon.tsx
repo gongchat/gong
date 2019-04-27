@@ -33,7 +33,7 @@ const useStyles = makeStyles(
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      animation: 'gong 5s linear',
+      animation: '$gong 5s linear',
       animationIterationCount: 'infinite',
       zIndex: '2',
     },
@@ -61,19 +61,19 @@ const useStyles = makeStyles(
       position: 'absolute',
     },
     delay1: {
-      animation: 'waves 5s 0.5s linear',
+      animation: '$waves 5s 0.5s linear',
       animationIterationCount: 'infinite',
     },
     delay2: {
-      animation: 'waves 5s linear 1.3s forwards',
+      animation: '$waves 5s linear 1.3s forwards',
       animationIterationCount: 'infinite',
     },
     delay3: {
-      animation: 'waves 5s linear 1.9s forwards',
+      animation: '$waves 5s linear 1.9s forwards',
       animationIterationCount: 'infinite',
     },
     delay4: {
-      animation: 'waves 5s linear 2.5s forwards',
+      animation: '$waves 5s linear 2.5s forwards',
       animationIterationCount: 'infinite',
     },
     '@keyframes gong': {

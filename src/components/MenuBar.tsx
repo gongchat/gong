@@ -60,9 +60,7 @@ const MenuBar: React.FC<IProps> = (props: IProps) => {
         setNotification('');
         setTimeout(() => {
           setNotification(menuBarNotification);
-          setIsFlashing(
-            menuBarNotification.split(',')[0] === 'repeat' ? true : false
-          );
+          setIsFlashing(menuBarNotification.split(',')[0] === 'repeat');
         }, 1);
       }
     } else {
@@ -164,10 +162,10 @@ const useStyles = makeStyles((theme: any) => ({
     },
   },
   flashOnce: {
-    animation: 'flashPrimary 1s linear',
+    animation: '$flashPrimary 1s linear',
   },
   flashRepeat: {
-    animation: 'flashPrimary 1s infinite',
+    animation: '$flashPrimary 1s infinite',
   },
   '@keyframes flashPrimary': {
     '0%': {
