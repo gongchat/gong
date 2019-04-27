@@ -230,6 +230,7 @@ const processMessage = (
         regExpWithoutAt.test(formattedMessage))
     ) {
       message.isMentioningMe = true;
+      user.lastTimeMentionedMe = moment();
     }
 
     // replace all the things

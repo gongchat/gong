@@ -54,10 +54,25 @@ const ListSelectorUsers: React.FC<IProps> = (props: IProps) => {
     }
   };
 
+  const sortUsers = (users: IChannelUser[]) => {
+    return users.sort((a: IChannelUser, b: IChannelUser) => {
+      if (
+        (a.lastTimeMentionedMe && !b.lastTimeMentionedMe) ||
+        (!a.lastTimeMentionedMe && b.lastTimeMentionedMe)
+      ) {
+        return 0;
+      } else if (a.lastTimeMentionedMe && b.lastTimeMentionedMe) {
+        return a.lastTimeMentionedMe.diff(b.lastTimeMentionedMe);
+      } else {
+        return a.nickname.localeCompare(b.nickname);
+      }
+    });
+  };
+
   React.useEffect(() => {
     if (selectorIndex === 1 && current && current.type === 'groupchat') {
       setTerm('');
-      setChannelUsers(current.users);
+      setChannelUsers(sortUsers(current.users));
     }
   }, [current, selectorIndex]);
 

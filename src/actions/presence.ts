@@ -138,6 +138,7 @@ const setGroupchat = (state: IState, presence: IPresence): IState => {
             role: presence.role,
             nickname,
             color: ColorUtil.stringToHexColor(nickname),
+            lastTimeMentionedMe: undefined,
           };
           room.users = [...room.users, newUser];
         }

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 
+import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
@@ -115,27 +116,33 @@ const ListSelector: React.FC<IProps> = (props: IProps) => {
       </Typography>
       <div className={classes.list} ref={listRef}>
         {list &&
-          list.map((obj: any, index: number) => (
-            <div
-              key={obj[keyProp]}
-              className={[
-                classes.listItem,
-                listIndex === index ? classes.current : '',
-              ].join(' ')}
-              onClick={() => handleSelection(obj)}
-            >
-              {showValue && (
-                <span className={classes.icon}>{obj[valueProp]}</span>
-              )}
-              {showKey && (
-                <Typography>
-                  {itemPrefix}
-                  {obj[keyProp]}
-                  {itemSuffix}
-                </Typography>
-              )}
-            </div>
-          ))}
+          list.map((obj: any, index: number) => {
+            if (!obj) {
+              return <Divider key={obj} />;
+            } else {
+              return (
+                <div
+                  key={obj[keyProp]}
+                  className={[
+                    classes.listItem,
+                    listIndex === index ? classes.current : '',
+                  ].join(' ')}
+                  onClick={() => handleSelection(obj)}
+                >
+                  {showValue && (
+                    <span className={classes.icon}>{obj[valueProp]}</span>
+                  )}
+                  {showKey && (
+                    <Typography>
+                      {itemPrefix}
+                      {obj[keyProp]}
+                      {itemSuffix}
+                    </Typography>
+                  )}
+                </div>
+              );
+            }
+          })}
       </div>
     </div>
   );
