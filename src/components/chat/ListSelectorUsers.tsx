@@ -1,10 +1,10 @@
 import React from 'react';
 import { useState } from 'react';
 import { useContext } from '../../context';
+import moment from 'moment';
 
 import ListSelector from './ListSelector';
 import IChannelUser from '../../interfaces/IChannelUser';
-import moment = require('moment');
 
 interface IProps {
   selectorIndex: number;
