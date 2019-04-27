@@ -43,6 +43,7 @@ export const handleOnMessage = (
   playAudioOnMessage(state, message, type);
   sendSystemNotificationOnMessage(state, message, type, rawText);
   setMenuBarNotificationOnMessage(state, message);
+  flashFrameOnMessage(state, message, type);
 };
 
 export const playAudio = (soundName: string) => {
@@ -162,6 +163,58 @@ const playAudioOnMessage = (state: IState, message: IMessage, type: string) => {
   }
 };
 
+const shouldFlashFrame = (
+  state: IState,
+  message: IMessage,
+  type: string
+): boolean => {
+  const settings = state.settings;
+  if (!message.isHistory && state.profile.status !== 'dnd') {
+    // Group chat
+    if (type === 'groupchat') {
+      // on message
+      if (
+        settings.flashFrameOnGroupchat !== 'never' &&
+        ((settings.flashFrameOnGroupchat === 'unread' && !message.isRead) ||
+          settings.flashFrameOnGroupchat === 'always')
+      ) {
+        return true;
+      }
+      // on mention
+      if (
+        message.isMentioningMe &&
+        settings.flashFrameOnMentionMe !== 'never' &&
+        ((settings.flashFrameOnMentionMe === 'unread' && !message.isRead) ||
+          settings.flashFrameOnMentionMe === 'always')
+      ) {
+        return true;
+      }
+    }
+    // one on one chat
+    if (type === 'chat') {
+      if (
+        settings.flashFrameOnChat !== 'never' &&
+        ((settings.flashFrameOnChat === 'unread' && !message.isRead) ||
+          settings.flashFrameOnChat === 'always')
+      ) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+const flashFrameOnMessage = (
+  state: IState,
+  message: IMessage,
+  type: string
+) => {
+  if (shouldFlashFrame(state, message, type)) {
+    const win = window.require('electron').remote.getCurrentWindow();
+    win.flashFrame(true);
+  }
+};
+
 const shouldSendSystemNotifications = (
   state: IState,
   message: IMessage,
@@ -241,9 +294,6 @@ const setMenuBarNotificationOnMessage = (state: IState, message: IMessage) => {
   const chatMessagesUnread = state.channels
     .filter((channel: IChannel) => channel.type === 'chat')
     .reduce((a: number, channel: IChannel) => a + channel.unreadMessages, 0);
-
-  const win = window.require('electron').remote.getCurrentWindow();
-  win.flashFrame(true);
 
   if (state.profile.status !== 'dnd') {
     if (
