@@ -5,6 +5,7 @@ import moment from 'moment';
 
 import ListSelector from './ListSelector';
 import IChannelUser from '../../interfaces/IChannelUser';
+import IRoom from '../../interfaces/IRoom';
 
 interface IProps {
   selectorIndex: number;
@@ -55,8 +56,8 @@ const ListSelectorUsers: React.FC<IProps> = (props: IProps) => {
     }
   };
 
-  const sortUsers = (users: IChannelUser[]) => {
-    let sortedUsers: any[] = [];
+  const sortUsers = (users: IChannelUser[]): IChannelUser[] => {
+    let sortedUsers: IChannelUser[] = [];
     const today = moment();
     const sortedRecentMentions = users
       .filter(
@@ -80,17 +81,17 @@ const ListSelectorUsers: React.FC<IProps> = (props: IProps) => {
       );
     if (sortedRecentMentions.length > 0) {
       sortedUsers = sortedRecentMentions;
-      sortedUsers.push(null);
     }
     if (sortedNonRecentMentions.length > 0) {
       sortedUsers = sortedUsers.concat(sortedNonRecentMentions);
     }
+    return sortedUsers;
   };
 
   React.useEffect(() => {
     if (selectorIndex === 1 && current && current.type === 'groupchat') {
       setTerm('');
-      setChannelUsers(sortUsers(current.users));
+      setChannelUsers(sortUsers((current as IRoom).users));
     }
   }, [current, selectorIndex]);
 
@@ -103,7 +104,7 @@ const ListSelectorUsers: React.FC<IProps> = (props: IProps) => {
           const channelUserWord = text.substring(channelCommandIndex);
           if (channelCommandIndex !== -1 && channelUserWord) {
             const newTerm = channelUserWord.substring(1);
-            const matchingChannelUsers = current.users.filter(
+            const matchingChannelUsers = (current as IRoom).users.filter(
               (user: IChannelUser) =>
                 user.nickname.toLowerCase().startsWith(newTerm.toLowerCase()) ||
                 user.nickname.toLowerCase() === newTerm.toLowerCase()
@@ -112,7 +113,7 @@ const ListSelectorUsers: React.FC<IProps> = (props: IProps) => {
               setSelectorIndex(1);
               setVisibility = true;
               setTerm(newTerm);
-              setChannelUsers(matchingChannelUsers);
+              setChannelUsers(sortUsers(matchingChannelUsers));
             }
           }
         }

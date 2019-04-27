@@ -223,15 +223,11 @@ const processMessage = (
     );
 
     // if mentioned me
-    if (
-      !message.isHistory &&
-      isMe &&
+    message.isMentioningMe =
       (regExpWithAt.test(formattedMessage) ||
-        regExpWithoutAt.test(formattedMessage))
-    ) {
-      message.isMentioningMe = true;
-      user.lastTimeMentionedMe = moment();
-    }
+        regExpWithoutAt.test(formattedMessage)) &&
+      !message.isHistory &&
+      isMe;
 
     // replace all the things
     formattedMessage = formattedMessage.replace(regExpWithAt, htmlWithAt);
@@ -347,7 +343,7 @@ const updateChannel = (
   let lastReadTimestampUpdated = false;
 
   state.channels = [
-    ...state.channels.map((channel: IChannel) => {
+    ...state.channels.map((channel: IChannel | IUser | IRoom) => {
       if (channel.jid === message.channelName && channel.type === type) {
         channelUpdated = true;
 
@@ -375,9 +371,20 @@ const updateChannel = (
               ) !== undefined),
         };
 
-        if (!isUnreadOne && type === 'groupchat') {
-          (newChannel as IRoom).lastReadTimestamp = moment();
-          lastReadTimestampUpdated = true;
+        if (type === 'groupchat') {
+          if (!isUnreadOne) {
+            (newChannel as IRoom).lastReadTimestamp = moment();
+            lastReadTimestampUpdated = true;
+          }
+
+          if (!message.isHistory && message.isMentioningMe) {
+            const channelUser = (newChannel as IRoom).users.find(
+              user => user.nickname === message.userNickname
+            );
+            if (channelUser) {
+              channelUser.lastTimeMentionedMe = moment();
+            }
+          }
         }
 
         log(state.profile.jid, channel, message);
