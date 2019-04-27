@@ -1,3 +1,6 @@
+import { addSavedRoomsToChannels } from './room';
+import { mapSettingsSavedToSettings, defaultSettings } from './settings';
+import { initialState } from '../context';
 import IConnection from '../interfaces/IConnection';
 import ICredentials from '../interfaces/ICredentials';
 import IProfile from '../interfaces/IProfile';
@@ -5,12 +8,7 @@ import ISettings from '../interfaces/ISettings';
 import ISettingsSaved from '../interfaces/ISettingsSaved';
 import ISnackbarNotification from '../interfaces/ISnackbarNotification';
 import IState from '../interfaces/IState';
-
 import ColorUtil from '../utils/colorUtil';
-import { addSavedRoomsToChannels } from './room';
-import { mapSettingsSavedToSettings } from './settings';
-
-import { initialState } from '../context';
 
 const ElectronStore = window.require('electron-store');
 const electronStore = new ElectronStore();
@@ -92,29 +90,13 @@ export const connectionActions = {
     // save credentials and default settings
     if (!settingsSaved) {
       settingsSaved = {
+        ...defaultSettings,
         jid: payload.jid,
         domain: payload.domain,
         username: payload.username,
         resource: payload.jid.split('/')[1],
         port: payload.port,
         password: payload.password,
-        soundName: 'Gong 1',
-        minimizeToTrayOnClose: true,
-        systemNotificationOnGroupchat: 'never',
-        systemNotificationOnMentionMe: 'unread',
-        systemNotificationOnChat: 'unread',
-        renderVideos: true,
-        renderGetYarn: true,
-        renderImages: true,
-        playAudioOnGroupchat: 'never',
-        playAudioOnChat: 'unread',
-        playAudioOnMentionMe: 'always',
-        flashMenuBarOnGroupchat: 'never',
-        flashMenuBarOnGroupchatFrequency: 'once',
-        flashMenuBarOnMentionMe: 'unread',
-        flashMenuBarOnMentionMeFrequency: 'repeat',
-        flashMenuBarOnChat: 'unread',
-        flashMenuBarOnChatFrequency: 'repeat',
       };
       electronStore.set('settings', settingsSaved);
     }

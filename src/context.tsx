@@ -2,8 +2,6 @@ import React from 'react';
 
 import { useGovernor } from '@techempower/react-governor';
 
-import IState from './interfaces/IState';
-
 import { appActions } from './actions/app';
 import { channelActions } from './actions/channel';
 import { connectionActions } from './actions/connection';
@@ -12,10 +10,10 @@ import { messageActions } from './actions/message';
 import { notificationActions } from './actions/notification';
 import { presenceActions } from './actions/presence';
 import { roomActions } from './actions/room';
-import { settingsActions } from './actions/settings';
+import { settingsActions, defaultSettings } from './actions/settings';
 import { themeActions } from './actions/theme';
 import { userActions } from './actions/user';
-
+import IState from './interfaces/IState';
 import { getTheme } from './actions/theme';
 
 export const initialState: IState = {
@@ -32,30 +30,7 @@ export const initialState: IState = {
     hasSavedCredentials: undefined,
     isAuthenticated: false,
   },
-  settings: {
-    jid: '',
-    domain: '',
-    username: '',
-    resource: '',
-    port: '',
-    systemNotificationOnGroupchat: 'never',
-    systemNotificationOnMentionMe: 'unread',
-    systemNotificationOnChat: 'unread',
-    minimizeToTrayOnClose: true,
-    renderVideos: true,
-    renderGetYarn: true,
-    renderImages: true,
-    soundName: 'Gong 1',
-    playAudioOnGroupchat: 'never',
-    playAudioOnMentionMe: 'all',
-    playAudioOnChat: 'unread',
-    flashMenuBarOnGroupchat: 'unread',
-    flashMenuBarOnGroupchatFrequency: 'once',
-    flashMenuBarOnMentionMe: 'unread',
-    flashMenuBarOnMentionMeFrequency: 'once',
-    flashMenuBarOnChat: 'unread',
-    flashMenuBarOnChatFrequency: 'once',
-  },
+  settings: { ...defaultSettings },
   channels: [],
   current: undefined,
   profile: {

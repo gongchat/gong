@@ -12,7 +12,7 @@ const Messages: React.FC = () => {
   const [context, actions] = useContext();
 
   const { settings } = context;
-  const { setSettings } = actions;
+  const { setAndSaveSettings } = actions;
 
   const [renderVideos, setRenderVideos] = useState(settings.renderVideos);
   const [renderGetYarn, setRenderGetYarn] = useState(settings.renderGetYarn);
@@ -20,7 +20,7 @@ const Messages: React.FC = () => {
 
   const handleOnChange = (event: any, value: any, action: any) => {
     action(value);
-    setSettings({ [event.target.name]: value });
+    setAndSaveSettings({ [event.target.name]: value });
   };
 
   return (

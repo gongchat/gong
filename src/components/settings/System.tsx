@@ -12,7 +12,7 @@ const System: React.FC = () => {
   const [context, actions] = useContext();
 
   const { settings } = context;
-  const { setSettings } = actions;
+  const { setAndSaveSettings } = actions;
 
   const [minimizeToTrayOnClose, setMinimizeToTrayOnClose] = useState(
     settings.minimizeToTrayOnClose
@@ -20,7 +20,7 @@ const System: React.FC = () => {
 
   const handleOnChange = (event: any, value: any, action: any) => {
     action(value);
-    setSettings({ [event.target.name]: value });
+    setAndSaveSettings({ [event.target.name]: value });
   };
 
   return (

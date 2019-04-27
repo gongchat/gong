@@ -32,6 +32,34 @@ export const settingsActions = {
   },
 };
 
+export const defaultSettings: ISettings = {
+  jid: '',
+  domain: '',
+  username: '',
+  resource: '',
+  port: '',
+  minimizeToTrayOnClose: true,
+  renderVideos: true,
+  renderGetYarn: true,
+  renderImages: true,
+  soundName: 'Gong 1',
+  playAudioOnGroupchat: 'never',
+  playAudioOnMentionMe: 'all',
+  playAudioOnChat: 'unread',
+  systemNotificationOnGroupchat: 'never',
+  systemNotificationOnMentionMe: 'unread',
+  systemNotificationOnChat: 'unread',
+  flashFrameOnGroupchat: 'never',
+  flashFrameOnMentionMe: 'unread',
+  flashFrameOnChat: 'unread',
+  flashMenuBarOnGroupchat: 'unread',
+  flashMenuBarOnGroupchatFrequency: 'once',
+  flashMenuBarOnMentionMe: 'unread',
+  flashMenuBarOnMentionMeFrequency: 'once',
+  flashMenuBarOnChat: 'unread',
+  flashMenuBarOnChatFrequency: 'once',
+};
+
 export const mapSettingsSavedToSettings = (
   settings: ISettingsSaved
 ): ISettings => {
@@ -52,6 +80,18 @@ export const mapSettingsSavedToSettings = (
     playAudioOnGroupchat: settings.playAudioOnGroupchat,
     playAudioOnChat: settings.playAudioOnChat,
     playAudioOnMentionMe: settings.playAudioOnMentionMe,
+    flashFrameOnGroupchat:
+      settings.flashFrameOnGroupchat === undefined
+        ? defaultSettings.flashFrameOnGroupchat
+        : settings.flashFrameOnGroupchat,
+    flashFrameOnChat:
+      settings.flashFrameOnChat === undefined
+        ? defaultSettings.flashFrameOnChat
+        : settings.flashFrameOnChat,
+    flashFrameOnMentionMe:
+      settings.flashFrameOnMentionMe === undefined
+        ? defaultSettings.flashFrameOnMentionMe
+        : settings.flashFrameOnMentionMe,
     flashMenuBarOnGroupchat: settings.flashMenuBarOnGroupchat,
     flashMenuBarOnGroupchatFrequency: settings.flashMenuBarOnGroupchatFrequency,
     flashMenuBarOnMentionMe: settings.flashMenuBarOnMentionMe,

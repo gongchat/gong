@@ -18,8 +18,9 @@ const NotificationSettings: React.FC = () => {
   const [context, actions] = useContext();
 
   const { settings } = context;
-  const { setSettings } = actions;
+  const { setAndSaveSettings } = actions;
 
+  // Play Audio
   const [soundName, setSoundName] = useState(settings.soundName);
   const [playAudioOnGroupchat, setPlayAudioOnGroupchat] = useState(
     settings.playAudioOnGroupchat
@@ -30,6 +31,17 @@ const NotificationSettings: React.FC = () => {
   const [playAudioOnMentionMe, setPlayAudioOnMentionMe] = useState(
     settings.playAudioOnMentionMe
   );
+  // Flash Frame
+  const [flashFrameOnGroupchat, setFlashFrameOnGroupchat] = useState(
+    settings.flashFrameOnGroupchat
+  );
+  const [flashFrameOnMentionMe, setFlashFrameOnMentionMe] = useState(
+    settings.flashFrameOnMentionMe
+  );
+  const [flashFrameOnChat, setFlashFrameOnChat] = useState(
+    settings.flashFrameOnChat
+  );
+  // Flash Menu Bar
   const [flashMenuBarOnGroupchat, setFlashMenuBarOnGroupchat] = useState(
     settings.flashMenuBarOnGroupchat
   );
@@ -51,6 +63,7 @@ const NotificationSettings: React.FC = () => {
     flashMenuBarOnChatFrequency,
     setFlashMenuBarOnChatFrequency,
   ] = useState(settings.flashMenuBarOnChatFrequency);
+  // System Notifications
   const [
     systemNotificationOnGroupchat,
     setSystemNotificationOnGroupchat,
@@ -69,11 +82,12 @@ const NotificationSettings: React.FC = () => {
       playAudio(e.target.value);
     }
     action(e.target.value);
-    setSettings({ [e.target.name]: e.target.value });
+    setAndSaveSettings({ [e.target.name]: e.target.value });
   };
 
   return (
     <BasePage title="Notifications">
+      {/* Sound */}
       <BaseSection title="Sound">
         <FormControl variant="filled">
           <InputLabel htmlFor="soundName">Sound</InputLabel>
@@ -138,6 +152,62 @@ const NotificationSettings: React.FC = () => {
           </Select>
         </FormControl>
       </BaseSection>
+      {/* Flash Frame */}
+      <BaseSection title="Flash Frame">
+        <FormControl variant="filled">
+          <InputLabel htmlFor="flashFrameOnGroupchat">
+            On Groupchat Message
+          </InputLabel>
+          <Select
+            value={flashFrameOnGroupchat}
+            onChange={(e: any) => handleChange(e, setFlashFrameOnGroupchat)}
+            input={
+              <FilledInput
+                name="flashFrameOnGroupchat"
+                id="flashFrameOnGroupchat"
+              />
+            }
+          >
+            <MenuItem value="always">Always</MenuItem>
+            <MenuItem value="unread">Unread</MenuItem>
+            <MenuItem value="never">Never</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl variant="filled">
+          <InputLabel htmlFor="flashFrameOnMentionMe">
+            On Mention Message
+          </InputLabel>
+          <Select
+            value={flashFrameOnMentionMe}
+            onChange={(e: any) => handleChange(e, setFlashFrameOnMentionMe)}
+            input={
+              <FilledInput
+                name="flashFrameOnMentionMe"
+                id="flashFrameOnMentionMe"
+              />
+            }
+          >
+            <MenuItem value="always">Always</MenuItem>
+            <MenuItem value="unread">Unread</MenuItem>
+            <MenuItem value="never">Never</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl variant="filled">
+          <InputLabel htmlFor="flashFrameOnChat">On Chat Message</InputLabel>
+          <Select
+            value={flashFrameOnChat}
+            onChange={(e: any) => handleChange(e, setFlashFrameOnChat)}
+            input={
+              <FilledInput name="flashFrameOnChat" id="flashFrameOnChat" />
+            }
+          >
+            <MenuItem value="always">Always</MenuItem>
+            <MenuItem value="unread">Unread</MenuItem>
+            <MenuItem value="never">Never</MenuItem>
+          </Select>
+        </FormControl>
+      </BaseSection>
+      {/* Flash Menu Bar */}
       <BaseSection title="Flash Menu Bar">
         <div className={classes.split}>
           <FormControl variant="filled">
@@ -269,10 +339,11 @@ const NotificationSettings: React.FC = () => {
           )}
         </div>
       </BaseSection>
+      {/* System Notifications */}
       <BaseSection title="System Notifications">
         <FormControl variant="filled">
           <InputLabel htmlFor="systemNotificationOnGroupchat">
-            On Groupchat
+            On Groupchat Message
           </InputLabel>
           <Select
             value={systemNotificationOnGroupchat}
@@ -293,7 +364,7 @@ const NotificationSettings: React.FC = () => {
         </FormControl>
         <FormControl variant="filled">
           <InputLabel htmlFor="systemNotificationOnMentionMe">
-            On Mention
+            On Mention Message
           </InputLabel>
           <Select
             value={systemNotificationOnMentionMe}
@@ -313,7 +384,9 @@ const NotificationSettings: React.FC = () => {
           </Select>
         </FormControl>
         <FormControl variant="filled">
-          <InputLabel htmlFor="systemNotificationOnChat">On Chat</InputLabel>
+          <InputLabel htmlFor="systemNotificationOnChat">
+            On Chat Message
+          </InputLabel>
           <Select
             value={systemNotificationOnChat}
             onChange={(e: any) => handleChange(e, setSystemNotificationOnChat)}

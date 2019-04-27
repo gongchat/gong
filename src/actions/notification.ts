@@ -243,6 +243,9 @@ const setMenuBarNotificationOnMessage = (state: IState, message: IMessage) => {
     .filter((channel: IChannel) => channel.type === 'chat')
     .reduce((a: number, channel: IChannel) => a + channel.unreadMessages, 0);
 
+  const win = window.require('electron').remote.getCurrentWindow();
+  win.flashFrame(true);
+
   if (state.profile.status !== 'dnd') {
     if (
       settings.flashMenuBarOnGroupchat !== 'never' &&
