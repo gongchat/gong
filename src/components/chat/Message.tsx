@@ -103,19 +103,20 @@ const Message: React.FC<IProps> = (props: IProps) => {
               .map((url: IMessageUrl, index: number) => {
                 if (url.url.toLowerCase().endsWith('.gifv')) {
                   return (
-                    <video
-                      key={index}
-                      className={classes.image}
-                      preload="auto"
-                      autoPlay={true}
-                      loop={true}
-                      onLoad={onMediaLoad}
-                    >
-                      <source
-                        src={url.url.replace('.gifv', '.mp4')}
-                        type="video/mp4"
-                      />
-                    </video>
+                    <div key={index} className={classes.gifv}>
+                      <video
+                        preload="auto"
+                        autoPlay={true}
+                        loop={true}
+                        height={185}
+                        onLoad={onMediaLoad}
+                      >
+                        <source
+                          src={url.url.replace('.gifv', '.mp4')}
+                          type="video/mp4"
+                        />
+                      </video>
+                    </div>
                   );
                 } else {
                   return (
@@ -207,6 +208,10 @@ const useStyles = makeStyles(
       '& img': {
         width: '100%',
       },
+    },
+    gifv: {
+      margin: theme.spacing.unit * 2,
+      marginLeft: theme.spacing.unit * 8,
     },
     me: {
       color: theme.palette.text.secondary,
