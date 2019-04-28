@@ -98,11 +98,30 @@ const Message: React.FC<IProps> = (props: IProps) => {
           {renderImages &&
             message.urls
               .filter((url: IMessageUrl) => url.type === 'image')
-              .map((url: IMessageUrl, index: number) => (
-                <div key={index} className={classes.image}>
-                  <img alt="shared" src={url.url} onLoad={onImageLoad} />
-                </div>
-              ))}
+              .map((url: IMessageUrl, index: number) => {
+                if (url.url.toLowerCase().endsWith('.gifv')) {
+                  return (
+                    <video
+                      key={index}
+                      className={classes.image}
+                      preload="auto"
+                      autoPlay={true}
+                      loop={true}
+                    >
+                      <source
+                        src={url.url.replace('.gifv', '.mp4')}
+                        type="video/mp4"
+                      />
+                    </video>
+                  );
+                } else {
+                  return (
+                    <div key={index} className={classes.image}>
+                      <img alt="shared" src={url.url} onLoad={onImageLoad} />
+                    </div>
+                  );
+                }
+              })}
         </React.Fragment>
       )}
     </div>

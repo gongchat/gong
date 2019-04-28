@@ -281,7 +281,7 @@ const getGetYarnUrls = (text: string): IMessageUrl[] => {
 };
 
 const getImageUrls = (text: string): IMessageUrl[] => {
-  const getImageRegExp = new RegExp(/(https?:\/\/.*\.(?:png|jpg|gif))/gi);
+  const getImageRegExp = new RegExp(/(https?:\/\/.*\.(?:png|jpg|gifv|gif))/gi);
   const scannedImageUrls = text.match(getImageRegExp);
   if (scannedImageUrls) {
     return scannedImageUrls.map((url: string) => ({
