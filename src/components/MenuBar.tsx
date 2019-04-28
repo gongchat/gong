@@ -10,6 +10,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import CropSquareIcon from '@material-ui/icons/CropSquare';
 import RemoveIcon from '@material-ui/icons/Remove';
 
+import IChannel from '../interfaces/IChannel';
+
 const { BrowserWindow } = (window as any).require('electron').remote;
 
 interface IProps {
@@ -21,7 +23,7 @@ const MenuBar: React.FC<IProps> = (props: IProps) => {
   const [context] = useContext();
 
   const { showOffline } = props;
-  const { connection, menuBarNotification } = context;
+  const { connection, menuBarNotification, channels } = context;
 
   const [isFlashing, setIsFlashing] = useState(false);
   const [notification, setNotification] = useState('');
@@ -31,6 +33,11 @@ const MenuBar: React.FC<IProps> = (props: IProps) => {
   const menuBarNotificationFrequency = notification
     ? notification.split(',')[0]
     : '';
+
+  const countOfUnreadMessages = channels.reduce(
+    (a: number, b: IChannel) => a + b.unreadMessages,
+    0
+  );
 
   const minimize = () => {
     const focusedWindow = BrowserWindow.getFocusedWindow();
@@ -81,10 +88,17 @@ const MenuBar: React.FC<IProps> = (props: IProps) => {
       ].join(' ')}
     >
       <div className={['menu-bar', classes.menuBar].join(' ')}>
-        <div className={classes.brand}>
-          <Typography>
-            Gong{connection.isConnected && showOffline ? '' : ' (offline)'}
-          </Typography>
+        <div className={classes.text}>
+          <Typography>Gong</Typography>
+          {!connection.isConnected && showOffline && (
+            <Typography variant="caption">offline</Typography>
+          )}
+          {countOfUnreadMessages > 0 && (
+            <Typography variant="caption">
+              {countOfUnreadMessages} unread message
+              {countOfUnreadMessages > 1 && 's'}
+            </Typography>
+          )}
         </div>
         <div className={['menu-bar--items', classes.menu].join(' ')}>
           {/* <Typography>File</Typography> */}
@@ -122,17 +136,20 @@ const useStyles = makeStyles((theme: any) => ({
     margin: 1, // to allow resizing on menu bar
     display: 'flex',
     flexWrap: 'nowrap',
-    '& $brand, & $menu': {
+    '& $text, & $menu': {
       display: 'flex',
       alignItems: 'center',
       paddingLeft: theme.spacing.unit * 2,
       paddingRight: theme.spacing.unit * 2,
     },
   },
-  brand: {
+  text: {
+    display: 'flex',
+    flexWrap: 'nowrap',
     textTransform: 'uppercase',
     '& p': {
       fontWeight: 'bold',
+      marginRight: theme.spacing.unit * 2,
     },
   },
   menu: {
