@@ -63,7 +63,6 @@ const ListSelectorEmojis: React.FC<IProps> = (props: IProps) => {
             text.substring(emojiCommandPrevIndex + 1, emojiCommandIndex)
           ]
         ) {
-          setSelectorIndex(0);
           const emojiWord = text.substring(emojiCommandIndex);
           const newTerm = emojiWord.substring(1);
           const matchingEmojis = Emojis.filter(
@@ -72,6 +71,7 @@ const ListSelectorEmojis: React.FC<IProps> = (props: IProps) => {
           );
           if (matchingEmojis.length > 0) {
             setVisibility = true;
+            setSelectorIndex(0);
             setTerm(newTerm);
             setEmojis(
               newTerm.length === 0

@@ -11,7 +11,16 @@ import IMessage from '../../interfaces/IMessage';
 const Messages: React.FC = () => {
   const classes = useStyles();
   const [context] = useContext();
+
   const { current, settings } = context;
+
+  const scrollerRef = React.useRef<any>(null);
+
+  const handleOnImageLoad = () => {
+    if (scrollerRef.current) {
+      scrollerRef.current.handleOnMediaLoad();
+    }
+  };
 
   let previousDate = '';
   let previousUserNickname = '';
@@ -19,7 +28,7 @@ const Messages: React.FC = () => {
   let hasNewMessageMarker = false;
 
   return (
-    <MessagesScroller>
+    <MessagesScroller ref={scrollerRef}>
       {current &&
         current.messages &&
         current.messages.map((message: IMessage, index: number) => {
@@ -90,7 +99,7 @@ const Messages: React.FC = () => {
                   renderVideos={settings.renderVideos}
                   renderGetYarn={settings.renderGetYarn}
                   renderImages={settings.renderImages}
-                  // onImageLoad={handleImageOnLoad}
+                  onImageLoad={handleOnImageLoad}
                 />
               </div>
             </React.Fragment>

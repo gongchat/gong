@@ -11,7 +11,7 @@ import IMessageUrl from '../../interfaces/IMessageUrl';
 interface IProps {
   message: IMessage;
   showTime: boolean;
-  // onImageLoad: any;
+  onImageLoad: any;
   renderImages: boolean;
   renderVideos: boolean;
   renderGetYarn: boolean;
@@ -23,7 +23,7 @@ const Message: React.FC<IProps> = (props: IProps) => {
   const {
     message,
     showTime,
-    // onImageLoad,
+    onImageLoad,
     renderImages,
     renderVideos,
     renderGetYarn,
@@ -100,8 +100,7 @@ const Message: React.FC<IProps> = (props: IProps) => {
               .filter((url: IMessageUrl) => url.type === 'image')
               .map((url: IMessageUrl, index: number) => (
                 <div key={index} className={classes.image}>
-                  {/* TODO: <img alt="shared" src={url.url} onLoad={onImageLoad} /> */}
-                  <img alt="shared" src={url.url} />
+                  <img alt="shared" src={url.url} onLoad={onImageLoad} />
                 </div>
               ))}
         </React.Fragment>
