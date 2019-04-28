@@ -83,8 +83,8 @@ const MessagesScroller: React.FC<IProps> = React.forwardRef(
           current &&
           !current.hasNoMoreLogs &&
           !current.isRequestingLogs &&
-          root.current &&
-          root.current.scrollTop === 0 &&
+          rootCurrent &&
+          rootCurrent.scrollTop === 0 &&
           (!prevChannel || (prevChannel && current.jid !== prevChannel.jid))
         );
       };
@@ -94,29 +94,29 @@ const MessagesScroller: React.FC<IProps> = React.forwardRef(
           current &&
           !current.hasNoMoreLogs &&
           !current.isRequestingLogs &&
-          root.current &&
-          root.current.scrollTop === 0
+          rootCurrent &&
+          rootCurrent.scrollTop === 0
         );
       };
 
       // Handle initial scroll position
-      if (root.current) {
+      if (rootCurrent) {
         if (isUpdateForLoggedMessages()) {
-          root.current.scrollTop =
-            root.current.scrollHeight - positionBeforeGettingLogs;
+          rootCurrent.scrollTop =
+            rootCurrent.scrollHeight - positionBeforeGettingLogs;
         } else if (shouldUpdateToSavedPosition() && current) {
-          root.current.scrollTop = current.scrollPosition;
+          rootCurrent.scrollTop = current.scrollPosition;
         } else if (wasAtBottom || isLastMessageMe()) {
-          root.current.scrollTop =
-            root.current.scrollHeight + root.current.offsetHeight;
+          rootCurrent.scrollTop =
+            rootCurrent.scrollHeight + rootCurrent.offsetHeight;
         }
       }
 
       // Check for logged messages
       if (canRequestLogsOnLoad()) {
         getChannelLogs(current);
-        if (root.current) {
-          positionBeforeGettingLogs = root.current.scrollHeight;
+        if (rootCurrent) {
+          positionBeforeGettingLogs = rootCurrent.scrollHeight;
         }
       }
 
@@ -150,23 +150,24 @@ const MessagesScroller: React.FC<IProps> = React.forwardRef(
         }, 100);
       };
 
-      const handleResizeWidth = (event: any) => {
+      const handleWindowResize = (event: any) => {
         if (window.innerWidth !== prevWindowInnerWidth) {
           handleScroll(event);
         }
         prevWindowInnerWidth = window.innerWidth;
       };
 
-      if (root.current) {
-        root.current.addEventListener('scroll', handleScroll);
-        window.addEventListener('resize', handleResizeWidth);
+      if (rootCurrent) {
+        rootCurrent.addEventListener('scroll', handleScroll);
+        window.addEventListener('resize', handleWindowResize);
       }
+
       return () => {
         clearTimeout(scrollTimer);
         if (rootCurrent) {
           rootCurrent.removeEventListener('scroll', handleScroll);
         }
-        window.removeEventListener('resize', handleResizeWidth);
+        window.removeEventListener('resize', handleWindowResize);
       };
     }, [
       current,
@@ -195,7 +196,6 @@ const useStyles = makeStyles((theme: any) => ({
     overflowY: 'scroll',
     display: 'flex',
     flexDirection: 'column',
-    overflowAnchor: 'auto',
   },
   filler: {
     flexGrow: 1,
