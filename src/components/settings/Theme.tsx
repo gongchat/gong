@@ -8,6 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles } from '@material-ui/styles';
 
 import ColorPicker from './ColorPicker';
+import MiniGong from './MiniGong';
 
 const ITEMS = [
   {
@@ -106,29 +107,36 @@ const Theme: React.FC = () => {
 
   return (
     <React.Fragment>
-      <List className={classes.list}>
-        {items.map((item: any) => (
-          <ListItem
-            key={`${item.group}-${item.type}`}
-            button={true}
-            selected={
-              item.group === selectedItem.group &&
-              item.type === selectedItem.type
-            }
-            onClick={() => setSelectedItem(item)}
-          >
-            <ListItemText
-              className={classes.itemText}
-              primary={item.group}
-              secondary={item.type}
-            />
-            <span
-              className={classes.preview}
-              style={{ backgroundColor: item.color }}
-            />
-          </ListItem>
-        ))}
-      </List>
+      <div className={classes.left}>
+        <div className={classes.miniGong}>
+          <MiniGong />
+        </div>
+        <div className={classes.listing}>
+          <List className={classes.list}>
+            {items.map((item: any) => (
+              <ListItem
+                key={`${item.group}-${item.type}`}
+                button={true}
+                selected={
+                  item.group === selectedItem.group &&
+                  item.type === selectedItem.type
+                }
+                onClick={() => setSelectedItem(item)}
+              >
+                <ListItemText
+                  className={classes.itemText}
+                  primary={item.group}
+                  secondary={item.type}
+                />
+                <span
+                  className={classes.preview}
+                  style={{ backgroundColor: item.color }}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </div>
+      </div>
       <div className={classes.picker}>
         <ColorPicker item={selectedItem} onSelection={handleClickColor} />
       </div>
@@ -137,14 +145,16 @@ const Theme: React.FC = () => {
 };
 
 const useStyles = makeStyles((theme: any) => ({
-  itemText: {
-    fontSize: '9px',
-  },
-  list: {
+  left: {
+    position: 'relative',
     maxWidth: '190px',
     overflowY: 'auto',
     padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit}px`,
   },
+  itemText: {
+    fontSize: '9px',
+  },
+  list: {},
   picker: {
     flexGrow: 1,
     overflowY: 'auto',
@@ -155,6 +165,13 @@ const useStyles = makeStyles((theme: any) => ({
     height: theme.spacing.unit * 2,
     marginLeft: theme.spacing.unit * 2,
     flexShrink: 0,
+  },
+  miniGong: {
+    position: 'fixed',
+    zIndex: 9999,
+  },
+  listing: {
+    marginTop: '150px', // same height as the miniGong(125px) + some spacing
   },
 }));
 
