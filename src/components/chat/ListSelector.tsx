@@ -5,10 +5,13 @@ import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
+import { usePrevious } from '../../utils/usePrevious';
+
 let currListIndex = 0;
 
 interface IProps {
   handleSelection: any;
+  selectorIndex: number;
   setSelectorIndex: any;
   list: any;
   term: string;
@@ -21,11 +24,20 @@ interface IProps {
   itemSuffix: string;
 }
 
+// selectorIndex:
+// -1 = Closed via escape
+//  0 = None
+//  10 = Emojis
+//  11 = Emojis via click
+//  20 = Users
+//  21 = Users via click
+
 const ListSelector: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
 
   const {
     handleSelection,
+    selectorIndex,
     setSelectorIndex,
     list,
     term,
@@ -41,6 +53,11 @@ const ListSelector: React.FC<IProps> = (props: IProps) => {
   const [listIndex, setListIndex] = useState(0);
 
   const listRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    currListIndex = 0;
+    setListIndex(0);
+  }, [selectorIndex, term]);
 
   React.useEffect(() => {
     const handleKeyDown = (event: any) => {

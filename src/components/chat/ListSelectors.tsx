@@ -14,22 +14,8 @@ interface IProps {
 const ListSelectors: React.FC<IProps> = (props: IProps) => {
   return (
     <React.Fragment>
-      <ListSelectorEmojis
-        {...props}
-        // text={text}
-        // setText={setText}
-        // focusInput={focusInput}
-        // selectorIndex={selectorIndex}
-        // setSelectorIndex={setSelectorIndex}
-      />
-      <ListSelectorUsers
-        {...props}
-        // text={text}
-        // setText={setText}
-        // focusInput={focusInput}
-        // selectorIndex={selectorIndex}
-        // setSelectorIndex={setSelectorIndex}
-      />
+      <ListSelectorEmojis {...props} />
+      <ListSelectorUsers {...props} />
     </React.Fragment>
   );
 };

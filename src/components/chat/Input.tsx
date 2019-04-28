@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
 import ListSelectors from './ListSelectors';
+import { emojiListSelectorIndex } from './ListSelectorEmojis';
+import { userListSelectorIndex } from './ListSelectorUsers';
 import IMessageSend from '../../interfaces/IMessageSend';
 import IRoom from '../../interfaces/IRoom';
 import IUser from '../../interfaces/IUser';
@@ -22,7 +24,7 @@ const Input: React.FC = () => {
 
   const [text, setText] = useState('');
   const [isFocused, setIsFocused] = useState(false);
-  const [listSelectorIndex, setListSelectorIndex] = useState(-1);
+  const [listSelectorIndex, setListSelectorIndex] = useState(0);
 
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -64,11 +66,13 @@ const Input: React.FC = () => {
 
   const handleKeyDown = (event: any) => {
     const preventDefaultOn = ['Enter', 'Tab', 'Escape', 'ArrowUp', 'ArrowDown'];
-    if (listSelectorIndex !== -1 && preventDefaultOn.includes(event.key)) {
+    if (listSelectorIndex > 0 && preventDefaultOn.includes(event.key)) {
       event.preventDefault();
     } else if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       send();
+    } else if (listSelectorIndex === -1) {
+      setListSelectorIndex(0);
     }
   };
 
@@ -90,7 +94,7 @@ const Input: React.FC = () => {
 
   const toggleListSelector = (index: number) => {
     if (listSelectorIndex === index) {
-      setListSelectorIndex(-1);
+      setListSelectorIndex(0);
     } else {
       setListSelectorIndex(index);
     }
@@ -150,12 +154,12 @@ const Input: React.FC = () => {
                   classes.inputRightInlineIcon,
                   classes.channelUserIcon,
                 ].join(' ')}
-                onClick={() => toggleListSelector(1)}
+                onClick={() => toggleListSelector(userListSelectorIndex + 1)}
               >
                 <Typography>@</Typography>
               </div>
               <div
-                onClick={() => toggleListSelector(0)}
+                onClick={() => toggleListSelector(emojiListSelectorIndex + 1)}
                 className={[
                   classes.inputRightInlineIcon,
                   classes.emojiIcon,
