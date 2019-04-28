@@ -21,13 +21,12 @@ class Logger {
         message.id !== undefined &&
         (!message.isHistory ||
           !messages ||
-          messages.find(
-            m => m.id !== undefined && m.id === message.id
-          ) === undefined))
+          messages.find(m => m.id !== undefined && m.id === message.id) ===
+            undefined))
     ) {
       if (!logs) {
         logsElectronStore.set('logs', [date]);
-      } else if (logs.find((l) => l === date) === undefined) {
+      } else if (logs.find(l => l === date) === undefined) {
         logsElectronStore.set('logs', [...logs, date]);
       }
       if (messages) {
@@ -58,16 +57,18 @@ class Logger {
           name: logs[currentLogIndex],
         });
         const currentSavedMessages = currentMessagesElectronStore.get(
-          'messages');
+          'messages'
+        );
         if (currentSavedMessages && currentSavedMessages.length > 0) {
           messages = currentSavedMessages.filter(
             message =>
-            channel.messages.find((m) => m.id === message.id) ===
-            undefined
+              channel.messages.find(m => m.id === message.id) === undefined
           );
           if (messages.length > maxNumberOfMessages) {
-            messages = messages.slice(messages.length - maxNumberOfMessages,
-              messages.length);
+            messages = messages.slice(
+              messages.length - maxNumberOfMessages,
+              messages.length
+            );
           }
         }
         // get the next full set of logs
@@ -82,14 +83,14 @@ class Logger {
               cwd: `logs/${user.split('/')[0]}/${channel.jid}`,
               name: logs[currentLogIndex - indexOffset],
             });
-            const nextSavedMessages = nextMessagesElectronStore.get(
-              'messages');
+            const nextSavedMessages = nextMessagesElectronStore.get('messages');
             if (nextSavedMessages && nextSavedMessages.length > 0) {
               messages = [...nextSavedMessages, ...messages];
               if (messages.length > maxNumberOfMessages) {
-                messages = messages.slice(messages.length -
-                  maxNumberOfMessages,
-                  messages.length);
+                messages = messages.slice(
+                  messages.length - maxNumberOfMessages,
+                  messages.length
+                );
               }
               getMoreLogs = messages.length < maxNumberOfMessages;
             }
@@ -105,7 +106,7 @@ class Logger {
     event.sender.send('get-log', {
       channelJid: channel.jid,
       hasNoMoreLogs,
-      messages
+      messages,
     });
   }
 }
