@@ -11,7 +11,7 @@ import IMessageUrl from '../../interfaces/IMessageUrl';
 interface IProps {
   message: IMessage;
   showTime: boolean;
-  onImageLoad: any;
+  onMediaLoad: any;
   renderImages: boolean;
   renderVideos: boolean;
   renderGetYarn: boolean;
@@ -23,7 +23,7 @@ const Message: React.FC<IProps> = (props: IProps) => {
   const {
     message,
     showTime,
-    onImageLoad,
+    onMediaLoad,
     renderImages,
     renderVideos,
     renderGetYarn,
@@ -70,6 +70,7 @@ const Message: React.FC<IProps> = (props: IProps) => {
                     width={300}
                     height={170}
                     controls={true}
+                    onLoad={onMediaLoad}
                   />
                 </div>
               ))}
@@ -82,6 +83,7 @@ const Message: React.FC<IProps> = (props: IProps) => {
                   return (
                     <div key={index} className={classes.getYarn}>
                       <iframe
+                        onLoad={onMediaLoad}
                         title="get yarn clip"
                         width={300}
                         height={185}
@@ -107,6 +109,7 @@ const Message: React.FC<IProps> = (props: IProps) => {
                       preload="auto"
                       autoPlay={true}
                       loop={true}
+                      onLoad={onMediaLoad}
                     >
                       <source
                         src={url.url.replace('.gifv', '.mp4')}
@@ -117,7 +120,7 @@ const Message: React.FC<IProps> = (props: IProps) => {
                 } else {
                   return (
                     <div key={index} className={classes.image}>
-                      <img alt="shared" src={url.url} onLoad={onImageLoad} />
+                      <img alt="shared" src={url.url} onLoad={onMediaLoad} />
                     </div>
                   );
                 }

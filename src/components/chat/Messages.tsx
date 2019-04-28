@@ -16,7 +16,7 @@ const Messages: React.FC = () => {
 
   const scrollerRef = React.useRef<any>(null);
 
-  const handleOnImageLoad = () => {
+  const handleOnMediaLoad = () => {
     if (scrollerRef.current) {
       scrollerRef.current.handleOnMediaLoad();
     }
@@ -99,7 +99,7 @@ const Messages: React.FC = () => {
                   renderVideos={settings.renderVideos}
                   renderGetYarn={settings.renderGetYarn}
                   renderImages={settings.renderImages}
-                  onImageLoad={handleOnImageLoad}
+                  onMediaLoad={handleOnMediaLoad}
                 />
               </div>
             </React.Fragment>
