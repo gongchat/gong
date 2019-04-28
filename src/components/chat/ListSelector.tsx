@@ -5,8 +5,6 @@ import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
-import { usePrevious } from '../../utils/usePrevious';
-
 let currListIndex = 0;
 
 interface IProps {
