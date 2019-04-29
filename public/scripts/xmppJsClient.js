@@ -1,16 +1,15 @@
-const ipcMain = require('electron');
 const ElectronStore = require('electron-store');
-const electronStore = new ElectronStore();
-
 const CryptoJS = require('crypto-js');
 const keytar = require('keytar');
 
 const { client, xml } = require('@xmpp/client');
 
-const Settings = require('./settings');
+const appSettings = require('./settings');
 
 // TODO: find less hacky solution, https://stackoverflow.com/questions/35633829/node-js-error-process-env-node-tls-reject-unauthorized-what-does-this-mean
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
+const electronStore = new ElectronStore();
 
 class XmppJsClient {
   constructor() {
@@ -25,11 +24,13 @@ class XmppJsClient {
   autoConnect(event, arg) {
     this.credentials = { username: arg.credentials.username };
     keytar.getPassword('gong', arg.credentials.username).then(key => {
-      arg.credentials.password = key ?
-        CryptoJS.AES.decrypt(arg.credentials.password, key).toString(
-          CryptoJS.enc.Utf8) : arg.credentials.password;
+      arg.credentials.password = key
+        ? CryptoJS.AES.decrypt(arg.credentials.password, key).toString(
+            CryptoJS.enc.Utf8
+          )
+        : arg.credentials.password;
       this.connect(event, arg.credentials, key, {
-        minimizeToTrayOnClose: arg.minimizeToTrayOnClose
+        minimizeToTrayOnClose: arg.minimizeToTrayOnClose,
       });
     });
   }
@@ -70,32 +71,40 @@ class XmppJsClient {
       let stopClient = false;
 
       if (!err.code) {
-        if (err.name === 'SASLError' && err.condition ===
-          'not-authorized') {
+        if (err.name === 'SASLError' && err.condition === 'not-authorized') {
           console.log('ERROR: SASLError, not-authorized');
-          event.sender.send('xmpp-connection-failed', { error: 'Cannot authorize your credentials' });
+          event.sender.send('xmpp-connection-failed', {
+            error: 'Cannot authorize your credentials',
+          });
         }
       } else {
         switch (err.code) {
           case 'ENOTFOUND':
             console.log('ERROR: ENOTFOUND; stopping client');
-            event.sender.send('xmpp-connection-failed', { error: 'Cannot find your server' });
+            event.sender.send('xmpp-connection-failed', {
+              error: 'Cannot find your server',
+            });
             stopClient = true;
             break;
           case 'ECONNRESET':
-            console.log(
-              'ERROR: ECONNRESET; stopping client; error unknown;');
-            event.sender.send('xmpp-connection-failed', { error: 'Connection to server failed' });
+            console.log('ERROR: ECONNRESET; stopping client; error unknown;');
+            event.sender.send('xmpp-connection-failed', {
+              error: 'Connection to server failed',
+            });
             stopClient = true;
             break;
           case 'ECONNREFUSED':
             console.log('ERROR: ECONNREFUSED; stopping client');
-            event.sender.send('xmpp-connection-failed', { error: 'Cannot connect to server' });
+            event.sender.send('xmpp-connection-failed', {
+              error: 'Cannot connect to server',
+            });
             stopClient = true;
             break;
           case 'ECONNABORTED':
             console.log('ERROR: ECONNABORTED');
-            event.sender.send('xmpp-connection-failed', { error: 'Connection has been aborted' });
+            event.sender.send('xmpp-connection-failed', {
+              error: 'Connection has been aborted',
+            });
             stopClient = true;
             break;
           default:
@@ -118,20 +127,22 @@ class XmppJsClient {
       this.sendGetInfo(event, credentials.domain);
 
       if (settings) {
-        Settings.set(settings);
+        appSettings.set(settings);
       }
       this.credentials = { ...credentials, jid: jid.toString() };
 
       if (!key) {
         key = CryptoJS.PBKDF2(credentials.password, '', {
           keySize: 512 / 32,
-          iterations: 1000
+          iterations: 1000,
         }).toString();
         keytar.setPassword('gong', credentials.username, key);
       }
 
-      credentials.password = CryptoJS.AES.encrypt(credentials.password,
-        key).toString();
+      credentials.password = CryptoJS.AES.encrypt(
+        credentials.password,
+        key
+      ).toString();
 
       event.sender.send('xmpp-connected', {
         jid: jid.toString(),
@@ -176,13 +187,18 @@ class XmppJsClient {
         case 'iq':
           this.handleStanzaIq(event, stanza);
           break;
+        default:
+          break;
       }
     }
   }
 
   handleStanzaIq(event, stanza) {
-    if (stanza.children && stanza.children.length > 0 &&
-      stanza.children[0].attrs.xmlns === 'urn:xmpp:ping') {
+    if (
+      stanza.children &&
+      stanza.children.length > 0 &&
+      stanza.children[0].attrs.xmlns === 'urn:xmpp:ping'
+    ) {
       this.sendPong(this.credentials.domain, stanza.attrs.id);
     }
   }
@@ -208,48 +224,57 @@ class XmppJsClient {
     event.sender.send('xmpp-presence', stanza);
   }
 
-
   //
   // iq
   //
 
   async sendGetInfo(event, domain) {
-    const response = await this.client.iqCaller.request(
-      xml('iq', {
+    await this.client.iqCaller.request(
+      xml(
+        'iq',
+        {
           to: `${domain}`,
           type: 'get',
           id: makeId(7),
         },
         xml('query', {
           xmlns: 'http://jabber.org/protocol/disco#info',
-        })));
+        })
+      )
+    );
     // currently do not care about what features are supported
   }
 
   async sendGetRoster(event) {
     const response = await this.client.iqCaller.request(
-      xml('iq', {
+      xml(
+        'iq',
+        {
           type: 'get',
           id: makeId(7),
         },
         xml('query', {
           xmlns: 'jabber:iq:roster',
-        }))
+        })
+      )
     );
     event.sender.send('xmpp-roster', response);
   }
 
   async sendDiscoverItems(event, subdomain) {
     const response = await this.client.iqCaller.request(
-      xml('iq', {
-          to: (subdomain ? `${subdomain}.` : '') +
-            `${this.credentials.domain}`,
+      xml(
+        'iq',
+        {
+          to: (subdomain ? `${subdomain}.` : '') + `${this.credentials.domain}`,
           type: 'get',
           id: makeId(7),
         },
         xml('query', {
           xmlns: 'http://jabber.org/protocol/disco#items',
-        })));
+        })
+      )
+    );
 
     if (response.attrs.from === this.credentials.domain) {
       event.sender.send('xmpp-discover-top-level-items', response);
@@ -262,7 +287,7 @@ class XmppJsClient {
     return await this.client.iqCaller.request(
       xml('iq', {
         id: id,
-        from: this.jid,
+        from: this.credentials.jid,
         to: domain,
         type: 'result',
       })
@@ -273,16 +298,15 @@ class XmppJsClient {
     const iqAttrs = {
       from: from,
       id: makeId(7),
-      type: 'get'
-    }
+      type: 'get',
+    };
 
     if (to && to !== '') {
       iqAttrs.to = to;
     }
 
     const response = await this.client.iqCaller.request(
-      xml('iq', iqAttrs,
-        xml('vCard', { xmlns: 'vcard-temp' }))
+      xml('iq', iqAttrs, xml('vCard', { xmlns: 'vcard-temp' }))
     );
 
     event.sender.send('xmpp-vcard', response);
@@ -291,54 +315,72 @@ class XmppJsClient {
   async sendSetVCard(event, vCard) {
     // https://xmpp.org/extensions/xep-0054.html
     const response = await this.client.iqCaller.request(
-      xml('iq', {
+      xml(
+        'iq',
+        {
           id: makeId(3),
           type: 'set',
         },
-        xml('vCard', { xmlns: 'vcard-temp' },
+        xml(
+          'vCard',
+          { xmlns: 'vcard-temp' },
           xml('JABBERID', {}, vCard.jid.split('/')[0]),
           xml('DESC', {}, vCard.description),
           xml('FN', {}, vCard.fullName),
-          xml('N', {},
+          xml(
+            'N',
+            {},
             xml('GIVEN', {}, vCard.firstName),
             xml('MIDDLE', {}, vCard.middleName),
-            xml('FAMILY', {}, vCard.lastName)),
+            xml('FAMILY', {}, vCard.lastName)
+          ),
           xml('NICKNAME', {}, vCard.nickname),
           xml('URL', {}, vCard.url),
           xml('BDAY', {}, vCard.birthday),
-          xml('ORG', {},
+          xml(
+            'ORG',
+            {},
             xml('ORGNAME', {}, vCard.organizationName),
-            xml('ORGUNIT', {}, vCard.organizationUnit)),
+            xml('ORGUNIT', {}, vCard.organizationUnit)
+          ),
           xml('TITLE', {}, vCard.title),
           xml('ROLE', {}, vCard.role),
-          xml('TEL', {},
+          xml(
+            'TEL',
+            {},
             xml('WORK', {}),
             xml('VOICE', {}),
-            xml('NUMBER', vCard.phoneNumber)),
-          xml('TEL', {},
-            xml('WORK', {}),
-            xml('FAX', {}),
-            xml('NUMBER', {})),
-          xml('TEL', {},
-            xml('WORK', {}),
-            xml('MSG', {}),
-            xml('NUMBER', {})),
-          xml('ADR', {},
+            xml('NUMBER', vCard.phoneNumber)
+          ),
+          xml('TEL', {}, xml('WORK', {}), xml('FAX', {}), xml('NUMBER', {})),
+          xml('TEL', {}, xml('WORK', {}), xml('MSG', {}), xml('NUMBER', {})),
+          xml(
+            'ADR',
+            {},
             xml('WORK', {}),
             xml('STREET', {}, vCard.street),
             xml('EXTADD', {}, vCard.streetExtended),
             xml('LOCALITY', {}, vCard.city),
             xml('REGION', {}, vCard.state),
             xml('PCODE', {}, vCard.zipCode),
-            xml('CTRY', {}, vCard.country)),
-          xml('EMAIL', {},
+            xml('CTRY', {}, vCard.country)
+          ),
+          xml(
+            'EMAIL',
+            {},
             xml('INTERNET', {}),
             xml('PREF', {}),
-            xml('USERID', {}, vCard.email)),
-          xml('PHOTO', {},
+            xml('USERID', {}, vCard.email)
+          ),
+          xml(
+            'PHOTO',
+            {},
             xml('TYPE', {}, vCard.photoType),
-            xml('BINVAL', {}, vCard.photo)),
-        )));
+            xml('BINVAL', {}, vCard.photo)
+          )
+        )
+      )
+    );
 
     // TODO: send confirmation of successful update
     // event.sender.send('xmpp-set-vcard-confirmation', response);
@@ -350,22 +392,28 @@ class XmppJsClient {
   sendSubscribe(jid, nickname, password) {
     if (password) {
       this.client.send(
-        xml('presence', {
+        xml(
+          'presence',
+          {
             id: makeId(7),
             to: `${jid}/${nickname}`,
-            from: this.jid,
+            from: jid,
           },
-          xml('x', {
+          xml(
+            'x',
+            {
               xmlns: 'http://jabber.org/protocol/muc',
             },
-            xml('password', {}, password)))
+            xml('password', {}, password)
+          )
+        )
       );
     } else {
       this.client.send(
         xml('presence', {
           id: makeId(7),
           to: `${jid}/${nickname}`,
-          from: this.jid,
+          from: jid,
         })
       );
     }
@@ -376,7 +424,7 @@ class XmppJsClient {
       xml('presence', {
         id: makeId(7),
         to: `${jid}/${nickname}`,
-        from: this.jid,
+        from: jid,
         type: 'unavailable',
       })
     );
@@ -384,33 +432,32 @@ class XmppJsClient {
 
   sendMyStatus(status) {
     if (status === 'online') {
-      this.client.send(
-        xml('presence', {}));
+      this.client.send(xml('presence', {}));
     } else {
-      this.client.send(
-        xml('presence', {},
-          xml('show', {},
-            status))
-      );
+      this.client.send(xml('presence', {}, xml('show', {}, status)));
     }
   }
 
   sendRoomNickname(jid, nickname) {
-    this.client.send(
-      xml('presence', { to: `${jid}/${nickname}` })
-    );
+    this.client.send(xml('presence', { to: `${jid}/${nickname}` }));
   }
 
   sendMessage(message) {
     // for some reason without setTimeout for a set period after sending a message
     // subsequent messages will have a delay before being sent
     setTimeout(() => {
-      this.client.send(xml('message', {
-        id: message.id,
-        type: message.type,
-        to: message.to,
-        from: message.from,
-      }, xml('body', {}, message.body)));
+      this.client.send(
+        xml(
+          'message',
+          {
+            id: message.id,
+            type: message.type,
+            to: message.to,
+            from: message.from,
+          },
+          xml('body', {}, message.body)
+        )
+      );
     });
   }
 }
@@ -426,4 +473,4 @@ function makeId(length) {
   return text;
 }
 
-module.exports = XmppJsClient;
+module.exports = new XmppJsClient();

@@ -1,4 +1,4 @@
-const electron = require('electron');
+const { app, BrowserWindow, Menu, Tray, shell } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
 
@@ -13,37 +13,24 @@ const {
 
 const operatingSystem = process.platform; // supported values: darwin (mac), linux, win32 (this is also 64bit)
 const path = require('path');
-const url = require('url');
 
-const XmppJsClient = require('./scripts/xmppJsClient');
-const IpcMainEvents = require('./scripts/ipcMainEvents');
-const Settings = require('./scripts/settings');
-
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
-const Menu = electron.Menu;
-const Tray = electron.Tray;
-
-const xmppJsClient = new XmppJsClient();
-const ipcMainEvents = new IpcMainEvents();
+const xmppJsClient = require('./scripts/xmppJsClient');
+const ipcMainEvents = require('./scripts/ipcMainEvents');
+const settings = require('./scripts/settings');
 
 let mainWindow;
 let tray;
 let isQuitting;
 
 // only allow once instance of Gong
-const isLocked = app.requestSingleInstanceLock(
-  (commandLine, workingDirectory) => {
-    // Someone tried to run a second instance, we should focus our window.
-    if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore();
-      mainWindow.focus();
-    }
-  }
-);
+const isLocked = app.requestSingleInstanceLock();
 if (!isLocked) {
   app.quit();
-  return;
+} else {
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
+  }
 }
 
 ipcMainEvents.attachEvents(xmppJsClient);
@@ -75,7 +62,7 @@ function createWindow() {
     if (
       operatingSystem === 'win32' &&
       !isQuitting &&
-      Settings.get().minimizeToTrayOnClose
+      settings.get().minimizeToTrayOnClose
     ) {
       event.preventDefault();
       mainWindow.hide();
@@ -111,13 +98,13 @@ function createWindow() {
   mainWindow.webContents.on('will-navigate', (event, targetUrl) => {
     if (!isDev || (isDev && !targetUrl.includes('localhost:3000'))) {
       event.preventDefault();
-      electron.shell.openExternal(targetUrl);
+      shell.openExternal(targetUrl);
     }
   });
   mainWindow.webContents.on('new-window', (event, targetUrl) => {
     if (!isDev || (isDev && !targetUrl.includes('localhost:3000'))) {
       event.preventDefault();
-      electron.shell.openExternal(targetUrl);
+      shell.openExternal(targetUrl);
     }
   });
 

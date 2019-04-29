@@ -1,10 +1,8 @@
 const { ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 
-const Settings = require('./settings');
-
-const Logger = require('./logger');
-const logger = new Logger();
+const logger = require('./logger');
+const settings = require('./settings');
 
 class IpcMainEvents {
   attachEvents(xmppJsClient) {
@@ -15,12 +13,12 @@ class IpcMainEvents {
     ipcMain.on('xmpp-connect', (event, arg) => {
       xmppJsClient.connect(event, arg);
     });
-    ipcMain.on('xmpp-roster', (event) => {
+    ipcMain.on('xmpp-roster', event => {
       xmppJsClient.sendGetRoster(event);
     });
     // end of startup chain
 
-    ipcMain.on('xmpp-discover-top-level-items', (event) => {
+    ipcMain.on('xmpp-discover-top-level-items', event => {
       xmppJsClient.sendDiscoverItems(event);
     });
 
@@ -61,11 +59,11 @@ class IpcMainEvents {
     });
 
     ipcMain.on('set-settings', (event, arg) => {
-      Settings.set(arg);
+      settings.set(arg);
     });
 
     ipcMain.on('set-flash-frame', (event, arg) => {
-      Settings.set(arg);
+      settings.set(arg);
     });
 
     ipcMain.on('set-log', (event, arg) => {
@@ -82,4 +80,4 @@ class IpcMainEvents {
   }
 }
 
-module.exports = IpcMainEvents;
+module.exports = new IpcMainEvents();

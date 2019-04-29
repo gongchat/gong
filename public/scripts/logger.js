@@ -1,5 +1,4 @@
 const ElectronStore = require('electron-store');
-const electronStore = new ElectronStore();
 
 class Logger {
   set(arg) {
@@ -111,4 +110,4 @@ class Logger {
   }
 }
 
-module.exports = Logger;
+module.exports = new Logger();

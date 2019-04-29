@@ -16,5 +16,5 @@ class Settings {
 
 // Singleton
 const instance = new Settings();
-Object.freeze(instance)
+Object.freeze(instance);
 module.exports = instance;
