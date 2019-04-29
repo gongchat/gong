@@ -99,7 +99,6 @@ const ListSelectorUsers: React.FC<IProps> = (props: IProps) => {
   };
 
   React.useEffect(() => {
-    console.log(selectorIndex);
     if (current && current.type === 'groupchat') {
       if (selectorIndex !== userListSelectorIndex + 1 && selectorIndex !== -1) {
         let setVisibility = false;
