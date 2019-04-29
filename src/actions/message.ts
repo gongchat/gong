@@ -187,110 +187,120 @@ const processMessage = (
 ) => {
   let formattedMessage = message.body;
 
-  // process urls
-  if (state.settings.renderVideos) {
-    message.urls = [...message.urls, ...getVideoUrls(message.body)];
-  }
-  if (state.settings.renderGetYarn) {
-    message.urls = [...message.urls, ...getGetYarnUrls(message.body)];
-  }
-  if (state.settings.renderImages) {
-    message.urls = [...message.urls, ...getImageUrls(message.body)];
-  }
+  if (formattedMessage) {
+    // process urls
+    if (state.settings.renderVideos) {
+      message.urls = [...message.urls, ...getVideoUrls(message.body)];
+    }
+    if (state.settings.renderGetYarn) {
+      message.urls = [...message.urls, ...getGetYarnUrls(message.body)];
+    }
+    if (state.settings.renderImages) {
+      message.urls = [...message.urls, ...getImageUrls(message.body)];
+    }
 
-  // escape tags
-  formattedMessage = formattedMessage.replace(/</g, '&lt;');
-  formattedMessage = formattedMessage.replace(/>/g, '&gt;');
+    // escape tags
+    formattedMessage = formattedMessage.replace(/</g, '&lt;');
+    formattedMessage = formattedMessage.replace(/>/g, '&gt;');
 
-  // handle mentions this only applies to IRoom
-  channelUsers.forEach((user: IChannelUser) => {
-    const isMe = user.nickname === myChannelNickname;
+    // handle mentions this only applies to IRoom
+    channelUsers.forEach((user: IChannelUser) => {
+      const isMe = user.nickname === myChannelNickname;
 
-    // handle mentions with @
-    const htmlWithAt = `<span class="${isMe ? 'mention-me' : 'mention'}">@${
-      user.nickname
-    }</span>`;
-    const regExpWithAt = new RegExp(`@${user.nickname}\\b`, 'gi');
+      // handle mentions with @
+      const htmlWithAt = `<span class="${isMe ? 'mention-me' : 'mention'}">@${
+        user.nickname
+      }</span>`;
+      const regExpWithAt = new RegExp(`@${user.nickname}\\b`, 'gi');
 
-    // handle mentions without @
-    const htmlWithoutAt = `<span class="${isMe ? 'mention-me' : 'mention'}">${
-      user.nickname
-    }</span>`;
-    const regExpWithoutAt = new RegExp(
-      // TODO: test@test matches, should not match so emails get generated properly
-      `(?<=[^a-zA-Z0-9@]|\\s|^)${user.nickname}(?=\\W|\\s+|$)(?=[^@]|$)`,
-      'gi'
+      // handle mentions without @
+      const htmlWithoutAt = `<span class="${isMe ? 'mention-me' : 'mention'}">${
+        user.nickname
+      }</span>`;
+      const regExpWithoutAt = new RegExp(
+        // TODO: test@test matches, should not match so emails get generated properly
+        `(?<=[^a-zA-Z0-9@]|\\s|^)${user.nickname}(?=\\W|\\s+|$)(?=[^@]|$)`,
+        'gi'
+      );
+
+      // if mentioned me
+      message.isMentioningMe =
+        (regExpWithAt.test(formattedMessage) ||
+          regExpWithoutAt.test(formattedMessage)) &&
+        !message.isHistory &&
+        isMe;
+
+      // replace all the things
+      formattedMessage = formattedMessage.replace(regExpWithAt, htmlWithAt);
+      formattedMessage = formattedMessage.replace(
+        regExpWithoutAt,
+        htmlWithoutAt
+      );
+    });
+
+    // markdown the message
+    formattedMessage = sanitizeHtml(
+      markdownIt.use(emoji).renderInline(formattedMessage),
+      {
+        allowedTags: ALLOWED_TAGS,
+        allowedAttributes: ALLOWED_ATTRIBUTES,
+      }
     );
 
-    // if mentioned me
-    message.isMentioningMe =
-      (regExpWithAt.test(formattedMessage) ||
-        regExpWithoutAt.test(formattedMessage)) &&
-      !message.isHistory &&
-      isMe;
-
-    // replace all the things
-    formattedMessage = formattedMessage.replace(regExpWithAt, htmlWithAt);
-    formattedMessage = formattedMessage.replace(regExpWithoutAt, htmlWithoutAt);
-  });
-
-  // markdown the message
-  formattedMessage = sanitizeHtml(
-    markdownIt.use(emoji).renderInline(formattedMessage),
-    {
-      allowedTags: ALLOWED_TAGS,
-      allowedAttributes: ALLOWED_ATTRIBUTES,
-    }
-  );
-
-  // handle new lines
-  message.body = formattedMessage
-    .replace(/\n\r/g, '<br />')
-    .replace(/\n/g, '<br />');
+    // handle new lines
+    message.body = formattedMessage
+      .replace(/\n\r/g, '<br />')
+      .replace(/\n/g, '<br />');
+  }
 };
 
 const getVideoUrls = (text: string): IMessageUrl[] => {
-  // find youtube videos, regExp from: https://github.com/regexhq/youtube-regex/blob/master/index.js
-  const youtubeRegExp = new RegExp(
-    /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/g
-  );
-  const scannedYoutubeUrls = text.match(youtubeRegExp);
-  if (scannedYoutubeUrls) {
-    return scannedYoutubeUrls.map((url: string) => ({
-      type: 'video',
-      url,
-    }));
-  } else {
-    return [];
+  if (text) {
+    // find youtube videos, regExp from: https://github.com/regexhq/youtube-regex/blob/master/index.js
+    const youtubeRegExp = new RegExp(
+      /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/g
+    );
+    const scannedYoutubeUrls = text.match(youtubeRegExp);
+    if (scannedYoutubeUrls) {
+      return scannedYoutubeUrls.map((url: string) => ({
+        type: 'video',
+        url,
+      }));
+    }
   }
+  return [];
 };
 
 const getGetYarnUrls = (text: string): IMessageUrl[] => {
-  const getYarnRegExp = new RegExp(
-    /(?:getyarn\.io\/yarn-clip\/)([a-zA-Z0-9_-]{36,36})(\b)/g
-  );
-  const scannedGetYarnUrls = text.match(getYarnRegExp);
-  if (scannedGetYarnUrls) {
-    return scannedGetYarnUrls.map((url: string) => ({
-      type: 'getyarn',
-      url,
-    }));
-  } else {
-    return [];
+  if (text) {
+    const getYarnRegExp = new RegExp(
+      /(?:getyarn\.io\/yarn-clip\/)([a-zA-Z0-9_-]{36,36})(\b)/g
+    );
+    const scannedGetYarnUrls = text.match(getYarnRegExp);
+    if (scannedGetYarnUrls) {
+      return scannedGetYarnUrls.map((url: string) => ({
+        type: 'getyarn',
+        url,
+      }));
+    }
   }
+  return [];
 };
 
 const getImageUrls = (text: string): IMessageUrl[] => {
-  const getImageRegExp = new RegExp(/(https?:\/\/.*\.(?:png|jpg|gifv|gif))/gi);
-  const scannedImageUrls = text.match(getImageRegExp);
-  if (scannedImageUrls) {
-    return scannedImageUrls.map((url: string) => ({
-      type: 'image',
-      url,
-    }));
-  } else {
-    return [];
+  if (text) {
+    const getImageRegExp = new RegExp(
+      /(https?:\/\/.*\.(?:png|jpg|gifv|gif))/gi
+    );
+    const scannedImageUrls = text.match(getImageRegExp);
+    if (scannedImageUrls) {
+      return scannedImageUrls.map((url: string) => ({
+        type: 'image',
+        url,
+      }));
+    }
   }
+  return [];
 };
 
 const addMessage = (

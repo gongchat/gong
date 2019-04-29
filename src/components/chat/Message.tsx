@@ -29,7 +29,7 @@ const Message: React.FC<IProps> = (props: IProps) => {
     renderGetYarn,
   } = props;
 
-  const isMe = message.body.startsWith('/me ');
+  const isMe = message.body && message.body.startsWith('/me ');
 
   return (
     <div className={classes.root}>
