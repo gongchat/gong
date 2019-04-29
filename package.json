@@ -12,7 +12,7 @@
   "scripts": {
     "react": "react-scripts start",
     "build": "react-scripts build",
-    "start": "concurrently \"cross-env BROWSER=none npm run react\" \"wait-on http://localhost:3000 && electron .\" --kill-others",
+    "start": "concurrently \"cross-env BROWSER=none npm run react\" \"wait-on http://localhost:3100 && electron .\" --kill-others",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "release:mac": "electron-builder build -m -p always",

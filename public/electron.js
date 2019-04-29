@@ -54,7 +54,7 @@ function createWindow() {
 
   mainWindow.loadURL(
     isDev
-      ? 'http://localhost:3000'
+      ? 'http://localhost:3100'
       : `file://${path.join(__dirname, '../build/index.html')}`
   );
 
@@ -96,13 +96,13 @@ function createWindow() {
   // react is using hash router for routing and does not register as a link to
   // a new page. on develop localhost:3000 is ignored for reloads on save.
   mainWindow.webContents.on('will-navigate', (event, targetUrl) => {
-    if (!isDev || (isDev && !targetUrl.includes('localhost:3000'))) {
+    if (!isDev || (isDev && !targetUrl.includes('localhost:3100'))) {
       event.preventDefault();
       shell.openExternal(targetUrl);
     }
   });
   mainWindow.webContents.on('new-window', (event, targetUrl) => {
-    if (!isDev || (isDev && !targetUrl.includes('localhost:3000'))) {
+    if (!isDev || (isDev && !targetUrl.includes('localhost:3100'))) {
       event.preventDefault();
       shell.openExternal(targetUrl);
     }
