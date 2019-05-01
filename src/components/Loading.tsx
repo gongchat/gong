@@ -1,7 +1,7 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import { useState } from 'react';
 import { useContext } from '../context';
-import { navigate } from '@reach/router';
 
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
@@ -25,11 +25,14 @@ const Loading: React.FC<IProps> = () => {
   const [text, setText] = useState('Loading please wait...');
   const [showLogin, setShowLogin] = useState(false);
 
+  const [goToLogin, setGoToLogin] = useState(false);
+  const [goToMain, setGoToMain] = useState(false);
+
   const handleLoginClick = () => {
     if (reconnectTimer) {
       clearTimeout(reconnectTimer);
     }
-    navigate('/login');
+    setGoToLogin(true);
   };
 
   React.useEffect(() => {
@@ -39,9 +42,9 @@ const Loading: React.FC<IProps> = () => {
   React.useEffect(() => {
     if (!connection.isConnecting && connection.isConnecting !== undefined) {
       if (connection.isConnected) {
-        navigate('/main');
+        setGoToMain(true);
       } else if (connection.hasSavedCredentials === false) {
-        navigate('/login');
+        setGoToLogin(true);
       } else if (!connection.isAuthenticated) {
         if (
           connection.connectionError !== 'Cannot authorize your credentials'
@@ -67,33 +70,39 @@ const Loading: React.FC<IProps> = () => {
     };
   }, [autoConnect, connection]);
 
-  return (
-    <div className={classes.root}>
-      <div className={classes.filler} />
-      <div className={classes.content}>
-        <h1 className={classes.title}>GONG</h1>
-        <LoadingIcon />
-        <p className={classes.message}>{text}</p>
-        {app.version !== '' && (
-          <p className={classes.version}>v{app.version}</p>
-        )}
-      </div>
-      {showLogin && (
-        <div className={classes.goToLogin}>
-          <div className={classes.filler} />
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleLoginClick}
-          >
-            Take me to login
-          </Button>
-          <div className={classes.filler} />
+  if (goToLogin) {
+    return <Redirect to="/login" />;
+  } else if (goToMain) {
+    return <Redirect to="/main" />;
+  } else {
+    return (
+      <div className={classes.root}>
+        <div className={classes.filler} />
+        <div className={classes.content}>
+          <h1 className={classes.title}>GONG</h1>
+          <LoadingIcon />
+          <p className={classes.message}>{text}</p>
+          {app.version !== '' && (
+            <p className={classes.version}>v{app.version}</p>
+          )}
         </div>
-      )}
-      <div className={classes.filler} />
-    </div>
-  );
+        {showLogin && (
+          <div className={classes.goToLogin}>
+            <div className={classes.filler} />
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleLoginClick}
+            >
+              Take me to login
+            </Button>
+            <div className={classes.filler} />
+          </div>
+        )}
+        <div className={classes.filler} />
+      </div>
+    );
+  }
 };
 
 const useStyles = makeStyles((theme: any) => ({

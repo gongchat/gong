@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
+import { Redirect } from 'react-router';
 import { useContext } from '../../context';
-import { navigate } from '@reach/router';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -56,6 +56,7 @@ const Settings: React.FC = () => {
   const { showSettings, app } = context;
   const { toggleShowSettings, logOff, setThemeToDefault } = actions;
 
+  const [goToLogin, setGoToLogin] = useState(false);
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
 
   const handleClickClose = () => {
@@ -64,112 +65,116 @@ const Settings: React.FC = () => {
 
   const handleLogOff = () => {
     logOff();
-    navigate('/login');
+    setGoToLogin(true);
   };
 
-  return (
-    <Dialog
-      fullScreen={true}
-      open={showSettings}
-      className={classes.dialog}
-      BackdropProps={{ className: classes.dialog }}
-    >
-      <DialogContent className={classes.dialogContent}>
-        <div className={classes.nav}>
-          <List>
-            {TABS.map((tab: any, index: number) => {
-              if (tab) {
-                if (
-                  !selectedTab ||
-                  (tab.name === 'System' && app.operatingSystem !== 'win32')
-                ) {
-                  return null;
+  if (goToLogin) {
+    return <Redirect to="/login" />;
+  } else {
+    return (
+      <Dialog
+        fullScreen={true}
+        open={showSettings}
+        className={classes.dialog}
+        BackdropProps={{ className: classes.dialog }}
+      >
+        <DialogContent className={classes.dialogContent}>
+          <div className={classes.nav}>
+            <List>
+              {TABS.map((tab: any, index: number) => {
+                if (tab) {
+                  if (
+                    !selectedTab ||
+                    (tab.name === 'System' && app.operatingSystem !== 'win32')
+                  ) {
+                    return null;
+                  } else {
+                    return (
+                      <ListItem
+                        key={index}
+                        button={true}
+                        selected={tab.name === selectedTab.name}
+                        onClick={() => setSelectedTab(tab)}
+                      >
+                        <ListItemIcon className={classes.icon}>
+                          {tab.icon}
+                        </ListItemIcon>
+                        <ListItemText>{tab.name}</ListItemText>
+                      </ListItem>
+                    );
+                  }
                 } else {
-                  return (
-                    <ListItem
-                      key={index}
-                      button={true}
-                      selected={tab.name === selectedTab.name}
-                      onClick={() => setSelectedTab(tab)}
-                    >
-                      <ListItemIcon className={classes.icon}>
-                        {tab.icon}
-                      </ListItemIcon>
-                      <ListItemText>{tab.name}</ListItemText>
-                    </ListItem>
-                  );
+                  return <Divider key={index} />;
                 }
-              } else {
-                return <Divider key={index} />;
-              }
-            })}
-            <Divider />
-            <ListItem className={classes.links}>
-              <ListItemIcon>
-                <a href="https://gongchat.github.io">
-                  <GongIcon />
-                </a>
-              </ListItemIcon>
-              <ListItemIcon>
-                <a href="https://github.com/gongchat/gong">
-                  <GithubIcon />
-                </a>
-              </ListItemIcon>
-            </ListItem>
-            <ListItem className={classes.version}>
-              <Typography variant="caption">v{app.version}</Typography>
-            </ListItem>
-          </List>
-        </div>
-        <div className={classes.content}>
-          {selectedTab && selectedTab.name === 'Account' && <Account />}
-          {selectedTab && selectedTab.name === 'Theme' && <Theme />}
-          {selectedTab && selectedTab.name === 'Font' && <Font />}
-          {selectedTab && selectedTab.name === 'Layout' && <Layout />}
-          {selectedTab && selectedTab.name === 'Messages' && <Messages />}
-          {selectedTab && selectedTab.name === 'Notifications' && (
-            <Notifications />
-          )}
-          {selectedTab && selectedTab.name === 'System' && <System />}
-          {selectedTab && selectedTab.name === 'Reset' && (
-            <div className={classes.section}>
-              <Typography>
-                This will reset your colors, font, and font size to the default
-                settings.
-              </Typography>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => setThemeToDefault()}
-              >
-                Reset all Styles
-              </Button>
-            </div>
-          )}
-          {selectedTab && selectedTab.name === 'Log Off' && (
-            <div className={classes.section}>
-              <Typography>
-                This will log you off of your current account. All data
-                associated this account will be removed.
-              </Typography>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleLogOff}
-              >
-                Log Off
-              </Button>
-            </div>
-          )}
-          <div className={classes.close}>
-            <IconButton onClick={handleClickClose}>
-              <CloseIcon />
-            </IconButton>
+              })}
+              <Divider />
+              <ListItem className={classes.links}>
+                <ListItemIcon>
+                  <a href="https://gongchat.github.io">
+                    <GongIcon />
+                  </a>
+                </ListItemIcon>
+                <ListItemIcon>
+                  <a href="https://github.com/gongchat/gong">
+                    <GithubIcon />
+                  </a>
+                </ListItemIcon>
+              </ListItem>
+              <ListItem className={classes.version}>
+                <Typography variant="caption">v{app.version}</Typography>
+              </ListItem>
+            </List>
           </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
+          <div className={classes.content}>
+            {selectedTab && selectedTab.name === 'Account' && <Account />}
+            {selectedTab && selectedTab.name === 'Theme' && <Theme />}
+            {selectedTab && selectedTab.name === 'Font' && <Font />}
+            {selectedTab && selectedTab.name === 'Layout' && <Layout />}
+            {selectedTab && selectedTab.name === 'Messages' && <Messages />}
+            {selectedTab && selectedTab.name === 'Notifications' && (
+              <Notifications />
+            )}
+            {selectedTab && selectedTab.name === 'System' && <System />}
+            {selectedTab && selectedTab.name === 'Reset' && (
+              <div className={classes.section}>
+                <Typography>
+                  This will reset your colors, font, and font size to the
+                  default settings.
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => setThemeToDefault()}
+                >
+                  Reset all Styles
+                </Button>
+              </div>
+            )}
+            {selectedTab && selectedTab.name === 'Log Off' && (
+              <div className={classes.section}>
+                <Typography>
+                  This will log you off of your current account. All data
+                  associated this account will be removed.
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleLogOff}
+                >
+                  Log Off
+                </Button>
+              </div>
+            )}
+            <div className={classes.close}>
+              <IconButton onClick={handleClickClose}>
+                <CloseIcon />
+              </IconButton>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 };
 
 const useStyles = makeStyles((theme: any) => ({
