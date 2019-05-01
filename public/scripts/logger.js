@@ -110,4 +110,6 @@ class Logger {
   }
 }
 
-module.exports = new Logger();
+const logger = new Logger();
+
+module.exports = logger;

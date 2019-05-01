@@ -473,4 +473,6 @@ function makeId(length) {
   return text;
 }
 
-module.exports = new XmppJsClient();
+const xmppJsClient = new XmppJsClient();
+
+module.exports = xmppJsClient;

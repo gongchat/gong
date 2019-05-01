@@ -80,4 +80,6 @@ class IpcMainEvents {
   }
 }
 
-module.exports = new IpcMainEvents();
+const ipcMainEvents = new IpcMainEvents();
+
+module.exports = ipcMainEvents;

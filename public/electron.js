@@ -3,7 +3,7 @@ const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
 
 const debug = require('electron-debug');
-debug({ enabled: true });
+debug({ enabled: true, showDevTools: false });
 
 const isDev = require('electron-is-dev');
 const {
@@ -34,9 +34,7 @@ if (!isLocked) {
 }
 
 ipcMainEvents.attachEvents(xmppJsClient);
-
 autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');
 
 function createWindow() {
@@ -178,7 +176,7 @@ autoUpdater.on('update-not-available', (ev, info) => {
   mainWindow.webContents.send('app-set', { hasUpdate: false });
 });
 autoUpdater.on('error', (event, error) => {
-  console.log('error'); // TODO: setup a messaging system
+  log.error('Auto update error'); // TODO: setup a messaging system
 });
 autoUpdater.on('update-downloaded', (event, info) => {
   mainWindow.webContents.send('app-set', {
