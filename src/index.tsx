@@ -3,12 +3,11 @@ import './bootstrap';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './index.scss';
+import App from './components/App';
+import * as serviceWorker from './serviceWorker';
 
 import ContextProvider from './context';
-
-import App from './components/App';
-import './index.scss';
-import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <ContextProvider>
