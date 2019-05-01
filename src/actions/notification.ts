@@ -6,7 +6,7 @@ import IState from '../interfaces/IState';
 export const SOUNDS = [
   { name: '!', fileName: '!.mp3' },
   { name: 'AWP', fileName: 'awp.mp3' },
-  { name: 'AYAYA', fileName: 'ayaya-ayaya.mp3' },
+  { name: 'AYAYA', fileName: 'ayaya.mp3' },
   { name: 'AYAYA AYAYA', fileName: 'ayaya-ayaya.mp3' },
   { name: 'Chewbacca', fileName: 'chewbacca.mp3' },
   { name: 'Gong 1', fileName: 'gong-1.wav' },
