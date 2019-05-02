@@ -49,11 +49,11 @@ const Users: React.FC<IProps> = (props: any) => {
                   .filter((user: IUser) => user.unreadMessages > 0)
                   .sort((a: IUser, b: IUser) => {
                     const aValue =
-                      a.vCard && a.vCard.fullName !== ''
+                      a.vCard && a.vCard.fullName && a.vCard.fullName !== ''
                         ? a.vCard.fullName
                         : a.username;
                     const bValue =
-                      b.vCard && b.vCard.fullName !== ''
+                      b.vCard && b.vCard.fullName && b.vCard.fullName !== ''
                         ? b.vCard.fullName
                         : b.username;
                     return aValue.localeCompare(bValue);
@@ -71,11 +71,11 @@ const Users: React.FC<IProps> = (props: any) => {
                   .filter((user: IUser) => user.unreadMessages === 0)
                   .sort((a: IUser, b: IUser) => {
                     const aValue =
-                      a.vCard && a.vCard.fullName !== ''
+                      a.vCard && a.vCard.fullName && a.vCard.fullName !== ''
                         ? a.vCard.fullName
                         : a.username;
                     const bValue =
-                      b.vCard && b.vCard.fullName !== ''
+                      b.vCard && b.vCard.fullName && b.vCard.fullName !== ''
                         ? b.vCard.fullName
                         : b.username;
                     return aValue.localeCompare(bValue);
@@ -92,11 +92,11 @@ const Users: React.FC<IProps> = (props: any) => {
                 group.users
                   .sort((a: IUser, b: IUser) => {
                     const aValue =
-                      a.vCard && a.vCard.fullName !== ''
+                      a.vCard && a.vCard.fullName && a.vCard.fullName !== ''
                         ? a.vCard.fullName
                         : a.username;
                     const bValue =
-                      b.vCard && b.vCard.fullName !== ''
+                      b.vCard && b.vCard.fullName && b.vCard.fullName !== ''
                         ? b.vCard.fullName
                         : b.username;
                     return aValue.localeCompare(bValue);

@@ -32,7 +32,7 @@ const User: React.FC<IProps> = (props: IProps) => {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   const displayName =
-    user.vCard && user.vCard.fullName !== ''
+    user.vCard && user.vCard.fullName && user.vCard.fullName !== ''
       ? user.vCard.fullName
       : user.username;
 
