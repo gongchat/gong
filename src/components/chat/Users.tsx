@@ -44,16 +44,71 @@ const Users: React.FC<IProps> = (props: any) => {
                 (user: IUser) => user.hasUnreadMentionMe
               )}
             >
-              {group.users
-                .sort((a: IUser, b: IUser) => a.name.localeCompare(b.name))
-                .map((user: IUser) => (
-                  <User
-                    key={user.jid}
-                    user={user}
-                    showAvatar={theme.sidebarLeftShowAvatar}
-                    isSelected={current && current.jid === user.jid}
-                  />
-                ))}
+              {theme.sortChannelsByMostRecentUnread &&
+                group.users
+                  .filter((user: IUser) => user.unreadMessages > 0)
+                  .sort((a: IUser, b: IUser) => {
+                    const aValue =
+                      a.vCard && a.vCard.fullName !== ''
+                        ? a.vCard.fullName
+                        : a.username;
+                    const bValue =
+                      b.vCard && b.vCard.fullName !== ''
+                        ? b.vCard.fullName
+                        : b.username;
+                    return aValue.localeCompare(bValue);
+                  })
+                  .map((user: IUser) => (
+                    <User
+                      key={user.jid}
+                      user={user}
+                      showAvatar={theme.sidebarLeftShowAvatar}
+                      isSelected={current && current.jid === user.jid}
+                    />
+                  ))}
+              {theme.sortChannelsByMostRecentUnread &&
+                group.users
+                  .filter((user: IUser) => user.unreadMessages === 0)
+                  .sort((a: IUser, b: IUser) => {
+                    const aValue =
+                      a.vCard && a.vCard.fullName !== ''
+                        ? a.vCard.fullName
+                        : a.username;
+                    const bValue =
+                      b.vCard && b.vCard.fullName !== ''
+                        ? b.vCard.fullName
+                        : b.username;
+                    return aValue.localeCompare(bValue);
+                  })
+                  .map((user: IUser) => (
+                    <User
+                      key={user.jid}
+                      user={user}
+                      showAvatar={theme.sidebarLeftShowAvatar}
+                      isSelected={current && current.jid === user.jid}
+                    />
+                  ))}
+              {!theme.sortChannelsByMostRecentUnread &&
+                group.users
+                  .sort((a: IUser, b: IUser) => {
+                    const aValue =
+                      a.vCard && a.vCard.fullName !== ''
+                        ? a.vCard.fullName
+                        : a.username;
+                    const bValue =
+                      b.vCard && b.vCard.fullName !== ''
+                        ? b.vCard.fullName
+                        : b.username;
+                    return aValue.localeCompare(bValue);
+                  })
+                  .map((user: IUser) => (
+                    <User
+                      key={user.jid}
+                      user={user}
+                      showAvatar={theme.sidebarLeftShowAvatar}
+                      isSelected={current && current.jid === user.jid}
+                    />
+                  ))}
             </Group>
           );
         } else {

@@ -38,6 +38,10 @@ const Layout: React.FC = () => {
   const [sidebarRightShowAvatar, setSidebarRightShowAvatar] = useState(
     theme.sidebarRightShowAvatar
   );
+  const [
+    sortChannelsByMostRecentUnread,
+    setSortChannelsByMostRecentUnread,
+  ] = useState(theme.sortChannelsByMostRecentUnread);
 
   const handleKeyDown = (event: any) => {
     const key = String.fromCharCode(
@@ -108,7 +112,7 @@ const Layout: React.FC = () => {
     }, 1000);
   };
 
-  const handleSidebarAvatarChange = (event: any, action: any) => {
+  const handleSwitchChange = (event: any, action: any) => {
     action(event.target.checked);
     setTheme({
       themeKey: event.target.name,
@@ -182,6 +186,20 @@ const Layout: React.FC = () => {
           />
         </div>
       </BaseSection>
+      <BaseSection title="Channels">
+        <FormControlLabel
+          control={
+            <Switch
+              name="sortChannelsByMostRecentUnread"
+              checked={sortChannelsByMostRecentUnread}
+              onChange={(event: any) =>
+                handleSwitchChange(event, setSortChannelsByMostRecentUnread)
+              }
+            />
+          }
+          label="Sort channels with unread messages first"
+        />
+      </BaseSection>
       <BaseSection title="Avatars">
         <FormControlLabel
           control={
@@ -189,7 +207,7 @@ const Layout: React.FC = () => {
               name="sidebarLeftShowAvatar"
               checked={sidebarLeftShowAvatar}
               onChange={(event: any) =>
-                handleSidebarAvatarChange(event, setSidebarLeftShowAvatar)
+                handleSwitchChange(event, setSidebarLeftShowAvatar)
               }
             />
           }
@@ -201,7 +219,7 @@ const Layout: React.FC = () => {
               name="sidebarRightShowAvatar"
               checked={sidebarRightShowAvatar}
               onChange={(event: any) =>
-                handleSidebarAvatarChange(event, setSidebarRightShowAvatar)
+                handleSwitchChange(event, setSidebarRightShowAvatar)
               }
             />
           }

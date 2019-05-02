@@ -29,6 +29,7 @@ const DEFAULT: any = {
   sidebarWidth: 225,
   sidebarLeftShowAvatar: true,
   sidebarRightShowAvatar: true,
+  sortChannelsByMostRecentUnread: true,
   typography: {
     fontFamily: '"Source Sans Pro", sans-serif',
     fontSize: 15,
@@ -114,6 +115,12 @@ export const themeActions = {
 export const getTheme = () => {
   const theme = electronStore.get('theme');
   if (theme) {
+    // set default props for new props
+    if (theme.sortChannelsByMostRecentUnread === undefined) {
+      theme.sortChannelsByMostRecentUnread =
+        DEFAULT.sortChannelsByMostRecentUnread;
+    }
+
     return createMuiTheme(theme);
   } else {
     return createMuiTheme({ ...DEFAULT });
