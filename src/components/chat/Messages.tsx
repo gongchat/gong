@@ -1,5 +1,6 @@
 import React from 'react';
 import { useContext } from '../../context';
+import moment from 'moment';
 
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
@@ -22,9 +23,7 @@ const Messages: React.FC = () => {
     }
   };
 
-  let previousDate = '';
-  let previousUserNickname = '';
-  let previousMessageStatus = true;
+  let prevMessage: IMessage;
   let hasNewMessageMarker = false;
 
   return (
@@ -32,9 +31,12 @@ const Messages: React.FC = () => {
       {current &&
         current.messages &&
         current.messages.map((message: IMessage, index: number) => {
-          const showDate = previousDate !== message.timestamp.format('L');
+          const showDate =
+            !prevMessage ||
+            prevMessage.timestamp.format('L') !== message.timestamp.format('L');
           const showNewMessageMarker =
-            !hasNewMessageMarker && previousMessageStatus !== message.isRead;
+            !hasNewMessageMarker &&
+            (!prevMessage || prevMessage.isRead !== message.isRead);
 
           const nextMessage: any =
             index + 1 > current.messages.length
@@ -49,10 +51,18 @@ const Messages: React.FC = () => {
               ? nextMessage.isRead !== message.isRead
               : false;
 
-          const isStartOfGroup = previousUserNickname !== message.userNickname;
-          const isEndOfGroup = nextMessage
-            ? nextMessage.userNickname !== message.userNickname
-            : true;
+          const isStartOfGroup =
+            !prevMessage ||
+            prevMessage.userNickname !== message.userNickname ||
+            moment
+              .duration(message.timestamp.diff(prevMessage.timestamp))
+              .asMinutes() > 2;
+          const isEndOfGroup =
+            !nextMessage ||
+            nextMessage.userNickname !== message.userNickname ||
+            moment
+              .duration(nextMessage.timestamp.diff(message.timestamp))
+              .asMinutes() > 2;
 
           if (showNewMessageMarker) {
             hasNewMessageMarker = true;
@@ -105,9 +115,7 @@ const Messages: React.FC = () => {
             </React.Fragment>
           );
 
-          previousDate = message.timestamp.format('L');
-          previousUserNickname = message.userNickname;
-          previousMessageStatus = message.isRead;
+          prevMessage = message;
 
           return returnVal;
         })}
