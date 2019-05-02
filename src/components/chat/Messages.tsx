@@ -36,7 +36,7 @@ const Messages: React.FC = () => {
             prevMessage.timestamp.format('L') !== message.timestamp.format('L');
           const showNewMessageMarker =
             !hasNewMessageMarker &&
-            (!prevMessage || prevMessage.isRead !== message.isRead);
+            (prevMessage && prevMessage.isRead !== message.isRead);
 
           const nextMessage: any =
             index + 1 > current.messages.length
@@ -47,9 +47,10 @@ const Messages: React.FC = () => {
               message.timestamp.format('L')
             : false;
           const isNextShowNewMessageMarker =
-            !hasNewMessageMarker && nextMessage && !nextMessage.isRead
-              ? nextMessage.isRead !== message.isRead
-              : false;
+            !hasNewMessageMarker &&
+            nextMessage &&
+            !nextMessage.isRead &&
+            nextMessage.isRead !== message.isRead;
 
           const isStartOfGroup =
             !prevMessage ||
