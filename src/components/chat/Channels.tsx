@@ -53,9 +53,9 @@ const Channels: React.FC<IProps> = (props: IProps) => {
                 )
                 .asSeconds()
             )
-            .map((channel: IChannel) => (
+            .map((channel: IChannel, index: number) => (
               <Channel
-                key={channel.jid}
+                key={index}
                 prefix={prefix}
                 channel={channel as IRoom}
                 isSelected={current && current.jid === channel.jid}
@@ -65,9 +65,9 @@ const Channels: React.FC<IProps> = (props: IProps) => {
           channels
             .filter((channel: IChannel) => channel.unreadMessages === 0)
             .sort((a: IChannel, b: IChannel) => a.name.localeCompare(b.name))
-            .map((channel: IChannel) => (
+            .map((channel: IChannel, index: number) => (
               <Channel
-                key={channel.jid}
+                key={index}
                 prefix={prefix}
                 channel={channel as IRoom}
                 isSelected={current && current.jid === channel.jid}
@@ -76,9 +76,9 @@ const Channels: React.FC<IProps> = (props: IProps) => {
         {!theme.sortChannelsByMostRecentUnread &&
           channels
             .sort((a: IChannel, b: IChannel) => a.name.localeCompare(b.name))
-            .map((channel: IChannel) => (
+            .map((channel: IChannel, index: number) => (
               <Channel
-                key={channel.jid}
+                key={index}
                 prefix={prefix}
                 channel={channel as IRoom}
                 isSelected={current && current.jid === channel.jid}
