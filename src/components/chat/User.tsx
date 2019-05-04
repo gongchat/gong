@@ -83,7 +83,7 @@ const User: React.FC<IProps> = (props: IProps) => {
               ) : (
                 <Avatar className={classes.img}>
                   <Typography>
-                    {StringUtil.getAbbreviation(displayName)} WOOO!
+                    {StringUtil.getAbbreviation(displayName)}
                   </Typography>
                 </Avatar>
               )}
