@@ -50,7 +50,11 @@ const Main: React.FC<IProps> = () => {
   };
 
   React.useEffect(() => {
-    if (!connection.isAuthenticated) {
+    if (
+      !connection.isAuthenticated &&
+      !connection.isConnecting &&
+      connection.hasSavedCredentials !== undefined
+    ) {
       setGoToLogin(true);
     }
   }, [connection]);
