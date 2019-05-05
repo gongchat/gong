@@ -67,7 +67,7 @@ const Messages: React.FC = () => {
           }
 
           const returnVal = (
-            < key={index}>
+            <React.Fragment key={index}>
               {showDate && (
                 <div className={classes.marker}>
                   <Typography className={classes.markerValue}>
@@ -110,7 +110,7 @@ const Messages: React.FC = () => {
                   onMediaLoad={handleOnMediaLoad}
                 />
               </div>
-            </>
+            </React.Fragment>
           );
 
           prevMessage = message;
