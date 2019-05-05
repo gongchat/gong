@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+import { Redirect } from 'react-router';
 import { useContext } from '../context';
 import * as WebFont from 'webfontloader';
 
@@ -27,6 +28,7 @@ interface IProps {
 const Main: React.FC<IProps> = () => {
   const classes = useStyles();
   const [{ connection, theme, app, current }, { autoConnect }] = useContext();
+  const [goToLogin, setGoToLogin] = useState(false);
   const [shouldReconnect, setShouldReconnect] = useState(true);
   const [updateOpen, setUpdateOpen] = useState(false);
 
@@ -48,18 +50,30 @@ const Main: React.FC<IProps> = () => {
   };
 
   React.useEffect(() => {
+    if (!connection.isAuthenticated) {
+      setGoToLogin(true);
+    }
+  }, [connection]);
+
+  React.useEffect(() => {
     if (connection) {
       if (!connection.isConnecting && !connection.isConnected) {
         autoConnect();
       }
     }
+  }, [autoConnect, connection, theme]);
+
+  React.useEffect(() => {
     if (theme) {
       loadFont(theme.typography.fontFamily);
     }
-    if (app && app.hasUpdate) {
+  }, [theme]);
+
+  React.useEffect(() => {
+    if (app.hasUpdate) {
       setUpdateOpen(true);
     }
-  }, [app, autoConnect, connection, theme]);
+  }, [app]);
 
   React.useEffect(() => {
     // TODO: need to handle errors better
@@ -82,15 +96,9 @@ const Main: React.FC<IProps> = () => {
     }
   }, [autoConnect, connection, shouldReconnect]);
 
-  React.useEffect(() => {
-    loadFont(theme.typography.fontFamily);
-  }, [theme.typography.fontFamily]);
-
-  React.useEffect(() => {
-    if (app.hasUpdate) {
-      setUpdateOpen(true);
-    }
-  }, [app.hasUpdate]);
+  if (goToLogin) {
+    return <Redirect to="/login" />;
+  }
 
   return (
     <div className={classes.root}>
