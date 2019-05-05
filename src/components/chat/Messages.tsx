@@ -11,20 +11,17 @@ import IMessage from '../../interfaces/IMessage';
 
 const Messages: React.FC = () => {
   const classes = useStyles();
-  const [context] = useContext();
-
-  const { current, settings } = context;
-
+  const [{ current, settings }] = useContext();
   const scrollerRef = React.useRef<any>(null);
+
+  let prevMessage: IMessage;
+  let hasNewMessageMarker = false;
 
   const handleOnMediaLoad = () => {
     if (scrollerRef.current) {
       scrollerRef.current.handleOnMediaLoad();
     }
   };
-
-  let prevMessage: IMessage;
-  let hasNewMessageMarker = false;
 
   return (
     <MessagesScroller ref={scrollerRef}>
@@ -70,7 +67,7 @@ const Messages: React.FC = () => {
           }
 
           const returnVal = (
-            <React.Fragment key={index}>
+            < key={index}>
               {showDate && (
                 <div className={classes.marker}>
                   <Typography className={classes.markerValue}>
@@ -113,7 +110,7 @@ const Messages: React.FC = () => {
                   onMediaLoad={handleOnMediaLoad}
                 />
               </div>
-            </React.Fragment>
+            </>
           );
 
           prevMessage = message;

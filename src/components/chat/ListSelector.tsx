@@ -31,8 +31,6 @@ interface IProps {
 //  21 = Users via click
 
 const ListSelector: React.FC<IProps> = (props: IProps) => {
-  const classes = useStyles();
-
   const {
     handleSelection,
     selectorIndex,
@@ -47,9 +45,8 @@ const ListSelector: React.FC<IProps> = (props: IProps) => {
     itemPrefix,
     itemSuffix,
   } = props;
-
+  const classes = useStyles();
   const [listIndex, setListIndex] = useState(0);
-
   const listRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {

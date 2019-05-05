@@ -19,11 +19,7 @@ interface IProps {
 
 const Login: React.FC<IProps> = () => {
   const classes = useStyles();
-  const [context, actions] = useContext();
-
-  const { connection } = context;
-  const { connecting } = actions;
-
+  const [{ connection }, { connecting }] = useContext();
   const [goToMain, setGoToMain] = useState(false);
   const [domain, setDomain] = useState('');
   const [username, setUsername] = useState('');

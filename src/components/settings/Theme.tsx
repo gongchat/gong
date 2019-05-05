@@ -63,11 +63,7 @@ const ITEMS = [
 
 const Theme: React.FC = () => {
   const classes = useStyles();
-  const [context, actions] = useContext();
-
-  const { theme } = context;
-  const { setTheme } = actions;
-
+  const [{ theme }, { setTheme }] = useContext();
   const [items, setItems] = useState(ITEMS);
   const [selectedItem, setSelectedItem] = useState(ITEMS[0]);
 
@@ -106,7 +102,7 @@ const Theme: React.FC = () => {
   }, [theme]);
 
   return (
-    <React.Fragment>
+    <>
       <div className={classes.left}>
         <div className={classes.miniGong}>
           <MiniGong />
@@ -140,7 +136,7 @@ const Theme: React.FC = () => {
       <div className={classes.picker}>
         <ColorPicker item={selectedItem} onSelection={handleClickColor} />
       </div>
-    </React.Fragment>
+    </>
   );
 };
 

@@ -18,15 +18,13 @@ interface IProps {
 
 const MessagesScroller: React.FC<IProps> = React.forwardRef(
   (props: IProps, ref: any) => {
-    const classes = useStyles();
-    const [context, actions] = useContext();
-
     const { children } = props;
-    const { profile, current } = context;
-    const { getChannelLogs, setChannelScrollPosition } = actions;
-
+    const classes = useStyles();
+    const [
+      { profile, current },
+      { getChannelLogs, setChannelScrollPosition },
+    ] = useContext();
     const prevChannel = usePrevious(current);
-
     const root = React.useRef<HTMLDivElement>(null);
 
     React.useImperativeHandle(ref, () => ({

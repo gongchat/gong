@@ -22,15 +22,11 @@ interface IProps {
 }
 
 const User: React.FC<IProps> = (props: IProps) => {
-  const classes = useStyles();
-  const actions = useContext()[1];
-
   const { user, isSelected, showAvatar } = props;
-  const { selectChannel } = actions;
-
+  const classes = useStyles();
+  const { selectChannel } = useContext()[1];
   const [anchorEl, setAnchorEl] = useState(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-
   const displayName =
     user.vCard && user.vCard.fullName && user.vCard.fullName !== ''
       ? user.vCard.fullName
@@ -60,7 +56,7 @@ const User: React.FC<IProps> = (props: IProps) => {
   };
 
   return (
-    <React.Fragment>
+    <>
       <div
         className={[
           classes.root,
@@ -133,7 +129,7 @@ const User: React.FC<IProps> = (props: IProps) => {
       >
         <UserDetail user={user} />
       </Dialog>
-    </React.Fragment>
+    </>
   );
 };
 

@@ -25,11 +25,9 @@ interface IProps {
 }
 
 const StatusMenu: React.FC<IProps> = (props: IProps) => {
-  const classes = useStyles();
-  const actions = useContext()[1];
-
   const { open, anchorEl, onClose } = props;
-  const { setMyStatus } = actions;
+  const classes = useStyles();
+  const { setMyStatus } = useContext()[1];
 
   const handleStatusClick = (status: string) => {
     setMyStatus(status);

@@ -17,15 +17,13 @@ import { usePrevious } from '../../utils/usePrevious';
 
 const Input: React.FC = () => {
   const classes = useStyles();
-  const [context, actions] = useContext();
-
-  const { current, settings, connection } = context;
-  const { sendMessage, setRoomNickname } = actions;
-
+  const [
+    { current, settings, connection },
+    { sendMessage, setRoomNickname },
+  ] = useContext();
   const [text, setText] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [listSelectorIndex, setListSelectorIndex] = useState(0);
-
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const send = () => {
@@ -112,7 +110,7 @@ const Input: React.FC = () => {
   }, [current, prevCurrent]);
 
   return (
-    <React.Fragment>
+    <>
       {current && (
         <div className={classes.root}>
           <ListSelectors
@@ -173,7 +171,7 @@ const Input: React.FC = () => {
           </div>
         </div>
       )}
-    </React.Fragment>
+    </>
   );
 };
 

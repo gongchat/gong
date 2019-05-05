@@ -5,9 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 
 const GithubIcon: React.FC = () => {
   const classes = useStyles();
-  const [context] = useContext();
-
-  const { theme } = context;
+  const [{ theme }] = useContext();
 
   return (
     <div className={classes.svg}>

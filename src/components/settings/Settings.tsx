@@ -51,11 +51,10 @@ const TABS = [
 
 const Settings: React.FC = () => {
   const classes = useStyles();
-  const [context, actions] = useContext();
-
-  const { showSettings, app } = context;
-  const { toggleShowSettings, logOff, setThemeToDefault } = actions;
-
+  const [
+    { showSettings, app },
+    { toggleShowSettings, logOff, setThemeToDefault },
+  ] = useContext();
   const [goToLogin, setGoToLogin] = useState(false);
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
 

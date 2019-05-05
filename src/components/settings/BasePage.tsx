@@ -9,9 +9,8 @@ interface IProps {
 }
 
 const BasePage: React.FC<IProps> = (props: IProps) => {
-  const classes = useStyles();
-
   const { title, children } = props;
+  const classes = useStyles();
 
   return (
     <div className={classes.root}>

@@ -10,10 +10,8 @@ interface IProps {
 }
 
 const Users: React.FC<IProps> = (props: any) => {
-  const [context] = useContext();
-
   const { users } = props;
-  const { theme, current } = context;
+  const [{ theme, current }] = useContext();
 
   const getGroupedUsers = (users: any) => {
     return users.reduce((a: any, c: any) => {

@@ -9,11 +9,7 @@ import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 
 const Messages: React.FC = () => {
-  const [context, actions] = useContext();
-
-  const { settings } = context;
-  const { setAndSaveSettings } = actions;
-
+  const [{ settings }, { setAndSaveSettings }] = useContext();
   const [renderVideos, setRenderVideos] = useState(settings.renderVideos);
   const [renderGetYarn, setRenderGetYarn] = useState(settings.renderGetYarn);
   const [renderImages, setRenderImages] = useState(settings.renderImages);

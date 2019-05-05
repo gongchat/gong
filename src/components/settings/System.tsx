@@ -9,11 +9,7 @@ import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 
 const System: React.FC = () => {
-  const [context, actions] = useContext();
-
-  const { settings } = context;
-  const { setAndSaveSettings } = actions;
-
+  const [{ settings }, { setAndSaveSettings }] = useContext();
   const [minimizeToTrayOnClose, setMinimizeToTrayOnClose] = useState(
     settings.minimizeToTrayOnClose
   );

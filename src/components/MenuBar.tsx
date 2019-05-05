@@ -19,21 +19,15 @@ interface IProps {
 }
 
 const MenuBar: React.FC<IProps> = (props: IProps) => {
-  const classes = useStyles();
-  const [context] = useContext();
-
   const { showOffline } = props;
-  const { connection, menuBarNotification, channels } = context;
-
+  const classes = useStyles();
+  const [{ connection, menuBarNotification, channels }] = useContext();
   const [isFlashing, setIsFlashing] = useState(false);
   const [notification, setNotification] = useState('');
-
   const prevMenuBarNotification = usePrevious(menuBarNotification);
-
   const menuBarNotificationFrequency = notification
     ? notification.split(',')[0]
     : '';
-
   const countOfUnreadMessages = channels.reduce(
     (a: number, b: IChannel) => a + b.unreadMessages,
     0

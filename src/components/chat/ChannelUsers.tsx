@@ -13,11 +13,9 @@ interface IProps {
 }
 
 const ChannelUsers: React.FC<IProps> = (props: IProps) => {
-  const classes = useStyles();
-  const [context] = useContext();
-
   const { users, title } = props;
-  const { theme } = context;
+  const classes = useStyles();
+  const [{ theme }] = useContext();
 
   return (
     <div className={classes.root}>

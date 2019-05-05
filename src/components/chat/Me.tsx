@@ -12,17 +12,12 @@ import StringUtil from '../../utils/stringUtils';
 
 const Me: React.FC = () => {
   const classes = useStyles();
-  const [context] = useContext();
-
-  const { profile } = context;
-
+  const [{ profile }] = useContext();
   const [showStatusMenu, setShowStatusMenu] = useState(false);
-
   const displayName =
     profile.vCard && profile.vCard.fullName
       ? profile.vCard.fullName
       : profile.username;
-
   const meRef = React.useRef<HTMLDivElement>(null);
 
   const toggleStatusMenu = () => {

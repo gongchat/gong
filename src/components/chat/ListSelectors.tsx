@@ -13,10 +13,10 @@ interface IProps {
 
 const ListSelectors: React.FC<IProps> = (props: IProps) => {
   return (
-    <React.Fragment>
+    <>
       <ListSelectorEmojis {...props} />
       <ListSelectorUsers {...props} />
-    </React.Fragment>
+    </>
   );
 };
 

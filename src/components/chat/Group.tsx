@@ -20,9 +20,6 @@ interface IProps {
 }
 
 const Group: React.FC<IProps> = (props: IProps) => {
-  const classes = useStyles();
-  const actions = useContext()[1];
-
   const {
     title,
     totalUnreadMessages,
@@ -30,8 +27,8 @@ const Group: React.FC<IProps> = (props: IProps) => {
     canAdd,
     children,
   } = props;
-  const { setShowDiscover } = actions;
-
+  const classes = useStyles();
+  const { setShowDiscover } = useContext()[1];
   const [isExpanded, setIsExpanded] = React.useState(true);
 
   const handleChange = () => {

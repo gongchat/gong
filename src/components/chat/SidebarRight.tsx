@@ -9,9 +9,7 @@ import IRoom from '../../interfaces/IRoom';
 
 const SidebarRight: React.FC = () => {
   const classes = useStyles();
-  const [context] = useContext();
-
-  const { current } = context;
+  const [{ current }] = useContext();
 
   return (
     <div className={classes.root}>

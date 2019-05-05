@@ -26,11 +26,7 @@ interface IProps {
 
 const Main: React.FC<IProps> = () => {
   const classes = useStyles();
-  const [context, actions] = useContext();
-
-  const { connection, theme, app, current } = context;
-  const { autoConnect } = actions;
-
+  const [{ connection, theme, app, current }, { autoConnect }] = useContext();
   const [shouldReconnect, setShouldReconnect] = useState(true);
   const [updateOpen, setUpdateOpen] = useState(false);
 
@@ -63,7 +59,7 @@ const Main: React.FC<IProps> = () => {
     if (app && app.hasUpdate) {
       setUpdateOpen(true);
     }
-  }, [actions, app, autoConnect, connection, theme]);
+  }, [app, autoConnect, connection, theme]);
 
   React.useEffect(() => {
     // TODO: need to handle errors better
@@ -125,14 +121,14 @@ const Main: React.FC<IProps> = () => {
         }}
         message={'Update has been downloaded. Would you like to...'}
         action={
-          <React.Fragment>
+          <>
             <Button color="primary" size="small" onClick={handleUpdate}>
               Install Now
             </Button>
             <Button color="secondary" size="small" onClick={handleUpdateClose}>
               Install After Restart
             </Button>
-          </React.Fragment>
+          </>
         }
       />
     </div>

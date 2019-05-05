@@ -10,9 +10,8 @@ interface IProps {
 }
 
 const SliderMarkers: React.FC<IProps> = (props: IProps) => {
-  const classes = useStyles();
-
   const { minSize, maxSize, defaultSize } = props;
+  const classes = useStyles();
 
   const getMarkers = () => {
     const markers: any[] = [];

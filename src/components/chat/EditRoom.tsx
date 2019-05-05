@@ -22,12 +22,9 @@ interface IProps {
 }
 
 const EditRoom: React.FC<IProps> = (props: IProps) => {
-  const classes = useStyles();
-  const actions = useContext()[1];
-
   const { channel, onClose } = props;
-  const { editRoom } = actions;
-
+  const classes = useStyles();
+  const { editRoom } = useContext()[1];
   const [jid, setJid] = useState(channel.jid);
   const [channelName, setChannelName] = useState(channel.name);
   const [nickname, setNickname] = useState(channel.myNickname);
@@ -44,7 +41,7 @@ const EditRoom: React.FC<IProps> = (props: IProps) => {
   };
 
   return (
-    <React.Fragment>
+    <>
       <DialogTitle className={classes.dialogTitle}>
         <span className={classes.title}>
           <span>Edit Room</span>
@@ -112,7 +109,7 @@ const EditRoom: React.FC<IProps> = (props: IProps) => {
           </Button>
         </DialogActions>
       </ValidatorForm>
-    </React.Fragment>
+    </>
   );
 };
 

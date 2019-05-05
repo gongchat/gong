@@ -13,10 +13,10 @@ import IUser from '../../interfaces/IUser';
 
 const SidebarLeft: React.FC = () => {
   const classes = useStyles();
-  const [context, actions] = useContext();
-
-  const { channels, current } = context;
-  const { selectChannel, toggleShowSettings } = actions;
+  const [
+    { channels, current },
+    { selectChannel, toggleShowSettings },
+  ] = useContext();
 
   React.useEffect(() => {
     const handleKeyDown = (event: any) => {
@@ -52,7 +52,7 @@ const SidebarLeft: React.FC = () => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown, false);
     };
-  }, [actions, channels, context, current, selectChannel]);
+  }, [channels, current, selectChannel]);
 
   return (
     <div className={classes.root}>

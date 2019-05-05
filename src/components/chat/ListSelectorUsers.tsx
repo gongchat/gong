@@ -18,11 +18,8 @@ interface IProps {
 }
 
 const ListSelectorUsers: React.FC<IProps> = (props: IProps) => {
-  const [context] = useContext();
-
   const { selectorIndex, text, setText, focusInput, setSelectorIndex } = props;
-  const { current } = context;
-
+  const [{ current }] = useContext();
   const [term, setTerm] = useState('');
   const [channelUsers, setChannelUsers] = useState([] as any);
 
@@ -139,7 +136,7 @@ const ListSelectorUsers: React.FC<IProps> = (props: IProps) => {
   }, [current, selectorIndex, setSelectorIndex, text]);
 
   return (
-    <React.Fragment>
+    <>
       {(selectorIndex === userListSelectorIndex ||
         selectorIndex === userListSelectorIndex + 1) && (
         <ListSelector
@@ -157,7 +154,7 @@ const ListSelectorUsers: React.FC<IProps> = (props: IProps) => {
           itemSuffix={''}
         />
       )}
-    </React.Fragment>
+    </>
   );
 };
 

@@ -24,16 +24,14 @@ import ISubdomain from '../../interfaces/ISubdomain';
 
 const Discover: React.FC = () => {
   const classes = useStyles();
-  const [context, actions] = useContext();
-
-  const { profile, subdomains, rooms, showDiscover } = context;
-  const { setShowDiscover, discoverItems, addRoomToChannels } = actions;
-
+  const [
+    { profile, subdomains, rooms, showDiscover },
+    { setShowDiscover, discoverItems, addRoomToChannels },
+  ] = useContext();
   const nickname =
     profile.vCard && profile.vCard.nickname
       ? profile.vCard.nickname
       : profile.username;
-
   const [open, setOpen] = useState(false);
   const [selectedSubdomainJid, setSelectedSubdomainJid] = useState('');
   const [tabIndex, setTabIndex] = useState(0);
@@ -122,7 +120,7 @@ const Discover: React.FC = () => {
         className={[tabIndex === 0 ? classes.discovery : ''].join(' ')}
       >
         {tabIndex === 0 && (
-          <React.Fragment>
+          <>
             <div className={classes.list}>
               <List className={classes.subdomains}>
                 {/* 
@@ -182,7 +180,7 @@ const Discover: React.FC = () => {
                   ))}
               </List>
             </div>
-          </React.Fragment>
+          </>
         )}
         {tabIndex === 1 && (
           <div className={classes.inputs}>
@@ -226,7 +224,7 @@ const Discover: React.FC = () => {
       </DialogContent>
       {tabIndex === 1 && (
         <DialogActions>
-          <React.Fragment>
+          <>
             <Button onClick={handleClickBack}>Back</Button>
             <Button
               onClick={handleClickAddRoom}
@@ -235,7 +233,7 @@ const Discover: React.FC = () => {
             >
               Connect
             </Button>
-          </React.Fragment>
+          </>
         </DialogActions>
       )}
     </Dialog>

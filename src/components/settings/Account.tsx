@@ -13,11 +13,7 @@ import { makeStyles } from '@material-ui/styles';
 
 const Account: React.FC = () => {
   const classes = useStyles();
-  const [context, actions] = useContext();
-
-  const { profile } = context;
-  const { setMyVCard } = actions;
-
+  const [{ profile }, { setMyVCard }] = useContext();
   const [index, setIndex] = useState(0);
   const [fullName, setFullName] = useState(profile.vCard.fullName);
   const [firstName, setFirstName] = useState(profile.vCard.firstName);
@@ -47,7 +43,6 @@ const Account: React.FC = () => {
   const [description, setDescription] = useState(profile.vCard.description);
   const [photoType, setPhotoType] = useState(profile.vCard.photoType);
   const [photo, setPhoto] = useState(profile.vCard.photo);
-
   const fileInput = React.useRef<HTMLInputElement>(null);
 
   const handleSubmit = (event: any) => {
@@ -180,7 +175,7 @@ const Account: React.FC = () => {
             <Tab label="Contact Info" />
           </Tabs>
           {index === 0 && (
-            <React.Fragment>
+            <>
               <TextValidator
                 name="fullName"
                 onChange={(event: any) => setFullName(event.target.value)}
@@ -246,10 +241,10 @@ const Account: React.FC = () => {
                 FormHelperTextProps={{ className: classes.helperText }}
                 className={classes.input}
               />
-            </React.Fragment>
+            </>
           )}
           {index === 1 && (
-            <React.Fragment>
+            <>
               <TextValidator
                 name="organizationName"
                 onChange={(event: any) =>
@@ -371,7 +366,7 @@ const Account: React.FC = () => {
                 FormHelperTextProps={{ className: classes.helperText }}
                 className={classes.input}
               />
-            </React.Fragment>
+            </>
           )}
           <div className={classes.section}>
             <Button type="submit" variant="contained" color="primary">

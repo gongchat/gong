@@ -18,8 +18,6 @@ interface IProps {
 }
 
 const Message: React.FC<IProps> = (props: IProps) => {
-  const classes = useStyles();
-
   const {
     message,
     showTime,
@@ -28,7 +26,7 @@ const Message: React.FC<IProps> = (props: IProps) => {
     renderVideos,
     renderGetYarn,
   } = props;
-
+  const classes = useStyles();
   const isMe = message.body && message.body.startsWith('/me ');
 
   return (
@@ -59,7 +57,7 @@ const Message: React.FC<IProps> = (props: IProps) => {
         </span>
       </Typography>
       {message.urls && (
-        <React.Fragment>
+        <>
           {renderVideos &&
             message.urls
               .filter((url: IMessageUrl) => url.type === 'video')
@@ -126,7 +124,7 @@ const Message: React.FC<IProps> = (props: IProps) => {
                   );
                 }
               })}
-        </React.Fragment>
+        </>
       )}
     </div>
   );

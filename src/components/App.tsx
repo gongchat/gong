@@ -10,9 +10,7 @@ import Routes from './Routes';
 import SnackbarNotifications from './SnackbarNotifications';
 
 const App: React.FC = () => {
-  const [context] = useContext();
-
-  const { theme } = context;
+  const [{ theme }] = useContext();
 
   return (
     <ThemeProvider theme={theme}>

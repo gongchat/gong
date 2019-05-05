@@ -9,14 +9,10 @@ import { usePrevious } from '../utils/usePrevious';
 
 const SnackbarNotifications: React.FC = () => {
   const classes = useStyles();
-  const [context, actions] = useContext();
-
-  const { snackbarNotifications } = context;
-  const { removeFromSnackbar } = actions;
-
+  const [{ snackbarNotifications }, { removeFromSnackbar }] = useContext();
   const { enqueueSnackbar } = useSnackbar();
-
   const prevSnackbarNotifications = usePrevious(snackbarNotifications);
+
   React.useEffect(() => {
     let notExists = false;
     if (snackbarNotifications) {
@@ -41,7 +37,6 @@ const SnackbarNotifications: React.FC = () => {
       });
     }
   }, [
-    actions,
     classes.notification,
     snackbarNotifications,
     enqueueSnackbar,

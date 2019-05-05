@@ -10,9 +10,8 @@ interface IProps {
 }
 
 const ColorPicker: React.FC<IProps> = (props: IProps) => {
-  const classes = useStyles();
-
   const { item, onSelection } = props;
+  const classes = useStyles();
 
   return (
     <div className={classes.root}>

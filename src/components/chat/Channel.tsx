@@ -20,12 +20,9 @@ interface IProps {
 }
 
 const Channel: React.FC<IProps> = (props: IProps) => {
-  const classes = useStyles();
-  const actions = useContext()[1];
-
   const { channel, isSelected, prefix } = props;
-  const { selectChannel, removeChannel } = actions;
-
+  const classes = useStyles();
+  const { selectChannel, removeChannel } = useContext()[1];
   const [anchorEl, setAnchorEl] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
 
@@ -58,7 +55,7 @@ const Channel: React.FC<IProps> = (props: IProps) => {
   };
 
   return (
-    <React.Fragment>
+    <>
       <div
         className={[
           classes.root,
@@ -127,7 +124,7 @@ const Channel: React.FC<IProps> = (props: IProps) => {
       >
         <EditRoom onClose={handleEditClose} channel={channel} />
       </Dialog>
-    </React.Fragment>
+    </>
   );
 };
 

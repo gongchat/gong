@@ -14,11 +14,9 @@ interface IProps {
 }
 
 const ChannelUser: React.FC<IProps> = (props: IProps) => {
-  const classes = useStyles();
-  const actions = useContext()[1];
-
   const { user, showAvatar } = props;
-  const { selectRoomUser } = actions;
+  const classes = useStyles();
+  const { selectRoomUser } = useContext()[1];
 
   const handleOnClick = () => {
     selectRoomUser(user);

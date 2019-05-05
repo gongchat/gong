@@ -10,9 +10,7 @@ import IUser from '../../interfaces/IUser';
 
 const ToolBar: React.FC = () => {
   const classes = useStyles();
-  const [context] = useContext();
-
-  const { current, settings } = context;
+  const [{ current, settings }] = useContext();
 
   let chatName = '';
   let chatStatus = '';

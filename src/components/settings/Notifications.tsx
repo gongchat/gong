@@ -15,10 +15,7 @@ import { playAudio, SOUNDS } from '../../actions/notification';
 
 const NotificationSettings: React.FC = () => {
   const classes = useStyles();
-  const [context, actions] = useContext();
-
-  const { settings } = context;
-  const { setAndSaveSettings } = actions;
+  const [{ settings }, { setAndSaveSettings }] = useContext();
 
   // Play Audio
   const [soundName, setSoundName] = useState(settings.soundName);

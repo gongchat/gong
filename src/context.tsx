@@ -13,8 +13,8 @@ import { roomActions } from './actions/room';
 import { settingsActions, defaultSettings } from './actions/settings';
 import { themeActions } from './actions/theme';
 import { userActions, defaultVCard } from './actions/user';
-import IState from './interfaces/IState';
 import { getTheme } from './actions/theme';
+import IState from './interfaces/IState';
 
 export const initialState: IState = {
   app: {

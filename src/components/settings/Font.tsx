@@ -21,11 +21,7 @@ let sizeTimer: any;
 
 const Font: React.FC = () => {
   const classes = useStyles();
-  const [context, actions] = useContext();
-
-  const { theme } = context;
-  const { setTheme } = actions;
-
+  const [{ theme }, { setTheme }] = useContext();
   const [font, setFont] = useState(
     theme.typography.fontFamily.split(',')[0].replace(/"/g, '')
   );

@@ -16,7 +16,6 @@ interface IProps {
 
 const ListSelectorEmojis: React.FC<IProps> = (props: IProps) => {
   const { selectorIndex, text, setText, setSelectorIndex, focusInput } = props;
-
   const [term, setTerm] = useState('');
   const [emojis, setEmojis] = useState();
 
@@ -96,7 +95,7 @@ const ListSelectorEmojis: React.FC<IProps> = (props: IProps) => {
   }, [selectorIndex, setSelectorIndex, text]);
 
   return (
-    <React.Fragment>
+    <>
       {(selectorIndex === emojiListSelectorIndex ||
         selectorIndex === emojiListSelectorIndex + 1) && (
         <ListSelector
@@ -114,7 +113,7 @@ const ListSelectorEmojis: React.FC<IProps> = (props: IProps) => {
           itemSuffix={':'}
         />
       )}
-    </React.Fragment>
+    </>
   );
 };
 

@@ -18,11 +18,9 @@ interface IProps {
 }
 
 const Channels: React.FC<IProps> = (props: IProps) => {
-  const classes = useStyles();
-  const [context] = useContext();
-
   const { channels, hideIfEmpty, title, canAdd, prefix } = props;
-  const { current, theme } = context;
+  const classes = useStyles();
+  const [{ current, theme }] = useContext();
 
   if (hideIfEmpty && (!channels || channels.length <= 0)) {
     return null;

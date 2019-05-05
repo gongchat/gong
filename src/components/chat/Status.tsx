@@ -7,9 +7,8 @@ interface IProps {
 }
 
 const Status: React.FC<IProps> = (props: IProps) => {
-  const classes = useStyles();
-
   const { status } = props;
+  const classes = useStyles();
 
   switch (status) {
     case 'online':

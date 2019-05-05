@@ -25,11 +25,7 @@ let sidebarWidthTimer: any;
 
 const Layout: React.FC = () => {
   const classes = useStyles();
-  const [context, actions] = useContext();
-
-  const { theme } = context;
-  const { setTheme } = actions;
-
+  const [{ theme }, { setTheme }] = useContext();
   const [spacing, setSpacing] = useState(theme.spacing.unit);
   const [sidebarWidth, setSidebarWidth] = useState(theme.sidebarWidth);
   const [sidebarLeftShowAvatar, setSidebarLeftShowAvatar] = useState(

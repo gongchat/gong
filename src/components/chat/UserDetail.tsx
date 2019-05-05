@@ -16,10 +16,9 @@ interface IProps {
 }
 
 const UserDetail: React.FC<IProps> = (props: IProps) => {
+  const { user } = props;
   const classes = useStyles();
   const [index, setIndex] = useState(0);
-
-  const { user } = props;
 
   const handleOnTabChange = (event: any, value: number) => {
     setIndex(value);
@@ -55,7 +54,7 @@ const UserDetail: React.FC<IProps> = (props: IProps) => {
       <div className={classes.content}>
         {/* User Info */}
         {index === 0 && user.vCard && (
-          <React.Fragment>
+          <>
             <div>
               {user.vCard.fullName && (
                 <div className={classes.section}>
@@ -112,10 +111,10 @@ const UserDetail: React.FC<IProps> = (props: IProps) => {
                 </div>
               )}
             </div>
-          </React.Fragment>
+          </>
         )}
         {index === 1 && user.vCard && (
-          <React.Fragment>
+          <>
             <div>
               {user.vCard.url && (
                 <div className={classes.section}>
@@ -175,7 +174,7 @@ const UserDetail: React.FC<IProps> = (props: IProps) => {
                 </div>
               )}
             </div>
-          </React.Fragment>
+          </>
         )}
       </div>
     </div>

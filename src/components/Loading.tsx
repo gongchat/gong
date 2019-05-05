@@ -17,14 +17,9 @@ interface IProps {
 
 const Loading: React.FC<IProps> = () => {
   const classes = useStyles();
-  const [context, actions] = useContext();
-
-  const { app, connection } = context;
-  const { autoConnect } = actions;
-
+  const [{ app, connection }, { autoConnect }] = useContext();
   const [text, setText] = useState('Loading please wait...');
   const [showLogin, setShowLogin] = useState(false);
-
   const [goToLogin, setGoToLogin] = useState(false);
   const [goToMain, setGoToMain] = useState(false);
 
