@@ -118,18 +118,6 @@ const NotificationSettings: React.FC = () => {
           </Select>
         </FormControl>
         <FormControl variant="filled">
-          <InputLabel htmlFor="playAudioOnChat">On Chat Message</InputLabel>
-          <Select
-            value={playAudioOnChat}
-            onChange={(e: any) => handleChange(e, setPlayAudioOnChat)}
-            input={<FilledInput name="playAudioOnChat" id="playAudioOnChat" />}
-          >
-            <MenuItem value="always">Always</MenuItem>
-            <MenuItem value="unread">Unread</MenuItem>
-            <MenuItem value="never">Never</MenuItem>
-          </Select>
-        </FormControl>
-        <FormControl variant="filled">
           <InputLabel htmlFor="playAudioOnMentionMe">On Mention Me</InputLabel>
           <Select
             value={playAudioOnMentionMe}
@@ -140,6 +128,18 @@ const NotificationSettings: React.FC = () => {
                 id="playAudioOnMentionMe"
               />
             }
+          >
+            <MenuItem value="always">Always</MenuItem>
+            <MenuItem value="unread">Unread</MenuItem>
+            <MenuItem value="never">Never</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl variant="filled">
+          <InputLabel htmlFor="playAudioOnChat">On Chat Message</InputLabel>
+          <Select
+            value={playAudioOnChat}
+            onChange={(e: any) => handleChange(e, setPlayAudioOnChat)}
+            input={<FilledInput name="playAudioOnChat" id="playAudioOnChat" />}
           >
             <MenuItem value="always">Always</MenuItem>
             <MenuItem value="unread">Unread</MenuItem>
