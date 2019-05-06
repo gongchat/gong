@@ -53,19 +53,12 @@ const Main: React.FC<IProps> = () => {
     if (
       !connection.isAuthenticated &&
       !connection.isConnecting &&
+      !connection.hasSavedCredentials &&
       connection.hasSavedCredentials !== undefined
     ) {
       setGoToLogin(true);
     }
   }, [connection]);
-
-  React.useEffect(() => {
-    if (connection) {
-      if (!connection.isConnecting && !connection.isConnected) {
-        autoConnect();
-      }
-    }
-  }, [autoConnect, connection, theme]);
 
   React.useEffect(() => {
     if (theme) {
@@ -80,22 +73,26 @@ const Main: React.FC<IProps> = () => {
   }, [app]);
 
   React.useEffect(() => {
-    // TODO: need to handle errors better
     if (shouldReconnect) {
       if (connection.connectionError === 'Connection has been aborted') {
         setShouldReconnect(false);
       } else if (
         connection &&
-        connection.hasSavedCredentials !== undefined &&
         !connection.isConnecting &&
         !connection.isConnected
       ) {
         if (reconnectTimer) {
           clearTimeout(reconnectTimer);
         }
-        reconnectTimer = setTimeout(() => {
-          autoConnect();
-        }, 10000);
+        if (!reconnectTimer) {
+          reconnectTimer = setTimeout(() => {
+            autoConnect();
+          });
+        } else {
+          reconnectTimer = setTimeout(() => {
+            autoConnect();
+          }, 10000);
+        }
       }
     }
   }, [autoConnect, connection, shouldReconnect]);
