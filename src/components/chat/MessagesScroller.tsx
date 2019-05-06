@@ -19,12 +19,13 @@ let prevWindowInnerWidth: any;
 
 interface IProps {
   ref: any;
+  newMessageMarkerRef: any;
   children: any;
 }
 
 const MessagesScroller: React.FC<IProps> = forwardRef(
   (props: IProps, ref: any) => {
-    const { children } = props;
+    const { children, newMessageMarkerRef } = props;
     const classes = useStyles();
     const [
       { profile, current },
@@ -74,6 +75,14 @@ const MessagesScroller: React.FC<IProps> = forwardRef(
         );
       };
 
+      const shouldUpdateToNewMessageMarker = () => {
+        return (
+          current &&
+          newMessageMarkerRef.current &&
+          (!prevChannel || (prevChannel && current.jid !== prevChannel.jid))
+        );
+      };
+
       const shouldUpdateToSavedPosition = () => {
         return (
           current &&
@@ -118,6 +127,8 @@ const MessagesScroller: React.FC<IProps> = forwardRef(
         if (isUpdateForLoggedMessages()) {
           rootCurrent.scrollTop =
             rootCurrent.scrollHeight - positionBeforeGettingLogs;
+        } else if (shouldUpdateToNewMessageMarker()) {
+          rootCurrent.scrollTop = newMessageMarkerRef.current.offsetTop;
         } else if (shouldUpdateToSavedPosition() && current) {
           rootCurrent.scrollTop = current.scrollPosition;
         } else if (wasAtBottom || isLastMessageMe()) {
@@ -194,6 +205,7 @@ const MessagesScroller: React.FC<IProps> = forwardRef(
     }, [
       current,
       getChannelLogs,
+      newMessageMarkerRef,
       prevChannel,
       profile.jid,
       setChannelScrollPosition,
@@ -219,6 +231,7 @@ const useStyles = makeStyles((theme: any) => ({
     overflowY: 'scroll',
     display: 'flex',
     flexDirection: 'column',
+    position: 'relative',
   },
   filler: {
     flexGrow: 1,

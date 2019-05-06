@@ -13,6 +13,7 @@ const Messages: React.FC = () => {
   const classes = useStyles();
   const [{ current, settings }] = useContext();
   const scrollerRef = useRef<any>(null);
+  const newMessageMarkerRef = useRef<any>(null);
 
   let prevMessage: IMessage;
   let hasNewMessageMarker = false;
@@ -24,7 +25,10 @@ const Messages: React.FC = () => {
   };
 
   return (
-    <MessagesScroller ref={scrollerRef}>
+    <MessagesScroller
+      ref={scrollerRef}
+      newMessageMarkerRef={newMessageMarkerRef}
+    >
       {current &&
         current.messages &&
         current.messages.map((message: IMessage, index: number) => {
@@ -76,7 +80,7 @@ const Messages: React.FC = () => {
                 </div>
               )}
               {showNewMessageMarker && (
-                <div className={classes.marker}>
+                <div ref={newMessageMarkerRef} className={classes.marker}>
                   <Typography
                     color="error"
                     className={[
