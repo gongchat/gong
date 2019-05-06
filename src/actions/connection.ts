@@ -131,7 +131,7 @@ export const connectionActions = {
         id: new Date().getTime() + Math.random() + '',
         source: 'connection',
         variant: 'success',
-        message: 'Reconnected!',
+        message: 'Connected!',
       };
       snackbarNotifications = [...snackbarNotifications, snackbarNotification];
     }
