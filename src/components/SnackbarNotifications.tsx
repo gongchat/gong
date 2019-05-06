@@ -33,7 +33,8 @@ const SnackbarNotifications: React.FC = () => {
           anchorOrigin: { vertical: 'top', horizontal: 'right' },
           className: classes.notification,
         } as any);
-        removeFromSnackbar(notification.id);
+        // TODO: If not wrapped in a setTimeout will remove users from channels in state, need ot figure out why
+        setTimeout(() => removeFromSnackbar(notification.id));
       });
     }
   }, [

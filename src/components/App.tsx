@@ -16,10 +16,10 @@ const App: React.FC = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <IpcRenderer />
+      <Routes />
       <SnackbarProvider maxSnack={3}>
         <SnackbarNotifications />
       </SnackbarProvider>
-      <Routes />
     </ThemeProvider>
   );
 };
