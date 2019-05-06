@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router';
-import { useState } from 'react';
 import { useContext } from '../context';
 
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
@@ -34,13 +33,13 @@ const Login: React.FC<IProps> = () => {
     connecting({ domain, username, password, port, resource });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (connection.isConnected) {
       setGoToMain(true);
     }
   }, [connection.isConnected]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setErrorMessage(connection.connectionError);
   }, [connection.connectionError]);
 

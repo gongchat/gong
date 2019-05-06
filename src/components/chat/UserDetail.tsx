@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import Avatar from '@material-ui/core/Avatar';
 import Link from '@material-ui/core/Link';

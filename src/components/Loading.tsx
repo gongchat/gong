@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-import { useState } from 'react';
 import { useContext } from '../context';
 
 import Button from '@material-ui/core/Button';
@@ -30,11 +29,11 @@ const Loading: React.FC<IProps> = () => {
     setGoToLogin(true);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     autoConnect();
   }, [autoConnect]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!connection.isConnecting && connection.isConnecting !== undefined) {
       if (connection.isConnected) {
         setGoToMain(true);

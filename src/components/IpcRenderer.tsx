@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useContext } from '../context';
 import XmppJsMapper from '../utils/xmppJsMapper';
 
@@ -7,7 +7,7 @@ const { ipcRenderer } = window.require('electron');
 const IpcRenderer: React.FC = () => {
   const actions = useContext()[1];
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Do not call multiple actions inside an ipcRenderer event. This will
     // causes states to go out of sync.
 

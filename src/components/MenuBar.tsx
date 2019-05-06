@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useContext } from '../context';
 import { usePrevious } from '../utils/usePrevious';
 
@@ -52,7 +51,7 @@ const MenuBar: React.FC<IProps> = (props: IProps) => {
     focusedWindow.close();
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (menuBarNotification !== '') {
       if (
         menuBarNotification !== prevMenuBarNotification &&

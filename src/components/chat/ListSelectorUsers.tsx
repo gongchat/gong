@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useContext } from '../../context';
 import moment from 'moment';
 
@@ -95,7 +94,7 @@ const ListSelectorUsers: React.FC<IProps> = (props: IProps) => {
     return sortedUsers;
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (current && current.type === 'groupchat') {
       if (selectorIndex !== userListSelectorIndex + 1 && selectorIndex !== -1) {
         let setVisibility = false;

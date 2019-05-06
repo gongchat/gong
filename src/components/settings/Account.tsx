@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useContext } from '../../context';
 
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
@@ -43,7 +42,7 @@ const Account: React.FC = () => {
   const [description, setDescription] = useState(profile.vCard.description);
   const [photoType, setPhotoType] = useState(profile.vCard.photoType);
   const [photo, setPhoto] = useState(profile.vCard.photo);
-  const fileInput = React.useRef<HTMLInputElement>(null);
+  const fileInput = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
@@ -104,7 +103,7 @@ const Account: React.FC = () => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (profile && profile.vCard) {
       setFullName(profile.vCard.fullName);
       setFirstName(profile.vCard.firstName);

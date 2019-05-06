@@ -1,4 +1,9 @@
-import React from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from 'react';
 import { useContext } from '../../context';
 
 import { makeStyles } from '@material-ui/styles';
@@ -16,7 +21,7 @@ interface IProps {
   children: any;
 }
 
-const MessagesScroller: React.FC<IProps> = React.forwardRef(
+const MessagesScroller: React.FC<IProps> = forwardRef(
   (props: IProps, ref: any) => {
     const { children } = props;
     const classes = useStyles();
@@ -25,9 +30,9 @@ const MessagesScroller: React.FC<IProps> = React.forwardRef(
       { getChannelLogs, setChannelScrollPosition },
     ] = useContext();
     const prevChannel = usePrevious(current);
-    const root = React.useRef<HTMLDivElement>(null);
+    const root = useRef<HTMLDivElement>(null);
 
-    React.useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({
       handleOnMediaLoad() {
         if (wasAtBottom && root.current) {
           root.current.scrollTop =
@@ -36,7 +41,7 @@ const MessagesScroller: React.FC<IProps> = React.forwardRef(
       },
     }));
 
-    React.useEffect(() => {
+    useEffect(() => {
       const rootCurrent = root.current;
 
       const isUpdateForLoggedMessages = () => {

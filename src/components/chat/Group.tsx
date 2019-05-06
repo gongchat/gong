@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useContext } from '../../context';
 
 import Badge from '@material-ui/core/Badge';
@@ -29,7 +29,7 @@ const Group: React.FC<IProps> = (props: IProps) => {
   } = props;
   const classes = useStyles();
   const { setShowDiscover } = useContext()[1];
-  const [isExpanded, setIsExpanded] = React.useState(true);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const handleChange = () => {
     setIsExpanded(!isExpanded);

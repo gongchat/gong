@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useContext } from '../../context';
 import moment from 'moment';
 
@@ -12,7 +12,7 @@ import IMessage from '../../interfaces/IMessage';
 const Messages: React.FC = () => {
   const classes = useStyles();
   const [{ current, settings }] = useContext();
-  const scrollerRef = React.useRef<any>(null);
+  const scrollerRef = useRef<any>(null);
 
   let prevMessage: IMessage;
   let hasNewMessageMarker = false;

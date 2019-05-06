@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import ListSelector from './ListSelector';
 import Emojis, { emojis as emojisObj } from '../../utils/emojis';
@@ -42,7 +41,7 @@ const ListSelectorEmojis: React.FC<IProps> = (props: IProps) => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (selectorIndex !== -1 && selectorIndex !== emojiListSelectorIndex + 1) {
       let setVisibility = false;
       if (text) {

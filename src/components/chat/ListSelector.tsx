@@ -1,6 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
-
+import React, { useState, useRef, useEffect } from 'react';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
@@ -47,14 +45,14 @@ const ListSelector: React.FC<IProps> = (props: IProps) => {
   } = props;
   const classes = useStyles();
   const [listIndex, setListIndex] = useState(0);
-  const listRef = React.useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     currListIndex = 0;
     setListIndex(0);
   }, [selectorIndex, term]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleKeyDown = (event: any) => {
       const maxIndex = list.length - 1;
       let itemHeight = 0;
@@ -116,7 +114,7 @@ const ListSelector: React.FC<IProps> = (props: IProps) => {
     };
   }, [handleSelection, setSelectorIndex, list]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setListIndex(0);
   }, [term]);
 

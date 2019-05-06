@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useContext } from '../../context';
 
 import Button from '@material-ui/core/Button';
@@ -94,7 +93,7 @@ const Discover: React.FC = () => {
     });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (open !== showDiscover) {
       setOpen(showDiscover);
       setTabIndex(0);

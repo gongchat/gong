@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useContext } from '../context';
 import { useSnackbar } from 'notistack';
 
@@ -13,7 +13,7 @@ const SnackbarNotifications: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const prevSnackbarNotifications = usePrevious(snackbarNotifications);
 
-  React.useEffect(() => {
+  useEffect(() => {
     let notExists = false;
     if (snackbarNotifications) {
       snackbarNotifications.forEach((notification: any, index: number) => {

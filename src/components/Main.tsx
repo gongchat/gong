@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router';
 import { useContext } from '../context';
 import * as WebFont from 'webfontloader';
@@ -49,7 +48,7 @@ const Main: React.FC<IProps> = () => {
     ipcRenderer.send('app-update');
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (
       !connection.isAuthenticated &&
       !connection.isConnecting &&
@@ -60,19 +59,19 @@ const Main: React.FC<IProps> = () => {
     }
   }, [connection]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (theme) {
       loadFont(theme.typography.fontFamily);
     }
   }, [theme]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (app.hasUpdate) {
       setUpdateOpen(true);
     }
   }, [app]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (shouldReconnect) {
       if (connection.connectionError === 'Connection has been aborted') {
         setShouldReconnect(false);

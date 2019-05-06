@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useContext } from '../../context';
 
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';

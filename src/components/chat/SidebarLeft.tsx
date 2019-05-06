@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useContext } from '../../context';
 
 import IconButton from '@material-ui/core/IconButton';
@@ -18,7 +18,7 @@ const SidebarLeft: React.FC = () => {
     { selectChannel, toggleShowSettings },
   ] = useContext();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleKeyDown = (event: any) => {
       if (
         channels &&

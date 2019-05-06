@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useContext } from '../../context';
 
 import TextField from '@material-ui/core/TextField';
@@ -24,7 +23,7 @@ const Input: React.FC = () => {
   const [text, setText] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [listSelectorIndex, setListSelectorIndex] = useState(0);
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const send = () => {
     if (current) {
@@ -99,7 +98,8 @@ const Input: React.FC = () => {
   };
 
   const prevCurrent = usePrevious(current);
-  React.useEffect(() => {
+
+  useEffect(() => {
     if (!prevCurrent || (current && prevCurrent.jid !== current.jid)) {
       // This must be in useEffect so the inputRef is initialized before calling
       // the block below.

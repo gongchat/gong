@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useContext } from '../../context';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -18,7 +17,7 @@ const Me: React.FC = () => {
     profile.vCard && profile.vCard.fullName
       ? profile.vCard.fullName
       : profile.username;
-  const meRef = React.useRef<HTMLDivElement>(null);
+  const meRef = useRef<HTMLDivElement>(null);
 
   const toggleStatusMenu = () => {
     setShowStatusMenu(!showStatusMenu);
