@@ -12,6 +12,9 @@ const { ipcRenderer } = window.require('electron');
 const ElectronStore = window.require('electron-store');
 const electronStore = new ElectronStore();
 
+export const TRIM_AT: number = 200;
+export const TRIM_TO: number = 150;
+
 export const channelActions = {
   removeChannel(jid: string, state: IState): IState {
     const channel: IChannel | undefined = state.channels.find(
@@ -89,7 +92,7 @@ export const channelActions = {
       }),
     };
   },
-  getChannelLogs(channel: IChannel, state: IState) {
+  getChannelLogs(channel: IChannel, state: IState): IState {
     ipcRenderer.send('get-log', {
       user: state.profile.jid,
       date:
@@ -124,7 +127,7 @@ export const channelActions = {
       channels,
     };
   },
-  setChannelLogs(payload: any, state: IState) {
+  setChannelLogs(payload: any, state: IState): IState {
     const { channelJid, messages, hasNoMoreLogs } = payload;
 
     messages.forEach((message: IMessage) => {
@@ -164,6 +167,29 @@ export const channelActions = {
       current,
       channels,
     };
+  },
+  trimOldMessages(jid: string, state: IState): IState {
+    const newState = { ...state };
+    let updatedChannel;
+    newState.channels = state.channels.map((channel: IChannel) => {
+      if (channel.jid === jid && channel.messages.length >= TRIM_AT) {
+        updatedChannel = {
+          ...channel,
+          hasNoMoreLogs: false,
+          messages: channel.messages.slice(
+            channel.messages.length - TRIM_TO,
+            channel.messages.length
+          ),
+        };
+        return updatedChannel;
+      } else {
+        return channel;
+      }
+    });
+    if (updatedChannel && state.current && state.current.jid === jid) {
+      newState.current = updatedChannel;
+    }
+    return newState;
   },
 };
 

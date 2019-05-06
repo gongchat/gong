@@ -9,6 +9,7 @@ import { useContext } from '../../context';
 import { makeStyles } from '@material-ui/styles';
 
 import IRoom from '../../interfaces/IRoom';
+import { TRIM_AT } from '../../actions/channel';
 import { usePrevious } from '../../utils/usePrevious';
 
 let wasAtBottom = true;
@@ -27,7 +28,7 @@ const MessagesScroller: React.FC<IProps> = forwardRef(
     const classes = useStyles();
     const [
       { profile, current },
-      { getChannelLogs, setChannelScrollPosition },
+      { getChannelLogs, setChannelScrollPosition, trimOldMessages },
     ] = useContext();
     const prevChannel = usePrevious(current);
     const root = useRef<HTMLDivElement>(null);
@@ -92,6 +93,16 @@ const MessagesScroller: React.FC<IProps> = forwardRef(
         );
       };
 
+      const canTrimMessagesOnLoad = () => {
+        return (
+          current &&
+          current.messages.length >= TRIM_AT &&
+          rootCurrent &&
+          rootCurrent.scrollTop + rootCurrent.offsetHeight >=
+            rootCurrent.scrollHeight - 5
+        );
+      };
+
       const canRequestLogsOnScroll = () => {
         return (
           current &&
@@ -123,6 +134,11 @@ const MessagesScroller: React.FC<IProps> = forwardRef(
         }
       }
 
+      // Check for timmed messages
+      if (current && canTrimMessagesOnLoad()) {
+        trimOldMessages(current.jid);
+      }
+
       // Event listener functions
       const handleScroll = (event: any) => {
         // record if at bottom
@@ -131,6 +147,9 @@ const MessagesScroller: React.FC<IProps> = forwardRef(
           event.target.scrollHeight - 5
         ) {
           wasAtBottom = true;
+          if (current && current.messages.length >= TRIM_AT) {
+            trimOldMessages(current.jid);
+          }
         } else {
           wasAtBottom = false;
         }
@@ -178,6 +197,7 @@ const MessagesScroller: React.FC<IProps> = forwardRef(
       prevChannel,
       profile.jid,
       setChannelScrollPosition,
+      trimOldMessages,
     ]);
 
     return (
