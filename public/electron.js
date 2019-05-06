@@ -33,7 +33,7 @@ if (!isLocked) {
   }
 }
 
-ipcMainEvents.attachEvents(xmppJsClient);
+ipcMainEvents.attachEvents(app, xmppJsClient);
 autoUpdater.logger = log;
 log.info('App starting...');
 
@@ -156,6 +156,7 @@ app.on('activate', () => {
 });
 
 app.on('ready', () => {
+  log.info('Loading React');
   createWindow();
   if (operatingSystem === 'win32') {
     createTray();
@@ -188,11 +189,4 @@ autoUpdater.on('update-downloaded', (event, info) => {
 app.on('ready', () => {
   log.info('Checking for updates');
   autoUpdater.checkForUpdates();
-  mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.webContents.send('app-set', {
-      version: app.getVersion(),
-      operatingSystem,
-    });
-  });
-  log.info('Loading React');
 });

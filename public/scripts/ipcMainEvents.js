@@ -5,7 +5,7 @@ const logger = require('./logger');
 const settings = require('./settings');
 
 class IpcMainEvents {
-  attachEvents(xmppJsClient) {
+  attachEvents(app, xmppJsClient) {
     // this block of functions will be called one after another during startup
     ipcMain.on('xmpp-auto-connect', (event, arg) => {
       xmppJsClient.autoConnect(event, arg);
@@ -76,6 +76,13 @@ class IpcMainEvents {
 
     ipcMain.on('app-update', (event, arg) => {
       autoUpdater.quitAndInstall();
+    });
+
+    ipcMain.on('app-get-info', event => {
+      event.sender.send('app-set', {
+        version: app.getVersion(),
+        operatingSystem: process.platform,
+      });
     });
   }
 }
