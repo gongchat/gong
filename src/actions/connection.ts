@@ -179,6 +179,9 @@ export const connectionActions = {
   },
   logOff(): IState {
     ipcRenderer.send('xmpp-log-off');
-    return { ...initialState };
+    return {
+      ...initialState,
+      connection: { ...initialState.connection, hasSavedCredentials: false },
+    };
   },
 };
