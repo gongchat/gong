@@ -1,7 +1,4 @@
 import moment from 'moment';
-import sanitizeHtml from 'sanitize-html';
-
-import MarkdownIt from 'markdown-it';
 
 import IChannel from '../interfaces/IChannel';
 import IChannelUser from '../interfaces/IChannelUser';
@@ -19,51 +16,6 @@ import { handleOnMessage } from './notification';
 import ColorUtil from '../utils/colorUtil';
 
 const { ipcRenderer } = window.require('electron');
-
-const markdownIt = new MarkdownIt({
-  linkify: true,
-  html: true,
-  typographer: true,
-});
-const emoji = require('markdown-it-emoji'); // tslint:disable-line
-
-const ALLOWED_TAGS = [
-  'h3',
-  'h4',
-  'h5',
-  'h6',
-  'blockquote',
-  'p',
-  'a',
-  'ul',
-  'ol',
-  'nl',
-  'li',
-  'b',
-  'i',
-  'strong',
-  'em',
-  'strike',
-  'code',
-  'hr',
-  'br',
-  'div',
-  'table',
-  'thead',
-  'caption',
-  'tbody',
-  'tr',
-  'th',
-  'td',
-  'pre',
-  'iframe',
-  'span',
-];
-
-const ALLOWED_ATTRIBUTES = {
-  a: ['href', 'name', 'target'],
-  span: ['class'],
-};
 
 export const messageActions = {
   sendMessage(messageSend: IMessageSend, state: IState): IState {
@@ -237,15 +189,6 @@ const processMessage = (
         htmlWithoutAt
       );
     });
-
-    // markdown the message
-    formattedMessage = sanitizeHtml(
-      markdownIt.use(emoji).renderInline(formattedMessage),
-      {
-        allowedTags: ALLOWED_TAGS,
-        allowedAttributes: ALLOWED_ATTRIBUTES,
-      }
-    );
 
     // handle new lines
     message.body = formattedMessage

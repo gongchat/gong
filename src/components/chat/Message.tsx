@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
+import sanitizeHtml from 'sanitize-html';
+import MarkdownIt from 'markdown-it';
 
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import Typography from '@material-ui/core/Typography';
@@ -7,6 +9,8 @@ import { makeStyles } from '@material-ui/styles';
 
 import IMessage from '../../interfaces/IMessage';
 import IMessageUrl from '../../interfaces/IMessageUrl';
+
+import { emojis } from '../../utils/emojis';
 
 interface IProps {
   message: IMessage;
@@ -16,6 +20,50 @@ interface IProps {
   renderVideos: boolean;
   renderGetYarn: boolean;
 }
+
+const ALLOWED_TAGS = [
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'blockquote',
+  'p',
+  'a',
+  'ul',
+  'ol',
+  'nl',
+  'li',
+  'b',
+  'i',
+  'strong',
+  'em',
+  'strike',
+  'code',
+  'hr',
+  'br',
+  'div',
+  'table',
+  'thead',
+  'caption',
+  'tbody',
+  'tr',
+  'th',
+  'td',
+  'pre',
+  'iframe',
+  'span',
+];
+
+const ALLOWED_ATTRIBUTES = {
+  a: ['href', 'name', 'target'],
+  span: ['class'],
+};
+
+const markdownIt = new MarkdownIt({
+  linkify: true,
+  html: true,
+  typographer: true,
+});
 
 const Message: React.FC<IProps> = (props: IProps) => {
   const {
@@ -28,6 +76,29 @@ const Message: React.FC<IProps> = (props: IProps) => {
   } = props;
   const classes = useStyles();
   const isMe = message.body && message.body.startsWith('/me ');
+  const [messageBody, setMessageBody] = useState('');
+
+  useEffect(() => {
+    let formattedMessageBody = message.body
+      ? sanitizeHtml(markdownIt.renderInline(message.body), {
+          allowedTags: ALLOWED_TAGS,
+          allowedAttributes: ALLOWED_ATTRIBUTES,
+        })
+      : '';
+
+    // replace any string emojis
+    const matches = formattedMessageBody.match(/:([^:]*):/g);
+    if (matches) {
+      matches.forEach(element => {
+        const emoji = emojis[element.substring(1, element.length - 1)];
+        if (emoji) {
+          formattedMessageBody = formattedMessageBody.replace(element, emoji);
+        }
+      });
+    }
+
+    setMessageBody(formattedMessageBody);
+  }, [message.body]);
 
   return (
     <div className={classes.root}>
@@ -51,7 +122,7 @@ const Message: React.FC<IProps> = (props: IProps) => {
           <span
             className={[classes.body, isMe && classes.me].join(' ')}
             dangerouslySetInnerHTML={{
-              __html: isMe ? `*${message.body.substring(4)}*` : message.body,
+              __html: isMe ? `*${messageBody.substring(4)}*` : messageBody,
             }}
           />
         </span>
