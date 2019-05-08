@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useContext } from '../../context';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -13,8 +13,7 @@ interface IProps {
   showAvatar: boolean;
 }
 
-const ChannelUser: React.FC<IProps> = (props: IProps) => {
-  const { user, showAvatar } = props;
+const ChannelUser: FC<IProps> = ({ user, showAvatar }: IProps) => {
   const classes = useStyles();
   const { selectRoomUser } = useContext()[1];
 

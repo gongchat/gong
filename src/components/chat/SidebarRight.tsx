@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useContext } from '../../context';
 
 import { makeStyles } from '@material-ui/styles';
@@ -7,7 +7,7 @@ import ChannelUsers from './ChannelUsers';
 import IChannelUser from '../../interfaces/IChannelUser';
 import IRoom from '../../interfaces/IRoom';
 
-const SidebarRight: React.FC = () => {
+const SidebarRight: FC = () => {
   const classes = useStyles();
   const [{ current }] = useContext();
 

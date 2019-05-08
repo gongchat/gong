@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import ListSelectorEmojis from './ListSelectorEmojis';
 import ListSelectorUsers from './ListSelectorUsers';
@@ -11,7 +11,7 @@ interface IProps {
   focusInput: any;
 }
 
-const ListSelectors: React.FC<IProps> = (props: IProps) => {
+const ListSelectors: FC<IProps> = (props: IProps) => {
   return (
     <>
       <ListSelectorEmojis {...props} />

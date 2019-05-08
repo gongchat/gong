@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import Avatar from '@material-ui/core/Avatar';
 import Link from '@material-ui/core/Link';
@@ -14,8 +14,7 @@ interface IProps {
   user: IUser;
 }
 
-const UserDetail: React.FC<IProps> = (props: IProps) => {
-  const { user } = props;
+const UserDetail: FC<IProps> = ({ user }: IProps) => {
   const classes = useStyles();
   const [index, setIndex] = useState(0);
 

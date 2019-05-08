@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { Redirect } from 'react-router';
 import { useContext } from '../context';
 
@@ -16,7 +16,7 @@ interface IProps {
   noThrow: boolean;
 }
 
-const Login: React.FC<IProps> = () => {
+const Login: FC<IProps> = () => {
   const classes = useStyles();
   const [{ connection }, { connecting }] = useContext();
   const [goToMain, setGoToMain] = useState(false);

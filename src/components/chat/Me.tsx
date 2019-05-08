@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { FC, useState, useRef } from 'react';
 import { useContext } from '../../context';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -9,7 +9,7 @@ import Status from './Status';
 import StatusMenu from './StatusMenu';
 import StringUtil from '../../utils/stringUtils';
 
-const Me: React.FC = () => {
+const Me: FC = () => {
   const classes = useStyles();
   const [{ profile }] = useContext();
   const [showStatusMenu, setShowStatusMenu] = useState(false);

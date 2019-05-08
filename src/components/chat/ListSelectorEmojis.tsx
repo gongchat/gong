@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 
 import ListSelector from './ListSelector';
 import Emojis, { emojis as emojisObj } from '../../utils/emojis';
@@ -13,8 +13,13 @@ interface IProps {
   focusInput: any;
 }
 
-const ListSelectorEmojis: React.FC<IProps> = (props: IProps) => {
-  const { selectorIndex, text, setText, setSelectorIndex, focusInput } = props;
+const ListSelectorEmojis: FC<IProps> = ({
+  selectorIndex,
+  text,
+  setText,
+  setSelectorIndex,
+  focusInput,
+}: IProps) => {
   const [term, setTerm] = useState('');
   const [emojis, setEmojis] = useState();
 

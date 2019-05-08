@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import { makeStyles } from '@material-ui/styles';
 
-const LoadingIcon: React.FC = () => {
+const LoadingIcon: FC = () => {
   const classes = useStyles();
 
   return (

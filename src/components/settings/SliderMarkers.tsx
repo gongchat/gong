@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
@@ -9,8 +9,11 @@ interface IProps {
   defaultSize: number;
 }
 
-const SliderMarkers: React.FC<IProps> = (props: IProps) => {
-  const { minSize, maxSize, defaultSize } = props;
+const SliderMarkers: FC<IProps> = ({
+  minSize,
+  maxSize,
+  defaultSize,
+}: IProps) => {
   const classes = useStyles();
 
   const getMarkers = () => {

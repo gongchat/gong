@@ -42,13 +42,10 @@ export const userActions = {
   },
   addUsersToChannels(users: IUser[], state: IState): IState {
     users.forEach((user: IUser) => {
-      const getVCard = () => {
-        ipcRenderer.send('xmpp-get-vcard', {
-          from: state.profile.jid,
-          to: user.jid,
-        });
-      };
-      setTimeout(getVCard, 10);
+      ipcRenderer.send('xmpp-get-vcard', {
+        from: state.profile.jid,
+        to: user.jid,
+      });
     });
     // update user status to online after roster is received
     ipcRenderer.send('xmpp-my-status', 'online');

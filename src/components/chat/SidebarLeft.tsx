@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useContext } from '../../context';
 
 import IconButton from '@material-ui/core/IconButton';
@@ -11,7 +11,7 @@ import Users from './Users';
 import IChannel from '../../interfaces/IChannel';
 import IUser from '../../interfaces/IUser';
 
-const SidebarLeft: React.FC = () => {
+const SidebarLeft: FC = () => {
   const classes = useStyles();
   const [
     { channels, current },

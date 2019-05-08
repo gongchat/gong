@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { useContext } from '../../context';
 
 import Badge from '@material-ui/core/Badge';
@@ -18,8 +18,7 @@ interface IProps {
   prefix: string;
 }
 
-const Channel: React.FC<IProps> = (props: IProps) => {
-  const { channel, isSelected, prefix } = props;
+const Channel: FC<IProps> = ({ channel, isSelected, prefix }: IProps) => {
   const classes = useStyles();
   const { selectChannel, removeChannel } = useContext()[1];
   const [anchorEl, setAnchorEl] = useState(null);

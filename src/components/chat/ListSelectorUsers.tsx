@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { useContext } from '../../context';
 import moment from 'moment';
 
@@ -16,8 +16,13 @@ interface IProps {
   setSelectorIndex: any;
 }
 
-const ListSelectorUsers: React.FC<IProps> = (props: IProps) => {
-  const { selectorIndex, text, setText, focusInput, setSelectorIndex } = props;
+const ListSelectorUsers: FC<IProps> = ({
+  selectorIndex,
+  text,
+  setText,
+  focusInput,
+  setSelectorIndex,
+}: IProps) => {
   const [{ current }] = useContext();
   const [term, setTerm] = useState('');
   const [channelUsers, setChannelUsers] = useState([] as any);

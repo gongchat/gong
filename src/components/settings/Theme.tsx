@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { useContext } from '../../context';
 
 import List from '@material-ui/core/List';
@@ -60,7 +60,7 @@ const ITEMS = [
   },
 ];
 
-const Theme: React.FC = () => {
+const Theme: FC = () => {
   const classes = useStyles();
   const [{ theme }, { setTheme }] = useContext();
   const [items, setItems] = useState(ITEMS);

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useContext } from '../context';
 import { SnackbarProvider } from 'notistack';
 
@@ -11,7 +11,7 @@ import SnackbarNotifications from './SnackbarNotifications';
 
 const { ipcRenderer } = window.require('electron');
 
-const App: React.FC = () => {
+const App: FC = () => {
   const [{ theme }] = useContext();
 
   useEffect(() => {

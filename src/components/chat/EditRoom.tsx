@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { useContext } from '../../context';
 
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
@@ -20,8 +20,7 @@ interface IProps {
   onClose: any;
 }
 
-const EditRoom: React.FC<IProps> = (props: IProps) => {
-  const { channel, onClose } = props;
+const EditRoom: FC<IProps> = ({ channel, onClose }: IProps) => {
   const classes = useStyles();
   const { editRoom } = useContext()[1];
   const [jid, setJid] = useState(channel.jid);

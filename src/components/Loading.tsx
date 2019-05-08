@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useContext } from '../context';
 
@@ -14,7 +14,7 @@ interface IProps {
   noThrow: boolean;
 }
 
-const Loading: React.FC<IProps> = () => {
+const Loading: FC<IProps> = () => {
   const classes = useStyles();
   const [{ app, connection }, { autoConnect }] = useContext();
   const [text, setText] = useState('Loading please wait...');

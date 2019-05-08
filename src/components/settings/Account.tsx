@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { FC, useState, useEffect, useRef } from 'react';
 import { useContext } from '../../context';
 
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
@@ -10,7 +10,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
-const Account: React.FC = () => {
+const Account: FC = () => {
   const classes = useStyles();
   const [{ profile }, { setMyVCard }] = useContext();
   const [index, setIndex] = useState(0);

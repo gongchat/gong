@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useContext } from '../../context';
 
 import Typography from '@material-ui/core/Typography';
@@ -8,7 +8,7 @@ import Status from './Status';
 import IRoom from '../../interfaces/IRoom';
 import IUser from '../../interfaces/IUser';
 
-const ToolBar: React.FC = () => {
+const ToolBar: FC = () => {
   const classes = useStyles();
   const [{ current, settings }] = useContext();
 

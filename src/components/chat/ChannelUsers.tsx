@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useContext } from '../../context';
 
 import Typography from '@material-ui/core/Typography';
@@ -12,8 +12,7 @@ interface IProps {
   title: string;
 }
 
-const ChannelUsers: React.FC<IProps> = (props: IProps) => {
-  const { users, title } = props;
+const ChannelUsers: FC<IProps> = ({ users, title }: IProps) => {
   const classes = useStyles();
   const [{ theme }] = useContext();
 

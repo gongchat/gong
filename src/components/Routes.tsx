@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { HashRouter as Router, Route } from 'react-router-dom';
 
 import Loading from './Loading';
 import Login from './Login';
 import Main from './Main';
 
-const Routes: React.FC = () => {
+const Routes: FC = () => {
   return (
     <Router>
       <Route path="/" exact component={Loading} />

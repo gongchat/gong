@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useContext } from '../../context';
 
 import { makeStyles } from '@material-ui/styles';
 
-const GithubIcon: React.FC = () => {
+const GithubIcon: FC = () => {
   const classes = useStyles();
   const [{ theme }] = useContext();
 

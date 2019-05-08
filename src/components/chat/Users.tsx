@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { useContext } from '../../context';
 
 import Group from './Group';
@@ -9,7 +9,7 @@ interface IProps {
   users: IUser[];
 }
 
-const Users: React.FC<IProps> = ({ users }: any) => {
+const Users: FC<IProps> = ({ users }: any) => {
   const [{ theme, current }] = useContext();
   const [groupedUsers, setGroupedUsers] = useState([]);
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import { makeStyles } from '@material-ui/styles';
 
@@ -6,8 +6,7 @@ interface IProps {
   status: string;
 }
 
-const Status: React.FC<IProps> = (props: IProps) => {
-  const { status } = props;
+const Status: FC<IProps> = ({ status }: IProps) => {
   const classes = useStyles();
 
   switch (status) {

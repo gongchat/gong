@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { useContext } from '../../context';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -20,8 +20,7 @@ interface IProps {
   showAvatar: boolean;
 }
 
-const User: React.FC<IProps> = (props: IProps) => {
-  const { user, isSelected, showAvatar } = props;
+const User: FC<IProps> = ({ user, isSelected, showAvatar }: IProps) => {
   const classes = useStyles();
   const { selectChannel } = useContext()[1];
   const [anchorEl, setAnchorEl] = useState(null);

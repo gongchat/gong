@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { Redirect } from 'react-router';
 import { useContext } from '../context';
 import * as WebFont from 'webfontloader';
@@ -24,7 +24,7 @@ interface IProps {
   noThrow: boolean;
 }
 
-const Main: React.FC<IProps> = () => {
+const Main: FC<IProps> = () => {
   const classes = useStyles();
   const [{ connection, theme, app, current }, { autoConnect }] = useContext();
   const [goToLogin, setGoToLogin] = useState(false);

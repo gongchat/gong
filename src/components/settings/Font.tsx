@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { useContext } from '../../context';
 
 import Link from '@material-ui/core/Link';
@@ -18,7 +18,7 @@ const DEFAULT_SIZE = 15;
 let fontTimer: any;
 let sizeTimer: any;
 
-const Font: React.FC = () => {
+const Font: FC = () => {
   const classes = useStyles();
   const [{ theme }, { setTheme }] = useContext();
   const [font, setFont] = useState(

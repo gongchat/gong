@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import { useContext } from '../context';
 import XmppJsMapper from '../utils/xmppJsMapper';
 
 const { ipcRenderer } = window.require('electron');
 
-const IpcRenderer: React.FC = () => {
+const IpcRenderer: FC = () => {
   const actions = useContext()[1];
 
   useEffect(() => {

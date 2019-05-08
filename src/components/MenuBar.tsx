@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { useContext } from '../context';
 import { usePrevious } from '../utils/usePrevious';
 
@@ -17,7 +17,7 @@ interface IProps {
   showOffline: boolean;
 }
 
-const MenuBar: React.FC<IProps> = ({ showOffline }: IProps) => {
+const MenuBar: FC<IProps> = ({ showOffline }: IProps) => {
   const classes = useStyles();
   const [{ connection, menuBarNotification, channels }] = useContext();
   const [isFlashing, setIsFlashing] = useState(false);

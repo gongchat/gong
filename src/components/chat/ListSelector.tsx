@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { FC, useState, useRef, useEffect } from 'react';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
@@ -28,21 +28,20 @@ interface IProps {
 //  20 = Users
 //  21 = Users via click
 
-const ListSelector: React.FC<IProps> = (props: IProps) => {
-  const {
-    handleSelection,
-    selectorIndex,
-    setSelectorIndex,
-    list,
-    term,
-    title,
-    showKey,
-    keyProp,
-    showValue,
-    valueProp,
-    itemPrefix,
-    itemSuffix,
-  } = props;
+const ListSelector: FC<IProps> = ({
+  handleSelection,
+  selectorIndex,
+  setSelectorIndex,
+  list,
+  term,
+  title,
+  showKey,
+  keyProp,
+  showValue,
+  valueProp,
+  itemPrefix,
+  itemSuffix,
+}: IProps) => {
   const classes = useStyles();
   const [listIndex, setListIndex] = useState(0);
   const listRef = useRef<HTMLDivElement>(null);

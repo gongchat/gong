@@ -1,8 +1,9 @@
 import React, {
+  FC,
+  forwardRef,
   useEffect,
   useRef,
   useImperativeHandle,
-  forwardRef,
 } from 'react';
 import { useContext } from '../../context';
 
@@ -23,9 +24,8 @@ interface IProps {
   children: any;
 }
 
-const MessagesScroller: React.FC<IProps> = forwardRef(
-  (props: IProps, ref: any) => {
-    const { children, newMessageMarkerRef } = props;
+const MessagesScroller: FC<IProps> = forwardRef(
+  ({ children, newMessageMarkerRef }: IProps, ref: any) => {
     const classes = useStyles();
     const [
       { profile, current },

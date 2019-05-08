@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Redirect } from 'react-router';
 import { useContext } from '../../context';
 
@@ -48,7 +48,7 @@ const TABS = [
   { name: 'Log Off', icon: <PowerSettingsNewIcon /> },
 ];
 
-const Settings: React.FC = () => {
+const Settings: FC = () => {
   const classes = useStyles();
   const [
     { showSettings, app },

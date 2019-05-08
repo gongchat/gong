@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useContext } from '../../context';
 
 import Popover from '@material-ui/core/Popover';
@@ -24,8 +24,7 @@ interface IProps {
   onClose: any;
 }
 
-const StatusMenu: React.FC<IProps> = (props: IProps) => {
-  const { open, anchorEl, onClose } = props;
+const StatusMenu: FC<IProps> = ({ open, anchorEl, onClose }: IProps) => {
   const classes = useStyles();
   const { setMyStatus } = useContext()[1];
 

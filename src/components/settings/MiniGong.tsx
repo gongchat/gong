@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import { makeStyles } from '@material-ui/styles';
 
-const MiniGong: React.FC = () => {
+const MiniGong: FC = () => {
   const classes = useStyles();
 
   return (

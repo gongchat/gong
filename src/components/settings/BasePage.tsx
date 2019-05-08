@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
@@ -8,8 +8,7 @@ interface IProps {
   children: any;
 }
 
-const BasePage: React.FC<IProps> = (props: IProps) => {
-  const { title, children } = props;
+const BasePage: FC<IProps> = ({ title, children }: IProps) => {
   const classes = useStyles();
 
   return (

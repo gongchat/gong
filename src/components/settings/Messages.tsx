@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { useContext } from '../../context';
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -7,7 +7,7 @@ import Switch from '@material-ui/core/Switch';
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 
-const Messages: React.FC = () => {
+const Messages: FC = () => {
   const [{ settings }, { setAndSaveSettings }] = useContext();
   const [renderVideos, setRenderVideos] = useState(settings.renderVideos);
   const [renderGetYarn, setRenderGetYarn] = useState(settings.renderGetYarn);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import { makeStyles } from '@material-ui/styles';
 
@@ -9,8 +9,7 @@ interface IProps {
   onSelection: any;
 }
 
-const ColorPicker: React.FC<IProps> = (props: IProps) => {
-  const { item, onSelection } = props;
+const ColorPicker: FC<IProps> = ({ item, onSelection }: IProps) => {
   const classes = useStyles();
 
   return (

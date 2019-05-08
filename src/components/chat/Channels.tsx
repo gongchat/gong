@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useContext } from '../../context';
 import moment from 'moment';
 
@@ -17,8 +17,13 @@ interface IProps {
   prefix: string;
 }
 
-const Channels: React.FC<IProps> = (props: IProps) => {
-  const { channels, hideIfEmpty, title, canAdd, prefix } = props;
+const Channels: FC<IProps> = ({
+  channels,
+  hideIfEmpty,
+  title,
+  canAdd,
+  prefix,
+}: IProps) => {
   const classes = useStyles();
   const [{ current, theme }] = useContext();
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { useContext } from '../../context';
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -22,7 +22,7 @@ const DEFAULT_SPACING = 8;
 let spacingTimer: any;
 let sidebarWidthTimer: any;
 
-const Layout: React.FC = () => {
+const Layout: FC = () => {
   const classes = useStyles();
   const [{ theme }, { setTheme }] = useContext();
   const [spacing, setSpacing] = useState(theme.spacing.unit);

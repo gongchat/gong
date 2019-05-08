@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { FC, useState, useRef, useEffect } from 'react';
 import { useContext } from '../../context';
 
 import TextField from '@material-ui/core/TextField';
@@ -14,7 +14,7 @@ import IUser from '../../interfaces/IUser';
 import StringUtil from '../../utils/stringUtils';
 import { usePrevious } from '../../utils/usePrevious';
 
-const Input: React.FC = () => {
+const Input: FC = () => {
   const classes = useStyles();
   const [
     { current, settings, connection },

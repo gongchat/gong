@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { useContext } from '../../context';
 
 import FilledInput from '@material-ui/core/FilledInput';
@@ -12,7 +12,7 @@ import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 import { playAudio, SOUNDS } from '../../actions/notification';
 
-const NotificationSettings: React.FC = () => {
+const NotificationSettings: FC = () => {
   const classes = useStyles();
   const [{ settings }, { setAndSaveSettings }] = useContext();
 

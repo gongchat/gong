@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { useContext } from '../../context';
 
 import Badge from '@material-ui/core/Badge';
@@ -19,14 +19,13 @@ interface IProps {
   children: any;
 }
 
-const Group: React.FC<IProps> = (props: IProps) => {
-  const {
-    title,
-    totalUnreadMessages,
-    hasUnreadMentionMe,
-    canAdd,
-    children,
-  } = props;
+const Group: FC<IProps> = ({
+  title,
+  totalUnreadMessages,
+  hasUnreadMentionMe,
+  canAdd,
+  children,
+}: IProps) => {
   const classes = useStyles();
   const { setShowDiscover } = useContext()[1];
   const [isExpanded, setIsExpanded] = useState(true);

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import { makeStyles } from '@material-ui/styles';
 
 import Input from './Input';
 import Messages from './Messages';
 
-const Chat: React.FC = () => {
+const Chat: FC = () => {
   const classes = useStyles();
 
   return (

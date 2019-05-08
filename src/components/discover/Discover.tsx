@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { useContext } from '../../context';
 
 import Button from '@material-ui/core/Button';
@@ -21,7 +21,7 @@ import IDiscoverRoom from '../../interfaces/IDiscoverRoom';
 import IRoomJoin from '../../interfaces/IRoomJoin';
 import ISubdomain from '../../interfaces/ISubdomain';
 
-const Discover: React.FC = () => {
+const Discover: FC = () => {
   const classes = useStyles();
   const [
     { profile, subdomains, rooms, showDiscover },

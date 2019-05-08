@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import sanitizeHtml from 'sanitize-html';
 import marked from 'marked';
@@ -59,7 +59,7 @@ interface IProps {
   renderGetYarn: boolean;
 }
 
-const Message: React.FC<IProps> = ({
+const Message: FC<IProps> = ({
   message,
   showTime,
   onMediaLoad,

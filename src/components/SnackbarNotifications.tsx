@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import { useContext } from '../context';
 import { useSnackbar } from 'notistack';
 
@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/styles';
 import ISnackbarNotification from '../interfaces/ISnackbarNotification';
 import { usePrevious } from '../utils/usePrevious';
 
-const SnackbarNotifications: React.FC = () => {
+const SnackbarNotifications: FC = () => {
   const classes = useStyles();
   const [{ snackbarNotifications }, { removeFromSnackbar }] = useContext();
   const { enqueueSnackbar } = useSnackbar();
