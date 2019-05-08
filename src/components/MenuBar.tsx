@@ -17,20 +17,16 @@ interface IProps {
   showOffline: boolean;
 }
 
-const MenuBar: React.FC<IProps> = (props: IProps) => {
-  const { showOffline } = props;
+const MenuBar: React.FC<IProps> = ({ showOffline }: IProps) => {
   const classes = useStyles();
   const [{ connection, menuBarNotification, channels }] = useContext();
   const [isFlashing, setIsFlashing] = useState(false);
   const [notification, setNotification] = useState('');
+  const [countOfUnreadMessages, setCountOfUnreadMessages] = useState(0);
   const prevMenuBarNotification = usePrevious(menuBarNotification);
   const menuBarNotificationFrequency = notification
     ? notification.split(',')[0]
     : '';
-  const countOfUnreadMessages = channels.reduce(
-    (a: number, b: IChannel) => a + b.unreadMessages,
-    0
-  );
 
   const minimize = () => {
     const focusedWindow = BrowserWindow.getFocusedWindow();
@@ -50,6 +46,12 @@ const MenuBar: React.FC<IProps> = (props: IProps) => {
     const focusedWindow = BrowserWindow.getFocusedWindow();
     focusedWindow.close();
   };
+
+  useEffect(() => {
+    setCountOfUnreadMessages(
+      channels.reduce((a: number, b: IChannel) => a + b.unreadMessages, 0)
+    );
+  }, [channels]);
 
   useEffect(() => {
     if (menuBarNotification !== '') {

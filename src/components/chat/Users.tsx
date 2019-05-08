@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useContext } from '../../context';
 
 import Group from './Group';
@@ -9,25 +9,27 @@ interface IProps {
   users: IUser[];
 }
 
-const Users: React.FC<IProps> = (props: any) => {
-  const { users } = props;
+const Users: React.FC<IProps> = ({ users }: any) => {
   const [{ theme, current }] = useContext();
+  const [groupedUsers, setGroupedUsers] = useState([]);
 
-  const getGroupedUsers = (users: any) => {
-    return users.reduce((a: any, c: any) => {
-      const group = a.find((g: any) => g.name === c.group);
-      if (!group) {
-        a.push({ name: c.group, users: [c] });
-      } else {
-        group.users.push(c);
-      }
-      return a;
-    }, []);
-  };
+  useEffect(() => {
+    setGroupedUsers(
+      users.reduce((a: any, c: any) => {
+        const group = a.find((g: any) => g.name === c.group);
+        if (!group) {
+          a.push({ name: c.group, users: [c] });
+        } else {
+          group.users.push(c);
+        }
+        return a;
+      }, [])
+    );
+  }, [users]);
 
   return (
     <div>
-      {getGroupedUsers(users).map((group: any) => {
+      {groupedUsers.map((group: any) => {
         if (group.users) {
           return (
             <Group
