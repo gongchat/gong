@@ -33,7 +33,7 @@
     "electron-store": "3.2.0",
     "electron-updater": "4.0.6",
     "keytar": "4.5.0",
-    "markdown-it": "8.4.2",
+    "marked": "0.6.2",
     "moment": "2.24.0",
     "notistack": "0.7.0",
     "react": "16.8.6",
@@ -50,6 +50,7 @@
   "devDependencies": {
     "@types/jest": "24.0.11",
     "@types/markdown-it": "0.0.7",
+    "@types/marked": "0.6.5",
     "@types/moment": "2.13.0",
     "@types/react-dom": "16.8.4",
     "@types/react-router-dom": "4.3.2",
@@ -60,7 +61,7 @@
     "electron": "4.1.5",
     "electron-builder": "20.38.2",
     "electron-rebuild": "1.8.4",
-    "node-sass": "^4.11.0",
+    "node-sass": "4.11.0",
     "react-scripts": "3.0.0",
     "typescript": "3.4.5",
     "wait-on": "3.2.0"

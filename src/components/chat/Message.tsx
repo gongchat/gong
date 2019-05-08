@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import sanitizeHtml from 'sanitize-html';
-import MarkdownIt from 'markdown-it';
+import marked from 'marked';
 
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import Typography from '@material-ui/core/Typography';
@@ -11,15 +11,6 @@ import IMessage from '../../interfaces/IMessage';
 import IMessageUrl from '../../interfaces/IMessageUrl';
 
 import { emojis } from '../../utils/emojis';
-
-interface IProps {
-  message: IMessage;
-  showTime: boolean;
-  onMediaLoad: any;
-  renderImages: boolean;
-  renderVideos: boolean;
-  renderGetYarn: boolean;
-}
 
 const ALLOWED_TAGS = [
   'h3',
@@ -59,28 +50,33 @@ const ALLOWED_ATTRIBUTES = {
   span: ['class'],
 };
 
-const markdownIt = new MarkdownIt({
-  linkify: true,
-  html: true,
-  typographer: true,
-});
+interface IProps {
+  message: IMessage;
+  showTime: boolean;
+  onMediaLoad: any;
+  renderImages: boolean;
+  renderVideos: boolean;
+  renderGetYarn: boolean;
+}
 
-const Message: React.FC<IProps> = (props: IProps) => {
-  const {
-    message,
-    showTime,
-    onMediaLoad,
-    renderImages,
-    renderVideos,
-    renderGetYarn,
-  } = props;
+const Message: React.FC<IProps> = ({
+  message,
+  showTime,
+  onMediaLoad,
+  renderImages,
+  renderVideos,
+  renderGetYarn,
+}: IProps) => {
   const classes = useStyles();
-  const isMe = message.body && message.body.startsWith('/me ');
+  const [isMe, setIsMe] = useState(false);
   const [messageBody, setMessageBody] = useState('');
+  const { body } = message;
 
   useEffect(() => {
-    let formattedMessageBody = message.body
-      ? sanitizeHtml(markdownIt.renderInline(message.body), {
+    setIsMe(body && body.startsWith('/me ') ? true : false);
+
+    let formattedMessageBody = body
+      ? sanitizeHtml(marked.inlineLexer(body, []), {
           allowedTags: ALLOWED_TAGS,
           allowedAttributes: ALLOWED_ATTRIBUTES,
         })
@@ -98,7 +94,7 @@ const Message: React.FC<IProps> = (props: IProps) => {
     }
 
     setMessageBody(formattedMessageBody);
-  }, [message.body]);
+  }, [body]);
 
   return (
     <div className={classes.root}>
