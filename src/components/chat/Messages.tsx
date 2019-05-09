@@ -18,9 +18,9 @@ const Messages: FC = () => {
   let prevMessage: IMessage;
   let hasNewMessageMarker = false;
 
-  const handleOnMediaLoad = () => {
+  const handleOnMessageLoad = () => {
     if (scrollerRef.current) {
-      scrollerRef.current.handleOnMediaLoad();
+      scrollerRef.current.handleOnMessageLoad();
     }
   };
 
@@ -111,7 +111,7 @@ const Messages: FC = () => {
                   renderVideos={settings.renderVideos}
                   renderGetYarn={settings.renderGetYarn}
                   renderImages={settings.renderImages}
-                  onMediaLoad={handleOnMediaLoad}
+                  onMessageLoad={handleOnMessageLoad}
                 />
               </div>
             </React.Fragment>

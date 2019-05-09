@@ -53,7 +53,7 @@ const ALLOWED_ATTRIBUTES = {
 interface IProps {
   message: IMessage;
   showTime: boolean;
-  onMediaLoad: any;
+  onMessageLoad: any;
   renderImages: boolean;
   renderVideos: boolean;
   renderGetYarn: boolean;
@@ -62,7 +62,7 @@ interface IProps {
 const Message: FC<IProps> = ({
   message,
   showTime,
-  onMediaLoad,
+  onMessageLoad,
   renderImages,
   renderVideos,
   renderGetYarn,
@@ -71,6 +71,10 @@ const Message: FC<IProps> = ({
   const [isMe, setIsMe] = useState(false);
   const [messageBody, setMessageBody] = useState('');
   const { body } = message;
+
+  useEffect(() => {
+    onMessageLoad();
+  }, [onMessageLoad]);
 
   useEffect(() => {
     setIsMe(body && body.startsWith('/me ') ? true : false);
@@ -135,7 +139,7 @@ const Message: FC<IProps> = ({
                     width={300}
                     height={170}
                     controls={true}
-                    onLoad={onMediaLoad}
+                    onLoad={onMessageLoad}
                   />
                 </div>
               ))}
@@ -148,7 +152,7 @@ const Message: FC<IProps> = ({
                   return (
                     <div key={index} className={classes.getYarn}>
                       <iframe
-                        onLoad={onMediaLoad}
+                        onLoad={onMessageLoad}
                         title="get yarn clip"
                         width={300}
                         height={185}
@@ -174,7 +178,7 @@ const Message: FC<IProps> = ({
                         autoPlay={true}
                         loop={true}
                         height={185}
-                        onLoad={onMediaLoad}
+                        onLoad={onMessageLoad}
                       >
                         <source
                           src={url.url.replace('.gifv', '.mp4')}
@@ -186,7 +190,7 @@ const Message: FC<IProps> = ({
                 } else {
                   return (
                     <div key={index} className={classes.image}>
-                      <img alt="shared" src={url.url} onLoad={onMediaLoad} />
+                      <img alt="shared" src={url.url} onLoad={onMessageLoad} />
                     </div>
                   );
                 }

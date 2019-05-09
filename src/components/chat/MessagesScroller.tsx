@@ -14,6 +14,7 @@ import { TRIM_AT } from '../../actions/channel';
 import { usePrevious } from '../../utils/usePrevious';
 
 let wasAtBottom = true;
+let wasAtNewMessageMarker = false;
 let scrollTimer: any;
 let positionBeforeGettingLogs: any;
 let prevWindowInnerWidth: any;
@@ -35,10 +36,17 @@ const MessagesScroller: FC<IProps> = forwardRef(
     const root = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(ref, () => ({
-      handleOnMediaLoad() {
-        if (wasAtBottom && root.current) {
-          root.current.scrollTop =
-            root.current.scrollHeight + root.current.offsetHeight;
+      handleOnMessageLoad() {
+        if (
+          root.current &&
+          (!prevChannel || (current && current.jid !== prevChannel.jid))
+        ) {
+          if (wasAtBottom) {
+            root.current.scrollTop =
+              root.current.scrollHeight + root.current.offsetHeight;
+          } else if (wasAtNewMessageMarker && newMessageMarkerRef.current) {
+            root.current.scrollTop = newMessageMarkerRef.current.offsetTop;
+          }
         }
       },
     }));
@@ -122,16 +130,30 @@ const MessagesScroller: FC<IProps> = forwardRef(
         );
       };
 
+      // Reset stuff if new channel
+      if (!prevChannel || (current && current.jid !== prevChannel)) {
+        wasAtBottom = true;
+        wasAtNewMessageMarker = false;
+      }
+
       // Handle initial scroll position
       if (rootCurrent) {
         if (isUpdateForLoggedMessages()) {
+          wasAtNewMessageMarker = false;
+          wasAtBottom = false;
           rootCurrent.scrollTop =
             rootCurrent.scrollHeight - positionBeforeGettingLogs;
         } else if (shouldUpdateToNewMessageMarker()) {
+          wasAtNewMessageMarker = true;
+          wasAtBottom = false;
           rootCurrent.scrollTop = newMessageMarkerRef.current.offsetTop;
         } else if (shouldUpdateToSavedPosition() && current) {
+          wasAtNewMessageMarker = false;
+          wasAtBottom = false;
           rootCurrent.scrollTop = current.scrollPosition;
         } else if (wasAtBottom || isLastMessageMe()) {
+          wasAtNewMessageMarker = false;
+          wasAtBottom = true;
           rootCurrent.scrollTop =
             rootCurrent.scrollHeight + rootCurrent.offsetHeight;
         }
@@ -154,15 +176,20 @@ const MessagesScroller: FC<IProps> = forwardRef(
       const handleScroll = (event: any) => {
         // record if at bottom
         if (
-          event.target.scrollTop + event.target.offsetHeight >=
-          event.target.scrollHeight - 5
+          !prevChannel ||
+          (current && current.hasNoMoreLogs === prevChannel.hasNoMoreLogs)
         ) {
-          wasAtBottom = true;
-          if (current && current.messages.length >= TRIM_AT) {
-            trimOldMessages(current.jid);
+          if (
+            event.target.scrollTop + event.target.offsetHeight >=
+            event.target.scrollHeight - 5
+          ) {
+            wasAtBottom = true;
+            if (current && current.messages.length >= TRIM_AT) {
+              trimOldMessages(current.jid);
+            }
+          } else {
+            wasAtBottom = false;
           }
-        } else {
-          wasAtBottom = false;
         }
 
         // update channels saved scroll position
