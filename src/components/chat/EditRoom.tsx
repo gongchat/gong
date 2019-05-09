@@ -49,7 +49,7 @@ const EditRoom: FC<IProps> = ({ channel, onClose }: IProps) => {
         </span>
       </DialogTitle>
       <ValidatorForm onSubmit={handleClickEditRoom}>
-        <DialogContent>
+        <DialogContent className={classes.dialogContent}>
           <div className={classes.inputs}>
             <TextValidator
               name="jid"
@@ -127,6 +127,9 @@ const useStyles = makeStyles((theme: any) => ({
   },
   icon: {
     marginRight: 0,
+  },
+  dialogContent: {
+    paddingTop: '0 !important',
   },
   inputs: {
     display: 'flex',
