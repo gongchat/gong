@@ -24,6 +24,12 @@ const Messages: FC = () => {
     }
   };
 
+  const handleOnMediaLoad = () => {
+    if (scrollerRef.current) {
+      scrollerRef.current.handleOnMediaLoad();
+    }
+  };
+
   return (
     <MessagesScroller
       ref={scrollerRef}
@@ -112,6 +118,7 @@ const Messages: FC = () => {
                   renderGetYarn={settings.renderGetYarn}
                   renderImages={settings.renderImages}
                   onMessageLoad={handleOnMessageLoad}
+                  onMediaLoad={handleOnMediaLoad}
                 />
               </div>
             </React.Fragment>

@@ -54,6 +54,7 @@ interface IProps {
   message: IMessage;
   showTime: boolean;
   onMessageLoad: any;
+  onMediaLoad: any;
   renderImages: boolean;
   renderVideos: boolean;
   renderGetYarn: boolean;
@@ -63,6 +64,7 @@ const Message: FC<IProps> = ({
   message,
   showTime,
   onMessageLoad,
+  onMediaLoad,
   renderImages,
   renderVideos,
   renderGetYarn,
@@ -190,7 +192,7 @@ const Message: FC<IProps> = ({
                 } else {
                   return (
                     <div key={index} className={classes.image}>
-                      <img alt="shared" src={url.url} onLoad={onMessageLoad} />
+                      <img alt="shared" src={url.url} onLoad={onMediaLoad} />
                     </div>
                   );
                 }
