@@ -30,7 +30,6 @@ const Messages: FC = () => {
   // value the scroll position should be updated to.
   //
   // Possible values for status:
-  // - initial (do nothing)
   // - scrolled (do nothing)
   // - bottom (scroll to bottom)
   // - new-message-marker (scroll to the new message marker)
