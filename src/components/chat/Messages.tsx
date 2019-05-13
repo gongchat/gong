@@ -62,7 +62,9 @@ const Messages: FC = () => {
           0 &&
         root.current &&
         root.current.offsetHeight !== root.current.scrollHeight;
-      const shouldUpdateToNewMessageMarker = newMessageMarkerRef.current;
+      const shouldUpdateToNewMessageMarker =
+        newMessageMarkerRef.current &&
+        (!prevCurrent || (current && current.jid !== prevCurrent.jid));
       const shouldScrollToBottom =
         prevCurrent &&
         prevCurrent.jid === current.jid &&
