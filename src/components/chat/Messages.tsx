@@ -36,7 +36,7 @@ const Messages: FC = () => {
   // - new-message-marker (scroll to the new message marker)
   // - saved-position (scroll to the saved position for the channel)
   // - previous-position (scroll to the position before receiving logs)
-  const [status, setStatus] = useState('initial');
+  const [status, setStatus] = useState('bottom');
 
   const newMessageMarkerRef = useRef<any>(null);
   const root = useRef<HTMLDivElement>(null);
