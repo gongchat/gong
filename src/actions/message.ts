@@ -280,6 +280,7 @@ const updateCurrent = (
     state.current = {
       ...state.current,
       messages: [...state.current.messages, message],
+      inputText: '',
     };
 
     handleOnMessage(state, message, type, rawText);
@@ -309,8 +310,9 @@ const updateChannel = (
           ) > 0;
         message.isRead = !isUnreadOne || !isUnreadTwo;
 
-        const newChannel = {
+        const newChannel: IChannel = {
           ...channel,
+          inputText: '',
           messages: [...channel.messages, message],
           unreadMessages:
             isUnreadOne && isUnreadTwo

@@ -53,7 +53,6 @@ const Input: FC = () => {
           };
           sendMessage(messageSend);
           setText('');
-          setInputText(current.jid, '');
         }
         setText('');
       }
