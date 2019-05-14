@@ -76,6 +76,19 @@ export const channelActions = {
     setMenuBarNotificationOnChannelSelect(newState);
     return newState;
   },
+  setInputText(jid: string, text: string, state: IState): IState {
+    // do not need to update current as it only matters when we change channels
+    return {
+      ...state,
+      channels: state.channels.map((channel: IChannel) => {
+        if (channel.jid === jid) {
+          return { ...channel, inputText: text };
+        } else {
+          return channel;
+        }
+      }),
+    };
+  },
   setChannelScrollPosition(
     channelJid: string,
     position: number,

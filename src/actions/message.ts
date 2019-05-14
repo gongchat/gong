@@ -373,6 +373,7 @@ const addToOpenChannels = (
     order: 10,
     jid: message.channelName,
     name: message.channelName,
+    inputText: '',
     messages: [message],
     unreadMessages: message.isRead ? 1 : 0,
     hasUnreadMentionMe: message.isMentioningMe,

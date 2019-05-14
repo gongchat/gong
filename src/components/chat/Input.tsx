@@ -14,11 +14,13 @@ import IUser from '../../interfaces/IUser';
 import StringUtil from '../../utils/stringUtils';
 import { usePrevious } from '../../utils/usePrevious';
 
+let inputTimer: any;
+
 const Input: FC = () => {
   const classes = useStyles();
   const [
     { current, settings, connection },
-    { sendMessage, setRoomNickname },
+    { sendMessage, setRoomNickname, setInputText },
   ] = useContext();
   const [text, setText] = useState('');
   const [isFocused, setIsFocused] = useState(false);
@@ -50,6 +52,8 @@ const Input: FC = () => {
             body: text,
           };
           sendMessage(messageSend);
+          setText('');
+          setInputText(current.jid, '');
         }
         setText('');
       }
@@ -59,6 +63,15 @@ const Input: FC = () => {
   const handleChange = (event: any) => {
     const newText = event.target.value;
     setText(newText);
+
+    if (inputTimer) {
+      clearTimeout(inputTimer);
+    }
+    inputTimer = setTimeout(() => {
+      if (current) {
+        setInputText(current.jid, newText);
+      }
+    }, 100);
   };
 
   const handleKeyDown = (event: any) => {
@@ -100,7 +113,11 @@ const Input: FC = () => {
   const prevCurrent = usePrevious(current);
 
   useEffect(() => {
-    if (!prevCurrent || (current && prevCurrent.jid !== current.jid)) {
+    if (
+      (current && !prevCurrent) ||
+      (current && prevCurrent.jid !== current.jid)
+    ) {
+      setText(current.inputText);
       // This must be in useEffect so the inputRef is initialized before calling
       // the block below.
       if (inputRef.current) {

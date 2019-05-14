@@ -22,6 +22,7 @@ export default class XmppJsMapper {
         group: item.children[0].children[0],
         status: 'offline',
         color: ColorUtil.stringToHexColor(item.attrs.name),
+        inputText: '',
         messages: [],
         unreadMessages: 0,
         hasUnreadMentionMe: false,
