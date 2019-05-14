@@ -44,7 +44,7 @@ export const defaultSettings: ISettings = {
   renderImages: true,
   soundName: 'Gong 1',
   playAudioOnGroupchat: 'never',
-  playAudioOnMentionMe: 'all',
+  playAudioOnMentionMe: 'always',
   playAudioOnChat: 'unread',
   systemNotificationOnGroupchat: 'never',
   systemNotificationOnMentionMe: 'unread',
