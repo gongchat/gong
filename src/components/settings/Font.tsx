@@ -61,14 +61,15 @@ const Font: FC = () => {
   };
 
   const handleFontChange = (event: any) => {
-    setFont(event.target.value);
+    const newFont = event.target.value;
+    setFont(newFont);
     if (fontTimer) {
       clearTimeout(fontTimer);
     }
     fontTimer = setTimeout(() => {
       setTheme({
         themeKey: 'typography.fontFamily',
-        value: font,
+        value: newFont,
       });
     }, 1000);
   };
