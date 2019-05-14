@@ -12,11 +12,13 @@ import SnackbarNotifications from './SnackbarNotifications';
 const { ipcRenderer } = window.require('electron');
 
 const App: FC = () => {
-  const [{ theme }] = useContext();
+  const [{ app, theme }] = useContext();
 
   useEffect(() => {
-    ipcRenderer.send('app-get-info');
-  }, []);
+    if (!app || app.version === '') {
+      ipcRenderer.send('app-get-info');
+    }
+  }, [app]);
 
   return (
     <ThemeProvider theme={theme}>
