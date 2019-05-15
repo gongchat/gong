@@ -21,6 +21,7 @@ export default interface ISettingsSaved {
   renderImages: boolean;
 
   soundName: string;
+  soundVolume: number;
   playAudioOnGroupchat: string; // always, unread, never
   playAudioOnChat: string; // always, unread, never
   playAudioOnMentionMe: string; // always, unread, never

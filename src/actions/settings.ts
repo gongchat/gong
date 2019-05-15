@@ -43,6 +43,7 @@ export const defaultSettings: ISettings = {
   renderGetYarn: true,
   renderImages: true,
   soundName: 'Gong 1',
+  soundVolume: 5,
   playAudioOnGroupchat: 'never',
   playAudioOnMentionMe: 'always',
   playAudioOnChat: 'unread',
@@ -77,9 +78,16 @@ export const mapSettingsSavedToSettings = (
     renderGetYarn: settings.renderGetYarn,
     renderImages: settings.renderImages,
     soundName: settings.soundName,
+    soundVolume:
+      settings.soundVolume === undefined
+        ? defaultSettings.soundVolume
+        : settings.soundVolume,
     playAudioOnGroupchat: settings.playAudioOnGroupchat,
     playAudioOnChat: settings.playAudioOnChat,
-    playAudioOnMentionMe: settings.playAudioOnMentionMe,
+    playAudioOnMentionMe:
+      settings.playAudioOnMentionMe === 'all'
+        ? 'always'
+        : settings.playAudioOnMentionMe,
     flashFrameOnGroupchat:
       settings.flashFrameOnGroupchat === undefined
         ? defaultSettings.flashFrameOnGroupchat

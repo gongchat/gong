@@ -6,11 +6,19 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import Slider from '@material-ui/lab/Slider';
 import { makeStyles } from '@material-ui/styles';
 
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
+import SliderMarkers from './SliderMarkers';
 import { playAudio, SOUNDS } from '../../actions/notification';
+
+const MIN_SIZE = 0;
+const MAX_SIZE = 10;
+const DEFAULT_SIZE = 5;
+
+let volumeTimer: any;
 
 const NotificationSettings: FC = () => {
   const classes = useStyles();
@@ -18,6 +26,7 @@ const NotificationSettings: FC = () => {
 
   // Play Audio
   const [soundName, setSoundName] = useState(settings.soundName);
+  const [volume, setVolume] = useState(settings.soundVolume);
   const [playAudioOnGroupchat, setPlayAudioOnGroupchat] = useState(
     settings.playAudioOnGroupchat
   );
@@ -74,10 +83,24 @@ const NotificationSettings: FC = () => {
 
   const handleChange = (e: any, action: any) => {
     if (e.target.name === 'soundName') {
-      playAudio(e.target.value);
+      playAudio(e.target.value, settings.soundVolume);
     }
     action(e.target.value);
     setAndSaveSettings({ [e.target.name]: e.target.value });
+  };
+
+  const updateVolume = (value: any) => {
+    setVolume(value);
+    playAudio(soundName, value);
+    if (volumeTimer) {
+      clearTimeout(volumeTimer);
+    }
+    volumeTimer = setTimeout(() => {
+      value = value < MIN_SIZE ? MIN_SIZE : value > MAX_SIZE ? MAX_SIZE : value;
+      setAndSaveSettings({ soundVolume: value });
+      // need to set again in case size is out of bounds
+      setVolume(value);
+    }, 1000);
   };
 
   return (
@@ -98,6 +121,20 @@ const NotificationSettings: FC = () => {
             ))}
           </Select>
         </FormControl>
+        <div className={classes.slider}>
+          <Slider
+            value={volume}
+            min={MIN_SIZE}
+            max={MAX_SIZE}
+            step={1}
+            onChange={(event: any, value: any) => updateVolume(value)}
+          />
+          <SliderMarkers
+            minSize={MIN_SIZE}
+            maxSize={MAX_SIZE}
+            defaultSize={DEFAULT_SIZE}
+          />
+        </div>
         <FormControl variant="filled">
           <InputLabel htmlFor="playAudioOnGroupchat">
             On Groupchat Message
@@ -403,6 +440,10 @@ const NotificationSettings: FC = () => {
 };
 
 const useStyles = makeStyles((theme: any) => ({
+  slider: {
+    position: 'relative',
+    paddingBottom: theme.spacing.unit * 2,
+  },
   split: {
     display: 'flex',
     flexWrap: 'nowrap',

@@ -53,11 +53,11 @@ export const handleOnMessage = (
   flashFrameOnMessage(state, message, type);
 };
 
-export const playAudio = (soundName: string) => {
+export const playAudio = (soundName: string, volume: number) => {
   const sound = SOUNDS.find((s: any) => s.name === soundName);
   if (sound) {
     const audio = new Audio(`./audio/${sound.fileName}`);
-    audio.volume = 1;
+    audio.volume = volume / 10;
     audio.play();
   }
 };
@@ -166,7 +166,7 @@ const shouldPlayAudio = (
 
 const playAudioOnMessage = (state: IState, message: IMessage, type: string) => {
   if (shouldPlayAudio(state, message, type)) {
-    playAudio(state.settings.soundName);
+    playAudio(state.settings.soundName, state.settings.soundVolume);
   }
 };
 
