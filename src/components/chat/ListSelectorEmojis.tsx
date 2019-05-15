@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect } from 'react';
 
 import ListSelector from './ListSelector';
-import Emojis, { emojis as emojisObj } from '../../utils/emojis';
+import Emojis, { EMOJIS } from '../../utils/emojis';
 
 export const emojiListSelectorIndex = 10;
 
@@ -57,7 +57,7 @@ const ListSelectorEmojis: FC<IProps> = ({
             .lastIndexOf(':');
           if (
             emojiCommandIndex !== -1 &&
-            !emojisObj[
+            !EMOJIS[
               text.substring(emojiCommandPrevIndex + 1, emojiCommandIndex)
             ]
           ) {

@@ -1,6 +1,6 @@
 // taken from: https://github.com/markdown-it/markdown-it-emoji/blob/master/lib/data/full.json
 
-export const emojis: any = {
+export const EMOJIS: any = {
   '100': '💯',
   '1234': '🔢',
   grinning: '😀',
@@ -1483,7 +1483,27 @@ export const emojis: any = {
   zimbabwe: '🇿🇼',
 };
 
-export default Object.keys(emojis).map((key: any) => ({
+export const ASCII_EMOJI_MAP = [
+  { key: '&lt;3', emoji: '❤️' },
+  { key: ':)', emoji: '😃' },
+  { key: ':D', emoji: '😀' },
+  { key: ':P', emoji: '😋' },
+  { key: ';)', emoji: '😉' },
+  { key: ';D', emoji: '😉' },
+  { key: ';P', emoji: '😜' },
+  { key: ':(', emoji: '☹️' },
+  { key: 'T.T', emoji: '😭' },
+  { key: '-.-', emoji: '😑' },
+  { key: '-_-', emoji: '😑' },
+  { key: 'o_o', emoji: '😐' },
+  { key: 'O_O', emoji: '😐' },
+  { key: 'o.o', emoji: '😮' },
+  { key: 'O.O', emoji: '😮' },
+  { key: '&gt;.&lt;', emoji: '😆' },
+  { key: '&gt; &lt;', emoji: '😆' },
+];
+
+export default Object.keys(EMOJIS).map((key: any) => ({
   key,
-  value: emojis[key],
+  value: EMOJIS[key],
 }));
