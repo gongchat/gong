@@ -9,46 +9,8 @@ import { makeStyles } from '@material-ui/styles';
 
 import IMessage from '../../interfaces/IMessage';
 import IMessageUrl from '../../interfaces/IMessageUrl';
-
-import { emojis } from '../../utils/emojis';
-
-const ALLOWED_TAGS = [
-  'h3',
-  'h4',
-  'h5',
-  'h6',
-  'blockquote',
-  'p',
-  'a',
-  'ul',
-  'ol',
-  'nl',
-  'li',
-  'b',
-  'i',
-  'strong',
-  'em',
-  'strike',
-  'code',
-  'hr',
-  'br',
-  'div',
-  'table',
-  'thead',
-  'caption',
-  'tbody',
-  'tr',
-  'th',
-  'td',
-  'pre',
-  'iframe',
-  'span',
-];
-
-const ALLOWED_ATTRIBUTES = {
-  a: ['href', 'name', 'target'],
-  span: ['class'],
-};
+import { EMOJIS, ASCII_EMOJI_MAP } from '../../utils/emojis';
+import { ALLOWED_TAGS, ALLOWED_ATTRIBUTES } from '../../utils/sanitizeConfig';
 
 interface IProps {
   message: IMessage;
@@ -92,12 +54,25 @@ const Message: FC<IProps> = ({
     const matches = formattedMessageBody.match(/:([^:]*):/g);
     if (matches) {
       matches.forEach(element => {
-        const emoji = emojis[element.substring(1, element.length - 1)];
+        const emoji = EMOJIS[element.substring(1, element.length - 1)];
         if (emoji) {
           formattedMessageBody = formattedMessageBody.replace(element, emoji);
         }
       });
     }
+
+    // replace characters with emojis
+    ASCII_EMOJI_MAP.forEach(item => {
+      formattedMessageBody = formattedMessageBody.replace(
+        new RegExp(
+          '(^|\\s)' +
+            item.key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') +
+            '($|\\s)',
+          'g'
+        ),
+        item.emoji
+      );
+    });
 
     setMessageBody(formattedMessageBody);
   }, [body]);
