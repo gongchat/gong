@@ -7,7 +7,6 @@ const electronStore = new ElectronStore();
 const { ipcRenderer } = window.require('electron');
 
 export const settingsActions = {
-  // TODO: interface for payload?
   toggleShowSettings(state: IState): IState {
     return { ...state, showSettings: !state.showSettings };
   },
@@ -18,10 +17,7 @@ export const settingsActions = {
       ...settings,
     };
     electronStore.set('settings', savedSettings);
-
-    // TODO: breakout into separate function
     sendSettingsToElectron(settings);
-
     return {
       ...state,
       settings: {
