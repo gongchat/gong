@@ -65,9 +65,9 @@ const Message: FC<IProps> = ({
     ASCII_EMOJI_MAP.forEach(item => {
       formattedMessageBody = formattedMessageBody.replace(
         new RegExp(
-          '(^|\\s)' +
+          '(?=^|\\W)' +
             item.key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') +
-            '($|\\s)',
+            '(?<=$|\\W)',
           'g'
         ),
         item.emoji
