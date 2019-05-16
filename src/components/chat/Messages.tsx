@@ -7,7 +7,6 @@ import { makeStyles } from '@material-ui/styles';
 
 import Message from './Message';
 import { TRIM_AT } from '../../actions/channel';
-import IRoom from '../../interfaces/IRoom';
 import IMessage from '../../interfaces/IMessage';
 import { usePrevious } from '../../utils/usePrevious';
 
