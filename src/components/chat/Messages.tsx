@@ -70,12 +70,7 @@ const Messages: FC = () => {
         prevCurrent.jid === current.jid &&
         current.messages.length > 0 &&
         prevCurrent.messages.length !== current.messages.length &&
-        ((current.type === 'chat' &&
-          current.messages[current.messages.length - 1].from ===
-            settings.jid) ||
-          (current.type === 'groupchat' &&
-            current.messages[current.messages.length - 1].userNickname ===
-              (current as IRoom).myNickname));
+        current.messages[current.messages.length - 1].isMe;
       const shouldUpdateToSavedPosition =
         current &&
         current.scrollPosition !== -1 &&
