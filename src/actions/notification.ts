@@ -176,7 +176,7 @@ const shouldFlashFrame = (
   type: string
 ): boolean => {
   const settings = state.settings;
-  if (!message.isHistory && state.profile.status !== 'dnd') {
+  if (!message.isHistory && !message.isMe && state.profile.status !== 'dnd') {
     // Group chat
     if (type === 'groupchat') {
       // on message

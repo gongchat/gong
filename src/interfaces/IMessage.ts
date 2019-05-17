@@ -14,5 +14,6 @@ export default interface IMessage {
   color: string;
   isRead: boolean;
   isHistory: boolean;
+  isMe: boolean;
   isMentioningMe: boolean;
 }

@@ -36,6 +36,7 @@ export const messageActions = {
             ? newState.profile.vCard.fullName
             : newState.profile.username,
         color: newState.profile.color,
+        isMe: true,
         isRead: true,
         isHistory: false,
         isMentioningMe: false,
@@ -117,6 +118,7 @@ export const messageActions = {
       body: messageReceive.body,
       urls: [],
       timestamp: messageReceive.timestamp,
+      isMe: false,
       isRead: false,
       isHistory: messageReceive.isHistory,
       isMentioningMe: false,
@@ -174,6 +176,10 @@ const processMessage = (
         `(?<=[^a-zA-Z0-9@]|\\s|^)${user.nickname}(?=\\W|\\s+|$)(?=[^@]|$)`,
         'gi'
       );
+
+      if (isMe) {
+        message.isMe = isMe;
+      }
 
       // if mentioned me
       message.isMentioningMe =
