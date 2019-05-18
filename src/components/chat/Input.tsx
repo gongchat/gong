@@ -14,8 +14,6 @@ import IUser from '../../interfaces/IUser';
 import StringUtil from '../../utils/stringUtils';
 import { usePrevious } from '../../utils/usePrevious';
 
-let inputTimer: any;
-
 const Input: FC = () => {
   const classes = useStyles();
   const [
@@ -26,6 +24,7 @@ const Input: FC = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [listSelectorIndex, setListSelectorIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const inputText = useRef(current ? current.inputText : '');
 
   const send = () => {
     if (current) {
@@ -53,6 +52,7 @@ const Input: FC = () => {
           };
           sendMessage(messageSend);
           setText('');
+          inputText.current = '';
         }
         setText('');
       }
@@ -62,15 +62,7 @@ const Input: FC = () => {
   const handleChange = (event: any) => {
     const newText = event.target.value;
     setText(newText);
-
-    if (inputTimer) {
-      clearTimeout(inputTimer);
-    }
-    inputTimer = setTimeout(() => {
-      if (current) {
-        setInputText(current.jid, newText);
-      }
-    }, 100);
+    inputText.current = newText;
   };
 
   const handleKeyDown = (event: any) => {
@@ -112,6 +104,13 @@ const Input: FC = () => {
   const prevCurrent = usePrevious(current);
 
   useEffect(() => {
+    // Handle prev channel
+    if (prevCurrent && current && prevCurrent.jid !== current.jid) {
+      setInputText(prevCurrent.jid, inputText.current);
+      inputText.current = current ? current.inputText : '';
+    }
+
+    // Handle new channel
     if (
       (current && !prevCurrent) ||
       (current && prevCurrent.jid !== current.jid)
@@ -123,7 +122,7 @@ const Input: FC = () => {
         inputRef.current.focus();
       }
     }
-  }, [current, prevCurrent]);
+  }, [current, prevCurrent, setInputText]);
 
   return (
     <>

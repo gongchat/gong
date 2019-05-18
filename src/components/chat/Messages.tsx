@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import { useContext } from '../../context';
 import moment from 'moment';
 
@@ -10,7 +10,6 @@ import { TRIM_AT } from '../../actions/channel';
 import IMessage from '../../interfaces/IMessage';
 import { usePrevious } from '../../utils/usePrevious';
 
-let scrollTimer: any;
 let prevScrollHeight: any;
 let prevWindowInnerWidth: any;
 let positionBeforeGettingLogs: any;
@@ -34,8 +33,9 @@ const Messages: FC = () => {
   // - new-message-marker (scroll to the new message marker)
   // - saved-position (scroll to the saved position for the channel)
   // - previous-position (scroll to the position before receiving logs)
-  const [status, setStatus] = useState('bottom');
+  const status = useRef('bottom');
 
+  const scrollPosition = useRef(current ? current.scrollPosition : -1);
   const newMessageMarkerRef = useRef<any>(null);
   const root = useRef<HTMLDivElement>(null);
 
@@ -75,7 +75,7 @@ const Messages: FC = () => {
         current.scrollPosition !== -1 &&
         (!prevCurrent || current.jid !== prevCurrent.jid);
 
-      let newStatus = status;
+      let newStatus = status.current;
       if (shouldUpdateForLoggedMessages) {
         newStatus = 'previous-position';
       } else if (shouldUpdateToNewMessageMarker) {
@@ -108,10 +108,18 @@ const Messages: FC = () => {
         default:
           break;
       }
-      setStatus(newStatus);
+      status.current = newStatus;
       prevScrollHeight = root.current.scrollHeight;
     }
   };
+
+  useEffect(() => {
+    // Save previous channels scroll position
+    if (prevCurrent && current && prevCurrent.jid !== current.jid) {
+      setChannelScrollPosition(prevCurrent.jid, scrollPosition.current);
+      scrollPosition.current = current ? current.scrollPosition : -1;
+    }
+  }, [current, prevCurrent, setChannelScrollPosition])
 
   useEffect(() => {
     const shouldRequestLogsOnLoad =
@@ -134,9 +142,9 @@ const Messages: FC = () => {
         root.current &&
         root.current.offsetHeight !== root.current.scrollHeight
       ) {
-        setStatus('previous-position');
+        status.current = 'previous-position';
       } else {
-        setStatus('bottom');
+        status.current = 'bottom';
       }
       getChannelLogs(current);
       if (root.current) {
@@ -144,7 +152,7 @@ const Messages: FC = () => {
       }
     } else if (shouldTrimMessagesOnLoad && current) {
       // Check for trimmed messages
-      setStatus('bottom');
+      status.current = 'bottom';
       trimOldMessages(current.jid);
     }
 
@@ -158,32 +166,27 @@ const Messages: FC = () => {
 
     // Event listener functions
     const handleScroll = (event: any) => {
+      scrollPosition.current = event.target.value;
+
       if (event.target.scrollHeight === prevScrollHeight) {
         if (
           event.target.scrollTop + event.target.offsetHeight >=
             event.target.scrollHeight - 5 &&
           (!prevCurrent || (current && current.jid === prevCurrent.jid))
         ) {
-          setStatus('bottom');
+          status.current = 'bottom';
           if (current && current.messages.length >= TRIM_AT) {
             trimOldMessages(current.jid);
           }
         } else {
-          setStatus('scrolled');
+          status.current = 'scrolled';
         }
-      }
 
-      // update channels saved scroll position
-      if (scrollTimer) {
-        clearTimeout(scrollTimer);
-      }
-      scrollTimer = setTimeout(() => {
         const shouldRequestLogsOnScroll =
           current &&
           !current.hasNoMoreLogs &&
           !current.isRequestingLogs &&
-          rootCurrent &&
-          rootCurrent.scrollTop === 0;
+          event.target.scrollTop === 0;
 
         // get logged message if at top
         if (shouldRequestLogsOnScroll) {
@@ -193,17 +196,13 @@ const Messages: FC = () => {
             root.current &&
             root.current.offsetHeight !== root.current.scrollHeight
           ) {
-            setStatus('previous-position');
+            status.current = 'previous-position';
           } else {
-            setStatus('bottom');
+            status.current = 'bottom';
           }
         }
+      }
 
-        // Saves the scroll position for when the channel is selected again
-        if (current) {
-          setChannelScrollPosition(current.jid, event.target.scrollTop);
-        }
-      }, 100);
     };
 
     const handleWindowResize = (event: any) => {
@@ -219,7 +218,6 @@ const Messages: FC = () => {
     }
 
     return () => {
-      clearTimeout(scrollTimer);
       if (rootCurrent) {
         rootCurrent.removeEventListener('scroll', handleScroll);
       }
