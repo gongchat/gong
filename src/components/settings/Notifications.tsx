@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import { useContext } from '../../context';
 
 import FilledInput from '@material-ui/core/FilledInput';
@@ -17,8 +17,6 @@ import { playAudio, SOUNDS } from '../../actions/notification';
 const MIN_SIZE = 0;
 const MAX_SIZE = 10;
 const DEFAULT_SIZE = 5;
-
-let volumeTimer: any;
 
 const NotificationSettings: FC = () => {
   const classes = useStyles();
@@ -81,6 +79,8 @@ const NotificationSettings: FC = () => {
     settings.systemNotificationOnChat
   );
 
+  const volumeTimer = useRef<any>();
+
   const handleChange = (e: any, action: any) => {
     if (e.target.name === 'soundName') {
       playAudio(e.target.value, settings.soundVolume);
@@ -93,9 +93,9 @@ const NotificationSettings: FC = () => {
     setVolume(value);
     playAudio(soundName, value);
     if (volumeTimer) {
-      clearTimeout(volumeTimer);
+      clearTimeout(volumeTimer.current);
     }
-    volumeTimer = setTimeout(() => {
+    volumeTimer.current = setTimeout(() => {
       value = value < MIN_SIZE ? MIN_SIZE : value > MAX_SIZE ? MAX_SIZE : value;
       setAndSaveSettings({ soundVolume: value });
       // need to set again in case size is out of bounds

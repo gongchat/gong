@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import { useContext } from '../../context';
 
 import Link from '@material-ui/core/Link';
@@ -15,9 +15,6 @@ const MIN_SIZE = 8;
 const MAX_SIZE = 24;
 const DEFAULT_SIZE = 15;
 
-let fontTimer: any;
-let sizeTimer: any;
-
 const Font: FC = () => {
   const classes = useStyles();
   const [{ theme }, { setTheme }] = useContext();
@@ -25,6 +22,8 @@ const Font: FC = () => {
     theme.typography.fontFamily.split(',')[0].replace(/"/g, '')
   );
   const [size, setSize] = useState(theme.typography.fontSize);
+  const fontTimer = useRef<any>();
+  const sizeTimer = useRef<any>();
 
   const handleKeyDown = (event: any) => {
     const key = String.fromCharCode(
@@ -64,9 +63,9 @@ const Font: FC = () => {
     const newFont = event.target.value;
     setFont(newFont);
     if (fontTimer) {
-      clearTimeout(fontTimer);
+      clearTimeout(fontTimer.current);
     }
-    fontTimer = setTimeout(() => {
+    fontTimer.current = setTimeout(() => {
       setTheme({
         themeKey: 'typography.fontFamily',
         value: newFont,
@@ -77,9 +76,9 @@ const Font: FC = () => {
   const updateSize = (value: any) => {
     setSize(value);
     if (sizeTimer) {
-      clearTimeout(sizeTimer);
+      clearTimeout(sizeTimer.current);
     }
-    sizeTimer = setTimeout(() => {
+    sizeTimer.current = setTimeout(() => {
       value = value < MIN_SIZE ? MIN_SIZE : value > MAX_SIZE ? MAX_SIZE : value;
       setTheme({
         themeKey: 'typography.fontSize',

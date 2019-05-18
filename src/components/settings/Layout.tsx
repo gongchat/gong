@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import { useContext } from '../../context';
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -19,9 +19,6 @@ const MIN_SPACING = 2;
 const MAX_SPACING = 10;
 const DEFAULT_SPACING = 8;
 
-let spacingTimer: any;
-let sidebarWidthTimer: any;
-
 const Layout: FC = () => {
   const classes = useStyles();
   const [{ theme }, { setTheme }] = useContext();
@@ -37,6 +34,9 @@ const Layout: FC = () => {
     sortChannelsByMostRecentUnread,
     setSortChannelsByMostRecentUnread,
   ] = useState(theme.sortChannelsByMostRecentUnread);
+
+  const spacingTimer = useRef<any>();
+  const sidebarWidthTimer = useRef<any>();
 
   const handleKeyDown = (event: any) => {
     const key = String.fromCharCode(
@@ -70,9 +70,9 @@ const Layout: FC = () => {
   const updateSpacing = (value: any) => {
     setSpacing(value);
     if (spacingTimer) {
-      clearTimeout(spacingTimer);
+      clearTimeout(spacingTimer.current);
     }
-    spacingTimer = setTimeout(() => {
+    spacingTimer.current = setTimeout(() => {
       value =
         value < MIN_SPACING
           ? MIN_SPACING
@@ -90,9 +90,9 @@ const Layout: FC = () => {
   const updateSidebarWidth = (value: any) => {
     setSidebarWidth(value);
     if (sidebarWidthTimer) {
-      clearTimeout(sidebarWidthTimer);
+      clearTimeout(sidebarWidthTimer.current);
     }
-    sidebarWidthTimer = setTimeout(() => {
+    sidebarWidthTimer.current = setTimeout(() => {
       value =
         value < MIN_SIDEBAR_WIDTH
           ? MIN_SIDEBAR_WIDTH

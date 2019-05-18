@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useContext } from '../context';
 
@@ -6,8 +6,6 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
 
 import LoadingIcon from './icons/LoadingIcon';
-
-let reconnectTimer: any;
 
 interface IProps {
   path: string;
@@ -21,10 +19,11 @@ const Loading: FC<IProps> = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [goToLogin, setGoToLogin] = useState(false);
   const [goToMain, setGoToMain] = useState(false);
+  const reconnectTimer = useRef<any>();
 
   const handleLoginClick = () => {
-    if (reconnectTimer) {
-      clearTimeout(reconnectTimer);
+    if (reconnectTimer.current) {
+      clearTimeout(reconnectTimer.current);
     }
     setGoToLogin(true);
   };
@@ -46,10 +45,10 @@ const Loading: FC<IProps> = () => {
           setText('Unable to find the server, retrying connection');
           setShowLogin(true);
           if (reconnectTimer) {
-            clearTimeout(reconnectTimer);
+            clearTimeout(reconnectTimer.current);
             setText('Server not found, retrying connection');
           }
-          reconnectTimer = setTimeout(() => {
+          reconnectTimer.current = setTimeout(() => {
             setText('Looking for the server');
             autoConnect();
           }, 10000);
@@ -58,8 +57,8 @@ const Loading: FC<IProps> = () => {
     }
 
     return () => {
-      if (reconnectTimer) {
-        clearTimeout(reconnectTimer);
+      if (reconnectTimer.current) {
+        clearTimeout(reconnectTimer.current);
       }
     };
   }, [autoConnect, connection]);
