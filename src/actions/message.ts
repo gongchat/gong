@@ -21,8 +21,8 @@ export const messageActions = {
   sendMessage(messageSend: IMessageSend, state: IState): IState {
     ipcRenderer.send('xmpp-send-message', messageSend);
 
-    const newState: IState = { ...state };
-    if (newState.current && newState.current.type === 'chat') {
+    if (state.current && state.current.type === 'chat') {
+      const newState: IState = { ...state };
       const message: IMessage = {
         id: messageSend.id,
         channelName: messageSend.channelName,
@@ -43,8 +43,11 @@ export const messageActions = {
       };
       processMessage(newState, message, [], '');
       addMessage(newState, message, 'chat', messageSend.body);
+
+      return newState;
     }
-    return newState;
+
+    return state;
   },
   receiveMessage(messageReceive: IMessageReceive, state: IState): IState {
     if (messageReceive.type === 'error') {
