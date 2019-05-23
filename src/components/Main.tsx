@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useEffect, useState, useRef } from 'react';
 import { Redirect } from 'react-router';
 import { useContext } from '../context';
 import * as WebFont from 'webfontloader';
@@ -28,8 +28,9 @@ const Main: FC<IProps> = () => {
   const classes = useStyles();
   const [{ connection, theme, app, current }, { autoConnect }] = useContext();
   const [goToLogin, setGoToLogin] = useState(false);
-  const [shouldReconnect, setShouldReconnect] = useState(true);
   const [updateOpen, setUpdateOpen] = useState(false);
+
+  const shouldReconnect = useRef(true);
 
   const loadFont = (fontFamily: string) => {
     const font: string = fontFamily.split(',')[0].replace(/"/g, '');
@@ -72,9 +73,9 @@ const Main: FC<IProps> = () => {
   }, [app]);
 
   useEffect(() => {
-    if (shouldReconnect) {
+    if (shouldReconnect.current) {
       if (connection.connectionError === 'Connection has been aborted') {
-        setShouldReconnect(false);
+        shouldReconnect.current = false;
       } else if (
         connection &&
         !connection.isConnecting &&
@@ -94,7 +95,7 @@ const Main: FC<IProps> = () => {
         }
       }
     }
-  }, [autoConnect, connection, shouldReconnect]);
+  }, [autoConnect, connection]);
 
   if (goToLogin) {
     return <Redirect to="/login" />;
@@ -110,9 +111,7 @@ const Main: FC<IProps> = () => {
         <div className={classes.left}>
           <SidebarLeft />
         </div>
-        <div className={classes.middle}>
-          <Chat />
-        </div>
+        <div className={classes.middle}>{current && <Chat />}</div>
         {(current && current.type) === 'groupchat' && (
           <div className={classes.right}>
             <SidebarRight />
