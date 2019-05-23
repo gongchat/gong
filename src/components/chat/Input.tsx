@@ -105,7 +105,12 @@ const Input: FC = () => {
 
   useEffect(() => {
     // Handle prev channel
-    if (prevCurrent && current && prevCurrent.jid !== current.jid) {
+    if (
+      prevCurrent &&
+      current &&
+      prevCurrent.jid !== current.jid &&
+      prevCurrent.inputText !== inputText.current
+    ) {
       setInputText(prevCurrent.jid, inputText.current);
       inputText.current = current ? current.inputText : '';
     }
