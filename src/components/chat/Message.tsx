@@ -37,10 +37,6 @@ const Message: FC<IProps> = ({
   const { body } = message;
 
   useEffect(() => {
-    onMessageLoad();
-  }, [onMessageLoad]);
-
-  useEffect(() => {
     setIsMe(body && body.startsWith('/me ') ? true : false);
 
     let formattedMessageBody = body
@@ -75,7 +71,8 @@ const Message: FC<IProps> = ({
     });
 
     setMessageBody(formattedMessageBody);
-  }, [body]);
+    onMessageLoad();
+  }, [body, onMessageLoad]);
 
   return (
     <div className={classes.root}>
