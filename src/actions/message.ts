@@ -145,6 +145,9 @@ const processMessage = (
   let formattedMessage = message.body;
 
   if (formattedMessage) {
+    // check if message is me
+    message.isMe = message.userNickname === myChannelNickname;
+
     // process urls
     if (state.settings.renderVideos) {
       message.urls = [...message.urls, ...getVideoUrls(message.body)];
@@ -179,10 +182,6 @@ const processMessage = (
         `(?<=[^a-zA-Z0-9@]|\\s|^)${user.nickname}(?=\\W|\\s+|$)(?=[^@]|$)`,
         'gi'
       );
-
-      if (isMe) {
-        message.isMe = isMe;
-      }
 
       // if mentioned me
       message.isMentioningMe =
@@ -390,7 +389,6 @@ const addToOpenChannels = (
     hasUnreadMentionMe: message.isMentioningMe,
     scrollPosition: -1,
     hasNoMoreLogs: undefined,
-    isRequestingLogs: false,
   };
   state.channels = [...state.channels, newChannel];
 
