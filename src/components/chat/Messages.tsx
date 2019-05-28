@@ -44,12 +44,17 @@ const Messages: FC = () => {
   let prevMessage: IMessage;
   let hasNewMessageMarker = false;
 
+  // when new channel
+  if (!prevCurrent || (current && current.jid !== prevCurrent.jid)) {
+    isLoading.current = true;
+  }
+
   const handleOnMessageLoad = () => {
     numberOfLoadedMessages.current = numberOfLoadedMessages.current + 1;
-    if (current && numberOfLoadedMessages.current === current.messages.length) {
-      console.log('messages loaded');
+    if (current && numberOfLoadedMessages.current >= current.messages.length) {
       isLoading.current = false;
       handleScrollUpdate();
+      handleGetLoggedMessages(root.current);
     }
   };
 
@@ -70,11 +75,16 @@ const Messages: FC = () => {
         root.current.offsetHeight !== root.current.scrollHeight;
       const shouldUpdateToNewMessageMarker = newMessageMarkerRef.current;
       const shouldUpdateToSavedPosition =
-        current && current.scrollPosition !== -1;
-      const shouldScrollToBottom =
-        prevCurrent &&
-        current.messages.length > 0 &&
-        prevCurrent.messages.length !== current.messages.length;
+        current &&
+        current.scrollPosition !== -1 &&
+        prevCurrent.jid !== current.jid;
+      const shouldUpdateToBottom =
+        !prevCurrent ||
+        prevCurrent.jid !== current.jid ||
+        (current &&
+          current.messages.length >= 0 &&
+          current.messages[current.messages.length - 1].isMe);
+
       let newStatus = status.current;
       if (shouldUpdateForLoggedMessages) {
         newStatus = 'previous-position';
@@ -82,7 +92,7 @@ const Messages: FC = () => {
         newStatus = 'new-message-marker';
       } else if (shouldUpdateToSavedPosition) {
         newStatus = 'saved-position';
-      } else if (shouldScrollToBottom) {
+      } else if (shouldUpdateToBottom) {
         newStatus = 'bottom';
       }
       switch (newStatus) {
@@ -109,10 +119,33 @@ const Messages: FC = () => {
       }
       status.current = newStatus;
       prevScrollHeight = root.current.scrollHeight;
-      console.log(status.current, root.current.scrollTop);
+      console.log(status.current);
     }
   };
 
+  const handleGetLoggedMessages = (element: any) => {
+    if (element) {
+      const shouldRequestLoggedMessages =
+        !isLoading.current &&
+        element &&
+        element.scrollTop === 0 &&
+        current &&
+        !current.hasNoMoreLogs;
+
+      if (shouldRequestLoggedMessages) {
+        if (element.offsetHeight !== element.scrollHeight) {
+          status.current = 'previous-position';
+        } else {
+          status.current = 'bottom';
+        }
+        isLoading.current = true;
+        positionBeforeGettingLogs = element.scrollHeight;
+        getChannelLogs(current);
+      }
+    }
+  };
+
+  // useEffect for saving previous channels scroll position
   useEffect(() => {
     if (
       (!prevCurrent && current) ||
@@ -123,29 +156,17 @@ const Messages: FC = () => {
           prevCurrent ? prevCurrent.jid : current.jid,
           scrollPosition.current
         );
-        console.log(
-          prevCurrent ? prevCurrent.jid : current.jid,
-          scrollPosition.current
-        );
       }
-      isLoading.current = true;
       numberOfLoadedMessages.current = 0;
       scrollPosition.current = -1;
     }
   }, [current, prevCurrent, setChannelScrollPosition]);
 
+  // useEffect for handling on load events
   useEffect(() => {
     if (current && current.messages.length === 0) {
       isLoading.current = false;
     }
-
-    const shouldRequestLogsOnLoad =
-      !isLoading.current &&
-      root.current &&
-      root.current.scrollTop === 0 &&
-      current &&
-      !current.hasNoMoreLogs &&
-      !current.isRequestingLogs;
 
     const shouldTrimMessagesOnLoad =
       current &&
@@ -155,21 +176,9 @@ const Messages: FC = () => {
         root.current.scrollHeight - 5;
 
     // Check for logged messages
-    if (shouldRequestLogsOnLoad) {
-      if (
-        root.current &&
-        root.current.offsetHeight !== root.current.scrollHeight
-      ) {
-        status.current = 'previous-position';
-      } else {
-        status.current = 'bottom';
-      }
-      console.log('getting logs on load');
-      getChannelLogs(current);
-      if (root.current) {
-        positionBeforeGettingLogs = root.current.scrollHeight;
-      }
-    } else if (shouldTrimMessagesOnLoad && current) {
+    handleGetLoggedMessages(root.current);
+
+    if (shouldTrimMessagesOnLoad && current) {
       // Check for trimmed messages
       status.current = 'bottom';
       trimOldMessages(current.jid);
@@ -178,18 +187,20 @@ const Messages: FC = () => {
     if (root.current) {
       prevScrollHeight = root.current.scrollHeight;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current, getChannelLogs, trimOldMessages, setChannelScrollPosition]);
 
+  // useEffect for handling scrolling
   useEffect(() => {
     const rootCurrent = root.current;
     // Event listener functions
     const handleScroll = (event: any) => {
       if (
-        event.target.scrollHeight === prevScrollHeight ||
-        (!prevCurrent || (current && prevCurrent.jid !== current.jid))
+        !isLoading.current &&
+        (event.target.scrollHeight === prevScrollHeight ||
+          (!prevCurrent || (current && prevCurrent.jid !== current.jid)))
       ) {
         scrollPosition.current = event.target.scrollTop;
-        console.log('handleScroll ', event.target.scrollTop, isLoading.current);
         if (
           event.target.scrollTop + event.target.offsetHeight >=
             event.target.scrollHeight - 5 &&
@@ -202,26 +213,8 @@ const Messages: FC = () => {
         } else {
           status.current = 'scrolled';
         }
-        const shouldRequestLogsOnScroll =
-          !isLoading.current &&
-          current &&
-          !current.hasNoMoreLogs &&
-          !current.isRequestingLogs &&
-          event.target.scrollTop === 0;
-        // get logged message if at top
-        if (shouldRequestLogsOnScroll) {
-          positionBeforeGettingLogs = event.target.scrollHeight;
-          console.log('getting logs on scroll');
-          getChannelLogs(current);
-          if (
-            root.current &&
-            root.current.offsetHeight !== root.current.scrollHeight
-          ) {
-            status.current = 'previous-position';
-          } else {
-            status.current = 'bottom';
-          }
-        }
+
+        handleGetLoggedMessages(event.target);
       }
     };
     const handleWindowResize = (event: any) => {
@@ -240,13 +233,14 @@ const Messages: FC = () => {
       }
       window.removeEventListener('resize', handleWindowResize);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    prevCurrent,
     current,
     newMessageMarkerRef,
     getChannelLogs,
     trimOldMessages,
     setChannelScrollPosition,
-    prevCurrent,
   ]);
 
   return (
@@ -294,7 +288,7 @@ const Messages: FC = () => {
           }
 
           const returnVal = (
-            <React.Fragment key={index}>
+            <React.Fragment key={message.id}>
               {showDate && (
                 <div className={classes.marker}>
                   <Typography className={classes.markerValue}>
