@@ -10,7 +10,6 @@ import { TRIM_AT } from '../../actions/channel';
 import IMessage from '../../interfaces/IMessage';
 import { usePrevious } from '../../utils/usePrevious';
 
-let prevScrollHeight: any;
 let prevWindowInnerWidth: any;
 let positionBeforeGettingLogs: any;
 
@@ -73,7 +72,9 @@ const Messages: FC = () => {
           0 &&
         root.current &&
         root.current.offsetHeight !== root.current.scrollHeight;
-      const shouldUpdateToNewMessageMarker = newMessageMarkerRef.current;
+      const shouldUpdateToNewMessageMarker =
+        newMessageMarkerRef.current &&
+        (!prevCurrent || prevCurrent.jid !== current.jid);
       const shouldUpdateToSavedPosition =
         current &&
         current.scrollPosition !== -1 &&
@@ -82,6 +83,7 @@ const Messages: FC = () => {
         !prevCurrent ||
         prevCurrent.jid !== current.jid ||
         (current &&
+          prevCurrent.messages.length !== current.messages.length &&
           current.messages.length >= 0 &&
           current.messages[current.messages.length - 1].isMe);
 
@@ -95,10 +97,17 @@ const Messages: FC = () => {
       } else if (shouldUpdateToBottom) {
         newStatus = 'bottom';
       }
+
       switch (newStatus) {
         case 'previous-position':
           root.current.scrollTop =
             root.current.scrollHeight - positionBeforeGettingLogs;
+          if (
+            root.current.scrollTop + root.current.offsetHeight >=
+            root.current.scrollHeight - 5
+          ) {
+            newStatus = 'bottom';
+          }
           break;
         case 'new-message-marker':
           if (newMessageMarkerRef.current) {
@@ -117,8 +126,15 @@ const Messages: FC = () => {
         default:
           break;
       }
+
+      if (
+        root.current.scrollTop + root.current.offsetHeight >=
+        root.current.scrollHeight - 5
+      ) {
+        newStatus = 'bottom';
+      }
+
       status.current = newStatus;
-      prevScrollHeight = root.current.scrollHeight;
     }
   };
 
@@ -182,10 +198,6 @@ const Messages: FC = () => {
       status.current = 'bottom';
       trimOldMessages(current.jid);
     }
-
-    if (root.current) {
-      prevScrollHeight = root.current.scrollHeight;
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current, getChannelLogs, trimOldMessages, setChannelScrollPosition]);
 
@@ -194,16 +206,11 @@ const Messages: FC = () => {
     const rootCurrent = root.current;
     // Event listener functions
     const handleScroll = (event: any) => {
-      if (
-        !isLoading.current &&
-        (event.target.scrollHeight === prevScrollHeight ||
-          (!prevCurrent || (current && prevCurrent.jid !== current.jid)))
-      ) {
+      if (!isLoading.current) {
         scrollPosition.current = event.target.scrollTop;
         if (
           event.target.scrollTop + event.target.offsetHeight >=
-            event.target.scrollHeight - 5 &&
-          (!prevCurrent || (current && current.jid === prevCurrent.jid))
+          event.target.scrollHeight - 5
         ) {
           status.current = 'bottom';
           if (current && current.messages.length >= TRIM_AT) {
