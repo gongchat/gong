@@ -119,7 +119,6 @@ const Messages: FC = () => {
       }
       status.current = newStatus;
       prevScrollHeight = root.current.scrollHeight;
-      console.log(status.current);
     }
   };
 
