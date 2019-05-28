@@ -34,7 +34,6 @@ export const roomActions = {
       unreadMessages: 0,
       hasUnreadMentionMe: false,
       hasNoMoreLogs: undefined,
-      isRequestingLogs: false,
       scrollPosition: -1,
       lastReadTimestamp: undefined,
       lastReadMessageId: '',
@@ -69,7 +68,6 @@ export const roomActions = {
         unreadMessages: 0,
         hasUnreadMentionMe: false,
         hasNoMoreLogs: undefined,
-        isRequestingLogs: false,
         scrollPosition: -1,
       };
       return {
@@ -103,7 +101,6 @@ export const roomActions = {
         unreadMessages: 0,
         hasUnreadMentionMe: false,
         hasNoMoreLogs: undefined,
-        isRequestingLogs: false,
         scrollPosition: -1,
         lastReadTimestamp: undefined,
         lastReadMessageId: '',
@@ -187,7 +184,6 @@ export const addSavedRoomsToChannels = (state: IState): IState => {
           unreadMessages: 0,
           hasUnreadMentionMe: false,
           hasNoMoreLogs: undefined,
-          isRequestingLogs: false,
           scrollPosition: -1,
           lastReadTimestamp: moment(roomSaved.lastReadTimestamp),
           lastReadMessageId: roomSaved.lastReadMessageId,

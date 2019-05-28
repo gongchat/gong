@@ -115,31 +115,7 @@ export const channelActions = {
           : '',
       channel,
     });
-
-    const current =
-      state.current && state.current.jid === channel.jid
-        ? {
-            ...state.current,
-            isRequestingLogs: true,
-          }
-        : state.current;
-
-    const channels = state.channels.map((c: IChannel) => {
-      if (c.jid === channel.jid) {
-        return {
-          ...c,
-          isRequestingLogs: true,
-        };
-      } else {
-        return c;
-      }
-    });
-
-    return {
-      ...state,
-      current,
-      channels,
-    };
+    return state;
   },
   setChannelLogs(payload: any, state: IState): IState {
     const { channelJid, messages, hasNoMoreLogs } = payload;
