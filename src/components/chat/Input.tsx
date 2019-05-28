@@ -112,15 +112,15 @@ const Input: FC = () => {
       prevCurrent.inputText !== inputText.current
     ) {
       setInputText(prevCurrent.jid, inputText.current);
-      inputText.current = current ? current.inputText : '';
     }
-
+    
     // Handle new channel
     if (
       (current && !prevCurrent) ||
       (current && prevCurrent.jid !== current.jid)
     ) {
       setText(current.inputText);
+      inputText.current = current ? current.inputText : '';
       // This must be in useEffect so the inputRef is initialized before calling
       // the block below.
       if (inputRef.current) {
