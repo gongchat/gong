@@ -78,24 +78,33 @@ export const mapSettingsSavedToSettings = (
       settings.soundVolume === undefined
         ? defaultSettings.soundVolume
         : settings.soundVolume,
+    // play audio
     playAudioOnGroupchat: settings.playAudioOnGroupchat,
     playAudioOnChat: settings.playAudioOnChat,
     playAudioOnMentionMe:
       settings.playAudioOnMentionMe === 'all'
         ? 'always'
         : settings.playAudioOnMentionMe,
+    // flash frame
     flashFrameOnGroupchat:
       settings.flashFrameOnGroupchat === undefined
         ? defaultSettings.flashFrameOnGroupchat
+        : settings.flashFrameOnGroupchat === 'always'
+        ? 'unread'
         : settings.flashFrameOnGroupchat,
     flashFrameOnChat:
       settings.flashFrameOnChat === undefined
         ? defaultSettings.flashFrameOnChat
+        : settings.flashFrameOnChat === 'always'
+        ? 'unread'
         : settings.flashFrameOnChat,
     flashFrameOnMentionMe:
       settings.flashFrameOnMentionMe === undefined
         ? defaultSettings.flashFrameOnMentionMe
+        : settings.flashFrameOnMentionMe === 'always'
+        ? 'unread'
         : settings.flashFrameOnMentionMe,
+    // flash menu bar
     flashMenuBarOnGroupchat: settings.flashMenuBarOnGroupchat,
     flashMenuBarOnGroupchatFrequency: settings.flashMenuBarOnGroupchatFrequency,
     flashMenuBarOnMentionMe: settings.flashMenuBarOnMentionMe,
@@ -105,38 +114,6 @@ export const mapSettingsSavedToSettings = (
   };
   return mappedSettings;
 };
-
-// const mapSettingsToSettingsSaved = (
-//   settings: ISettings,
-//   password: string
-// ): ISettingsSaved => {
-//   const mappedSettings: ISettingsSaved = {
-//     jid: settings.jid,
-//     domain: settings.domain,
-//     username: settings.username,
-//     resource: settings.resource,
-//     port: settings.port,
-//     systemNotificationOnGroupchat: settings.systemNotificationOnGroupchat,
-//     systemNotificationOnMentionMe: settings.systemNotificationOnMentionMe,
-//     systemNotificationOnChat: settings.systemNotificationOnChat,
-//     minimizeToTrayOnClose: settings.minimizeToTrayOnClose,
-//     renderVideos: settings.renderVideos,
-//     renderGetYarn: settings.renderGetYarn,
-//     renderImages: settings.renderImages,
-//     soundName: settings.soundName,
-//     playAudioOnGroupchat: settings.playAudioOnGroupchat,
-//     playAudioOnChat: settings.playAudioOnChat,
-//     playAudioOnMentionMe: settings.playAudioOnMentionMe,
-//     flashMenuBarOnGroupchat: settings.flashMenuBarOnGroupchat,
-//     flashMenuBarOnGroupchatFrequency: settings.flashMenuBarOnGroupchatFrequency,
-//     flashMenuBarOnMentionMe: settings.flashMenuBarOnMentionMe,
-//     flashMenuBarOnMentionMeFrequency: settings.flashMenuBarOnMentionMeFrequency,
-//     flashMenuBarOnChat: settings.flashMenuBarOnChat,
-//     flashMenuBarOnChatFrequency: settings.flashMenuBarOnChatFrequency,
-//     password,
-//   };
-//   return mappedSettings;
-// };
 
 const sendSettingsToElectron = (settings: ISettings) => {
   if (settings.minimizeToTrayOnClose !== undefined) {

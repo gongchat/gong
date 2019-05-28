@@ -200,7 +200,6 @@ const NotificationSettings: FC = () => {
               />
             }
           >
-            <MenuItem value="always">Always</MenuItem>
             <MenuItem value="unread">Unread</MenuItem>
             <MenuItem value="never">Never</MenuItem>
           </Select>
@@ -219,7 +218,6 @@ const NotificationSettings: FC = () => {
               />
             }
           >
-            <MenuItem value="always">Always</MenuItem>
             <MenuItem value="unread">Unread</MenuItem>
             <MenuItem value="never">Never</MenuItem>
           </Select>
@@ -233,7 +231,6 @@ const NotificationSettings: FC = () => {
               <FilledInput name="flashFrameOnChat" id="flashFrameOnChat" />
             }
           >
-            <MenuItem value="always">Always</MenuItem>
             <MenuItem value="unread">Unread</MenuItem>
             <MenuItem value="never">Never</MenuItem>
           </Select>

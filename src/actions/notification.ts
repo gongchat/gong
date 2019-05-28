@@ -135,7 +135,8 @@ const shouldPlayAudio = (
       // on message
       if (
         settings.playAudioOnGroupchat !== 'never' &&
-        ((settings.playAudioOnGroupchat === 'unread' && !message.isRead) ||
+        ((settings.playAudioOnGroupchat === 'unread' &&
+          (!message.isRead || !document.hasFocus())) ||
           settings.playAudioOnGroupchat === 'always')
       ) {
         return true;
@@ -144,7 +145,8 @@ const shouldPlayAudio = (
       if (
         message.isMentioningMe &&
         settings.playAudioOnMentionMe !== 'never' &&
-        ((settings.playAudioOnMentionMe === 'unread' && !message.isRead) ||
+        ((settings.playAudioOnMentionMe === 'unread' &&
+          (!message.isRead || !document.hasFocus())) ||
           settings.playAudioOnMentionMe === 'always')
       ) {
         return true;
@@ -154,7 +156,8 @@ const shouldPlayAudio = (
     if (type === 'chat') {
       if (
         settings.playAudioOnChat !== 'never' &&
-        ((settings.playAudioOnChat === 'unread' && !message.isRead) ||
+        ((settings.playAudioOnChat === 'unread' &&
+          (!message.isRead || !document.hasFocus())) ||
           settings.playAudioOnChat === 'always')
       ) {
         return true;
@@ -182,8 +185,8 @@ const shouldFlashFrame = (
       // on message
       if (
         settings.flashFrameOnGroupchat !== 'never' &&
-        ((settings.flashFrameOnGroupchat === 'unread' && !message.isRead) ||
-          settings.flashFrameOnGroupchat === 'always')
+        (settings.flashFrameOnGroupchat === 'unread' &&
+          (!message.isRead || !document.hasFocus()))
       ) {
         return true;
       }
@@ -191,8 +194,8 @@ const shouldFlashFrame = (
       if (
         message.isMentioningMe &&
         settings.flashFrameOnMentionMe !== 'never' &&
-        ((settings.flashFrameOnMentionMe === 'unread' && !message.isRead) ||
-          settings.flashFrameOnMentionMe === 'always')
+        (settings.flashFrameOnMentionMe === 'unread' &&
+          (!message.isRead || !document.hasFocus()))
       ) {
         return true;
       }
@@ -201,8 +204,8 @@ const shouldFlashFrame = (
     if (type === 'chat') {
       if (
         settings.flashFrameOnChat !== 'never' &&
-        ((settings.flashFrameOnChat === 'unread' && !message.isRead) ||
-          settings.flashFrameOnChat === 'always')
+        (settings.flashFrameOnChat === 'unread' &&
+          (!message.isRead || !document.hasFocus()))
       ) {
         return true;
       }
@@ -235,7 +238,7 @@ const shouldSendSystemNotifications = (
       if (
         settings.systemNotificationOnGroupchat !== 'never' &&
         ((settings.systemNotificationOnGroupchat === 'unread' &&
-          !message.isRead) ||
+          (!message.isRead || !document.hasFocus())) ||
           settings.systemNotificationOnGroupchat === 'always')
       ) {
         return true;
@@ -245,7 +248,7 @@ const shouldSendSystemNotifications = (
         message.isMentioningMe &&
         settings.systemNotificationOnMentionMe !== 'never' &&
         ((settings.systemNotificationOnMentionMe === 'unread' &&
-          !message.isRead) ||
+          (!message.isRead || !document.hasFocus())) ||
           settings.systemNotificationOnMentionMe === 'always')
       ) {
         return true;
@@ -255,7 +258,8 @@ const shouldSendSystemNotifications = (
     if (type === 'chat') {
       if (
         settings.systemNotificationOnChat !== 'never' &&
-        ((settings.systemNotificationOnChat === 'unread' && !message.isRead) ||
+        ((settings.systemNotificationOnChat === 'unread' &&
+          (!message.isRead || !document.hasFocus())) ||
           settings.systemNotificationOnChat === 'always')
       ) {
         return true;

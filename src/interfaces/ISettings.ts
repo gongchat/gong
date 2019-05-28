@@ -7,13 +7,13 @@ export default interface ISettings {
 
   minimizeToTrayOnClose: boolean;
 
-  systemNotificationOnGroupchat: string; // always, unread, never TODO: instead of unread maybe not-focused
+  systemNotificationOnGroupchat: string; // always, unread, never
   systemNotificationOnMentionMe: string; // always, unread, never
   systemNotificationOnChat: string; // always, unread, never
 
-  flashFrameOnGroupchat: string; // always, unread, never
-  flashFrameOnMentionMe: string; // always, unread, never
-  flashFrameOnChat: string; // always, unread, never
+  flashFrameOnGroupchat: string; // unread, never
+  flashFrameOnMentionMe: string; // unread, never
+  flashFrameOnChat: string; // unread, never
 
   renderVideos: boolean;
   renderGetYarn: boolean;
