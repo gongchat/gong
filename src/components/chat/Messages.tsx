@@ -102,12 +102,6 @@ const Messages: FC = () => {
         case 'previous-position':
           root.current.scrollTop =
             root.current.scrollHeight - positionBeforeGettingLogs;
-          if (
-            root.current.scrollTop + root.current.offsetHeight >=
-            root.current.scrollHeight - 5
-          ) {
-            newStatus = 'bottom';
-          }
           break;
         case 'new-message-marker':
           if (newMessageMarkerRef.current) {
