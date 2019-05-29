@@ -19,7 +19,7 @@ const GithubIcon: FC = () => {
   );
 };
 
-const useStyles = makeStyles(
+const useStyles: any = makeStyles(
   (theme: any): any => ({
     gongContainer: {
       position: 'relative',

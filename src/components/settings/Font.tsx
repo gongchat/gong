@@ -147,7 +147,7 @@ const Font: FC = () => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   slider: { position: 'relative' },
 }));
 

@@ -85,9 +85,9 @@ const Group: FC<IProps> = ({
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1),
   },
   panel: {
     backgroundColor: 'transparent',
@@ -98,9 +98,9 @@ const useStyles = makeStyles((theme: any) => ({
     },
   },
   heading: {
-    paddingTop: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit * 0.5,
-    paddingRight: theme.spacing.unit,
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(0.5),
+    paddingRight: theme.spacing(1),
     paddingLeft: 0,
     margin: '0',
   },
@@ -136,7 +136,7 @@ const useStyles = makeStyles((theme: any) => ({
     marginRight: '25px',
   },
   details: {
-    padding: theme.spacing.unit * 0.5,
+    padding: theme.spacing(0.5),
     flexDirection: 'column',
   },
   iconButton: {
@@ -145,7 +145,7 @@ const useStyles = makeStyles((theme: any) => ({
   },
   badge: {
     width: '20px',
-    marginRight: 8 + theme.spacing.unit * 0.5,
+    marginRight: 8 + theme.spacing(0.5),
     borderRadius: '5px',
   },
   badgeFlash: {

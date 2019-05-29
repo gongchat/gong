@@ -21,15 +21,15 @@ const BaseSection: FC<IProps> = ({ title, children }: IProps) => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit,
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
     display: 'flex',
     flexDirection: 'column',
     flexShrink: 0,
     '& > *': {
-      marginBottom: theme.spacing.unit * 2,
+      marginBottom: theme.spacing(2),
       width: '500px',
     },
     '& input': {

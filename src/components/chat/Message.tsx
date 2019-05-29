@@ -73,16 +73,16 @@ const Message: FC<IProps> = ({
 
     setMessageBody(formattedMessageBody);
   }, [body, onMessageLoad]);
-  
+
   useEffect(() => {
     setIsLoaded(true);
-  }, [messageBody])
-  
+  }, [messageBody]);
+
   useEffect(() => {
     if (isLoaded) {
       onMessageLoad();
     }
-  }, [isLoaded, onMessageLoad])
+  }, [isLoaded, onMessageLoad]);
 
   return (
     <div className={classes.root}>
@@ -185,7 +185,7 @@ const Message: FC<IProps> = ({
   );
 };
 
-const useStyles = makeStyles(
+const useStyles: any = makeStyles(
   (theme: any): any => ({
     root: {
       width: '100%',
@@ -203,7 +203,7 @@ const useStyles = makeStyles(
     },
     timestamp: {
       color: theme.palette.text.secondary,
-      paddingRight: theme.spacing.unit,
+      paddingRight: theme.spacing(1),
       fontSize: '0.7rem',
       opacity: 0.5,
       whiteSpace: 'nowrap',
@@ -223,7 +223,7 @@ const useStyles = makeStyles(
       display: 'table-cell',
     },
     body: {
-      paddingLeft: theme.spacing.unit,
+      paddingLeft: theme.spacing(1),
       color: theme.palette.text.primary,
       overflowWrap: 'break-word',
       wordBreak: 'break-word',
@@ -242,29 +242,29 @@ const useStyles = makeStyles(
     },
     video: {
       flex: '0 1 100%',
-      padding: theme.spacing.unit * 2,
-      paddingLeft: theme.spacing.unit * 8,
+      padding: theme.spacing(2),
+      paddingLeft: theme.spacing(8),
     },
     getYarn: {
       flex: '0 1 100%',
-      padding: theme.spacing.unit * 2,
-      paddingLeft: theme.spacing.unit * 8,
+      padding: theme.spacing(2),
+      paddingLeft: theme.spacing(8),
       overflow: 'hidden',
       '& iframe': {
         border: 'none',
       },
     },
     image: {
-      margin: theme.spacing.unit * 2,
-      marginLeft: theme.spacing.unit * 8,
+      margin: theme.spacing(2),
+      marginLeft: theme.spacing(8),
       width: 300,
       '& img': {
         width: '100%',
       },
     },
     gifv: {
-      margin: theme.spacing.unit * 2,
-      marginLeft: theme.spacing.unit * 8,
+      margin: theme.spacing(2),
+      marginLeft: theme.spacing(8),
     },
     me: {
       color: theme.palette.text.secondary,

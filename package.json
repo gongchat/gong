@@ -20,10 +20,10 @@
     "test": "react-scripts test"
   },
   "dependencies": {
-    "@material-ui/core": "3.9.3",
-    "@material-ui/icons": "3.0.2",
-    "@material-ui/lab": "3.0.0-alpha.30",
-    "@material-ui/styles": "3.0.0-alpha.10",
+    "@material-ui/core": "4.0.1",
+    "@material-ui/icons": "4.0.1",
+    "@material-ui/lab": "4.0.0-alpha.14",
+    "@material-ui/styles": "4.0.1",
     "@techempower/react-governor": "0.3.0",
     "crypto-js": "3.1.9-1",
     "dictionary-en-us": "2.1.1",

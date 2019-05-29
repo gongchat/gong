@@ -134,7 +134,7 @@ const Login: FC<IProps> = () => {
   }
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
     height: '100%',
     display: 'flex',
@@ -143,8 +143,8 @@ const useStyles = makeStyles((theme: any) => ({
   title: {
     fontSize: '2rem',
     textAlign: 'center',
-    marginTop: theme.spacing.unit * 4,
-    marginBottom: theme.spacing.unit * 4,
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(4),
   },
   form: {
     overflowY: 'auto',
@@ -156,7 +156,7 @@ const useStyles = makeStyles((theme: any) => ({
     flexShrink: 0,
     flex: 1,
     '& div, & button': {
-      marginBottom: theme.spacing.unit * 0.5,
+      marginBottom: theme.spacing(0.5),
       width: '100%',
       maxWidth: '400px',
     },
@@ -165,7 +165,7 @@ const useStyles = makeStyles((theme: any) => ({
     display: 'flex',
     flexDirection: 'column',
     '& > *:last-child': {
-      marginBottom: theme.spacing.unit * 4,
+      marginBottom: theme.spacing(4),
     },
   },
   input: {
@@ -173,13 +173,13 @@ const useStyles = makeStyles((theme: any) => ({
   },
   helperText: {
     margin: 0,
-    marginBottom: theme.spacing.unit / 2,
+    marginBottom: theme.spacing(0.5),
   },
   button: {
     flexShrink: 0,
   },
   error: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(1),
   },
 }));
 

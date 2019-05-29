@@ -70,7 +70,7 @@ const Channel: FC<IProps> = ({ channel, isSelected, prefix }: IProps) => {
         >
           <Typography
             className={classes.hashtag}
-            color={channel.connectionError ? 'error' : 'default'}
+            color={channel.connectionError ? 'error' : 'textPrimary'}
           >
             {prefix}
           </Typography>
@@ -126,7 +126,7 @@ const Channel: FC<IProps> = ({ channel, isSelected, prefix }: IProps) => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
     display: 'flex',
     flexWrap: 'nowrap',
@@ -154,10 +154,10 @@ const useStyles = makeStyles((theme: any) => ({
     flexWrap: 'nowrap',
     alignItems: 'center',
     flexGrow: 1,
-    paddingLeft: theme.spacing.unit,
+    paddingLeft: theme.spacing(1),
     paddingRight: 0,
-    paddingTop: theme.spacing.unit / 2,
-    paddingBottom: theme.spacing.unit / 2,
+    paddingTop: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.5),
   },
   name: {
     flexGrow: 1,
@@ -184,19 +184,19 @@ const useStyles = makeStyles((theme: any) => ({
   },
   hashtag: {
     opacity: 0.5,
-    marginRight: theme.spacing.unit / 2,
+    marginRight: theme.spacing(0.5),
     fontWeight: 'bold',
   },
   close: {
     cursor: 'pointer',
     opacity: 0.5,
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
     display: 'flex',
     alignItems: 'center',
     paddingLeft: 0,
-    paddingRight: theme.spacing.unit,
-    paddingTop: theme.spacing.unit / 2,
-    paddingBottom: theme.spacing.unit / 2,
+    paddingRight: theme.spacing(1),
+    paddingTop: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.5),
     '&:hover': {
       opacity: 1,
     },

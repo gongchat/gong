@@ -23,7 +23,7 @@ const LoadingIcon: FC = () => {
   );
 };
 
-const useStyles = makeStyles(
+const useStyles: any = makeStyles(
   (theme: any): any => ({
     root: {
       height: '225px',

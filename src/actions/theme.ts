@@ -97,7 +97,7 @@ export const themeActions = {
     } else if (props[0] === 'palette') {
       updatePalette(theme, props, lastProp, item.value);
     } else if (lastProp === 'unit') {
-      theme.spacing.unit = item.value;
+      theme.spacing = item.value;
     } else {
       theme[lastProp] = item.value;
     }

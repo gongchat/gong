@@ -48,7 +48,7 @@ const SnackbarNotifications: FC = () => {
   return null;
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   notification: {
     [theme.breakpoints.down('md')]: {
       left: 'auto',

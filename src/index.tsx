@@ -1,6 +1,3 @@
-// TODO: Remove on material-ui@4.0.0
-import './bootstrap';
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';

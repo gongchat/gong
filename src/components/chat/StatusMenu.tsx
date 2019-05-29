@@ -72,9 +72,9 @@ const StatusMenu: FC<IProps> = ({ open, anchorEl, onClose }: IProps) => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
-    width: theme.sidebarWidth - theme.spacing.unit * 4,
+    width: theme.sidebarWidth - theme.spacing(4),
   },
   item: {
     cursor: 'pointer',
@@ -85,21 +85,21 @@ const useStyles = makeStyles((theme: any) => ({
     },
   },
   rowOne: {
-    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
     display: 'flex',
     flexWrap: 'nowrap',
     alignItems: 'center',
   },
   status: {
-    width: theme.spacing.unit * 4,
+    width: theme.spacing(4),
   },
   title: {
-    // marginLeft: theme.spacing.unit,
+    // marginLeft: theme.spacing(1),
   },
   description: {
-    marginLeft: theme.spacing.unit * 4,
+    marginLeft: theme.spacing(4),
     opacity: 0.7,
-    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
     paddingTop: 0,
   },
 }));

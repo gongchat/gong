@@ -239,19 +239,19 @@ const Discover: FC = () => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   dialog: {
     top: '23px',
   },
   dialogTitle: {
     padding: 0,
-    paddingLeft: theme.spacing.unit,
+    paddingLeft: theme.spacing(1),
   },
   title: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1),
     textTransform: 'uppercase',
     fontWeight: 'bold',
     fontSize: '12pt',
@@ -281,8 +281,8 @@ const useStyles = makeStyles((theme: any) => ({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit,
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   },
   helperText: {
     marginLeft: 0,

@@ -40,15 +40,15 @@ const ChannelUsers: FC<IProps> = ({ users, title }: IProps) => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {},
   title: {
     textTransform: 'uppercase',
     opacity: 0.5,
-    paddingBottom: theme.spacing.unit / 2,
+    paddingBottom: theme.spacing(0.5),
   },
   users: {
-    paddingBottom: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing(2),
   },
 }));
 

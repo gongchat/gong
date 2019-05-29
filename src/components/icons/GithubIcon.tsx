@@ -22,7 +22,7 @@ const GithubIcon: FC = () => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   svg: {
     padding: 3,
   },

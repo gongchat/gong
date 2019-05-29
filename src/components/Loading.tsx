@@ -98,7 +98,7 @@ const Loading: FC<IProps> = () => {
   }
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
     height: '100%',
     display: 'flex',
@@ -127,19 +127,19 @@ const useStyles = makeStyles((theme: any) => ({
   message: {
     color: 'white',
     textAlign: 'center',
-    margin: theme.spacing.unit / 3,
+    margin: theme.spacing(1/3),
   },
   version: {
     color: 'white',
     textAlign: 'center',
     opacity: 0.25,
-    margin: theme.spacing.unit / 2,
+    margin: theme.spacing(0.5),
     fontSize: '0.9rem',
   },
   goToLogin: {
     display: 'flex',
     justifyContent: 'center',
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
   },
 }));
 

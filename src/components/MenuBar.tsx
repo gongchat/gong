@@ -123,7 +123,7 @@ const MenuBar: FC<IProps> = ({ showOffline }: IProps) => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
     background: theme.palette.backgroundAccent,
   },
@@ -134,8 +134,8 @@ const useStyles = makeStyles((theme: any) => ({
     '& $text, & $menu': {
       display: 'flex',
       alignItems: 'center',
-      paddingLeft: theme.spacing.unit * 2,
-      paddingRight: theme.spacing.unit * 2,
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
     },
   },
   text: {
@@ -144,7 +144,7 @@ const useStyles = makeStyles((theme: any) => ({
     textTransform: 'uppercase',
     '& p': {
       fontWeight: 'bold',
-      marginRight: theme.spacing.unit * 2,
+      marginRight: theme.spacing(2),
     },
   },
   menu: {

@@ -27,7 +27,7 @@ const Status: FC<IProps> = ({ status }: IProps) => {
   }
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
     width: 12,
     height: 12,

@@ -103,7 +103,7 @@ const SidebarLeft: FC = () => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
     flexGrow: 1,
     display: 'flex',
@@ -121,8 +121,8 @@ const useStyles = makeStyles((theme: any) => ({
     background: theme.palette.background.default,
   },
   me: {
-    paddingLeft: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
     background: theme.palette.backgroundAccent,
     width: theme.sidebarWidth,
     display: 'flex',

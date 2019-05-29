@@ -179,7 +179,7 @@ const UserDetail: FC<IProps> = ({ user }: IProps) => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
     minWidth: '500px',
   },
@@ -188,10 +188,10 @@ const useStyles = makeStyles((theme: any) => ({
     flexWrap: 'nowrap',
     alignItems: 'center',
     backgroundColor: theme.palette.backgroundAccent,
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
   },
   headerText: {
-    marginLeft: theme.spacing.unit * 2,
+    marginLeft: theme.spacing(2),
   },
   avatar: {
     height: '64px',
@@ -202,7 +202,7 @@ const useStyles = makeStyles((theme: any) => ({
     opacity: 0.7,
   },
   content: {
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
     display: 'flex',
     flexWrap: 'nowrap',
     overflowY: 'auto',
@@ -211,7 +211,7 @@ const useStyles = makeStyles((theme: any) => ({
     },
   },
   section: {
-    paddingBottom: theme.spacing.unit,
+    paddingBottom: theme.spacing(1),
   },
   name: {
     opacity: 0.5,

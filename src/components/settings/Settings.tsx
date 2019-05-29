@@ -175,7 +175,7 @@ const Settings: FC = () => {
   }
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   dialog: {
     top: '23px',
   },
@@ -192,9 +192,9 @@ const useStyles = makeStyles((theme: any) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-end',
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
     '& p': {
-      padding: theme.spacing.unit,
+      padding: theme.spacing(1),
     },
   },
   icon: {
@@ -220,7 +220,7 @@ const useStyles = makeStyles((theme: any) => ({
   close: {
     position: 'absolute',
     width: '50px',
-    top: theme.spacing.unit * 4,
+    top: theme.spacing(4),
     left: 585,
     '& button': {
       position: 'fixed',
@@ -230,10 +230,10 @@ const useStyles = makeStyles((theme: any) => ({
     padding: 0,
   },
   section: {
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
     maxWidth: '500px',
     '& p': {
-      paddingBottom: theme.spacing.unit * 2,
+      paddingBottom: theme.spacing(2),
     },
   },
   version: {

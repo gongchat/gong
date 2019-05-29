@@ -21,18 +21,18 @@ const BasePage: FC<IProps> = ({ title, children }: IProps) => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(1),
     marginLeft: '16px', // leave hard coded for when spacing is set to 0
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
     display: 'flex',
     flexDirection: 'column',
     overflowX: 'hidden',
     flexGrow: 1,
   },
   title: {
-    paddingBottom: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing(2),
     textTransform: 'uppercase',
   },
 }));

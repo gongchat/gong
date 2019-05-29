@@ -142,7 +142,7 @@ const Main: FC<IProps> = () => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',

@@ -139,12 +139,12 @@ const Theme: FC = () => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   left: {
     position: 'relative',
     maxWidth: '190px',
     overflowY: 'auto',
-    padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit}px`,
+    padding: `${theme.spacing(5)}px ${theme.spacing(1)}px`,
   },
   itemText: {
     fontSize: '9px',
@@ -153,12 +153,12 @@ const useStyles = makeStyles((theme: any) => ({
   picker: {
     flexGrow: 1,
     overflowY: 'auto',
-    padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit * 2}px`,
+    padding: `${theme.spacing(5)}px ${theme.spacing(2)}px`,
   },
   preview: {
-    width: theme.spacing.unit * 2,
-    height: theme.spacing.unit * 2,
-    marginLeft: theme.spacing.unit * 2,
+    width: theme.spacing(2),
+    height: theme.spacing(2),
+    marginLeft: theme.spacing(2),
     flexShrink: 0,
   },
   miniGong: {

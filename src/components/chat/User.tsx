@@ -131,9 +131,9 @@ const User: FC<IProps> = ({ user, isSelected, showAvatar }: IProps) => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1),
     borderRadius: '5px',
     display: 'flex',
     flexWrap: 'nowrap',
@@ -145,7 +145,7 @@ const useStyles = makeStyles((theme: any) => ({
     },
   },
   rootNarrow: {
-    padding: `${theme.spacing.unit / 2}px ${theme.spacing.unit}px`,
+    padding: `${theme.spacing(0.5)}px ${theme.spacing(1)}px`,
   },
   title: {
     flexGrow: 1,
@@ -162,7 +162,7 @@ const useStyles = makeStyles((theme: any) => ({
     width: '30px',
     height: '30px',
     fontSize: '.8rem',
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   },
   status: {
     position: 'absolute',
@@ -172,7 +172,7 @@ const useStyles = makeStyles((theme: any) => ({
     borderRadius: '50%',
   },
   statusOnly: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   },
   active: {
     background: 'rgba(125,125,125,.4)',

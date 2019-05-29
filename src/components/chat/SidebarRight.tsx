@@ -35,9 +35,9 @@ const SidebarRight: FC = () => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     overflowY: 'auto',
     height: '100%',
   },

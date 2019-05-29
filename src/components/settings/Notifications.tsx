@@ -436,10 +436,10 @@ const NotificationSettings: FC = () => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   slider: {
     position: 'relative',
-    paddingBottom: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing(2),
   },
   split: {
     display: 'flex',

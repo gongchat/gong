@@ -92,14 +92,14 @@ const Channels: FC<IProps> = ({
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
     flexGrow: 1,
   },
   title: {
     textTransform: 'uppercase',
     fontWeight: 'bold',
-    paddingBottom: theme.spacing.unit,
+    paddingBottom: theme.spacing(1),
   },
 }));
 

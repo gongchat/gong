@@ -58,13 +58,13 @@ const Me: FC = () => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
     position: 'relative',
   },
   me: {
-    padding: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit * 1.5,
+    padding: theme.spacing(1),
+    paddingBottom: theme.spacing(1.5),
     borderRadius: '5px',
     display: 'flex',
     flexWrap: 'nowrap',
@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme: any) => ({
     width: '30px',
     height: '30px',
     fontSize: '.8rem',
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   },
   status: {
     position: 'absolute',

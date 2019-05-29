@@ -18,7 +18,7 @@ const Chat: FC = () => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
     flexGrow: 1,
     display: 'flex',

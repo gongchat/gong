@@ -64,7 +64,7 @@ const ToolBar: FC = () => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
     display: 'flex',
     flexWrap: 'nowrap',
@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme: any) => ({
   left: {
     width: theme.sidebarWidth,
     borderBottom: '1px solid ' + theme.palette.divider,
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     flexShrink: 0,
     '& p': {
       fontWeight: 'bold',
@@ -86,11 +86,11 @@ const useStyles = makeStyles((theme: any) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     borderBottom: '1px solid ' + theme.palette.divider,
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     display: 'flex',
     alignItems: 'center',
     '& p': {
-      paddingRight: theme.spacing.unit,
+      paddingRight: theme.spacing(1),
     },
   },
   symbol: {

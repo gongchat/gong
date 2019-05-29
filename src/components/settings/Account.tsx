@@ -378,9 +378,9 @@ const Account: FC = () => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
     overflowY: 'auto',
     flexGrow: 1,
   },
@@ -388,7 +388,7 @@ const useStyles = makeStyles((theme: any) => ({
     display: 'flex',
     flexWrap: 'nowrap',
     alignItems: 'center',
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing(2),
   },
   avatarSection: {
     display: 'flex',
@@ -400,11 +400,11 @@ const useStyles = makeStyles((theme: any) => ({
     cursor: 'pointer',
   },
   userInfo: {
-    marginLeft: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 8,
+    marginLeft: theme.spacing(2),
+    paddingBottom: theme.spacing(8),
   },
   section: {
-    paddingBottom: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing(2),
   },
   name: {
     opacity: 0.4,
@@ -414,11 +414,11 @@ const useStyles = makeStyles((theme: any) => ({
     flexDirection: 'column',
     width: '500px',
     '& > div': {
-      paddingBottom: theme.spacing.unit * 2,
+      paddingBottom: theme.spacing(2),
     },
   },
   tabs: {
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing(1),
   },
   fileInput: {
     display: 'none',

@@ -343,12 +343,12 @@ const Messages: FC = () => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
     flexGrow: 1,
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
-    paddingTop: theme.spacing.unit,
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(1),
     overflowY: 'scroll',
     display: 'flex',
     flexDirection: 'column',
@@ -358,8 +358,8 @@ const useStyles = makeStyles((theme: any) => ({
     flexGrow: 1,
   },
   marker: {
-    paddingTop: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
   },
   markerValue: {
     position: 'relative',
@@ -371,7 +371,7 @@ const useStyles = makeStyles((theme: any) => ({
       position: 'absolute',
       transform: 'translateY(-50%) translateX(-50%)',
       backgroundColor: theme.palette.background.paper,
-      padding: `0 ${theme.spacing.unit}px`,
+      padding: `0 ${theme.spacing(1)}px`,
     },
   },
   newMessageMarkerValue: {
@@ -381,10 +381,10 @@ const useStyles = makeStyles((theme: any) => ({
     borderTop: '1px solid ' + theme.palette.divider,
   },
   startOfGroupPadding: {
-    paddingTop: theme.spacing.unit,
+    paddingTop: theme.spacing(1),
   },
   endOfGroupPadding: {
-    paddingBottom: theme.spacing.unit,
+    paddingBottom: theme.spacing(1),
   },
 }));
 

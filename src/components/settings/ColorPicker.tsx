@@ -33,7 +33,7 @@ const ColorPicker: FC<IProps> = ({ item, onSelection }: IProps) => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',

@@ -44,7 +44,7 @@ const SliderMarkers: FC<IProps> = ({
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
     height: '10px',
   },
@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: any) => ({
     '& p': {
       position: 'absolute',
       transform: 'translateX(-50%)',
-      paddingTop: theme.spacing.unit,
+      paddingTop: theme.spacing(1),
     },
   },
   dot: {

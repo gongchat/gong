@@ -22,7 +22,7 @@ const DEFAULT_SPACING = 8;
 const Layout: FC = () => {
   const classes = useStyles();
   const [{ theme }, { setTheme }] = useContext();
-  const [spacing, setSpacing] = useState(theme.spacing.unit);
+  const [spacing, setSpacing] = useState(theme.spacing(1));
   const [sidebarWidth, setSidebarWidth] = useState(theme.sidebarWidth);
   const [sidebarLeftShowAvatar, setSidebarLeftShowAvatar] = useState(
     theme.sidebarLeftShowAvatar
@@ -225,7 +225,7 @@ const Layout: FC = () => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   slider: { position: 'relative' },
 }));
 

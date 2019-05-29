@@ -46,9 +46,9 @@ const MiniGong: FC = () => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
-    width: 190 - theme.spacing.unit * 3, // same as Theme.tsx left maxWidth
+    width: 190 - theme.spacing(3), // same as Theme.tsx left maxWidth
     height: '125px',
     display: 'flex',
     flexDirection: 'column',
@@ -117,29 +117,29 @@ const useStyles = makeStyles((theme: any) => ({
     height: '2px',
     width: '5px',
     backgroundColor: theme.palette.secondary.main,
-    marginRight: theme.spacing.unit / 2,
-    marginBottom: theme.spacing.unit / 2,
+    marginRight: theme.spacing(0.5),
+    marginBottom: theme.spacing(0.5),
   },
   mentionOther: {
     height: '2px',
     width: '5px',
     backgroundColor: theme.palette.primary.main,
-    marginRight: theme.spacing.unit / 2,
-    marginBottom: theme.spacing.unit / 2,
+    marginRight: theme.spacing(0.5),
+    marginBottom: theme.spacing(0.5),
   },
   text: {
     height: '2px',
     width: '10px',
     backgroundColor: theme.palette.text.primary,
-    marginRight: theme.spacing.unit / 2,
-    marginBottom: theme.spacing.unit / 2,
+    marginRight: theme.spacing(0.5),
+    marginBottom: theme.spacing(0.5),
   },
   textShort: {
     height: '2px',
     width: '5px',
     backgroundColor: theme.palette.text.primary,
-    marginRight: theme.spacing.unit / 2,
-    marginBottom: theme.spacing.unit / 2,
+    marginRight: theme.spacing(0.5),
+    marginBottom: theme.spacing(0.5),
   },
   inputContainer: {
     borderTop: '1px solid',

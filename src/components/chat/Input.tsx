@@ -195,11 +195,11 @@ const Input: FC = () => {
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
     position: 'relative',
     borderTop: '1px solid ' + theme.palette.divider,
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
   },
   input: {
     display: 'flex',
@@ -211,8 +211,8 @@ const useStyles = makeStyles((theme: any) => ({
   },
   textField: {
     width: '100%',
-    borderTopLeftRadius: theme.spacing.unit * 0.5,
-    borderBottomLeftRadius: theme.spacing.unit * 0.5,
+    borderTopLeftRadius: theme.spacing(0.5),
+    borderBottomLeftRadius: theme.spacing(0.5),
     borderColor: `${theme.palette.backgroundInput} !important`,
     backgroundColor: theme.palette.backgroundInput,
   },
@@ -224,8 +224,8 @@ const useStyles = makeStyles((theme: any) => ({
   inputRightInline: {
     display: 'flex',
     alignItems: 'flex-start',
-    borderTopRightRadius: theme.spacing.unit * 0.5,
-    borderBottomRightRadius: theme.spacing.unit * 0.5,
+    borderTopRightRadius: theme.spacing(0.5),
+    borderBottomRightRadius: theme.spacing(0.5),
     borderColor: `${theme.palette.backgroundInput} !important`,
     backgroundColor: theme.palette.backgroundInput,
   },

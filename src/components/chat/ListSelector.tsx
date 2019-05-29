@@ -157,25 +157,25 @@ const ListSelector: FC<IProps> = ({
   );
 };
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles: any = makeStyles((theme: any) => ({
   root: {
     borderTopLeftRadius: '5px',
     borderTopRightRadius: '5px',
     background: theme.palette.background.default,
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1),
     position: 'absolute',
-    bottom: `calc(100% - ${theme.spacing.unit * 2}px)`,
-    left: theme.spacing.unit * 2,
-    right: theme.spacing.unit * 2,
+    bottom: `calc(100% - ${theme.spacing(2)}px)`,
+    left: theme.spacing(2),
+    right: theme.spacing(2),
   },
   term: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
   },
   current: {
     backgroundColor: theme.palette.action.hover,
   },
   list: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(1),
     maxHeight: '200px',
     overflowY: 'auto',
   },
@@ -183,14 +183,14 @@ const useStyles = makeStyles((theme: any) => ({
     cursor: 'pointer',
     display: 'flex',
     flexWrap: 'nowrap',
-    padding: theme.spacing.unit / 2,
+    padding: theme.spacing(0.5),
     '&:hover': {
       backgroundColor: theme.palette.action.hover,
     },
   },
   icon: {
-    marginRight: theme.spacing.unit,
-    width: theme.spacing.unit * 2,
+    marginRight: theme.spacing(1),
+    width: theme.spacing(2),
   },
 }));
 
