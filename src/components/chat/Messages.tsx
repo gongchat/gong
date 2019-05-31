@@ -162,7 +162,7 @@ const Messages: FC = () => {
       (!prevCurrent && current) ||
       (current && current.jid !== prevCurrent.jid)
     ) {
-      if (scrollPosition.current) {
+      if (scrollPosition.current !== undefined) {
         setChannelScrollPosition(
           prevCurrent ? prevCurrent.jid : current.jid,
           scrollPosition.current
