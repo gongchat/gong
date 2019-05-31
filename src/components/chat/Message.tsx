@@ -32,7 +32,6 @@ const Message: FC<IProps> = ({
   renderGetYarn,
 }: IProps) => {
   const classes = useStyles();
-  const [isLoaded, setIsLoaded] = useState(false);
   const [isMe, setIsMe] = useState(false);
   const [messageBody, setMessageBody] = useState('');
   const { body } = message;
@@ -72,17 +71,8 @@ const Message: FC<IProps> = ({
     });
 
     setMessageBody(formattedMessageBody);
+    onMessageLoad();
   }, [body, onMessageLoad]);
-
-  useEffect(() => {
-    setIsLoaded(true);
-  }, [messageBody]);
-
-  useEffect(() => {
-    if (isLoaded) {
-      onMessageLoad();
-    }
-  }, [isLoaded, onMessageLoad]);
 
   return (
     <div className={classes.root}>

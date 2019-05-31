@@ -94,17 +94,15 @@ export const channelActions = {
     position: number,
     state: IState
   ): IState {
-    // do not need to update current as it only matters when we change channels
-    const channel = state.channels.find(
-      (channel: IChannel) => channel.jid === channelJid
-    );
-    if (channel) {
-      channel.scrollPosition = position;
-    }
-    if (state.current && state.current.jid === channelJid) {
-      state.current.scrollPosition = position;
-    }
-    return state;
+    return {
+      ...state,
+      channels: state.channels.map((channel: IChannel) => {
+        if (channel.jid === channelJid) {
+          return { ...channel, scrollPosition: position };
+        }
+        return channel;
+      }),
+    };
   },
   getChannelLogs(channel: IChannel, state: IState): IState {
     ipcRenderer.send('get-log', {

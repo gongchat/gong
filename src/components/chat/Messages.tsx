@@ -51,9 +51,11 @@ const Messages: FC = () => {
   const handleOnMessageLoad = () => {
     numberOfLoadedMessages.current = numberOfLoadedMessages.current + 1;
     if (current && numberOfLoadedMessages.current >= current.messages.length) {
-      isLoading.current = false;
-      handleScrollUpdate();
-      handleGetLoggedMessages(root.current);
+      setTimeout(() => {
+        isLoading.current = false;
+        handleScrollUpdate();
+        handleGetLoggedMessages(root.current);
+      }, 0);
     }
   };
 
@@ -288,7 +290,7 @@ const Messages: FC = () => {
           }
 
           const returnVal = (
-            <React.Fragment key={message.id}>
+            <React.Fragment key={index}>
               {showDate && (
                 <div className={classes.marker}>
                   <Typography className={classes.markerValue}>
