@@ -4,6 +4,7 @@ import { useContext } from '../../context';
 import Badge from '@material-ui/core/Badge';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
@@ -75,8 +76,7 @@ const Group: FC<IProps> = ({
         </div>
       </div>
       <ExpansionPanel className={classes.panel} expanded={isExpanded}>
-        {/*  This div is required for the expansion panel, it expects the 2nd div to be the portion that collapses and expands */}
-        <div />
+        <ExpansionPanelSummary className={classes.summary} />
         <ExpansionPanelDetails className={classes.details}>
           {/* Empty div is here incase the children is null, ExpansionPanelDetails expects something */}
           <div />
@@ -136,6 +136,9 @@ const useStyles: any = makeStyles((theme: any) => ({
     whiteSpace: 'nowrap',
     cursor: 'pointer',
     marginRight: '25px',
+  },
+  summary: {
+    display: 'none',
   },
   details: {
     padding: theme.spacing(0.5),
