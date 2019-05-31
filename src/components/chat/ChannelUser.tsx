@@ -54,7 +54,7 @@ const useStyles: any = makeStyles((theme: any) => ({
     },
   },
   rootNarrow: {
-    padding: `${theme.spacing(0.5)}px ${theme.spacing(1)}px`,
+    padding: theme.spacing(0.5, 1),
   },
   title: {
     fontSize: '16px',

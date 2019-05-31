@@ -373,7 +373,7 @@ const useStyles: any = makeStyles((theme: any) => ({
       position: 'absolute',
       transform: 'translateY(-50%) translateX(-50%)',
       backgroundColor: theme.palette.background.paper,
-      padding: `0 ${theme.spacing(1)}px`,
+      padding: theme.spacing(0, 1),
     },
   },
   newMessageMarkerValue: {

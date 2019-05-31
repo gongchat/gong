@@ -144,7 +144,7 @@ const useStyles: any = makeStyles((theme: any) => ({
     position: 'relative',
     maxWidth: '190px',
     overflowY: 'auto',
-    padding: `${theme.spacing(5)}px ${theme.spacing(1)}px`,
+    padding: theme.spacing(5, 1),
   },
   itemText: {
     fontSize: '9px',
@@ -153,7 +153,7 @@ const useStyles: any = makeStyles((theme: any) => ({
   picker: {
     flexGrow: 1,
     overflowY: 'auto',
-    padding: `${theme.spacing(5)}px ${theme.spacing(2)}px`,
+    padding: theme.spacing(5, 2),
   },
   preview: {
     width: theme.spacing(2),

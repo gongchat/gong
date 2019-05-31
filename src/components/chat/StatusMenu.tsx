@@ -85,7 +85,7 @@ const useStyles: any = makeStyles((theme: any) => ({
     },
   },
   rowOne: {
-    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+    padding: theme.spacing(1, 2),
     display: 'flex',
     flexWrap: 'nowrap',
     alignItems: 'center',
@@ -99,7 +99,7 @@ const useStyles: any = makeStyles((theme: any) => ({
   description: {
     marginLeft: theme.spacing(4),
     opacity: 0.7,
-    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+    padding: theme.spacing(1, 2),
     paddingTop: 0,
   },
 }));
