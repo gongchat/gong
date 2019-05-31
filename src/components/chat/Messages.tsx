@@ -202,7 +202,9 @@ const Messages: FC = () => {
     const rootCurrent = root.current;
     // Event listener functions
     const handleScroll = (event: any) => {
-      if (!isLoading.current) {
+      if (isLoading.current) {
+        event.preventDefault();
+      } else {
         scrollPosition.current = event.target.scrollTop;
         if (
           event.target.scrollTop + event.target.offsetHeight >=
