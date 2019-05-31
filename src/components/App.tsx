@@ -14,8 +14,6 @@ const { ipcRenderer } = window.require('electron');
 const App: FC = () => {
   const [{ app, theme }] = useContext();
 
-  console.log(theme);
-
   useEffect(() => {
     if (!app || app.version === '') {
       ipcRenderer.send('app-get-info');

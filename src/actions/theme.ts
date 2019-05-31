@@ -36,41 +36,23 @@ const DEFAULT: any = {
   },
 };
 
-// TODO: When material-ui releases v4 remove depreciated props
 const TYPOGRAPHY_PROPS = [
-  'body1',
-  'body1Next',
-  'body2',
-  'body2Next',
-  'button',
-  'buttonNext',
-  'captionNext',
   'h1',
   'h2',
   'h3',
   'h4',
   'h5',
   'h6',
-  'headline',
-  'overline',
-  'subheading',
   'subtitle1',
   'subtitle2',
-  'title',
+  'body1',
+  'body2',
+  'button',
   'caption',
-  'display1',
-  'display2',
-  'display3',
-  'display4',
+  'overline',
 ];
 
-const TYPOGRAPHY_SPECIAL_PROPS = [
-  'caption',
-  'display1',
-  'display2',
-  'display3',
-  'display4',
-];
+const TYPOGRAPHY_SPECIAL_PROPS = ['caption'];
 
 export const themeActions = {
   setThemeToDefault(state: IState): IState {
@@ -181,7 +163,7 @@ const updateTypographyColor = (theme: any, color: string) => {
   // update nontypography props
   theme.palette.text.primary = color;
   theme.palette.action.active = color;
-  // TODO: bottom border color on text areas are set by type (light vs dark), unable to change from theme properties. may have to figure out if light or dark from backround color (machine learning?)
+  // TODO: bottom border color on text areas are set by type (light vs dark), unable to change from theme properties. may have to figure out if light or dark from background color (machine learning?)
 
   // update each individually
   TYPOGRAPHY_PROPS.forEach((prop: string) => {

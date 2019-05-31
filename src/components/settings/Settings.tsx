@@ -31,6 +31,7 @@ import Messages from './Messages';
 import Notifications from './Notifications';
 import System from './System';
 import Theme from './Theme';
+import MenuBar from '../MenuBar';
 import GithubIcon from '../icons/GithubIcon';
 import GongIcon from '../icons/GongIcon';
 
@@ -75,98 +76,104 @@ const Settings: FC = () => {
         open={showSettings}
         className={classes.dialog}
         BackdropProps={{ className: classes.dialog }}
+        PaperProps={{ className: classes.dialog }}
       >
         <DialogContent className={classes.dialogContent}>
-          <div className={classes.nav}>
-            <List>
-              {TABS.map((tab: any, index: number) => {
-                if (tab) {
-                  if (
-                    !selectedTab ||
-                    (tab.name === 'System' && app.operatingSystem !== 'win32')
-                  ) {
-                    return null;
-                  } else {
-                    return (
-                      <ListItem
-                        key={index}
-                        button={true}
-                        selected={tab.name === selectedTab.name}
-                        onClick={() => setSelectedTab(tab)}
-                      >
-                        <ListItemIcon className={classes.icon}>
-                          {tab.icon}
-                        </ListItemIcon>
-                        <ListItemText>{tab.name}</ListItemText>
-                      </ListItem>
-                    );
-                  }
-                } else {
-                  return <Divider key={index} />;
-                }
-              })}
-              <Divider />
-              <ListItem className={classes.links}>
-                <ListItemIcon>
-                  <a href="https://gongchat.github.io">
-                    <GongIcon />
-                  </a>
-                </ListItemIcon>
-                <ListItemIcon>
-                  <a href="https://github.com/gongchat/gong">
-                    <GithubIcon />
-                  </a>
-                </ListItemIcon>
-              </ListItem>
-              <ListItem className={classes.version}>
-                <Typography variant="caption">v{app.version}</Typography>
-              </ListItem>
-            </List>
+          <div className={classes.menubar}>
+            <MenuBar showOffline={false} />
           </div>
-          <div className={classes.content}>
-            {selectedTab && selectedTab.name === 'Account' && <Account />}
-            {selectedTab && selectedTab.name === 'Theme' && <Theme />}
-            {selectedTab && selectedTab.name === 'Font' && <Font />}
-            {selectedTab && selectedTab.name === 'Layout' && <Layout />}
-            {selectedTab && selectedTab.name === 'Messages' && <Messages />}
-            {selectedTab && selectedTab.name === 'Notifications' && (
-              <Notifications />
-            )}
-            {selectedTab && selectedTab.name === 'System' && <System />}
-            {selectedTab && selectedTab.name === 'Reset' && (
-              <div className={classes.section}>
-                <Typography>
-                  This will reset your colors, font, and font size to the
-                  default settings.
-                </Typography>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => setThemeToDefault()}
-                >
-                  Reset all Styles
-                </Button>
+          <div className={classes.settings}>
+            <div className={classes.nav}>
+              <List>
+                {TABS.map((tab: any, index: number) => {
+                  if (tab) {
+                    if (
+                      !selectedTab ||
+                      (tab.name === 'System' && app.operatingSystem !== 'win32')
+                    ) {
+                      return null;
+                    } else {
+                      return (
+                        <ListItem
+                          key={index}
+                          button={true}
+                          selected={tab.name === selectedTab.name}
+                          onClick={() => setSelectedTab(tab)}
+                        >
+                          <ListItemIcon className={classes.icon}>
+                            {tab.icon}
+                          </ListItemIcon>
+                          <ListItemText>{tab.name}</ListItemText>
+                        </ListItem>
+                      );
+                    }
+                  } else {
+                    return <Divider key={index} />;
+                  }
+                })}
+                <Divider />
+                <ListItem className={classes.links}>
+                  <ListItemIcon>
+                    <a href="https://gongchat.github.io">
+                      <GongIcon />
+                    </a>
+                  </ListItemIcon>
+                  <ListItemIcon>
+                    <a href="https://github.com/gongchat/gong">
+                      <GithubIcon />
+                    </a>
+                  </ListItemIcon>
+                </ListItem>
+                <ListItem className={classes.version}>
+                  <Typography variant="caption">v{app.version}</Typography>
+                </ListItem>
+              </List>
+            </div>
+            <div className={classes.content}>
+              {selectedTab && selectedTab.name === 'Account' && <Account />}
+              {selectedTab && selectedTab.name === 'Theme' && <Theme />}
+              {selectedTab && selectedTab.name === 'Font' && <Font />}
+              {selectedTab && selectedTab.name === 'Layout' && <Layout />}
+              {selectedTab && selectedTab.name === 'Messages' && <Messages />}
+              {selectedTab && selectedTab.name === 'Notifications' && (
+                <Notifications />
+              )}
+              {selectedTab && selectedTab.name === 'System' && <System />}
+              {selectedTab && selectedTab.name === 'Reset' && (
+                <div className={classes.section}>
+                  <Typography>
+                    This will reset your colors, font, and font size to the
+                    default settings.
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => setThemeToDefault()}
+                  >
+                    Reset all Styles
+                  </Button>
+                </div>
+              )}
+              {selectedTab && selectedTab.name === 'Log Off' && (
+                <div className={classes.section}>
+                  <Typography>
+                    This will log you off of your current account. All data
+                    associated this account will be removed.
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleLogOff}
+                  >
+                    Log Off
+                  </Button>
+                </div>
+              )}
+              <div className={classes.close}>
+                <IconButton onClick={handleClickClose}>
+                  <CloseIcon />
+                </IconButton>
               </div>
-            )}
-            {selectedTab && selectedTab.name === 'Log Off' && (
-              <div className={classes.section}>
-                <Typography>
-                  This will log you off of your current account. All data
-                  associated this account will be removed.
-                </Typography>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={handleLogOff}
-                >
-                  Log Off
-                </Button>
-              </div>
-            )}
-            <div className={classes.close}>
-              <IconButton onClick={handleClickClose}>
-                <CloseIcon />
-              </IconButton>
             </div>
           </div>
         </DialogContent>
@@ -177,13 +184,22 @@ const Settings: FC = () => {
 
 const useStyles: any = makeStyles((theme: any) => ({
   dialog: {
-    top: '23px',
+    background: 'transparent',
   },
   dialogContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    padding: 0,
+  },
+  settings: {
+    flexGrow: 1,
     display: 'flex',
     flexWrap: 'nowrap',
     justifyContent: 'center',
     padding: '0 !important',
+  },
+  menubar: {
+    opacity: 0,
   },
   nav: {
     overflowY: 'auto',

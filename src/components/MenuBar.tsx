@@ -126,6 +126,7 @@ const MenuBar: FC<IProps> = ({ showOffline }: IProps) => {
 const useStyles: any = makeStyles((theme: any) => ({
   root: {
     background: theme.palette.backgroundAccent,
+    zIndex: 9999,
   },
   menuBar: {
     margin: 1, // to allow resizing on menu bar

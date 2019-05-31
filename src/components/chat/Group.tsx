@@ -75,6 +75,8 @@ const Group: FC<IProps> = ({
         </div>
       </div>
       <ExpansionPanel className={classes.panel} expanded={isExpanded}>
+        {/*  This div is required for the expansion panel, it expects the 2nd div to be the portion that collapses and expands */}
+        <div />
         <ExpansionPanelDetails className={classes.details}>
           {/* Empty div is here incase the children is null, ExpansionPanelDetails expects something */}
           <div />
@@ -92,7 +94,7 @@ const useStyles: any = makeStyles((theme: any) => ({
   panel: {
     backgroundColor: 'transparent',
     boxShadow: 'none',
-    marginTop: 0,
+    marginTop: '0 !important',
     '&:before': {
       display: 'none',
     },
@@ -102,7 +104,7 @@ const useStyles: any = makeStyles((theme: any) => ({
     paddingBottom: theme.spacing(0.5),
     paddingRight: theme.spacing(1),
     paddingLeft: 0,
-    margin: '0',
+    margin: 0,
   },
   headingContent: {
     display: 'flex',
