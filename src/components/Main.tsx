@@ -112,7 +112,7 @@ const Main: FC<IProps> = () => {
           <SidebarLeft />
         </div>
         <div className={classes.middle}>{current && <Chat />}</div>
-        {(current && current.type) === 'groupchat' && (
+        {current && current.type === 'groupchat' && (
           <div className={classes.right}>
             <SidebarRight />
           </div>
