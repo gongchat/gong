@@ -50,6 +50,7 @@ const SnackbarNotifications: FC = () => {
 
 const useStyles: any = makeStyles((theme: any) => ({
   notification: {
+    zIndex: 9999,
     [theme.breakpoints.down('md')]: {
       left: 'auto',
     },
