@@ -1,6 +1,7 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { useContext } from '../../context';
 
+import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -10,6 +11,7 @@ import { makeStyles } from '@material-ui/styles';
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 import SliderMarkers from './SliderMarkers';
+import { DEFAULT as DEFAULT_THEME } from '../../actions/theme';
 
 const MIN_SIZE = 8;
 const MAX_SIZE = 24;
@@ -66,10 +68,7 @@ const Font: FC = () => {
       clearTimeout(fontTimer.current);
     }
     fontTimer.current = setTimeout(() => {
-      setTheme({
-        themeKey: 'typography.fontFamily',
-        value: newFont,
-      });
+      setTheme([{ themeKey: 'typography.fontFamily', value: newFont }]);
     }, 1000);
   };
 
@@ -80,14 +79,32 @@ const Font: FC = () => {
     }
     sizeTimer.current = setTimeout(() => {
       value = value < MIN_SIZE ? MIN_SIZE : value > MAX_SIZE ? MAX_SIZE : value;
-      setTheme({
-        themeKey: 'typography.fontSize',
-        value,
-      });
+      setTheme([{ themeKey: 'typography.fontSize', value }]);
       // need to set again in case size is out of bounds
       setSize(value);
     }, 1000);
   };
+
+  const reset = () => {
+    setTheme([
+      {
+        themeKey: 'typography.fontSize',
+        value: DEFAULT_THEME.typography.fontSize,
+      },
+      {
+        themeKey: 'typography.fontFamily',
+        value: DEFAULT_THEME.typography.fontFamily,
+      },
+    ]);
+  };
+
+  useEffect(() => {
+    setFont(theme.typography.fontFamily.split(',')[0].replace(/"/g, ''));
+  }, [theme.typography.fontFamily]);
+
+  useEffect(() => {
+    setSize(`${theme.typography.fontSize}`);
+  }, [theme.typography.fontSize]);
 
   return (
     <BasePage title="Font">
@@ -143,6 +160,11 @@ const Font: FC = () => {
           />
         </div>
       </BaseSection>
+      <div>
+        <Button color="secondary" onClick={reset} variant="outlined">
+          RESET
+        </Button>
+      </div>
     </BasePage>
   );
 };

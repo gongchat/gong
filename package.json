@@ -41,6 +41,7 @@
     "react": "16.8.6",
     "react-dev-utils": "9.0.0",
     "react-dom": "16.8.6",
+    "react-json-view": "^1.19.1",
     "react-material-ui-form-validator": "2.0.8",
     "react-player": "1.11.0",
     "react-router": "5.0.0",

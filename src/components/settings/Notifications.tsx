@@ -1,6 +1,7 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { useContext } from '../../context';
 
+import Button from '@material-ui/core/Button';
 import FilledInput from '@material-ui/core/FilledInput';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -13,6 +14,7 @@ import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 import SliderMarkers from './SliderMarkers';
 import { playAudio, SOUNDS } from '../../actions/notification';
+import { defaultSettings } from '../../actions/settings';
 
 const MIN_SIZE = 0;
 const MAX_SIZE = 10;
@@ -102,6 +104,95 @@ const NotificationSettings: FC = () => {
       setVolume(value);
     }, 1000);
   };
+
+  const reset = () => {
+    setAndSaveSettings({
+      soundName: defaultSettings.soundName,
+      playAudioOnGroupchat: defaultSettings.playAudioOnGroupchat,
+      playAudioOnMentionMe: defaultSettings.playAudioOnMentionMe,
+      playAudioOnChat: defaultSettings.playAudioOnChat,
+      systemNotificationOnGroupchat:
+        defaultSettings.systemNotificationOnGroupchat,
+      systemNotificationOnMentionMe:
+        defaultSettings.systemNotificationOnMentionMe,
+      systemNotificationOnChat: defaultSettings.systemNotificationOnChat,
+      flashFrameOnGroupchat: defaultSettings.flashFrameOnGroupchat,
+      flashFrameOnMentionMe: defaultSettings.flashFrameOnMentionMe,
+      flashFrameOnChat: defaultSettings.flashFrameOnChat,
+      flashMenuBarOnGroupchat: defaultSettings.flashMenuBarOnGroupchat,
+      flashMenuBarOnGroupchatFrequency:
+        defaultSettings.flashMenuBarOnGroupchatFrequency,
+      flashMenuBarOnMentionMe: defaultSettings.flashMenuBarOnMentionMe,
+      flashMenuBarOnMentionMeFrequency:
+        defaultSettings.flashMenuBarOnMentionMeFrequency,
+      flashMenuBarOnChat: defaultSettings.flashMenuBarOnChat,
+      flashMenuBarOnChatFrequency: defaultSettings.flashMenuBarOnChatFrequency,
+    });
+  };
+
+  useEffect(() => {
+    setPlayAudioOnGroupchat(settings.playAudioOnGroupchat);
+  }, [settings.playAudioOnGroupchat]);
+
+  useEffect(() => {
+    setPlayAudioOnMentionMe(settings.playAudioOnMentionMe);
+  }, [settings.playAudioOnMentionMe]);
+
+  useEffect(() => {
+    setPlayAudioOnChat(settings.playAudioOnChat);
+  }, [settings.playAudioOnChat]);
+
+  useEffect(() => {
+    setSystemNotificationOnGroupchat(settings.systemNotificationOnGroupchat);
+  }, [settings.systemNotificationOnGroupchat]);
+
+  useEffect(() => {
+    setSystemNotificationOnMentionMe(settings.systemNotificationOnMentionMe);
+  }, [settings.systemNotificationOnMentionMe]);
+
+  useEffect(() => {
+    setSystemNotificationOnChat(settings.systemNotificationOnChat);
+  }, [settings.systemNotificationOnChat]);
+
+  useEffect(() => {
+    setFlashFrameOnGroupchat(settings.flashFrameOnGroupchat);
+  }, [settings.flashFrameOnGroupchat]);
+
+  useEffect(() => {
+    setFlashFrameOnMentionMe(settings.flashFrameOnMentionMe);
+  }, [settings.flashFrameOnMentionMe]);
+
+  useEffect(() => {
+    setFlashFrameOnChat(settings.flashFrameOnChat);
+  }, [settings.flashFrameOnChat]);
+
+  useEffect(() => {
+    setFlashMenuBarOnGroupchat(settings.flashMenuBarOnGroupchat);
+  }, [settings.flashMenuBarOnGroupchat]);
+
+  useEffect(() => {
+    setFlashMenuBarOnGroupchatFrequency(
+      settings.flashMenuBarOnGroupchatFrequency
+    );
+  }, [settings.flashMenuBarOnGroupchatFrequency]);
+
+  useEffect(() => {
+    setFlashMenuBarOnMentionMe(settings.flashMenuBarOnMentionMe);
+  }, [settings.flashMenuBarOnMentionMe]);
+
+  useEffect(() => {
+    setFlashMenuBarOnMentionMeFrequency(
+      settings.flashMenuBarOnMentionMeFrequency
+    );
+  }, [settings.flashMenuBarOnMentionMeFrequency]);
+
+  useEffect(() => {
+    setFlashMenuBarOnChat(settings.flashMenuBarOnChat);
+  }, [settings.flashMenuBarOnChat]);
+
+  useEffect(() => {
+    setFlashMenuBarOnChatFrequency(settings.flashMenuBarOnChatFrequency);
+  }, [settings.flashMenuBarOnChatFrequency]);
 
   return (
     <BasePage title="Notifications">
@@ -432,6 +523,11 @@ const NotificationSettings: FC = () => {
           </Select>
         </FormControl>
       </BaseSection>
+      <div>
+        <Button color="secondary" onClick={reset} variant="outlined">
+          RESET
+        </Button>
+      </div>
     </BasePage>
   );
 };

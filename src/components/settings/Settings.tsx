@@ -13,10 +13,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import AccountCircleIcon from '@material-ui/icons/AccountCircleOutlined';
+import CodeIcon from '@material-ui/icons/Code';
 import CloseIcon from '@material-ui/icons/Close';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import FontDownloadIcon from '@material-ui/icons/FontDownloadOutlined';
-import FormatColorResetIcon from '@material-ui/icons/FormatColorReset';
 import HorizontalSplitIcon from '@material-ui/icons/HorizontalSplit';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import PaletteIcon from '@material-ui/icons/PaletteOutlined';
@@ -25,6 +25,7 @@ import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import { makeStyles } from '@material-ui/styles';
 
 import Account from './Account';
+import Developer from './Developer';
 import Font from './Font';
 import Layout from './Layout';
 import Messages from './Messages';
@@ -44,17 +45,14 @@ const TABS = [
   { name: 'Notifications', icon: <NotificationsIcon /> },
   { name: 'System', icon: <SettingsApplicationsIcon /> },
   null,
-  { name: 'Reset', icon: <FormatColorResetIcon /> },
+  { name: 'Developer', icon: <CodeIcon /> },
   null,
   { name: 'Log Off', icon: <PowerSettingsNewIcon /> },
 ];
 
 const Settings: FC = () => {
   const classes = useStyles();
-  const [
-    { showSettings, app },
-    { toggleShowSettings, logOff, setThemeToDefault },
-  ] = useContext();
+  const [{ showSettings, app }, { toggleShowSettings, logOff }] = useContext();
   const [goToLogin, setGoToLogin] = useState(false);
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
 
@@ -65,6 +63,47 @@ const Settings: FC = () => {
   const handleLogOff = () => {
     logOff();
     setGoToLogin(true);
+  };
+
+  const getContent = () => {
+    if (selectedTab) {
+      switch (selectedTab.name) {
+        case 'Account':
+          return <Account />;
+        case 'Developer':
+          return <Developer />;
+        case 'Font':
+          return <Font />;
+        case 'Layout':
+          return <Layout />;
+        case 'Log Off':
+          return (
+            <div className={classes.section}>
+              <Typography>
+                This will log you off of your current account. All data
+                associated this account will be removed.
+              </Typography>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleLogOff}
+              >
+                Log Off
+              </Button>
+            </div>
+          );
+        case 'Messages':
+          return <Messages />;
+        case 'Notifications':
+          return <Notifications />;
+        case 'System':
+          return <System />;
+        case 'Theme':
+          return <Theme />;
+        default:
+          return null;
+      }
+    }
   };
 
   if (goToLogin) {
@@ -130,45 +169,7 @@ const Settings: FC = () => {
               </List>
             </div>
             <div className={classes.content}>
-              {selectedTab && selectedTab.name === 'Account' && <Account />}
-              {selectedTab && selectedTab.name === 'Theme' && <Theme />}
-              {selectedTab && selectedTab.name === 'Font' && <Font />}
-              {selectedTab && selectedTab.name === 'Layout' && <Layout />}
-              {selectedTab && selectedTab.name === 'Messages' && <Messages />}
-              {selectedTab && selectedTab.name === 'Notifications' && (
-                <Notifications />
-              )}
-              {selectedTab && selectedTab.name === 'System' && <System />}
-              {selectedTab && selectedTab.name === 'Reset' && (
-                <div className={classes.section}>
-                  <Typography>
-                    This will reset your colors, font, and font size to the
-                    default settings.
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => setThemeToDefault()}
-                  >
-                    Reset all Styles
-                  </Button>
-                </div>
-              )}
-              {selectedTab && selectedTab.name === 'Log Off' && (
-                <div className={classes.section}>
-                  <Typography>
-                    This will log you off of your current account. All data
-                    associated this account will be removed.
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleLogOff}
-                  >
-                    Log Off
-                  </Button>
-                </div>
-              )}
+              {getContent()}
               <div className={classes.close}>
                 <IconButton onClick={handleClickClose}>
                   <CloseIcon />

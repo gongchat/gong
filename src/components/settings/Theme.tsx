@@ -74,7 +74,7 @@ const Theme: FC = () => {
       value: color,
     };
     setSelectedItem({ ...selectedItem, color });
-    setTheme(updatedItem);
+    setTheme([updatedItem]);
   };
 
   const getItemsFromTheme = (theme: any) => {

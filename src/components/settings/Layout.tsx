@@ -1,6 +1,7 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { useContext } from '../../context';
 
+import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
@@ -10,6 +11,7 @@ import { makeStyles } from '@material-ui/styles';
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 import SliderMarkers from './SliderMarkers';
+import { DEFAULT as DEFAULT_THEME } from '../../actions/theme';
 
 const MIN_SIDEBAR_WIDTH = 150;
 const MAX_SIDEBAR_WIDTH = 250;
@@ -79,10 +81,7 @@ const Layout: FC = () => {
           : value > MAX_SPACING
           ? MAX_SPACING
           : value;
-      setTheme({
-        themeKey: 'theme.spacing.unit',
-        value,
-      });
+      setTheme([{ themeKey: 'theme.spacing.unit', value }]);
       setSpacing(value);
     }, 1000);
   };
@@ -99,21 +98,54 @@ const Layout: FC = () => {
           : value > MAX_SIDEBAR_WIDTH
           ? MAX_SIDEBAR_WIDTH
           : value;
-      setTheme({
-        themeKey: 'sidebarWidth',
-        value,
-      });
+      setTheme([{ themeKey: 'sidebarWidth', value }]);
       setSidebarWidth(value);
     }, 1000);
   };
 
   const handleSwitchChange = (event: any, action: any) => {
     action(event.target.checked);
-    setTheme({
-      themeKey: event.target.name,
-      value: event.target.checked,
-    });
+    setTheme([{ themeKey: event.target.name, value: event.target.checked }]);
   };
+
+  const reset = () => {
+    setTheme([
+      { themeKey: 'theme.spacing.unit', value: 8 },
+      { themeKey: 'sidebarWidth', value: DEFAULT_THEME.sidebarWidth },
+      {
+        themeKey: 'sortChannelsByMostRecentUnread',
+        value: DEFAULT_THEME.sortChannelsByMostRecentUnread,
+      },
+      {
+        themeKey: 'sidebarLeftShowAvatar',
+        value: DEFAULT_THEME.sidebarLeftShowAvatar,
+      },
+      {
+        themeKey: 'sidebarRightShowAvatar',
+        value: DEFAULT_THEME.sidebarRightShowAvatar,
+      },
+    ]);
+  };
+
+  useEffect(() => {
+    setSpacing(theme.spacing.unit);
+  }, [theme.spacing.unit]);
+
+  useEffect(() => {
+    setSidebarWidth(theme.sidebarWidth);
+  }, [theme.sidebarWidth]);
+
+  useEffect(() => {
+    setSortChannelsByMostRecentUnread(theme.sortChannelsByMostRecentUnread);
+  }, [theme.sortChannelsByMostRecentUnread]);
+
+  useEffect(() => {
+    setSidebarLeftShowAvatar(theme.sidebarLeftShowAvatar);
+  }, [theme.sidebarLeftShowAvatar]);
+
+  useEffect(() => {
+    setSidebarRightShowAvatar(theme.sidebarRightShowAvatar);
+  }, [theme.sidebarRightShowAvatar]);
 
   return (
     <BasePage title="Layout">
@@ -221,6 +253,11 @@ const Layout: FC = () => {
           label="Show avatars in the right sidebar"
         />
       </BaseSection>
+      <div>
+        <Button color="secondary" onClick={reset} variant="outlined">
+          RESET
+        </Button>
+      </div>
     </BasePage>
   );
 };
