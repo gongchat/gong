@@ -6,7 +6,7 @@ import IState from '../interfaces/IState';
 import IUser from '../interfaces/IUser';
 import IUserConnection from '../interfaces/IUserConnection';
 
-import ColorUtil from '../utils/colorUtil';
+import { stringToHexColor } from '../utils/colorUtil';
 
 export const presenceActions = {
   setPresence(payload: IPresence, state: IState): IState {
@@ -137,7 +137,7 @@ const setGroupchat = (state: IState, presence: IPresence): IState => {
             jid: presence.user,
             role: presence.role,
             nickname,
-            color: ColorUtil.stringToHexColor(nickname),
+            color: stringToHexColor(nickname),
             lastTimeMentionedMe: undefined,
           };
           room.users = [...room.users, newUser];

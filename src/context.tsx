@@ -10,13 +10,16 @@ import { messageActions } from './actions/message';
 import { notificationActions } from './actions/notification';
 import { presenceActions } from './actions/presence';
 import { roomActions } from './actions/room';
-import { settingsActions, defaultSettings } from './actions/settings';
+import {
+  settingsActions,
+  DEFAULT as DEFAULT_SETTINGS,
+} from './actions/settings';
 import { themeActions } from './actions/theme';
-import { userActions, defaultVCard } from './actions/user';
+import { userActions, DEFAULT_VCARD } from './actions/user';
 import { getTheme } from './actions/theme';
 import IState from './interfaces/IState';
 
-export const initialState: IState = {
+export const INITIAL_STATE: IState = {
   app: {
     version: '',
     operatingSystem: '',
@@ -30,7 +33,7 @@ export const initialState: IState = {
     hasSavedCredentials: undefined,
     isAuthenticated: false,
   },
-  settings: { ...defaultSettings },
+  settings: { ...DEFAULT_SETTINGS },
   channels: [],
   current: undefined,
   profile: {
@@ -39,7 +42,7 @@ export const initialState: IState = {
     group: '',
     status: '',
     color: '',
-    vCard: defaultVCard,
+    vCard: DEFAULT_VCARD,
   },
   snackbarNotifications: [],
   showDiscover: false,
@@ -64,10 +67,10 @@ const contract = {
   ...userActions,
 };
 
-const Context = React.createContext(initialState);
+const Context = React.createContext(INITIAL_STATE);
 
 export default function ContextProvider(props: any) {
-  const [context, actions] = useGovernor(initialState, contract);
+  const [context, actions] = useGovernor(INITIAL_STATE, contract);
 
   const { children } = props;
 

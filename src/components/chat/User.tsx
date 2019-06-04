@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/styles';
 import Status from './Status';
 import UserDetail from './UserDetail';
 import IUser from '../../interfaces/IUser';
-import StringUtil from '../../utils/stringUtils';
+import { getAbbreviation } from '../../utils/stringUtils';
 
 interface IProps {
   user: IUser;
@@ -76,9 +76,7 @@ const User: FC<IProps> = ({ user, isSelected, showAvatar }: IProps) => {
                 />
               ) : (
                 <Avatar className={classes.img}>
-                  <Typography>
-                    {StringUtil.getAbbreviation(displayName)}
-                  </Typography>
+                  <Typography>{getAbbreviation(displayName)}</Typography>
                 </Avatar>
               )}
               <div className={classes.status}>

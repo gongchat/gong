@@ -1,11 +1,13 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { useContext } from '../../context';
 
+import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
+import { DEFAULT as DEFAULT_SETTINGS } from '../../actions/settings';
 
 const System: FC = () => {
   const [{ settings }, { setAndSaveSettings }] = useContext();
@@ -17,6 +19,16 @@ const System: FC = () => {
     action(value);
     setAndSaveSettings({ [event.target.name]: value });
   };
+
+  const reset = () => {
+    setAndSaveSettings({
+      minimizeToTrayOnClose: DEFAULT_SETTINGS.minimizeToTrayOnClose,
+    });
+  };
+
+  useEffect(() => {
+    setMinimizeToTrayOnClose(settings.minimizeToTrayOnClose);
+  }, [settings.minimizeToTrayOnClose]);
 
   return (
     <BasePage title="System">
@@ -34,6 +46,11 @@ const System: FC = () => {
           label="Minimize to tray"
         />
       </BaseSection>
+      <div>
+        <Button color="secondary" onClick={reset} variant="outlined">
+          RESET
+        </Button>
+      </div>
     </BasePage>
   );
 };

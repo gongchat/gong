@@ -13,7 +13,7 @@ import IUser from '../interfaces/IUser';
 import { saveRooms } from './channel';
 import { handleOnMessage } from './notification';
 
-import ColorUtil from '../utils/colorUtil';
+import { stringToHexColor } from '../utils/colorUtil';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -68,7 +68,7 @@ export const messageActions = {
     const newState: IState = { ...state };
     let channelName: string = messageReceive.from.split('/')[0];
     let userNickname: string = messageReceive.from.split('/')[1];
-    let color: string = ColorUtil.stringToHexColor(userNickname);
+    let color: string = stringToHexColor(userNickname);
     let channel: IRoom | IUser | undefined = newState.channels.find(
       (c: IChannel) => c.type === messageReceive.type && c.jid === channelName
     ) as IRoom | IUser;

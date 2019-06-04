@@ -6,29 +6,7 @@ const ElectronStore = window.require('electron-store');
 const electronStore = new ElectronStore();
 const { ipcRenderer } = window.require('electron');
 
-export const settingsActions = {
-  toggleShowSettings(state: IState): IState {
-    return { ...state, showSettings: !state.showSettings };
-  },
-  setAndSaveSettings(settings: any, state: IState): IState {
-    let savedSettings: ISettingsSaved = electronStore.get('settings');
-    savedSettings = {
-      ...savedSettings,
-      ...settings,
-    };
-    electronStore.set('settings', savedSettings);
-    sendSettingsToElectron(settings);
-    return {
-      ...state,
-      settings: {
-        ...state.settings,
-        ...settings,
-      },
-    };
-  },
-};
-
-export const defaultSettings: ISettings = {
+export const DEFAULT: ISettings = {
   jid: '',
   domain: '',
   username: '',
@@ -57,6 +35,28 @@ export const defaultSettings: ISettings = {
   flashMenuBarOnChatFrequency: 'once',
 };
 
+export const settingsActions = {
+  toggleShowSettings(state: IState): IState {
+    return { ...state, showSettings: !state.showSettings };
+  },
+  setAndSaveSettings(settings: any, state: IState): IState {
+    let savedSettings: ISettingsSaved = electronStore.get('settings');
+    savedSettings = {
+      ...savedSettings,
+      ...settings,
+    };
+    electronStore.set('settings', savedSettings);
+    sendSettingsToElectron(settings);
+    return {
+      ...state,
+      settings: {
+        ...state.settings,
+        ...settings,
+      },
+    };
+  },
+};
+
 export const mapSettingsSavedToSettings = (
   settings: ISettingsSaved
 ): ISettings => {
@@ -76,7 +76,7 @@ export const mapSettingsSavedToSettings = (
     soundName: settings.soundName,
     soundVolume:
       settings.soundVolume === undefined
-        ? defaultSettings.soundVolume
+        ? DEFAULT.soundVolume
         : settings.soundVolume,
     // play audio
     playAudioOnGroupchat: settings.playAudioOnGroupchat,
@@ -88,19 +88,19 @@ export const mapSettingsSavedToSettings = (
     // flash frame
     flashFrameOnGroupchat:
       settings.flashFrameOnGroupchat === undefined
-        ? defaultSettings.flashFrameOnGroupchat
+        ? DEFAULT.flashFrameOnGroupchat
         : settings.flashFrameOnGroupchat === 'always'
         ? 'unread'
         : settings.flashFrameOnGroupchat,
     flashFrameOnChat:
       settings.flashFrameOnChat === undefined
-        ? defaultSettings.flashFrameOnChat
+        ? DEFAULT.flashFrameOnChat
         : settings.flashFrameOnChat === 'always'
         ? 'unread'
         : settings.flashFrameOnChat,
     flashFrameOnMentionMe:
       settings.flashFrameOnMentionMe === undefined
-        ? defaultSettings.flashFrameOnMentionMe
+        ? DEFAULT.flashFrameOnMentionMe
         : settings.flashFrameOnMentionMe === 'always'
         ? 'unread'
         : settings.flashFrameOnMentionMe,

@@ -1,7 +1,10 @@
 import { addSavedRoomsToChannels } from './room';
-import { defaultVCard } from './user';
-import { mapSettingsSavedToSettings, defaultSettings } from './settings';
-import { initialState } from '../context';
+import { DEFAULT_VCARD } from './user';
+import {
+  mapSettingsSavedToSettings,
+  DEFAULT as DEFAULT_SETTINGS,
+} from './settings';
+import { INITIAL_STATE } from '../context';
 import IConnection from '../interfaces/IConnection';
 import ICredentials from '../interfaces/ICredentials';
 import IProfile from '../interfaces/IProfile';
@@ -9,7 +12,7 @@ import ISettings from '../interfaces/ISettings';
 import ISettingsSaved from '../interfaces/ISettingsSaved';
 import ISnackbarNotification from '../interfaces/ISnackbarNotification';
 import IState from '../interfaces/IState';
-import ColorUtil from '../utils/colorUtil';
+import { stringToHexColor } from '../utils/colorUtil';
 
 const ElectronStore = window.require('electron-store');
 const electronStore = new ElectronStore();
@@ -91,7 +94,7 @@ export const connectionActions = {
     // save credentials and default settings
     if (!settingsSaved) {
       settingsSaved = {
-        ...defaultSettings,
+        ...DEFAULT_SETTINGS,
         jid: payload.jid,
         domain: payload.domain,
         username: payload.username,
@@ -115,8 +118,8 @@ export const connectionActions = {
       username: payload.username,
       group: '',
       status: 'online',
-      color: ColorUtil.stringToHexColor(payload.username),
-      vCard: defaultVCard,
+      color: stringToHexColor(payload.username),
+      vCard: DEFAULT_VCARD,
     };
 
     const settings: ISettings = mapSettingsSavedToSettings(settingsSaved);
@@ -163,7 +166,7 @@ export const connectionActions = {
       payload.error === 'Cannot authorize your credentials'
     ) {
       ipcRenderer.send('xmpp-log-off');
-      return { ...initialState };
+      return { ...INITIAL_STATE };
     }
 
     return {
@@ -180,8 +183,8 @@ export const connectionActions = {
   logOff(): IState {
     ipcRenderer.send('xmpp-log-off');
     return {
-      ...initialState,
-      connection: { ...initialState.connection, hasSavedCredentials: false },
+      ...INITIAL_STATE,
+      connection: { ...INITIAL_STATE.connection, hasSavedCredentials: false },
     };
   },
 };

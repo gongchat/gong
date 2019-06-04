@@ -1,6 +1,13 @@
 import { FC, useEffect } from 'react';
 import { useContext } from '../context';
-import XmppJsMapper from '../utils/xmppJsMapper';
+import {
+  mapToPresence,
+  mapToReply,
+  mapToRooms,
+  mapToSubdomains,
+  mapToUsers,
+  mapToVCard,
+} from '../utils/xmppJsMapper';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -24,27 +31,27 @@ const IpcRenderer: FC = () => {
     });
 
     ipcRenderer.on('xmpp-roster', (event: any, arg: any) => {
-      actions.addUsersToChannels(XmppJsMapper.mapToUsers(arg));
+      actions.addUsersToChannels(mapToUsers(arg));
     });
 
     ipcRenderer.on('xmpp-presence', (event: any, arg: any) => {
-      actions.setPresence(XmppJsMapper.mapToPresence(arg));
+      actions.setPresence(mapToPresence(arg));
     });
 
     ipcRenderer.on('xmpp-discover-top-level-items', (event: any, arg: any) => {
-      actions.setDiscoverSubdomains(XmppJsMapper.mapToSubdomains(arg));
+      actions.setDiscoverSubdomains(mapToSubdomains(arg));
     });
 
     ipcRenderer.on('xmpp-discover-sub-level-items', (event: any, arg: any) => {
-      actions.setDiscoverRooms(XmppJsMapper.mapToRooms(arg));
+      actions.setDiscoverRooms(mapToRooms(arg));
     });
 
     ipcRenderer.on('xmpp-reply', (event: any, arg: any) => {
-      actions.receiveMessage(XmppJsMapper.mapToReply(arg));
+      actions.receiveMessage(mapToReply(arg));
     });
 
     ipcRenderer.on('xmpp-vcard', (event: any, arg: any) => {
-      actions.setUserVCard(XmppJsMapper.mapToVCard(arg));
+      actions.setUserVCard(mapToVCard(arg));
     });
 
     ipcRenderer.on('get-log', (event: any, arg: any) => {

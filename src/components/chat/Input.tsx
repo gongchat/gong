@@ -11,7 +11,7 @@ import { userListSelectorIndex } from './ListSelectorUsers';
 import IMessageSend from '../../interfaces/IMessageSend';
 import IRoom from '../../interfaces/IRoom';
 import IUser from '../../interfaces/IUser';
-import StringUtil from '../../utils/stringUtils';
+import { makeId } from '../../utils/stringUtils';
 import { usePrevious } from '../../utils/usePrevious';
 
 const Input: FC = () => {
@@ -43,7 +43,7 @@ const Input: FC = () => {
             to = user.sessionJid;
           }
           const messageSend: IMessageSend = {
-            id: StringUtil.makeId(7),
+            id: makeId(7),
             channelName: current.jid,
             type: current.type,
             to,
@@ -113,7 +113,7 @@ const Input: FC = () => {
     ) {
       setInputText(prevCurrent.jid, inputText.current);
     }
-    
+
     // Handle new channel
     if (
       (current && !prevCurrent) ||

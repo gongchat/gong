@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
 import IChannelUser from '../../interfaces/IChannelUser';
-import StringUtil from '../../utils/stringUtils';
+import { getAbbreviation } from '../../utils/stringUtils';
 
 interface IProps {
   user: IChannelUser;
@@ -29,7 +29,7 @@ const ChannelUser: FC<IProps> = ({ user, showAvatar }: IProps) => {
       {showAvatar && (
         <div className={classes.avatar}>
           <Avatar className={classes.img}>
-            {StringUtil.getAbbreviation(user.nickname)}
+            {getAbbreviation(user.nickname)}
           </Avatar>
         </div>
       )}

@@ -4,7 +4,7 @@ import red from '@material-ui/core/colors/red';
 import { createMuiTheme } from '@material-ui/core/styles';
 
 import IState from '../interfaces/IState';
-import MaterialColorsUtil from '../utils/materialColors';
+import { COLORS, SHADES } from '../utils/materialColors';
 
 const ElectronStore = window.require('electron-store');
 const electronStore = new ElectronStore();
@@ -115,23 +115,17 @@ export const getTheme = () => {
 };
 
 const updatePrimaryColor = (theme: any, item: any) => {
-  const color: any = MaterialColorsUtil.colors.find(
-    (c: any) => c.name === item.name
-  );
-  const baseShadeIndex = MaterialColorsUtil.shades.indexOf(item.shade);
-  const shadeLength = MaterialColorsUtil.shades.length;
+  const color: any = COLORS.find((c: any) => c.name === item.name);
+  const baseShadeIndex = SHADES.indexOf(item.shade);
+  const shadeLength = SHADES.length;
   if (color) {
     theme.palette.primary = {
       light:
-        color.color[
-          MaterialColorsUtil.shades[
-            baseShadeIndex - 1 <= 0 ? 0 : baseShadeIndex - 2
-          ]
-        ],
-      main: color.color[MaterialColorsUtil.shades[baseShadeIndex]],
+        color.color[SHADES[baseShadeIndex - 1 <= 0 ? 0 : baseShadeIndex - 2]],
+      main: color.color[SHADES[baseShadeIndex]],
       dark:
         color.color[
-          MaterialColorsUtil.shades[
+          SHADES[
             baseShadeIndex + 1 >= shadeLength ? shadeLength : baseShadeIndex + 2
           ]
         ],
@@ -140,23 +134,17 @@ const updatePrimaryColor = (theme: any, item: any) => {
 };
 
 const updateSecondaryColor = (theme: any, item: any) => {
-  const color: any = MaterialColorsUtil.colors.find(
-    (c: any) => c.name === item.name
-  );
-  const baseShadeIndex = MaterialColorsUtil.shades.indexOf(item.shade);
-  const shadeLength = MaterialColorsUtil.shades.length;
+  const color: any = COLORS.find((c: any) => c.name === item.name);
+  const baseShadeIndex = SHADES.indexOf(item.shade);
+  const shadeLength = SHADES.length;
   if (color) {
     theme.palette.secondary = {
       light:
-        color.color[
-          MaterialColorsUtil.shades[
-            baseShadeIndex - 1 <= 0 ? 0 : baseShadeIndex - 2
-          ]
-        ],
-      main: color.color[MaterialColorsUtil.shades[baseShadeIndex]],
+        color.color[SHADES[baseShadeIndex - 1 <= 0 ? 0 : baseShadeIndex - 2]],
+      main: color.color[SHADES[baseShadeIndex]],
       dark:
         color.color[
-          MaterialColorsUtil.shades[
+          SHADES[
             baseShadeIndex + 1 >= shadeLength ? shadeLength : baseShadeIndex + 2
           ]
         ],

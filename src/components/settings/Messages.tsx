@@ -1,11 +1,13 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { useContext } from '../../context';
 
+import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
+import { DEFAULT as DEFAULT_SETTINGS } from '../../actions/settings';
 
 const Messages: FC = () => {
   const [{ settings }, { setAndSaveSettings }] = useContext();
@@ -17,6 +19,26 @@ const Messages: FC = () => {
     action(value);
     setAndSaveSettings({ [event.target.name]: value });
   };
+
+  const reset = () => {
+    setAndSaveSettings({
+      renderVideos: DEFAULT_SETTINGS.renderVideos,
+      renderGetYarn: DEFAULT_SETTINGS.renderGetYarn,
+      renderImages: DEFAULT_SETTINGS.renderImages,
+    });
+  };
+
+  useEffect(() => {
+    setRenderVideos(settings.renderVideos);
+  }, [settings.renderVideos]);
+
+  useEffect(() => {
+    setRenderGetYarn(settings.renderGetYarn);
+  }, [settings.renderGetYarn]);
+
+  useEffect(() => {
+    setRenderImages(settings.renderImages);
+  }, [settings.renderImages]);
 
   return (
     <BasePage title="Messages">
@@ -58,6 +80,11 @@ const Messages: FC = () => {
           label="Show images"
         />
       </BaseSection>
+      <div>
+        <Button color="secondary" onClick={reset} variant="outlined">
+          RESET
+        </Button>
+      </div>
     </BasePage>
   );
 };

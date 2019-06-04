@@ -5,6 +5,32 @@ import IVCard from '../interfaces/IVCard';
 
 const { ipcRenderer } = window.require('electron');
 
+export const DEFAULT_VCARD: IVCard = {
+  jid: '',
+  fullName: '',
+  firstName: '',
+  lastName: '',
+  middleName: '',
+  nickname: '',
+  url: '',
+  birthday: '',
+  organizationName: '',
+  organizationUnit: '',
+  title: '',
+  role: '',
+  phoneNumber: '',
+  street: '',
+  streetExtended: '',
+  city: '',
+  state: '',
+  zipCode: '',
+  country: '',
+  email: '',
+  description: '',
+  photoType: '',
+  photo: '',
+};
+
 export const userActions = {
   setMyStatus(status: string, state: IState): IState {
     ipcRenderer.send('xmpp-my-status', status);
@@ -60,30 +86,4 @@ export const userActions = {
       ],
     };
   },
-};
-
-export const defaultVCard: IVCard = {
-  jid: '',
-  fullName: '',
-  firstName: '',
-  lastName: '',
-  middleName: '',
-  nickname: '',
-  url: '',
-  birthday: '',
-  organizationName: '',
-  organizationUnit: '',
-  title: '',
-  role: '',
-  phoneNumber: '',
-  street: '',
-  streetExtended: '',
-  city: '',
-  state: '',
-  zipCode: '',
-  country: '',
-  email: '',
-  description: '',
-  photoType: '',
-  photo: '',
 };

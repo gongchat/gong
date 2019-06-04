@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import Status from './Status';
 import StatusMenu from './StatusMenu';
-import StringUtil from '../../utils/stringUtils';
+import { getAbbreviation } from '../../utils/stringUtils';
 
 const Me: FC = () => {
   const classes = useStyles();
@@ -40,7 +40,7 @@ const Me: FC = () => {
             />
           ) : (
             <Avatar className={classes.img}>
-              {StringUtil.getAbbreviation(displayName)}
+              {getAbbreviation(displayName)}
             </Avatar>
           )}
           <div className={classes.status}>

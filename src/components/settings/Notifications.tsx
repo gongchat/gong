@@ -14,7 +14,7 @@ import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 import SliderMarkers from './SliderMarkers';
 import { playAudio, SOUNDS } from '../../actions/notification';
-import { defaultSettings } from '../../actions/settings';
+import { DEFAULT as DEFAULT_SETTINGS } from '../../actions/settings';
 
 const MIN_SIZE = 0;
 const MAX_SIZE = 10;
@@ -107,26 +107,26 @@ const NotificationSettings: FC = () => {
 
   const reset = () => {
     setAndSaveSettings({
-      soundName: defaultSettings.soundName,
-      playAudioOnGroupchat: defaultSettings.playAudioOnGroupchat,
-      playAudioOnMentionMe: defaultSettings.playAudioOnMentionMe,
-      playAudioOnChat: defaultSettings.playAudioOnChat,
+      soundName: DEFAULT_SETTINGS.soundName,
+      playAudioOnGroupchat: DEFAULT_SETTINGS.playAudioOnGroupchat,
+      playAudioOnMentionMe: DEFAULT_SETTINGS.playAudioOnMentionMe,
+      playAudioOnChat: DEFAULT_SETTINGS.playAudioOnChat,
       systemNotificationOnGroupchat:
-        defaultSettings.systemNotificationOnGroupchat,
+        DEFAULT_SETTINGS.systemNotificationOnGroupchat,
       systemNotificationOnMentionMe:
-        defaultSettings.systemNotificationOnMentionMe,
-      systemNotificationOnChat: defaultSettings.systemNotificationOnChat,
-      flashFrameOnGroupchat: defaultSettings.flashFrameOnGroupchat,
-      flashFrameOnMentionMe: defaultSettings.flashFrameOnMentionMe,
-      flashFrameOnChat: defaultSettings.flashFrameOnChat,
-      flashMenuBarOnGroupchat: defaultSettings.flashMenuBarOnGroupchat,
+        DEFAULT_SETTINGS.systemNotificationOnMentionMe,
+      systemNotificationOnChat: DEFAULT_SETTINGS.systemNotificationOnChat,
+      flashFrameOnGroupchat: DEFAULT_SETTINGS.flashFrameOnGroupchat,
+      flashFrameOnMentionMe: DEFAULT_SETTINGS.flashFrameOnMentionMe,
+      flashFrameOnChat: DEFAULT_SETTINGS.flashFrameOnChat,
+      flashMenuBarOnGroupchat: DEFAULT_SETTINGS.flashMenuBarOnGroupchat,
       flashMenuBarOnGroupchatFrequency:
-        defaultSettings.flashMenuBarOnGroupchatFrequency,
-      flashMenuBarOnMentionMe: defaultSettings.flashMenuBarOnMentionMe,
+        DEFAULT_SETTINGS.flashMenuBarOnGroupchatFrequency,
+      flashMenuBarOnMentionMe: DEFAULT_SETTINGS.flashMenuBarOnMentionMe,
       flashMenuBarOnMentionMeFrequency:
-        defaultSettings.flashMenuBarOnMentionMeFrequency,
-      flashMenuBarOnChat: defaultSettings.flashMenuBarOnChat,
-      flashMenuBarOnChatFrequency: defaultSettings.flashMenuBarOnChatFrequency,
+        DEFAULT_SETTINGS.flashMenuBarOnMentionMeFrequency,
+      flashMenuBarOnChat: DEFAULT_SETTINGS.flashMenuBarOnChat,
+      flashMenuBarOnChatFrequency: DEFAULT_SETTINGS.flashMenuBarOnChatFrequency,
     });
   };
 
