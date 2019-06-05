@@ -14,8 +14,8 @@ import SliderMarkers from './SliderMarkers';
 import { DEFAULT as DEFAULT_THEME } from '../../actions/theme';
 
 const MIN_SIZE = 8;
-const MAX_SIZE = 24;
-const DEFAULT_SIZE = 15;
+const MAX_SIZE = 20;
+const DEFAULT_SIZE = 14;
 
 const Font: FC = () => {
   const classes = useStyles();
@@ -93,7 +93,7 @@ const Font: FC = () => {
       },
       {
         themeKey: 'typography.fontFamily',
-        value: DEFAULT_THEME.typography.fontFamily,
+        value: 'Source Sans Pro',
       },
     ]);
   };

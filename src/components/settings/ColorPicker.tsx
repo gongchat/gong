@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { makeStyles } from '@material-ui/styles';
 
-import MaterialColors from '../../utils/materialColors';
+import { COLORS, SHADES } from '../../utils/materialColors';
 
 interface IProps {
   item: any;
@@ -14,9 +14,9 @@ const ColorPicker: FC<IProps> = ({ item, onSelection }: IProps) => {
 
   return (
     <div className={classes.root}>
-      {MaterialColors.colors.map((color, colorIndex) => (
+      {COLORS.map((color, colorIndex) => (
         <div key={colorIndex} className={classes.colorRow}>
-          {MaterialColors.shades.map((shade, shadeIndex) => (
+          {SHADES.map((shade, shadeIndex) => (
             <div
               key={`${colorIndex}-${shadeIndex}`}
               className={[

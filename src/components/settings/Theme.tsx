@@ -1,6 +1,7 @@
 import React, { FC, useState, useEffect } from 'react';
 import { useContext } from '../../context';
 
+import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -15,48 +16,76 @@ const ITEMS = [
     type: 'Primary',
     color: '',
     themeKey: 'palette.primary.main',
+    defaultProps: {
+      name: 'cyan',
+      shade: '500',
+      value: '#00bcd4',
+    },
   },
   {
     group: 'Color',
     type: 'Secondary',
     color: '',
     themeKey: 'palette.secondary.main',
+    defaultProps: {
+      name: 'orange',
+      shade: '500',
+      value: '#ff9100',
+    },
   },
   {
     group: 'Background',
     type: 'Header and Footer',
     color: '',
     themeKey: 'palette.backgroundAccent',
+    defaultProps: {
+      value: '#222222',
+    },
   },
   {
     group: 'Background',
     type: ' Chat',
     color: '',
     themeKey: 'palette.background.paper',
+    defaultProps: {
+      value: '#424242',
+    },
   },
   {
     group: 'Background',
     type: 'Sidebars',
     color: '',
     themeKey: 'palette.background.default',
+    defaultProps: {
+      value: '#303030',
+    },
   },
   {
     group: 'Background',
     type: 'Input',
     color: '',
     themeKey: 'palette.backgroundInput',
+    defaultProps: {
+      value: '#555555',
+    },
   },
   {
     group: 'Text',
     type: 'Primary',
     color: '',
     themeKey: 'palette.text.primary',
+    defaultProps: {
+      value: '#fff',
+    },
   },
   {
     group: 'Text',
     type: 'Secondary',
     color: '',
     themeKey: 'palette.text.secondary',
+    defaultProps: {
+      value: 'rgba(255, 255, 255, 0.7)',
+    },
   },
 ];
 
@@ -96,6 +125,17 @@ const Theme: FC = () => {
     });
   };
 
+  const reset = () => {
+    setTheme(
+      ITEMS.map(item => {
+        return {
+          themeKey: item.themeKey,
+          ...item.defaultProps,
+        };
+      })
+    );
+  };
+
   useEffect(() => {
     setItems(getItemsFromTheme(theme));
   }, [theme]);
@@ -129,6 +169,10 @@ const Theme: FC = () => {
                 />
               </ListItem>
             ))}
+            <Divider />
+            <ListItem button={true} onClick={reset}>
+              RESET
+            </ListItem>
           </List>
         </div>
       </div>

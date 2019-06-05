@@ -16,8 +16,8 @@ export const DEFAULT: any = {
     secondary: orange,
     error: red,
 
-    backgroundAccent: '#222',
-    backgroundInput: '#555',
+    backgroundAccent: '#222222',
+    backgroundInput: '#555555',
 
     online: '#64dd17',
     chat: '#aeea00',
@@ -32,24 +32,24 @@ export const DEFAULT: any = {
   sortChannelsByMostRecentUnread: true,
   typography: {
     fontFamily: '"Source Sans Pro", sans-serif',
-    fontSize: 15,
+    fontSize: 14,
   },
 };
 
 const TYPOGRAPHY_PROPS = [
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'h5',
-  'h6',
-  'subtitle1',
-  'subtitle2',
-  'body1',
-  'body2',
-  'button',
-  'caption',
-  'overline',
+  { prop: 'h1', size: 96, lineHeight: 1, letterSpacing: -1.5 },
+  { prop: 'h2', size: 60, lineHeight: 1, letterSpacing: -0.5 },
+  { prop: 'h3', size: 48, lineHeight: 1.04, letterSpacing: 0 },
+  { prop: 'h4', size: 34, lineHeight: 1.17, letterSpacing: 0.25 },
+  { prop: 'h5', size: 24, lineHeight: 1.33, letterSpacing: 0 },
+  { prop: 'h6', size: 20, lineHeight: 1.6, letterSpacing: 0.15 },
+  { prop: 'subtitle1', size: 16, lineHeight: 1.75, letterSpacing: 0.15 },
+  { prop: 'subtitle2', size: 14, lineHeight: 1.57, letterSpacing: 0.1 },
+  { prop: 'body1', size: 16, lineHeight: 1.5, letterSpacing: 0.15 },
+  { prop: 'body2', size: 14, lineHeight: 1.43, letterSpacing: 0.15 },
+  { prop: 'button', size: 14, lineHeight: 1.75, letterSpacing: 0.4 },
+  { prop: 'caption', size: 12, lineHeight: 1.66, letterSpacing: 0.4 },
+  { prop: 'overline', size: 12, lineHeight: 2.66, letterSpacing: 1 },
 ];
 
 const TYPOGRAPHY_SPECIAL_PROPS = ['caption'];
@@ -159,29 +159,41 @@ const updateTypographyColor = (theme: any, color: string) => {
   // TODO: bottom border color on text areas are set by type (light vs dark), unable to change from theme properties. may have to figure out if light or dark from background color (machine learning?)
 
   // update each individually
-  TYPOGRAPHY_PROPS.forEach((prop: string) => {
-    theme.typography[prop].color = color;
+  TYPOGRAPHY_PROPS.forEach((item: any) => {
+    theme.typography[item.prop].color = color;
   });
   const alphaColor = addAlphaToRgb(convertHexToRgb(color), 0.7);
+  console.log(alphaColor, color, convertHexToRgb(color));
   TYPOGRAPHY_SPECIAL_PROPS.forEach((prop: string) => {
     theme.typography[prop].color = alphaColor;
   });
+};
+
+const round = (value: number) => {
+  return Math.round(value * 1e5) / 1e5;
 };
 
 const updateTypographyFontSize = (theme: any, size: number) => {
   theme.typography = { ...theme.typography };
   theme.typography.fontSize = size;
   theme.typography.htmlFontSize = size;
-  TYPOGRAPHY_PROPS.forEach((prop: string) => {
-    theme.typography[prop].fontSize = theme.typography.pxToRem(size);
+
+  TYPOGRAPHY_PROPS.forEach((item: any) => {
+    theme.typography[item.prop].fontSize = theme.typography.pxToRem(
+      (size / 15) * item.size
+    );
+    theme.typography[item.prop].lineHeight = item.lineHeight;
+    theme.typography[item.prop].letterSpacing = `${round(
+      item.letterSpacing / item.size
+    )}px`;
   });
 };
 
 const updateTypographyFontFamily = (theme: any, font: string) => {
   theme.typography = { ...theme.typography };
   theme.typography.fontFamily = `"${font}", sans-serif`;
-  TYPOGRAPHY_PROPS.forEach((prop: string) => {
-    theme.typography[prop].fontFamily = theme.typography.fontFamily;
+  TYPOGRAPHY_PROPS.forEach((item: any) => {
+    theme.typography[item.prop].fontFamily = theme.typography.fontFamily;
   });
 };
 
@@ -191,7 +203,6 @@ const updatePalette = (
   prop: string,
   color: string
 ) => {
-  // do normal update
   let currentProp = theme;
   for (const p of props) {
     if (currentProp[p] && p !== prop) {
@@ -202,12 +213,20 @@ const updatePalette = (
 };
 
 const convertHexToRgb = (hex: string): string => {
-  const bigInt = parseInt(hex, 16);
-  const r = (bigInt >> 16) & 255; // tslint:disable-line
-  const g = (bigInt >> 8) & 255; // tslint:disable-line
-  const b = bigInt & 255; // tslint:disable-line
+  // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+  var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+  hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+    return r + r + g + g + b + b;
+  });
 
-  return `rgb(${r}, ${g}, ${b})`;
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  // tslint: disable-next-line
+  return result
+    ? `rgb(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(
+        result[3],
+        16
+      )})`
+    : '';
 };
 
 const addAlphaToRgb = (rgb: string, value: number): string => {
