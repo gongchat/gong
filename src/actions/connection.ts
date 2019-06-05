@@ -146,10 +146,8 @@ export const connectionActions: any = {
         ];
       }
 
-      this.state = addSavedRoomsToChannels(this.state);
-
       return {
-        ...this.state,
+        ...addSavedRoomsToChannels(this.state),
         connection,
         settings,
         profile,
