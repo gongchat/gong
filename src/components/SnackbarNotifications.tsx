@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useContext } from '../context';
 import { useSnackbar } from 'notistack';
 
@@ -6,12 +6,23 @@ import { makeStyles } from '@material-ui/styles';
 
 import ISnackbarNotification from '../interfaces/ISnackbarNotification';
 import { usePrevious } from '../utils/usePrevious';
+import { Button } from '@material-ui/core';
 
 const SnackbarNotifications: FC = () => {
   const classes = useStyles();
   const [{ snackbarNotifications }, { removeFromSnackbar }] = useContext();
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const prevSnackbarNotifications = usePrevious(snackbarNotifications);
+
+  const action = (key: any) => (
+    <Button
+      onClick={() => {
+        closeSnackbar(key);
+      }}
+    >
+      Dismiss
+    </Button>
+  );
 
   useEffect(() => {
     let notExists = false;
@@ -32,6 +43,7 @@ const SnackbarNotifications: FC = () => {
           variant: notification.variant,
           anchorOrigin: { vertical: 'top', horizontal: 'right' },
           className: classes.notification,
+          action,
         } as any);
         removeFromSnackbar(notification.id);
       });
@@ -42,6 +54,8 @@ const SnackbarNotifications: FC = () => {
     enqueueSnackbar,
     prevSnackbarNotifications,
     removeFromSnackbar,
+    closeSnackbar,
+    action,
   ]);
 
   return null;
