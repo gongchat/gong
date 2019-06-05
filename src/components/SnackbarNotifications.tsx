@@ -33,8 +33,7 @@ const SnackbarNotifications: FC = () => {
           anchorOrigin: { vertical: 'top', horizontal: 'right' },
           className: classes.notification,
         } as any);
-        // TODO: If not wrapped in a setTimeout will remove users from channels in state, need ot figure out why
-        setTimeout(() => removeFromSnackbar(notification.id));
+        removeFromSnackbar(notification.id);
       });
     }
   }, [
@@ -50,13 +49,8 @@ const SnackbarNotifications: FC = () => {
 
 const useStyles: any = makeStyles((theme: any) => ({
   notification: {
-    zIndex: 9999,
     [theme.breakpoints.down('md')]: {
       left: 'auto',
-    },
-    // TODO: Figure out why it is not picking up the correct text color
-    '& span': {
-      color: theme.palette.text.primary,
     },
   },
 }));
