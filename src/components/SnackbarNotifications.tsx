@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import { useContext } from '../context';
 import { useSnackbar } from 'notistack';
 
@@ -6,13 +6,13 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
 
 import ISnackbarNotification from '../interfaces/ISnackbarNotification';
-import { usePrevious } from '../utils/usePrevious';
 
 const SnackbarNotifications: FC = () => {
   const classes = useStyles();
   const [{ snackbarNotifications }, { removeFromSnackbar }] = useContext();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const prevSnackbarNotifications = usePrevious(snackbarNotifications);
+
+  const displayed = useRef([] as string[]);
 
   useEffect(() => {
     const action = (key: any) => (
@@ -24,37 +24,27 @@ const SnackbarNotifications: FC = () => {
         Dismiss
       </Button>
     );
-
-    let notExists = false;
-
     if (snackbarNotifications) {
-      snackbarNotifications.forEach((notification: any, index: number) => {
-        if (!notExists) {
-          notExists =
-            notExists ||
-            !prevSnackbarNotifications.filter(
-              ({ id }) => snackbarNotifications[index].id === id
-            ).length;
+      snackbarNotifications.forEach(
+        (notification: ISnackbarNotification, index: number) => {
+          if (!displayed.current.find((id: string) => id === notification.id)) {
+            console.log(snackbarNotifications);
+            enqueueSnackbar(notification.message, {
+              variant: notification.variant,
+              anchorOrigin: { vertical: 'top', horizontal: 'right' },
+              className: classes.notification,
+              action,
+            } as any);
+            removeFromSnackbar(notification.id);
+            displayed.current.push(notification.id);
+          }
         }
-      });
-    }
-
-    if (notExists && snackbarNotifications) {
-      snackbarNotifications.forEach((notification: ISnackbarNotification) => {
-        enqueueSnackbar(notification.message, {
-          variant: notification.variant,
-          anchorOrigin: { vertical: 'top', horizontal: 'right' },
-          className: classes.notification,
-          action,
-        } as any);
-        removeFromSnackbar(notification.id);
-      });
+      );
     }
   }, [
     classes.notification,
     snackbarNotifications,
     enqueueSnackbar,
-    prevSnackbarNotifications,
     removeFromSnackbar,
     closeSnackbar,
   ]);
