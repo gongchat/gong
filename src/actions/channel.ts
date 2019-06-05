@@ -15,169 +15,181 @@ const electronStore = new ElectronStore();
 export const TRIM_AT: number = 200;
 export const TRIM_TO: number = 150;
 
-export const channelActions = {
-  removeChannel(jid: string, state: IState): IState {
-    const channel: IChannel | undefined = state.channels.find(
-      (c: IChannel) => c.jid === jid
-    );
-    if (channel) {
-      const channels: IChannel[] = state.channels.filter(c => c !== channel);
-      ipcRenderer.send('xmpp-unsubscribe-to-room', channel);
-      saveRooms(channels);
-      return {
-        ...state,
-        channels,
-        current:
-          state.current && state.current.jid === jid
-            ? undefined
-            : state.current,
-      };
-    } else {
-      return state;
-    }
-  },
-  selectChannel(channelJid: string, state: IState): IState {
-    const channels: IChannel[] = state.channels.map((channel: IChannel) => {
-      if (channel.jid === channelJid) {
-        const newChannel = {
-          ...channel,
-          unreadMessages: 0,
-          hasUnreadMentionMe: false,
+export const channelActions: any = {
+  removeChannel(jid: string) {
+    return (): IState => {
+      const channel: IChannel | undefined = this.state.channels.find(
+        (c: IChannel) => c.jid === jid
+      );
+      if (channel) {
+        const channels: IChannel[] = this.state.channels.filter(
+          (c: IChannel) => c !== channel
+        );
+        ipcRenderer.send('xmpp-unsubscribe-to-room', channel);
+        saveRooms(channels);
+        return {
+          ...this.state,
+          channels,
+          current:
+            this.state.current && this.state.current.jid === jid
+              ? undefined
+              : this.state.current,
         };
-
-        if (channel.type === 'groupchat') {
-          (newChannel as IRoom).lastReadTimestamp = moment();
-          if (newChannel.messages && newChannel.messages.length > 0) {
-            (newChannel as IRoom).lastReadMessageId =
-              channel.messages[channel.messages.length - 1].id;
+      } else {
+        return this.state;
+      }
+    };
+  },
+  selectChannel(channelJid: string) {
+    return (): IState => {
+      const channels: IChannel[] = this.state.channels.map(
+        (channel: IChannel) => {
+          if (channel.jid === channelJid) {
+            const newChannel = {
+              ...channel,
+              unreadMessages: 0,
+              hasUnreadMentionMe: false,
+            };
+            if (channel.type === 'groupchat') {
+              (newChannel as IRoom).lastReadTimestamp = moment();
+              if (newChannel.messages && newChannel.messages.length > 0) {
+                (newChannel as IRoom).lastReadMessageId =
+                  channel.messages[channel.messages.length - 1].id;
+              }
+            }
+            return newChannel;
+          } else {
+            if (this.state.current && this.state.current.jid === channel.jid) {
+              return {
+                ...channel,
+                messages: channel.messages.map((message: IMessage) => ({
+                  ...message,
+                  isRead: true,
+                })),
+              };
+            }
+            return channel;
           }
         }
-
-        return newChannel;
-      } else {
-        if (state.current && state.current.jid === channel.jid) {
-          return {
-            ...channel,
-            messages: channel.messages.map((message: IMessage) => ({
-              ...message,
-              isRead: true,
-            })),
-          };
-        }
-        return channel;
-      }
-    });
-    const newState: IState = {
-      ...state,
-      current: channels.find((channel: IChannel) => channel.jid === channelJid),
-      channels,
+      );
+      const newState: IState = {
+        ...this.state,
+        current: channels.find(
+          (channel: IChannel) => channel.jid === channelJid
+        ),
+        channels,
+      };
+      saveRooms(channels);
+      setMenuBarNotificationOnChannelSelect(newState);
+      return newState;
     };
-    saveRooms(channels);
-    setMenuBarNotificationOnChannelSelect(newState);
-    return newState;
   },
-  setInputText(jid: string, text: string, state: IState): IState {
+  setInputText(jid: string, text: string) {
     // do not need to update current as it only matters when we change channels
-    return {
-      ...state,
-      channels: state.channels.map((channel: IChannel) => {
+    return (): IState => ({
+      ...this.state,
+      channels: this.state.channels.map((channel: IChannel) => {
         if (channel.jid === jid) {
           return { ...channel, inputText: text };
         } else {
           return channel;
         }
       }),
-    };
+    });
   },
-  setChannelScrollPosition(
-    channelJid: string,
-    position: number,
-    state: IState
-  ): IState {
-    return {
-      ...state,
-      channels: state.channels.map((channel: IChannel) => {
+  setChannelScrollPosition(channelJid: string, position: number) {
+    return (): IState => ({
+      ...this.state,
+      channels: this.state.channels.map((channel: IChannel) => {
         if (channel.jid === channelJid) {
           return { ...channel, scrollPosition: position };
         }
         return channel;
       }),
+    });
+  },
+  getChannelLogs(channel: IChannel) {
+    return (): IState => {
+      ipcRenderer.send('get-log', {
+        user: this.state.profile.jid,
+        date:
+          channel.messages && channel.messages.length > 0
+            ? moment(channel.messages[0].timestamp).format('YYYY-MM-DD')
+            : '',
+        channel,
+      });
+      return this.state;
     };
   },
-  getChannelLogs(channel: IChannel, state: IState): IState {
-    ipcRenderer.send('get-log', {
-      user: state.profile.jid,
-      date:
-        channel.messages && channel.messages.length > 0
-          ? moment(channel.messages[0].timestamp).format('YYYY-MM-DD')
-          : '',
-      channel,
-    });
-    return state;
-  },
-  setChannelLogs(payload: any, state: IState): IState {
-    const { channelJid, messages, hasNoMoreLogs } = payload;
+  setChannelLogs({ channelJid, messages, hasNoMoreLogs }) {
+    return (): IState => {
+      messages.forEach((message: IMessage) => {
+        message.timestamp = moment(message.timestamp);
+        message.isRead = true;
+      });
 
-    messages.forEach((message: IMessage) => {
-      message.timestamp = moment(message.timestamp);
-      message.isRead = true;
-    });
+      const current =
+        this.state.current && this.state.current.jid === channelJid
+          ? {
+              ...this.state.current,
+              messages:
+                messages.length > 0
+                  ? [...messages, ...this.state.current.messages]
+                  : this.state.current.messages,
+              hasNoMoreLogs,
+              isRequestingLogs: false,
+            }
+          : this.state.current;
 
-    const current =
-      state.current && state.current.jid === channelJid
-        ? {
-            ...state.current,
+      const channels = this.state.channels.map((c: IChannel) => {
+        if (c.jid === channelJid) {
+          return {
+            ...c,
             messages:
-              messages.length > 0
-                ? [...messages, ...state.current.messages]
-                : state.current.messages,
+              messages.length > 0 ? [...messages, ...c.messages] : c.messages,
             hasNoMoreLogs,
             isRequestingLogs: false,
-          }
-        : state.current;
+          };
+        } else {
+          return c;
+        }
+      });
 
-    const channels = state.channels.map((c: IChannel) => {
-      if (c.jid === channelJid) {
-        return {
-          ...c,
-          messages:
-            messages.length > 0 ? [...messages, ...c.messages] : c.messages,
-          hasNoMoreLogs,
-          isRequestingLogs: false,
-        };
-      } else {
-        return c;
-      }
-    });
-
-    return {
-      ...state,
-      current,
-      channels,
+      return {
+        ...this.state,
+        current,
+        channels,
+      };
     };
   },
-  trimOldMessages(jid: string, state: IState): IState {
-    const newState = { ...state };
-    let updatedChannel;
-    newState.channels = state.channels.map((channel: IChannel) => {
-      if (channel.jid === jid && channel.messages.length >= TRIM_AT) {
-        updatedChannel = {
-          ...channel,
-          hasNoMoreLogs: false,
-          messages: channel.messages.slice(
-            channel.messages.length - TRIM_TO,
-            channel.messages.length
-          ),
-        };
-        return updatedChannel;
-      } else {
-        return channel;
+  trimOldMessages(jid: string) {
+    return (): IState => {
+      const newState = { ...this.state };
+      let updatedChannel: IChannel | undefined;
+      newState.channels = this.state.channels.map((channel: IChannel) => {
+        if (channel.jid === jid && channel.messages.length >= TRIM_AT) {
+          updatedChannel = {
+            ...channel,
+            hasNoMoreLogs: false,
+            messages: channel.messages.slice(
+              channel.messages.length - TRIM_TO,
+              channel.messages.length
+            ),
+          };
+          return updatedChannel;
+        } else {
+          return channel;
+        }
+      });
+      if (
+        updatedChannel &&
+        this.state.current &&
+        this.state.current.jid === jid
+      ) {
+        newState.current = updatedChannel;
       }
-    });
-    if (updatedChannel && state.current && state.current.jid === jid) {
-      newState.current = updatedChannel;
-    }
-    return newState;
+      return newState;
+    };
   },
 };
 

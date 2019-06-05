@@ -1,10 +1,10 @@
 import IState from '../interfaces/IState';
 
-export const appActions = {
-  setApp(payload: any, state: IState): IState {
-    return {
-      ...state,
-      app: { ...state.app, ...payload },
-    };
+export const appActions: any = {
+  setApp(payload: any) {
+    return (): IState => ({
+      ...this.state,
+      app: { ...this.state.app, ...payload },
+    });
   },
 };

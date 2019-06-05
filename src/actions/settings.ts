@@ -35,24 +35,29 @@ export const DEFAULT: ISettings = {
   flashMenuBarOnChatFrequency: 'once',
 };
 
-export const settingsActions = {
-  toggleShowSettings(state: IState): IState {
-    return { ...state, showSettings: !state.showSettings };
+export const settingsActions: any = {
+  toggleShowSettings() {
+    return (): IState => ({
+      ...this.state,
+      showSettings: !this.state.showSettings,
+    });
   },
-  setAndSaveSettings(settings: any, state: IState): IState {
-    let savedSettings: ISettingsSaved = electronStore.get('settings');
-    savedSettings = {
-      ...savedSettings,
-      ...settings,
-    };
-    electronStore.set('settings', savedSettings);
-    sendSettingsToElectron(settings);
-    return {
-      ...state,
-      settings: {
-        ...state.settings,
+  setAndSaveSettings(settings: any) {
+    return (): IState => {
+      let savedSettings: ISettingsSaved = electronStore.get('settings');
+      savedSettings = {
+        ...savedSettings,
         ...settings,
-      },
+      };
+      electronStore.set('settings', savedSettings);
+      sendSettingsToElectron(settings);
+      return {
+        ...this.state,
+        settings: {
+          ...this.state.settings,
+          ...settings,
+        },
+      };
     };
   },
 };

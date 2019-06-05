@@ -17,122 +17,126 @@ import { stringToHexColor } from '../utils/colorUtil';
 
 const { ipcRenderer } = window.require('electron');
 
-export const messageActions = {
-  sendMessage(messageSend: IMessageSend, state: IState): IState {
-    ipcRenderer.send('xmpp-send-message', messageSend);
+export const messageActions: any = {
+  sendMessage(messageSend: IMessageSend) {
+    return (): IState => {
+      ipcRenderer.send('xmpp-send-message', messageSend);
 
-    if (state.current && state.current.type === 'chat') {
-      const newState: IState = { ...state };
+      if (this.state.current && this.state.current.type === 'chat') {
+        const newState: IState = { ...this.state };
+        const message: IMessage = {
+          id: messageSend.id,
+          channelName: messageSend.channelName,
+          to: messageSend.to,
+          from: messageSend.from,
+          body: messageSend.body,
+          urls: [],
+          timestamp: moment(),
+          userNickname:
+            newState.profile.vCard && newState.profile.vCard.fullName
+              ? newState.profile.vCard.fullName
+              : newState.profile.username,
+          color: newState.profile.color,
+          isMe: true,
+          isRead: true,
+          isHistory: false,
+          isMentioningMe: false,
+        };
+        processMessage(newState, message, [], '');
+        addMessage(newState, message, 'chat', messageSend.body);
+
+        return newState;
+      }
+
+      return this.state;
+    };
+  },
+  receiveMessage(messageReceive: IMessageReceive) {
+    return (): IState => {
+      if (messageReceive.type === 'error') {
+        return {
+          ...this.state,
+          snackbarNotifications: [
+            ...this.state.snackbarNotifications,
+            {
+              id: new Date().getTime() + Math.random() + '',
+              source: 'message',
+              variant: 'error',
+              message: `Unable to send message to ${messageReceive.from}`,
+            },
+          ],
+        };
+      }
+
+      const newState: IState = { ...this.state };
+      let channelName: string = messageReceive.from.split('/')[0];
+      let userNickname: string = messageReceive.from.split('/')[1];
+      let color: string = stringToHexColor(userNickname);
+      let channel: IRoom | IUser | undefined = newState.channels.find(
+        (c: IChannel) => c.type === messageReceive.type && c.jid === channelName
+      ) as IRoom | IUser;
+      let channelUsers: IChannelUser[] = [];
+      let myChannelNickname = '';
+
+      switch (messageReceive.type) {
+        case 'groupchat':
+          if (channel) {
+            channel = channel as IRoom; // TODO: Need to type check
+            channelUsers = channel.users;
+            myChannelNickname = channel.myNickname;
+            const channelUser: IChannelUser | undefined = !channel.users
+              ? undefined
+              : channel.users.find(
+                  (u: IChannelUser) => u.nickname === userNickname
+                );
+            if (channelUser) {
+              userNickname = channelUser.nickname;
+              color = channelUser.color;
+            }
+          }
+          break;
+        case 'chat':
+          if (channel) {
+            channel = channel as IUser; // TODO: Need to type check
+            userNickname = channel.username;
+            color = channel.color;
+
+            // update session jid
+            if (channel.sessionJid !== messageReceive.from) {
+              channel.sessionJid = messageReceive.from;
+            }
+            if (newState.current && newState.current.jid === channel.jid) {
+              (newState.current as IUser).sessionJid = messageReceive.from;
+            }
+          } else {
+            channelName = messageReceive.from;
+          }
+          break;
+        default:
+          break;
+      }
+
       const message: IMessage = {
-        id: messageSend.id,
-        channelName: messageSend.channelName,
-        to: messageSend.to,
-        from: messageSend.from,
-        body: messageSend.body,
+        id: messageReceive.id,
+        channelName,
+        to: newState.settings.jid,
+        from: messageReceive.from,
+        body: messageReceive.body,
         urls: [],
-        timestamp: moment(),
-        userNickname:
-          newState.profile.vCard && newState.profile.vCard.fullName
-            ? newState.profile.vCard.fullName
-            : newState.profile.username,
-        color: newState.profile.color,
-        isMe: true,
-        isRead: true,
-        isHistory: false,
+        timestamp: messageReceive.timestamp,
+        isMe: false,
+        isRead: false,
+        isHistory: messageReceive.isHistory,
         isMentioningMe: false,
+        userNickname,
+        color,
       };
-      processMessage(newState, message, [], '');
-      addMessage(newState, message, 'chat', messageSend.body);
+
+      processMessage(newState, message, channelUsers, myChannelNickname);
+      addMessage(newState, message, messageReceive.type, messageReceive.body);
 
       return newState;
-    }
-
-    return state;
-  },
-  receiveMessage(messageReceive: IMessageReceive, state: IState): IState {
-    if (messageReceive.type === 'error') {
-      return {
-        ...state,
-        snackbarNotifications: [
-          ...state.snackbarNotifications,
-          {
-            id: new Date().getTime() + Math.random() + '',
-            source: 'message',
-            variant: 'error',
-            message: `Unable to send message to ${messageReceive.from}`,
-          },
-        ],
-      };
-    }
-
-    const newState: IState = { ...state };
-    let channelName: string = messageReceive.from.split('/')[0];
-    let userNickname: string = messageReceive.from.split('/')[1];
-    let color: string = stringToHexColor(userNickname);
-    let channel: IRoom | IUser | undefined = newState.channels.find(
-      (c: IChannel) => c.type === messageReceive.type && c.jid === channelName
-    ) as IRoom | IUser;
-    let channelUsers: IChannelUser[] = [];
-    let myChannelNickname = '';
-
-    switch (messageReceive.type) {
-      case 'groupchat':
-        if (channel) {
-          channel = channel as IRoom; // TODO: Need to type check
-          channelUsers = channel.users;
-          myChannelNickname = channel.myNickname;
-          const channelUser: IChannelUser | undefined = !channel.users
-            ? undefined
-            : channel.users.find(
-                (u: IChannelUser) => u.nickname === userNickname
-              );
-          if (channelUser) {
-            userNickname = channelUser.nickname;
-            color = channelUser.color;
-          }
-        }
-        break;
-      case 'chat':
-        if (channel) {
-          channel = channel as IUser; // TODO: Need to type check
-          userNickname = channel.username;
-          color = channel.color;
-
-          // update session jid
-          if (channel.sessionJid !== messageReceive.from) {
-            channel.sessionJid = messageReceive.from;
-          }
-          if (newState.current && newState.current.jid === channel.jid) {
-            (newState.current as IUser).sessionJid = messageReceive.from;
-          }
-        } else {
-          channelName = messageReceive.from;
-        }
-        break;
-      default:
-        break;
-    }
-
-    const message: IMessage = {
-      id: messageReceive.id,
-      channelName,
-      to: newState.settings.jid,
-      from: messageReceive.from,
-      body: messageReceive.body,
-      urls: [],
-      timestamp: messageReceive.timestamp,
-      isMe: false,
-      isRead: false,
-      isHistory: messageReceive.isHistory,
-      isMentioningMe: false,
-      userNickname,
-      color,
     };
-
-    processMessage(newState, message, channelUsers, myChannelNickname);
-    addMessage(newState, message, messageReceive.type, messageReceive.body);
-
-    return newState;
   },
 };
 

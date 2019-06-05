@@ -54,47 +54,51 @@ const TYPOGRAPHY_PROPS = [
 
 const TYPOGRAPHY_SPECIAL_PROPS = ['caption'];
 
-export const themeActions = {
-  setThemeToDefault(state: IState): IState {
-    const theme = createMuiTheme({ ...DEFAULT });
-    electronStore.set('theme', theme);
-    return { ...state, theme: { ...theme } };
+export const themeActions: any = {
+  setThemeToDefault() {
+    return (): IState => {
+      const theme = createMuiTheme({ ...DEFAULT });
+      electronStore.set('theme', theme);
+      return { ...this.state, theme: { ...theme } };
+    };
   },
-  setTheme(items: any, state: IState): IState {
-    let theme = { ...state.theme };
+  setTheme(items: any) {
+    return (): IState => {
+      let theme = { ...this.state.theme };
 
-    items.forEach((item: any) => {
-      theme = { ...theme };
-      const props = item.themeKey.split('.');
-      const lastProp = props[props.length - 1];
-      // order matters
-      if (lastProp === 'fontFamily') {
-        // theme.typography.fontFamily = item.value;
-        updateTypographyFontFamily(theme, item.value);
-      } else if (lastProp === 'fontSize') {
-        // theme.typography.fontSize = item.value;
-        updateTypographyFontSize(theme, item.value);
-      } else if (item.themeKey === 'palette.text.primary') {
-        updateTypographyColor(theme, item.value);
-      } else if (props[1] === 'primary') {
-        updatePrimaryColor(theme, item);
-      } else if (props[1] === 'secondary') {
-        updateSecondaryColor(theme, item);
-      } else if (props[0] === 'palette') {
-        updatePalette(theme, props, lastProp, item.value);
-      } else if (lastProp === 'unit') {
-        theme.spacing = item.value;
-      } else {
-        theme[lastProp] = item.value;
-      }
-      theme = createMuiTheme(theme);
-    });
+      items.forEach((item: any) => {
+        theme = { ...theme };
+        const props = item.themeKey.split('.');
+        const lastProp = props[props.length - 1];
+        // order matters
+        if (lastProp === 'fontFamily') {
+          // theme.typography.fontFamily = item.value;
+          updateTypographyFontFamily(theme, item.value);
+        } else if (lastProp === 'fontSize') {
+          // theme.typography.fontSize = item.value;
+          updateTypographyFontSize(theme, item.value);
+        } else if (item.themeKey === 'palette.text.primary') {
+          updateTypographyColor(theme, item.value);
+        } else if (props[1] === 'primary') {
+          updatePrimaryColor(theme, item);
+        } else if (props[1] === 'secondary') {
+          updateSecondaryColor(theme, item);
+        } else if (props[0] === 'palette') {
+          updatePalette(theme, props, lastProp, item.value);
+        } else if (lastProp === 'unit') {
+          theme.spacing = item.value;
+        } else {
+          theme[lastProp] = item.value;
+        }
+        theme = createMuiTheme(theme);
+      });
 
-    electronStore.set('theme', theme);
+      electronStore.set('theme', theme);
 
-    return {
-      ...state,
-      theme,
+      return {
+        ...this.state,
+        theme,
+      };
     };
   },
 };

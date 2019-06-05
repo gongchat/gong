@@ -24,20 +24,23 @@ export const SOUNDS = [
   { name: 'Yahoo', fileName: 'yahoo.wav' },
 ];
 
-export const notificationActions = {
-  addToSnackbar(notification: ISnackbarNotifications, state: IState): IState {
-    return {
-      ...state,
-      snackbarNotifications: [...state.snackbarNotifications, notification],
-    };
+export const notificationActions: any = {
+  addToSnackbar(notification: ISnackbarNotifications) {
+    return (): IState => ({
+      ...this.state,
+      snackbarNotifications: [
+        ...this.state.snackbarNotifications,
+        notification,
+      ],
+    });
   },
-  removeFromSnackbar(id: string, state: IState): IState {
-    return {
-      ...state,
-      snackbarNotifications: state.snackbarNotifications.filter(
+  removeFromSnackbar(id: string) {
+    return (): IState => ({
+      ...this.state,
+      snackbarNotifications: this.state.snackbarNotifications.filter(
         (notification: ISnackbarNotifications) => notification.id !== id
       ),
-    };
+    });
   },
 };
 

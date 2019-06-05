@@ -8,13 +8,15 @@ import IUserConnection from '../interfaces/IUserConnection';
 
 import { stringToHexColor } from '../utils/colorUtil';
 
-export const presenceActions = {
-  setPresence(payload: IPresence, state: IState): IState {
-    if (!payload.user && !payload.code) {
-      return setChat(state, payload);
-    } else {
-      return setGroupchat(state, payload);
-    }
+export const presenceActions: any = {
+  setPresence(payload: IPresence) {
+    return (): IState => {
+      if (!payload.user && !payload.code) {
+        return setChat(this.state, payload);
+      } else {
+        return setGroupchat(this.state, payload);
+      }
+    };
   },
 };
 
