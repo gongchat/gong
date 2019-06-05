@@ -14,18 +14,19 @@ const SnackbarNotifications: FC = () => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const prevSnackbarNotifications = usePrevious(snackbarNotifications);
 
-  const action = (key: any) => (
-    <Button
-      onClick={() => {
-        closeSnackbar(key);
-      }}
-    >
-      Dismiss
-    </Button>
-  );
-
   useEffect(() => {
+    const action = (key: any) => (
+      <Button
+        onClick={() => {
+          closeSnackbar(key);
+        }}
+      >
+        Dismiss
+      </Button>
+    );
+
     let notExists = false;
+
     if (snackbarNotifications) {
       snackbarNotifications.forEach((notification: any, index: number) => {
         if (!notExists) {
@@ -37,6 +38,7 @@ const SnackbarNotifications: FC = () => {
         }
       });
     }
+
     if (notExists && snackbarNotifications) {
       snackbarNotifications.forEach((notification: ISnackbarNotification) => {
         enqueueSnackbar(notification.message, {
@@ -55,7 +57,6 @@ const SnackbarNotifications: FC = () => {
     prevSnackbarNotifications,
     removeFromSnackbar,
     closeSnackbar,
-    action,
   ]);
 
   return null;
