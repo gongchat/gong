@@ -2,11 +2,11 @@ import React, { FC, useEffect } from 'react';
 import { useContext } from '../context';
 import { useSnackbar } from 'notistack';
 
+import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
 
 import ISnackbarNotification from '../interfaces/ISnackbarNotification';
 import { usePrevious } from '../utils/usePrevious';
-import { Button } from '@material-ui/core';
 
 const SnackbarNotifications: FC = () => {
   const classes = useStyles();
