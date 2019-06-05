@@ -12,9 +12,9 @@ export const presenceActions: any = {
   setPresence(payload: IPresence) {
     return (): IState => {
       if (!payload.user && !payload.code) {
-        return setChat(this.state, payload);
+        return setChat({ ...this.state }, payload);
       } else {
-        return setGroupchat(this.state, payload);
+        return setGroupchat({ ...this.state }, payload);
       }
     };
   },
