@@ -1,6 +1,6 @@
 # Gong &middot; [![Build Status](https://travis-ci.org/gongchat/gong.svg?branch=master)](https://travis-ci.org/gongchat/gong)
 
-Gong is a Electron + React XMPP Client. Currently under development and is in pre-alpha.
+Gong is a Electron + React XMPP Client. Currently under development and is in alpha.
 
 ## Running the Application
 
@@ -21,14 +21,11 @@ If you are on linux you and do not already have `libsecret` installed run `sudo 
 
 ## Starting up the Application
 
-After you get your XMPP server running and the required packages installed run `npm start`.
+Run `npm start` to start the application
 
 ## Building the Application
 
-1. Run `npm run build`
-2. Run `npm run dist`
-
-After `npm run dist` finishes you can find the installation file in the `/dist` folder.
+Run `npm run dist` to build the application. Build files will be outputted to the `/dist` folder.
 
 ## Updating Your Application
 
