@@ -10,11 +10,11 @@ import { stringToHexColor } from '../utils/colorUtil';
 
 export const presenceActions: any = {
   setPresence(payload: IPresence) {
-    return (): IState => {
+    return (state: IState): IState => {
       if (!payload.user && !payload.code) {
-        return setChat({ ...this.state }, payload);
+        return setChat({ ...state }, payload);
       } else {
-        return setGroupchat({ ...this.state }, payload);
+        return setGroupchat({ ...state }, payload);
       }
     };
   },

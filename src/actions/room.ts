@@ -15,9 +15,9 @@ const { ipcRenderer } = window.require('electron');
 
 export const roomActions: any = {
   addRoomToChannels(roomJoin: IRoomJoin) {
-    return (): IState => {
-      if (this.state.channels.find((c: IChannel) => c.jid === roomJoin.jid)) {
-        return this.state;
+    return (state: IState): IState => {
+      if (state.channels.find((c: IChannel) => c.jid === roomJoin.jid)) {
+        return state;
       }
       const room: IRoom = {
         type: 'groupchat',
@@ -39,23 +39,23 @@ export const roomActions: any = {
         lastReadTimestamp: undefined,
         lastReadMessageId: '',
       };
-      const channels: IChannel[] = [...this.state.channels, room];
+      const channels: IChannel[] = [...state.channels, room];
       ipcRenderer.send('xmpp-subscribe-to-room', roomJoin);
       saveRooms(channels);
       return {
-        ...this.state,
+        ...state,
         channels,
       };
     };
   },
   selectRoomUser(user: IChannelUser) {
-    return (): IState => {
-      let channel = this.state.channels.find(
+    return (state: IState): IState => {
+      let channel = state.channels.find(
         (c: IChannel) => c.jid === user.jid && c.type === 'chat'
       );
 
       if (!channel) {
-        channel = this.state.channels.find(
+        channel = state.channels.find(
           (c: IChannel) => c.jid === user.jid.split('/')[0] && c.type === 'chat'
         );
       }
@@ -74,21 +74,21 @@ export const roomActions: any = {
           scrollPosition: -1,
         };
         return {
-          ...this.state,
-          channels: [...this.state.channels, newChannel],
+          ...state,
+          channels: [...state.channels, newChannel],
           current: newChannel,
         };
       } else {
         return {
-          ...this.state,
+          ...state,
           current: channel,
         };
       }
     };
   },
   editRoom(jid: string, payload: any) {
-    return (): IState => {
-      const channel = this.state.channels.find((c: IChannel) => c.jid === jid);
+    return (state: IState): IState => {
+      const channel = state.channels.find((c: IChannel) => c.jid === jid);
       if (channel) {
         const room: IRoom = {
           type: 'groupchat',
@@ -111,27 +111,27 @@ export const roomActions: any = {
           lastReadMessageId: '',
         };
         const channels: IChannel[] = [
-          ...this.state.channels.filter((c: IChannel) => c !== channel),
+          ...state.channels.filter((c: IChannel) => c !== channel),
           room,
         ];
         ipcRenderer.send('xmpp-subscribe-to-room', payload);
         saveRooms(channels);
         return {
-          ...this.state,
+          ...state,
           channels,
         };
       } else {
-        return this.state;
+        return state;
       }
     };
   },
   setChannelNickname(payload: any) {
-    return (): IState => {
+    return (state: IState): IState => {
       ipcRenderer.send('xmpp-set-room-nickname', {
         jid: payload.jid,
         nickname: payload.newNickname,
       });
-      const channels = this.state.channels.map((channel: IChannel) => {
+      const channels = state.channels.map((channel: IChannel) => {
         if (channel.jid === payload.jid && channel.type === 'groupchat') {
           const room = channel as IRoom;
           const user = room.users.find(
@@ -147,7 +147,7 @@ export const roomActions: any = {
       });
       saveRooms(channels);
       return {
-        ...this.state,
+        ...state,
         channels,
       };
     };

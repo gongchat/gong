@@ -20,11 +20,11 @@ const { ipcRenderer } = window.require('electron');
 
 export const connectionActions: any = {
   autoConnect() {
-    return (): IState => {
+    return (state: IState): IState => {
       const settingsSaved: ISettingsSaved = electronStore.get('settings');
       if (settingsSaved === undefined) {
         return {
-          ...this.state,
+          ...state,
           connection: {
             isConnecting: false,
             isConnected: false,
@@ -47,8 +47,8 @@ export const connectionActions: any = {
         });
 
         // handle reconnecting message if already authenticated
-        let snackbarNotifications = this.state.snackbarNotifications;
-        if (this.state.connection.hasSavedCredentials) {
+        let snackbarNotifications = state.snackbarNotifications;
+        if (state.connection.hasSavedCredentials) {
           const snackbarNotification: ISnackbarNotification = {
             id: new Date().getTime() + Math.random() + '',
             source: 'connection',
@@ -62,9 +62,9 @@ export const connectionActions: any = {
         }
 
         return {
-          ...this.state,
+          ...state,
           connection: {
-            ...this.state.connection,
+            ...state.connection,
             isConnected: false,
             isConnecting: true,
             hasSavedCredentials: true,
@@ -76,12 +76,12 @@ export const connectionActions: any = {
     };
   },
   connecting(credentials: ICredentials) {
-    return (): IState => {
+    return (state: IState): IState => {
       ipcRenderer.send('xmpp-connect', credentials);
       return {
-        ...this.state,
+        ...state,
         connection: {
-          ...this.state.connection,
+          ...state.connection,
           isConnected: false,
           isConnecting: true,
           connectionError: '',
@@ -91,7 +91,7 @@ export const connectionActions: any = {
   },
   // TODO: turn payload into an interface
   connected(payload: any) {
-    return (): IState => {
+    return (state: IState): IState => {
       let settingsSaved: ISettingsSaved = electronStore.get('settings');
 
       // if no saved settings should be first log in.
@@ -132,8 +132,8 @@ export const connectionActions: any = {
       ipcRenderer.send('xmpp-get-vcard', { from: payload.jid });
 
       // handle reconnected message if already authenticated
-      let snackbarNotifications = this.state.snackbarNotifications;
-      if (this.state.connection.hasSavedCredentials) {
+      let snackbarNotifications = state.snackbarNotifications;
+      if (state.connection.hasSavedCredentials) {
         const snackbarNotification: ISnackbarNotification = {
           id: new Date().getTime() + Math.random() + '',
           source: 'connection',
@@ -147,7 +147,7 @@ export const connectionActions: any = {
       }
 
       return {
-        ...addSavedRoomsToChannels(this.state),
+        ...addSavedRoomsToChannels(state),
         connection,
         settings,
         profile,
@@ -157,9 +157,9 @@ export const connectionActions: any = {
   },
   // TODO: turn payload into an interface
   connectionFailed(payload: any) {
-    return (): IState => {
-      let snackbarNotifications = this.state.snackbarNotifications;
-      if (this.state.connection.hasSavedCredentials) {
+    return (state: IState): IState => {
+      let snackbarNotifications = state.snackbarNotifications;
+      if (state.connection.hasSavedCredentials) {
         const snackbarNotification: ISnackbarNotification = {
           id: new Date().getTime() + Math.random() + '',
           source: 'connection',
@@ -173,7 +173,7 @@ export const connectionActions: any = {
       }
 
       if (
-        this.state.connection.hasSavedCredentials &&
+        state.connection.hasSavedCredentials &&
         payload.error === 'Cannot authorize your credentials'
       ) {
         ipcRenderer.send('xmpp-log-off');
@@ -181,9 +181,9 @@ export const connectionActions: any = {
       }
 
       return {
-        ...this.state,
+        ...state,
         connection: {
-          ...this.state.connection,
+          ...state.connection,
           isConnected: false,
           isConnecting: false,
           connectionError: payload.error,
@@ -193,7 +193,7 @@ export const connectionActions: any = {
     };
   },
   logOff() {
-    return (): IState => {
+    return (state: IState): IState => {
       ipcRenderer.send('xmpp-log-off');
       return {
         ...INITIAL_STATE,

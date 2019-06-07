@@ -37,13 +37,13 @@ export const DEFAULT: ISettings = {
 
 export const settingsActions: any = {
   toggleShowSettings() {
-    return (): IState => ({
-      ...this.state,
-      showSettings: !this.state.showSettings,
+    return (state: IState): IState => ({
+      ...state,
+      showSettings: !state.showSettings,
     });
   },
   setAndSaveSettings(settings: any) {
-    return (): IState => {
+    return (state: IState): IState => {
       let savedSettings: ISettingsSaved = electronStore.get('settings');
       savedSettings = {
         ...savedSettings,
@@ -52,9 +52,9 @@ export const settingsActions: any = {
       electronStore.set('settings', savedSettings);
       sendSettingsToElectron(settings);
       return {
-        ...this.state,
+        ...state,
         settings: {
-          ...this.state.settings,
+          ...state.settings,
           ...settings,
         },
       };

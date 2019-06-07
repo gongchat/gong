@@ -19,11 +19,11 @@ const { ipcRenderer } = window.require('electron');
 
 export const messageActions: any = {
   sendMessage(messageSend: IMessageSend) {
-    return (): IState => {
+    return (state: IState): IState => {
       ipcRenderer.send('xmpp-send-message', messageSend);
 
-      if (this.state.current && this.state.current.type === 'chat') {
-        const newState: IState = { ...this.state };
+      if (state.current && state.current.type === 'chat') {
+        const newState: IState = { ...state };
         const message: IMessage = {
           id: messageSend.id,
           channelName: messageSend.channelName,
@@ -48,16 +48,16 @@ export const messageActions: any = {
         return newState;
       }
 
-      return this.state;
+      return state;
     };
   },
   receiveMessage(messageReceive: IMessageReceive) {
-    return (): IState => {
+    return (state: IState): IState => {
       if (messageReceive.type === 'error') {
         return {
-          ...this.state,
+          ...state,
           snackbarNotifications: [
-            ...this.state.snackbarNotifications,
+            ...state.snackbarNotifications,
             {
               id: new Date().getTime() + Math.random() + '',
               source: 'message',
@@ -68,7 +68,7 @@ export const messageActions: any = {
         };
       }
 
-      const newState: IState = { ...this.state };
+      const newState: IState = { ...state };
       let channelName: string = messageReceive.from.split('/')[0];
       let userNickname: string = messageReceive.from.split('/')[1];
       let color: string = stringToHexColor(userNickname);

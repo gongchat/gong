@@ -56,15 +56,15 @@ const TYPOGRAPHY_SPECIAL_PROPS = ['caption'];
 
 export const themeActions: any = {
   setThemeToDefault() {
-    return (): IState => {
+    return (state: IState): IState => {
       const theme = createMuiTheme({ ...DEFAULT });
       electronStore.set('theme', theme);
-      return { ...this.state, theme: { ...theme } };
+      return { ...state, theme: { ...theme } };
     };
   },
   setTheme(items: any) {
-    return (): IState => {
-      let theme = { ...this.state.theme };
+    return (state: IState): IState => {
+      let theme = { ...state.theme };
 
       items.forEach((item: any) => {
         theme = { ...theme };
@@ -96,7 +96,7 @@ export const themeActions: any = {
       electronStore.set('theme', theme);
 
       return {
-        ...this.state,
+        ...state,
         theme,
       };
     };

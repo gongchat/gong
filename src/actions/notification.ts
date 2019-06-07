@@ -26,18 +26,18 @@ export const SOUNDS = [
 
 export const notificationActions: any = {
   addToSnackbar(notification: ISnackbarNotifications) {
-    return (): IState => ({
-      ...this.state,
+    return (state: IState): IState => ({
+      ...state,
       snackbarNotifications: [
-        ...this.state.snackbarNotifications,
+        ...state.snackbarNotifications,
         notification,
       ],
     });
   },
   removeFromSnackbar(id: string) {
-    return (): IState => ({
-      ...this.state,
-      snackbarNotifications: this.state.snackbarNotifications.filter(
+    return (state: IState): IState => ({
+      ...state,
+      snackbarNotifications: state.snackbarNotifications.filter(
         (notification: ISnackbarNotifications) => notification.id !== id
       ),
     });

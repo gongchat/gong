@@ -17,32 +17,32 @@ export const TRIM_TO: number = 150;
 
 export const channelActions: any = {
   removeChannel(jid: string) {
-    return (): IState => {
-      const channel: IChannel | undefined = this.state.channels.find(
+    return (state: IState): IState => {
+      const channel: IChannel | undefined = state.channels.find(
         (c: IChannel) => c.jid === jid
       );
       if (channel) {
-        const channels: IChannel[] = this.state.channels.filter(
+        const channels: IChannel[] = state.channels.filter(
           (c: IChannel) => c !== channel
         );
         ipcRenderer.send('xmpp-unsubscribe-to-room', channel);
         saveRooms(channels);
         return {
-          ...this.state,
+          ...state,
           channels,
           current:
-            this.state.current && this.state.current.jid === jid
+            state.current && state.current.jid === jid
               ? undefined
-              : this.state.current,
+              : state.current,
         };
       } else {
-        return this.state;
+        return state;
       }
     };
   },
   selectChannel(channelJid: string) {
-    return (): IState => {
-      const channels: IChannel[] = this.state.channels.map(
+    return (state: IState): IState => {
+      const channels: IChannel[] = state.channels.map(
         (channel: IChannel) => {
           if (channel.jid === channelJid) {
             const newChannel = {
@@ -59,7 +59,7 @@ export const channelActions: any = {
             }
             return newChannel;
           } else {
-            if (this.state.current && this.state.current.jid === channel.jid) {
+            if (state.current && state.current.jid === channel.jid) {
               return {
                 ...channel,
                 messages: channel.messages.map((message: IMessage) => ({
@@ -73,7 +73,7 @@ export const channelActions: any = {
         }
       );
       const newState: IState = {
-        ...this.state,
+        ...state,
         current: channels.find(
           (channel: IChannel) => channel.jid === channelJid
         ),
@@ -86,9 +86,9 @@ export const channelActions: any = {
   },
   setInputText(jid: string, text: string) {
     // do not need to update current as it only matters when we change channels
-    return (): IState => ({
-      ...this.state,
-      channels: this.state.channels.map((channel: IChannel) => {
+    return (state: IState): IState => ({
+      ...state,
+      channels: state.channels.map((channel: IChannel) => {
         if (channel.jid === jid) {
           return { ...channel, inputText: text };
         } else {
@@ -98,9 +98,9 @@ export const channelActions: any = {
     });
   },
   setChannelScrollPosition(channelJid: string, position: number) {
-    return (): IState => ({
-      ...this.state,
-      channels: this.state.channels.map((channel: IChannel) => {
+    return (state: IState): IState => ({
+      ...state,
+      channels: state.channels.map((channel: IChannel) => {
         if (channel.jid === channelJid) {
           return { ...channel, scrollPosition: position };
         }
@@ -109,39 +109,39 @@ export const channelActions: any = {
     });
   },
   getChannelLogs(channel: IChannel) {
-    return (): IState => {
+    return (state: IState): IState => {
       ipcRenderer.send('get-log', {
-        user: this.state.profile.jid,
+        user: state.profile.jid,
         date:
           channel.messages && channel.messages.length > 0
             ? moment(channel.messages[0].timestamp).format('YYYY-MM-DD')
             : '',
         channel,
       });
-      return this.state;
+      return state;
     };
   },
   setChannelLogs({ channelJid, messages, hasNoMoreLogs }) {
-    return (): IState => {
+    return (state: IState): IState => {
       messages.forEach((message: IMessage) => {
         message.timestamp = moment(message.timestamp);
         message.isRead = true;
       });
 
       const current =
-        this.state.current && this.state.current.jid === channelJid
+        state.current && state.current.jid === channelJid
           ? {
-              ...this.state.current,
+              ...state.current,
               messages:
                 messages.length > 0
-                  ? [...messages, ...this.state.current.messages]
-                  : this.state.current.messages,
+                  ? [...messages, ...state.current.messages]
+                  : state.current.messages,
               hasNoMoreLogs,
               isRequestingLogs: false,
             }
-          : this.state.current;
+          : state.current;
 
-      const channels = this.state.channels.map((c: IChannel) => {
+      const channels = state.channels.map((c: IChannel) => {
         if (c.jid === channelJid) {
           return {
             ...c,
@@ -156,17 +156,17 @@ export const channelActions: any = {
       });
 
       return {
-        ...this.state,
+        ...state,
         current,
         channels,
       };
     };
   },
   trimOldMessages(jid: string) {
-    return (): IState => {
-      const newState = { ...this.state };
+    return (state: IState): IState => {
+      const newState = { ...state };
       let updatedChannel: IChannel | undefined;
-      newState.channels = this.state.channels.map((channel: IChannel) => {
+      newState.channels = state.channels.map((channel: IChannel) => {
         if (channel.jid === jid && channel.messages.length >= TRIM_AT) {
           updatedChannel = {
             ...channel,
@@ -183,8 +183,8 @@ export const channelActions: any = {
       });
       if (
         updatedChannel &&
-        this.state.current &&
-        this.state.current.jid === jid
+        state.current &&
+        state.current.jid === jid
       ) {
         newState.current = updatedChannel;
       }

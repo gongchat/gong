@@ -6,23 +6,23 @@ const { ipcRenderer } = window.require('electron');
 
 export const discoverActions: any = {
   setShowDiscover(value: boolean) {
-    return (): IState => {
+    return (state: IState): IState => {
       if (value === true) {
         ipcRenderer.send('xmpp-discover-top-level-items');
       }
-      return { ...this.state, showDiscover: value };
+      return { ...state, showDiscover: value };
     };
   },
   discoverItems(subdomain: string) {
-    return (): IState => {
+    return (state: IState): IState => {
       ipcRenderer.send('xmpp-discover-sub-level-items', subdomain);
-      return this.state;
+      return state;
     };
   },
   setDiscoverRooms(rooms: IDiscoverRoom[]) {
-    return (): IState => ({ ...this.state, rooms });
+    return (state: IState): IState => ({ ...state, rooms });
   },
   setDiscoverSubdomains(subdomains: ISubdomain[]) {
-    return (): IState => ({ ...this.state, subdomains });
+    return (state: IState): IState => ({ ...state, subdomains });
   },
 };
