@@ -7,7 +7,7 @@ import ISubdomain from '../interfaces/ISubdomain';
 import IUser from '../interfaces/IUser';
 import IVCard from '../interfaces/IVCard';
 
-import { stringToHexColor } from './colorUtil';
+import { stringToHexColor } from './colorUtils';
 
 export const mapToUsers = (jsXml: any): IUser[] => {
   const users: IUser[] = jsXml.children[0].children.map((item: any) => {

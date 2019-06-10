@@ -6,7 +6,7 @@ import IState from '../interfaces/IState';
 import IUser from '../interfaces/IUser';
 import IUserConnection from '../interfaces/IUserConnection';
 
-import { stringToHexColor } from '../utils/colorUtil';
+import { stringToHexColor } from '../utils/colorUtils';
 
 export const presenceActions: any = {
   setPresence(payload: IPresence) {

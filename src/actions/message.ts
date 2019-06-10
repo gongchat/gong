@@ -13,7 +13,7 @@ import IUser from '../interfaces/IUser';
 import { saveRooms } from './channel';
 import { handleOnMessage } from './notification';
 
-import { stringToHexColor } from '../utils/colorUtil';
+import { stringToHexColor } from '../utils/colorUtils';
 
 const { ipcRenderer } = window.require('electron');
 

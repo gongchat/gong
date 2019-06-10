@@ -12,7 +12,7 @@ import ISettings from '../interfaces/ISettings';
 import ISettingsSaved from '../interfaces/ISettingsSaved';
 import ISnackbarNotification from '../interfaces/ISnackbarNotification';
 import IState from '../interfaces/IState';
-import { stringToHexColor } from '../utils/colorUtil';
+import { stringToHexColor } from '../utils/colorUtils';
 
 const ElectronStore = window.require('electron-store');
 const electronStore = new ElectronStore();
