@@ -15,7 +15,6 @@ matrix:
 cache:
   directories:
     - node_modules
-    - $HOME/.npm
     - $HOME/.cache/electron
     - $HOME/.cache/electron-builder
 
@@ -26,22 +25,24 @@ cache:
 #       export PATH="/tmp/git-lfs:$PATH"
 #     fi
 
-before_script:
-  - git lfs pull
+# before_script:
+#   - git lfs pull
 
 # The `npm i --save-dev node@8.15.0` and `npm rebuild node-sass --force` commands are there due to bugs. Remove once they are fixed.
 script:
   - |
     if [ "$TRAVIS_OS_NAME" == "linux" ]; then
       docker run --rm \
-        --env-file <(env | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS|APPVEYOR_|CSC_|_TOKEN|_KEY|AWS_|STRIP|BUILD_') \
+        --env-file <(env | grep -vE '\r|\n' | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_') \
+        --env ELECTRON_CACHE="/root/.cache/electron" \
+        --env ELECTRON_BUILDER_CACHE="/root/.cache/electron-builder" \
         -v ${PWD}:/project \
         -v ~/.cache/electron:/root/.cache/electron \
         -v ~/.cache/electron-builder:/root/.cache/electron-builder \
         electronuserland/builder:wine \
         /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn release:linux-windows"
     else
-      npm run release:mac
+      yarn release:mac
     fi
 
 before_cache:
