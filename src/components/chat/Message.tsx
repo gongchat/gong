@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useLayoutEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import sanitizeHtml from 'sanitize-html';
 import marked from 'marked';
@@ -34,6 +34,7 @@ const Message: FC<IProps> = ({
   const classes = useStyles();
   const [isMe, setIsMe] = useState(false);
   const [messageBody, setMessageBody] = useState('');
+  const [isLoaded, setIsLoaded] = useState(false);
   const { body } = message;
 
   useEffect(() => {
@@ -71,8 +72,14 @@ const Message: FC<IProps> = ({
     });
 
     setMessageBody(formattedMessageBody);
-    onMessageLoad();
-  }, [body, onMessageLoad]);
+    setIsLoaded(true);
+  }, [body]);
+
+  useLayoutEffect(() => {
+    if (isLoaded) {
+      onMessageLoad();
+    }
+  }, [isLoaded, onMessageLoad]);
 
   return (
     <div className={classes.root}>
