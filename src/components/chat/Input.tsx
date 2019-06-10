@@ -12,7 +12,7 @@ import IMessageSend from '../../interfaces/IMessageSend';
 import IRoom from '../../interfaces/IRoom';
 import IUser from '../../interfaces/IUser';
 import { makeId } from '../../utils/stringUtils';
-import { usePrevious } from '../../utils/usePrevious';
+import { usePrevious } from '../../hooks/usePrevious';
 
 const Input: FC = () => {
   const classes = useStyles();

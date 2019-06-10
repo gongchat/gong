@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from 'react';
 import { useContext } from '../context';
-import { usePrevious } from '../utils/usePrevious';
+import { usePrevious } from '../hooks/usePrevious';
 
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';

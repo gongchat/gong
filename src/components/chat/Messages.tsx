@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/styles';
 import Message from './Message';
 import { TRIM_AT } from '../../actions/channel';
 import IMessage from '../../interfaces/IMessage';
-import { usePrevious } from '../../utils/usePrevious';
+import { usePrevious } from '../../hooks/usePrevious';
 
 let prevWindowInnerWidth: any;
 let positionBeforeGettingLogs: any;
