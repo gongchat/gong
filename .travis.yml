@@ -30,7 +30,7 @@ script:
         -v ~/.cache/electron:/root/.cache/electron \
         -v ~/.cache/electron-builder:/root/.cache/electron-builder \
         electronuserland/builder:wine \
-        /bin/bash -c "npm ci && npm run build && npm run release:linux-windows"
+        /bin/bash -c "npm run build && npm run release:linux-windows"
     else
       npm run build && npm run release:mac
     fi
