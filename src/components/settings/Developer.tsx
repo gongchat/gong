@@ -21,7 +21,7 @@ const Developer: FC = () => {
             <Typography className={classes.command} variant="body2">
               Open dev tools:
               <span className={classes.keys}>
-                <span>Ctrl</span> + <span>Alt</span> + <span>I</span>
+                <span>Ctrl</span> + <span>Shift</span> + <span>I</span>
               </span>
               or
               <span className={classes.keys}>
@@ -32,6 +32,10 @@ const Developer: FC = () => {
               Refresh application:
               <span className={classes.keys}>
                 <span>Ctrl</span> + <span>R</span>
+              </span>
+              or
+              <span className={classes.keys}>
+                <span>F5</span>
               </span>
             </Typography>
           </>
@@ -52,6 +56,10 @@ const Developer: FC = () => {
               Refresh application:
               <span className={classes.keys}>
                 <span>Cmd</span> + <span>R</span>
+              </span>
+              or
+              <span className={classes.keys}>
+                <span>F5</span>
               </span>
             </Typography>
           </>
