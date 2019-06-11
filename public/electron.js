@@ -9,6 +9,7 @@ const isDev = require('electron-is-dev');
 const {
   default: installExtension,
   REACT_DEVELOPER_TOOLS,
+  REDUX_DEVTOOLS,
 } = require('electron-devtools-installer');
 
 const operatingSystem = process.platform; // supported values: darwin (mac), linux, win32 (this is also 64bit)
@@ -78,7 +79,7 @@ function createWindow() {
     mainWindow = null;
   });
 
-  [REACT_DEVELOPER_TOOLS].forEach(extension => {
+  [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS].forEach(extension => {
     installExtension(extension.id)
       .then(name => console.log(`Added Extension:  ${name}`))
       .catch(err => console.log('An error occurred: ', err));
