@@ -1,4 +1,6 @@
 import React from 'react';
+import { useGovernor } from '@techempower/react-governor';
+
 import { appActions } from './actions/app';
 import { channelActions } from './actions/channel';
 import { connectionActions } from './actions/connection';
@@ -14,8 +16,8 @@ import {
 import { themeActions } from './actions/theme';
 import { userActions, DEFAULT_VCARD } from './actions/user';
 import { getTheme } from './actions/theme';
-import { useContextDevTools } from './hooks/useContextDevTools';
 import IState from './interfaces/IState';
+import governorMiddleware from './utils/governorMiddleware';
 
 export const INITIAL_STATE: IState = {
   app: {
@@ -68,7 +70,11 @@ const contract = {
 const Context = React.createContext(INITIAL_STATE);
 
 export default function ContextProvider(props: any) {
-  const [state, actions] = useContextDevTools(INITIAL_STATE, contract);
+  const [state, actions] = useGovernor(
+    INITIAL_STATE,
+    contract,
+    governorMiddleware
+  );
 
   const { children } = props;
 
