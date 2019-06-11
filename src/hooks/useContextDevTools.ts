@@ -15,8 +15,21 @@ export const useContextDevTools = (initialState: IState, contract: any) => {
     initialState,
     Object.assign({}, contract, setStateAction)
   );
-  const currentActions = useRef<Array<string>>([]);
-  const newActions = useRef({});
+
+  const currentActions = useRef<string[]>([]);
+
+  const newActions = useMemo(() => {
+    const _newActions = {};
+    Object.keys(actions).forEach(actionKey => {
+      _newActions[actionKey] = (...args: any) => {
+        actions[actionKey](...args);
+        currentActions.current = [...currentActions.current, actionKey];
+      };
+    });
+    return _newActions;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const devTools = useMemo(() => {
     if (reduxDevTools) {
       const name = `react-governor - ${instanceID}`;
@@ -49,6 +62,7 @@ export const useContextDevTools = (initialState: IState, contract: any) => {
       });
       return _devTools;
     }
+
     return null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -66,12 +80,5 @@ export const useContextDevTools = (initialState: IState, contract: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
-  Object.keys(actions).forEach(actionKey => {
-    newActions.current[actionKey] = (...args: any) => {
-      actions[actionKey](...args);
-      currentActions.current = [...currentActions.current, actionKey];
-    };
-  });
-
-  return [state, newActions.current];
+  return [state, newActions];
 };
