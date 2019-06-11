@@ -68,12 +68,12 @@ const contract = {
 const Context = React.createContext(INITIAL_STATE);
 
 export default function ContextProvider(props: any) {
-  const [context, actions] = useContextDevTools(INITIAL_STATE, contract);
+  const [state, actions] = useContextDevTools(INITIAL_STATE, contract);
 
   const { children } = props;
 
   return (
-    <Context.Provider value={[context, actions] as any}>
+    <Context.Provider value={[state, actions] as any}>
       {children}
     </Context.Provider>
   );

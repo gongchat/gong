@@ -12,7 +12,7 @@ const SnackbarNotifications: FC = () => {
   const [{ snackbarNotifications }, { removeFromSnackbar }] = useContext();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-  const displayed = useRef([] as string[]);
+  const displayed = useRef<string[]>([]);
 
   useEffect(() => {
     const action = (key: any) => (
