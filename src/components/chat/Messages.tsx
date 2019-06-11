@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useLayoutEffect, useRef } from 'react';
 import { useContext } from '../../context';
 import moment from 'moment';
 
@@ -157,7 +157,7 @@ const Messages: FC = () => {
   };
 
   // useEffect for saving previous channels scroll position
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (
       (!prevCurrent && current) ||
       (current && current.jid !== prevCurrent.jid)
@@ -174,7 +174,7 @@ const Messages: FC = () => {
   }, [current, prevCurrent, setChannelScrollPosition]);
 
   // useEffect for handling on load events
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (current && current.messages.length === 0) {
       isLoading.current = false;
     }
@@ -198,7 +198,7 @@ const Messages: FC = () => {
   }, [current, getChannelLogs, trimOldMessages, setChannelScrollPosition]);
 
   // useEffect for handling scrolling
-  useEffect(() => {
+  useLayoutEffect(() => {
     const rootCurrent = root.current;
     // Event listener functions
     const handleScroll = (event: any) => {
