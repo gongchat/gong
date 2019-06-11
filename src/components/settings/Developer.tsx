@@ -16,7 +16,7 @@ const Developer: FC = () => {
     <BasePage title="Developer">
       <BaseSection title="Commands">
         {(context.app.operatingSystem === 'win32' ||
-          context.app.operatingSystem === 'darwin') && (
+          context.app.operatingSystem === 'linux') && (
           <>
             <Typography className={classes.command} variant="body2">
               Open dev tools:
@@ -40,7 +40,7 @@ const Developer: FC = () => {
             </Typography>
           </>
         )}
-        {context.app.operatingSystem === 'mac' && (
+        {context.app.operatingSystem === 'darwin' && (
           <>
             <Typography className={classes.command} variant="body2">
               Open dev tools:
