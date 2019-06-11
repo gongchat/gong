@@ -211,17 +211,45 @@ const processMessage = (
 
 const getVideoUrls = (text: string): IMessageUrl[] => {
   if (text) {
-    // find youtube videos, regExp from: https://github.com/regexhq/youtube-regex/blob/master/index.js
-    const youtubeRegExp = new RegExp(
-      /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/g
-    );
-    const scannedYoutubeUrls = text.match(youtubeRegExp);
-    if (scannedYoutubeUrls) {
-      return scannedYoutubeUrls.map((url: string) => ({
-        type: 'video',
-        url,
-      }));
-    }
+    const linkConfig = [
+      {
+        // find youtube videos, regExp from: https://github.com/regexhq/youtube-regex/blob/master/index.js
+        source: 'youtube',
+        regEx: new RegExp(
+          /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/gi
+        ),
+      },
+      {
+        source: 'twitch',
+        regEx: new RegExp(/(?:twitch\.tv\/)(\S{1,})/gi),
+      },
+      {
+        source: 'soundcloud',
+        regEx: new RegExp(/(?:soundcloud\.com\/)(\S{1,})/gi),
+      },
+      {
+        source: 'vimeo',
+        regEx: new RegExp(/(?:(https|http)\:\/\/vimeo\.com\/)(\S{1,})/gi),
+      },
+    ];
+
+    let urls: any[] = [];
+
+    linkConfig.forEach((config: any) => {
+      const matches = text.match(config.regEx);
+      if (matches) {
+        urls = [
+          ...urls,
+          ...matches.map((url: string) => ({
+            type: 'video',
+            source: config.source,
+            url,
+          })),
+        ];
+      }
+    });
+
+    return urls;
   }
   return [];
 };
@@ -229,7 +257,7 @@ const getVideoUrls = (text: string): IMessageUrl[] => {
 const getGetYarnUrls = (text: string): IMessageUrl[] => {
   if (text) {
     const getYarnRegExp = new RegExp(
-      /(?:getyarn\.io\/yarn-clip\/)([a-zA-Z0-9_-]{36,36})(\b)/g
+      /(?:getyarn\.io\/yarn-clip\/)([a-zA-Z0-9_-]{36,36})(\b)/gi
     );
     const scannedGetYarnUrls = text.match(getYarnRegExp);
     if (scannedGetYarnUrls) {
