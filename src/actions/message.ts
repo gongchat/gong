@@ -229,7 +229,7 @@ const getVideoUrls = (text: string): IMessageUrl[] => {
       },
       {
         source: 'vimeo',
-        regEx: new RegExp(/(?:(https|http)\:\/\/vimeo\.com\/)(\S{1,})/gi),
+        regEx: new RegExp(/(?:(https|http):\/\/vimeo\.com\/)(\S{1,})/gi),
       },
     ];
 
