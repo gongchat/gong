@@ -162,6 +162,7 @@ app.on('ready', () => {
   log.info('Loading React');
   createWindow();
   if (operatingSystem === 'win32') {
+    app.setAppUserModelId('com.gongchat.gong');
     createTray();
   }
 });
