@@ -13,8 +13,6 @@ matrix:
       language: generic
       node_js: "10"
 
-install:
-  - npm ci
 cache:
   directories:
     - node_modules
