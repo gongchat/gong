@@ -28,7 +28,6 @@ const SnackbarNotifications: FC = () => {
       snackbarNotifications.forEach(
         (notification: ISnackbarNotification, index: number) => {
           if (!displayed.current.find((id: string) => id === notification.id)) {
-            console.log(snackbarNotifications);
             enqueueSnackbar(notification.message, {
               variant: notification.variant,
               anchorOrigin: { vertical: 'top', horizontal: 'right' },
