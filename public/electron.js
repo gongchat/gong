@@ -79,12 +79,6 @@ function createWindow() {
     mainWindow = null;
   });
 
-  [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS].forEach(extension => {
-    installExtension(extension.id)
-      .then(name => console.log(`Added Extension:  ${name}`))
-      .catch(err => console.log('An error occurred: ', err));
-  });
-
   // setup dev tools
   if (isDev) {
     mainWindow.webContents.openDevTools({
@@ -162,10 +156,17 @@ app.on('activate', () => {
 app.on('ready', () => {
   log.info('Loading React');
   createWindow();
+
   if (operatingSystem === 'win32') {
     app.setAppUserModelId('com.gongchat.gong');
     createTray();
   }
+
+  [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS].forEach(extension => {
+    installExtension(extension.id)
+      .then(name => console.log(`Added Extension:  ${name}`))
+      .catch(err => console.log('An error occurred: ', err));
+  });
 });
 
 //
