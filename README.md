@@ -1,4 +1,4 @@
-# Gong &middot; [![Build Status](https://travis-ci.org/gongchat/gong.svg?branch=master)](https://travis-ci.org/gongchat/gong)
+# Gong &middot; [![Build Status](https://travis-ci.org/gongchat/gong.svg?branch=master)](https://travis-ci.org/gongchat/gong) ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
 Gong is a Electron + React XMPP Client. Currently under development and is in alpha.
 
