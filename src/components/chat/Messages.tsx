@@ -55,12 +55,14 @@ const Messages: FC = () => {
         isLoading.current = false;
         handleScrollUpdate();
         handleGetLoggedMessages(root.current);
-      }, 0);
+      });
     }
   };
 
   const handleOnMediaLoad = () => {
-    handleScrollUpdate();
+    setTimeout(() => {
+      handleScrollUpdate();
+    });
   };
 
   const handleScrollUpdate = () => {
@@ -169,7 +171,7 @@ const Messages: FC = () => {
         );
       }
       numberOfLoadedMessages.current = 0;
-      scrollPosition.current = -1;
+      scrollPosition.current = current.scrollPosition;
     }
   }, [current, prevCurrent, setChannelScrollPosition]);
 
