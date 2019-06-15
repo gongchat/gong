@@ -1,6 +1,7 @@
 const ElectronStore = require('electron-store');
 const CryptoJS = require('crypto-js');
 const keytar = require('keytar');
+const isDev = require('electron-is-dev');
 
 const { client, xml } = require('@xmpp/client');
 const debug = require('@xmpp/debug');
@@ -62,7 +63,9 @@ class XmppJsClient {
       password: credentials.password,
     });
 
-    debug(this.client, true);
+    if (isDev) {
+      debug(this.client, true);
+    }
 
     this.attachEvents(event, credentials, key, settings);
 
@@ -297,7 +300,9 @@ class XmppJsClient {
         })
       )
       // TODO: This is not working, will always return an error. Possibly due to xmpp.js
-      .catch((e) => {/* console.log(e) */});
+      .catch(e => {
+        /* console.log(e) */
+      });
   }
 
   async sendGetVCard(event, from, to) {
