@@ -222,6 +222,10 @@ const useStyles: any = makeStyles((theme: any) => ({
     flexWrap: 'nowrap',
     alignItems: 'flex-start',
     paddingBottom: 0,
+    '& > div': {
+      minWidth: 0,
+      marginRight: theme.spacing(1),
+    },
     '& a': {
       color: theme.palette.text.primary,
     },
