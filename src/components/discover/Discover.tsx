@@ -24,7 +24,14 @@ import ISubdomain from '../../interfaces/ISubdomain';
 const Discover: FC = () => {
   const classes = useStyles();
   const [
-    { profile, subdomains, rooms, showDiscover },
+    {
+      profile,
+      isSubdomainsLoaded,
+      subdomains,
+      isRoomsLoaded,
+      rooms,
+      showDiscover,
+    },
     { setShowDiscover, discoverItems, addRoomToChannels },
   ] = useContext();
   const nickname =
@@ -130,9 +137,14 @@ const Discover: FC = () => {
                 <ListItem button={true} dense={true} onClick={manuallyAddARoom}>
                   <ListItemText>Manually Add a Room</ListItemText>
                 </ListItem>
-                {subdomains.length === 0 && (
+                {!isSubdomainsLoaded && (
                   <ListItem>
                     <ListItemText>Looking for subdomains...</ListItemText>
+                  </ListItem>
+                )}
+                {isSubdomainsLoaded && subdomains.length === 0 && (
+                  <ListItem>
+                    <ListItemText>No subdomains found</ListItemText>
                   </ListItem>
                 )}
                 {subdomains.length > 0 &&
@@ -156,11 +168,16 @@ const Discover: FC = () => {
                   there are no items to discover. Need to implement a away to 
                   check if it comes back empty 
                 */}
-                {subdomains.length > 0 &&
-                  selectedSubdomainJid !== '' &&
+                {selectedSubdomainJid !== '' && !isRoomsLoaded && (
+                  <ListItem>
+                    <ListItemText>Looking for rooms...</ListItemText>
+                  </ListItem>
+                )}
+                {selectedSubdomainJid !== '' &&
+                  isRoomsLoaded &&
                   rooms.length === 0 && (
                     <ListItem>
-                      <ListItemText>Looking for rooms...</ListItemText>
+                      <ListItemText>No rooms found</ListItemText>
                     </ListItem>
                   )}
                 {rooms.length > 0 &&
@@ -271,6 +288,7 @@ const useStyles: any = makeStyles((theme: any) => ({
   },
   icon: {
     marginRight: 0,
+    minWidth: 0,
   },
   formButtons: {
     display: 'flex',

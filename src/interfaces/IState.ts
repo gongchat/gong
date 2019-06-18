@@ -19,7 +19,9 @@ export default interface IState {
   current?: IChannel | IRoom | IUser;
 
   showDiscover: boolean;
+  isSubdomainsLoaded: boolean;
   subdomains: ISubdomain[];
+  isRoomsLoaded: boolean;
   rooms: IDiscoverRoom[];
 
   showSettings: boolean;

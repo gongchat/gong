@@ -10,19 +10,34 @@ export const discoverActions: any = {
       if (value === true) {
         ipcRenderer.send('xmpp-discover-top-level-items');
       }
-      return { ...state, showDiscover: value };
+      return {
+        ...state,
+        showDiscover: value,
+        isSubdomainsLoaded: false,
+      };
     };
   },
   discoverItems(subdomain: string) {
     return (state: IState): IState => {
       ipcRenderer.send('xmpp-discover-sub-level-items', subdomain);
-      return state;
+      return {
+        ...state,
+        isRoomsLoaded: false,
+      };
     };
   },
   setDiscoverRooms(rooms: IDiscoverRoom[]) {
-    return (state: IState): IState => ({ ...state, rooms });
+    return (state: IState): IState => ({
+      ...state,
+      isRoomsLoaded: true,
+      rooms,
+    });
   },
   setDiscoverSubdomains(subdomains: ISubdomain[]) {
-    return (state: IState): IState => ({ ...state, subdomains });
+    return (state: IState): IState => ({
+      ...state,
+      isSubdomainsLoaded: true,
+      subdomains,
+    });
   },
 };
