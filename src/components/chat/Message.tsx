@@ -17,6 +17,7 @@ interface IProps {
   showTime: boolean;
   onMessageLoad: any;
   onMediaLoad: any;
+  onMediaError: any;
   renderImages: boolean;
   renderVideos: boolean;
   renderGetYarn: boolean;
@@ -27,6 +28,7 @@ const Message: FC<IProps> = ({
   showTime,
   onMessageLoad,
   onMediaLoad,
+  onMediaError,
   renderImages,
   renderVideos,
   renderGetYarn,
@@ -120,7 +122,6 @@ const Message: FC<IProps> = ({
                     width={300}
                     height={170}
                     controls={true}
-                    onLoad={onMessageLoad}
                   />
                 </div>
               ))}
@@ -133,7 +134,6 @@ const Message: FC<IProps> = ({
                   return (
                     <div key={index} className={classes.getYarn}>
                       <iframe
-                        onLoad={onMessageLoad}
                         title="get yarn clip"
                         width={300}
                         height={185}
@@ -159,7 +159,6 @@ const Message: FC<IProps> = ({
                         autoPlay={true}
                         loop={true}
                         height={185}
-                        onLoad={onMessageLoad}
                       >
                         <source
                           src={url.url.replace('.gifv', '.mp4')}
@@ -171,7 +170,12 @@ const Message: FC<IProps> = ({
                 } else {
                   return (
                     <div key={index} className={classes.image}>
-                      <img alt="shared" src={url.url} onLoad={onMediaLoad} />
+                      <img
+                        alt="shared"
+                        src={url.url}
+                        onLoad={onMediaLoad}
+                        onError={onMediaError}
+                      />
                     </div>
                   );
                 }

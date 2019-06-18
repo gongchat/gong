@@ -9,6 +9,7 @@ import Message from './Message';
 import { TRIM_AT } from '../../actions/channel';
 import IMessage from '../../interfaces/IMessage';
 import { usePrevious } from '../../hooks/usePrevious';
+import IMessageUrl from '../../interfaces/IMessageUrl';
 
 let prevWindowInnerWidth: any;
 let positionBeforeGettingLogs: any;
@@ -37,7 +38,10 @@ const Messages: FC = () => {
   const scrollPosition = useRef(current ? current.scrollPosition : -1);
   const newMessageMarkerRef = useRef<any>(null);
   const root = useRef<HTMLDivElement>(null);
+  const numberOfMessages = useRef(0);
   const numberOfLoadedMessages = useRef(0);
+  const numberOfImages = useRef(0);
+  const numberOfLoadedImages = useRef(0);
   const isLoading = useRef(true);
 
   let prevMessage: IMessage;
@@ -50,21 +54,29 @@ const Messages: FC = () => {
 
   const handleOnMessageLoad = () => {
     numberOfLoadedMessages.current = numberOfLoadedMessages.current + 1;
-    if (current && numberOfLoadedMessages.current >= current.messages.length) {
-      isLoading.current = false;
-      handleScrollUpdate();
-      handleGetLoggedMessages(root.current);
-
+    if (
+      numberOfLoadedMessages.current >= numberOfMessages.current &&
+      numberOfLoadedImages.current >= numberOfImages.current
+    ) {
       setTimeout(() => {
-        handleScrollUpdate(); // to account for DOM changes after render
-      }, 100);
+        handleScrollUpdate();
+        handleGetLoggedMessages(root.current);
+        isLoading.current = false;
+      }, 0);
     }
   };
 
   const handleOnMediaLoad = () => {
-    setTimeout(() => {
-      handleScrollUpdate();
-    }, 100);
+    numberOfLoadedImages.current = numberOfLoadedImages.current + 1;
+    if (
+      numberOfLoadedMessages.current >= numberOfMessages.current &&
+      numberOfLoadedImages.current >= numberOfImages.current
+    ) {
+      setTimeout(() => {
+        handleScrollUpdate();
+        isLoading.current = false;
+      }, 0);
+    }
   };
 
   const handleScrollUpdate = () => {
@@ -166,40 +178,55 @@ const Messages: FC = () => {
       (!prevCurrent && current) ||
       (current && current.jid !== prevCurrent.jid)
     ) {
+      // save scroll position of pervious channel
       if (scrollPosition.current !== undefined) {
         setChannelScrollPosition(
           prevCurrent ? prevCurrent.jid : current.jid,
           scrollPosition.current
         );
       }
+
+      // set refs to new values
+      numberOfMessages.current = current.messages.length;
       numberOfLoadedMessages.current = 0;
+      numberOfImages.current = current.messages.reduce(
+        (total: number, message: IMessage) =>
+          total +
+          message.urls.filter((url: IMessageUrl) => url.type === 'image')
+            .length,
+        0
+      );
+      numberOfLoadedImages.current = 0;
       scrollPosition.current = current.scrollPosition;
-    }
-  }, [current, prevCurrent, setChannelScrollPosition]);
 
-  // useEffect for handling on load events
-  useLayoutEffect(() => {
-    if (current && current.messages.length === 0) {
-      isLoading.current = false;
-    }
+      if (current && current.messages.length === 0) {
+        isLoading.current = false;
+      }
 
-    const shouldTrimMessagesOnLoad =
-      current &&
-      current.messages.length >= TRIM_AT &&
-      root.current &&
-      root.current.scrollTop + root.current.offsetHeight >=
-        root.current.scrollHeight - 5;
+      const shouldTrimMessagesOnLoad =
+        current &&
+        current.messages.length >= TRIM_AT &&
+        root.current &&
+        root.current.scrollTop + root.current.offsetHeight >=
+          root.current.scrollHeight - 5;
 
-    // Check for logged messages
-    handleGetLoggedMessages(root.current);
+      // Check for logged messages
+      handleGetLoggedMessages(root.current);
 
-    if (shouldTrimMessagesOnLoad && current) {
-      // Check for trimmed messages
-      status.current = 'bottom';
-      trimOldMessages(current.jid);
+      if (shouldTrimMessagesOnLoad) {
+        // Check for trimmed messages
+        status.current = 'bottom';
+        trimOldMessages(current.jid);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [current, getChannelLogs, trimOldMessages, setChannelScrollPosition]);
+  }, [
+    current,
+    prevCurrent,
+    getChannelLogs,
+    trimOldMessages,
+    setChannelScrollPosition,
+  ]);
 
   // useEffect for handling scrolling
   useLayoutEffect(() => {
@@ -338,6 +365,7 @@ const Messages: FC = () => {
                   renderImages={settings.renderImages}
                   onMessageLoad={handleOnMessageLoad}
                   onMediaLoad={handleOnMediaLoad}
+                  onMediaError={handleOnMediaLoad} // currently no need for its own function
                 />
               </div>
             </React.Fragment>
