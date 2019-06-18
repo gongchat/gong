@@ -51,10 +51,12 @@ const Messages: FC = () => {
   const handleOnMessageLoad = () => {
     numberOfLoadedMessages.current = numberOfLoadedMessages.current + 1;
     if (current && numberOfLoadedMessages.current >= current.messages.length) {
+      isLoading.current = false;
+      handleScrollUpdate();
+      handleGetLoggedMessages(root.current);
+
       setTimeout(() => {
-        isLoading.current = false;
-        handleScrollUpdate();
-        handleGetLoggedMessages(root.current);
+        handleScrollUpdate(); // to account for DOM changes after render
       });
     }
   };
