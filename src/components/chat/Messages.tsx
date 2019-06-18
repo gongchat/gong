@@ -57,14 +57,14 @@ const Messages: FC = () => {
 
       setTimeout(() => {
         handleScrollUpdate(); // to account for DOM changes after render
-      });
+      }, 100);
     }
   };
 
   const handleOnMediaLoad = () => {
     setTimeout(() => {
       handleScrollUpdate();
-    });
+    }, 100);
   };
 
   const handleScrollUpdate = () => {
