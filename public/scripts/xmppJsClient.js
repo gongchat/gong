@@ -410,6 +410,7 @@ class XmppJsClient {
             to: `${jid}/${nickname}`,
             from: jid,
           },
+          xml('priority', {}, 1),
           xml(
             'x',
             {
@@ -421,11 +422,15 @@ class XmppJsClient {
       );
     } else {
       this.client.send(
-        xml('presence', {
-          id: makeId(7),
-          to: `${jid}/${nickname}`,
-          from: jid,
-        })
+        xml(
+          'presence',
+          {
+            id: makeId(7),
+            to: `${jid}/${nickname}`,
+            from: jid,
+          },
+          xml('priority', {}, 1)
+        )
       );
     }
   }
