@@ -79,10 +79,12 @@ const Settings: FC = () => {
         case 'Log Off':
           return (
             <div className={classes.section}>
-              <Typography>
-                This will log you off of your current account. All data
-                associated this account will be removed.
-              </Typography>
+              <div>
+                <Typography gutterBottom>
+                  Logging off will remove your custom settings and saved rooms. 
+                  Your chat logs will not be removed.
+                </Typography>
+              </div>
               <Button
                 variant="contained"
                 color="secondary"
