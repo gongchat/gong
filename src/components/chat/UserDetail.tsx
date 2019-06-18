@@ -4,11 +4,17 @@ import Avatar from '@material-ui/core/Avatar';
 import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Tab from '@material-ui/core/Tab';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
 import IUser from '../../interfaces/IUser';
+import IUserConnection from '../../interfaces/IUserConnection';
 
 interface IProps {
   user: IUser;
@@ -47,6 +53,7 @@ const UserDetail: FC<IProps> = ({ user }: IProps) => {
         >
           <Tab label="User Info" />
           <Tab label="Contact Info" />
+          <Tab label="Connections" />
         </Tabs>
       </Paper>
       <div className={classes.content}>
@@ -173,6 +180,28 @@ const UserDetail: FC<IProps> = ({ user }: IProps) => {
               )}
             </div>
           </>
+        )}
+        {index === 2 && user.connections && (
+          <div>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell>JID</TableCell>
+                  <TableCell>Priority</TableCell>
+                  <TableCell>Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {user.connections.map((connection: IUserConnection) => (
+                  <TableRow key={connection.jid}>
+                    <TableCell>{connection.jid}</TableCell>
+                    <TableCell>{connection.priority}</TableCell>
+                    <TableCell>{connection.status}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </div>
     </div>
