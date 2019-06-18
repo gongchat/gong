@@ -443,9 +443,11 @@ class XmppJsClient {
 
   sendMyStatus(status) {
     if (status === 'online') {
-      this.client.send(xml('presence', {}));
+      this.client.send(xml('presence', {}, xml('priority', {}, 1)));
     } else {
-      this.client.send(xml('presence', {}, xml('show', {}, status)));
+      this.client.send(
+        xml('presence', {}, xml('show', {}, status), xml('priority', {}, 1))
+      );
     }
   }
 
