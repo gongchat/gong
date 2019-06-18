@@ -188,7 +188,6 @@ const useStyles: any = makeStyles((theme: any) => ({
     position: 'relative',
     maxWidth: '190px',
     overflowY: 'auto',
-    padding: theme.spacing(5, 1),
   },
   itemText: {
     fontSize: '9px',
@@ -206,11 +205,14 @@ const useStyles: any = makeStyles((theme: any) => ({
     flexShrink: 0,
   },
   miniGong: {
-    position: 'fixed',
+    position: 'sticky',
+    top: 0,
     zIndex: 9999,
+    padding: theme.spacing(5, 1, 0, 1),
+    backgroundColor: theme.palette.background.paper,
   },
   listing: {
-    marginTop: '150px', // same height as the miniGong(125px) + some spacing
+    padding: theme.spacing(1, 1, 5, 1),
   },
 }));
 
