@@ -242,7 +242,7 @@ const useStyles: any = makeStyles((theme: any) => ({
     position: 'absolute',
     width: '50px',
     top: theme.spacing(4),
-    left: 585,
+    right: 25,
     '& button': {
       position: 'fixed',
     },
