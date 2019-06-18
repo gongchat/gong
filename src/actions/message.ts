@@ -189,10 +189,11 @@ const processMessage = (
 
       // if mentioned me
       message.isMentioningMe =
-        (regExpWithAt.test(formattedMessage) ||
+        message.isMentioningMe ||
+        ((regExpWithAt.test(formattedMessage) ||
           regExpWithoutAt.test(formattedMessage)) &&
-        !message.isHistory &&
-        isMe;
+          !message.isHistory &&
+          isMe);
 
       // replace all the things
       formattedMessage = formattedMessage.replace(regExpWithAt, htmlWithAt);
