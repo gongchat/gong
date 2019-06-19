@@ -94,9 +94,7 @@ const Messages: FC = () => {
           0 &&
         root.current &&
         root.current.offsetHeight !== root.current.scrollHeight;
-      const shouldUpdateToNewMessageMarker =
-        newMessageMarkerRef.current &&
-        (!prevCurrent || prevCurrent.jid !== current.jid);
+      const shouldUpdateToNewMessageMarker = newMessageMarkerRef.current;
       const shouldUpdateToSavedPosition =
         current &&
         current.scrollPosition !== -1 &&
@@ -112,12 +110,12 @@ const Messages: FC = () => {
       let newStatus = status.current;
       if (shouldUpdateForLoggedMessages) {
         newStatus = 'previous-position';
-      } else if (shouldUpdateToNewMessageMarker) {
-        newStatus = 'new-message-marker';
       } else if (shouldUpdateToSavedPosition) {
         newStatus = 'saved-position';
       } else if (shouldUpdateToBottom) {
         newStatus = 'bottom';
+      } else if (shouldUpdateToNewMessageMarker) {
+        newStatus = 'new-message-marker';
       }
 
       switch (newStatus) {
