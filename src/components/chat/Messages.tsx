@@ -34,50 +34,69 @@ const Messages: FC = () => {
   // - saved-position (scroll to the saved position for the channel)
   // - previous-position (scroll to the position before receiving logs)
   const status = useRef('bottom');
-
   const scrollPosition = useRef(current ? current.scrollPosition : -1);
   const newMessageMarkerRef = useRef<any>(null);
   const root = useRef<HTMLDivElement>(null);
-  const numberOfMessages = useRef(0);
-  const numberOfLoadedMessages = useRef(0);
-  const numberOfImages = useRef(0);
-  const numberOfLoadedImages = useRef(0);
-  const isLoading = useRef(true);
+
+  // normal variables
+  const numberOfMessages = current ? current.messages.length : 0;
+  const numberOfImages = current
+    ? current.messages.reduce(
+        (total: number, message: IMessage) =>
+          total +
+          message.urls.filter((url: IMessageUrl) => url.type === 'image')
+            .length,
+        0
+      )
+    : 0;
+
+  let isLoading = true;
+  let numberOfLoadedMessages = 0;
+  let numberOfLoadedImages = 0;
 
   let prevMessage: IMessage;
   let hasNewMessageMarker = false;
 
   // when new channel
   if (!prevCurrent || (current && current.jid !== prevCurrent.jid)) {
-    isLoading.current = true;
+    status.current =
+      !current || current.scrollPosition === -1 ? 'bottom' : 'saved-position';
+    if (current && current.messages.length === 0) {
+      isLoading = false;
+    } else if (root.current) {
+      root.current.style.opacity = '0';
+    }
   }
 
   const handleOnMessageLoad = () => {
-    numberOfLoadedMessages.current = numberOfLoadedMessages.current + 1;
-    if (numberOfLoadedMessages.current >= numberOfMessages.current) {
+    numberOfLoadedMessages++;
+    if (numberOfLoadedMessages >= numberOfMessages) {
       setTimeout(() => {
         handleScrollUpdate();
-        handleGetLoggedMessages(root.current);
         if (root.current) {
           root.current.style.opacity = '1';
         }
-        if (numberOfLoadedImages.current >= numberOfImages.current) {
-          isLoading.current = false;
+        if (numberOfLoadedImages >= numberOfImages) {
+          isLoading = false;
+          console.log('request more logs from msg load')
+          handleGetLoggedMessages(root.current);
         }
       }, 0);
     }
   };
 
   const handleOnMediaLoad = () => {
-    numberOfLoadedImages.current = numberOfLoadedImages.current + 1;
-    if (numberOfLoadedImages.current >= numberOfImages.current) {
+    numberOfLoadedImages++;
+    if (numberOfLoadedImages >= numberOfImages) {
       setTimeout(() => {
         handleScrollUpdate();
         if (root.current) {
           root.current.style.opacity = '1';
         }
-        if (numberOfLoadedMessages.current >= numberOfMessages.current) {
-          isLoading.current = false;
+        if (numberOfLoadedMessages >= numberOfMessages) {
+          isLoading = false;
+          console.log('request more logs from img load')
+          handleGetLoggedMessages(root.current);
         }
       }, 0);
     }
@@ -155,7 +174,7 @@ const Messages: FC = () => {
   const handleGetLoggedMessages = (element: any) => {
     if (element) {
       const shouldRequestLoggedMessages =
-        !isLoading.current &&
+        !isLoading &&
         element &&
         element.scrollTop === 0 &&
         current &&
@@ -167,17 +186,18 @@ const Messages: FC = () => {
         } else {
           status.current = 'bottom';
         }
-        isLoading.current = true;
-        positionBeforeGettingLogs = element.scrollHeight;
         if (root.current) {
           root.current.style.opacity = '0';
         }
+        isLoading = true;
+        positionBeforeGettingLogs = element.scrollHeight;
+        console.log('requesting more logs')
         getChannelLogs(current);
       }
     }
   };
 
-  // useEffect for saving previous channels scroll position
+  // useEffect for handling new channel
   useLayoutEffect(() => {
     if (
       (!prevCurrent && current) ||
@@ -192,23 +212,7 @@ const Messages: FC = () => {
       }
 
       // set refs to new values
-      numberOfMessages.current = current.messages.length;
-      numberOfLoadedMessages.current = 0;
-      numberOfImages.current = current.messages.reduce(
-        (total: number, message: IMessage) =>
-          total +
-          message.urls.filter((url: IMessageUrl) => url.type === 'image')
-            .length,
-        0
-      );
-      numberOfLoadedImages.current = 0;
       scrollPosition.current = current.scrollPosition;
-
-      if (current && current.messages.length === 0) {
-        isLoading.current = false;
-      } else if (root.current) {
-        root.current.style.opacity = '0';
-      }
 
       const shouldTrimMessagesOnLoad =
         current &&
@@ -218,6 +222,7 @@ const Messages: FC = () => {
           root.current.scrollHeight - 5;
 
       // Check for logged messages
+      console.log('request more logs from new channel')
       handleGetLoggedMessages(root.current);
 
       if (shouldTrimMessagesOnLoad) {
@@ -240,7 +245,7 @@ const Messages: FC = () => {
     const rootCurrent = root.current;
     // Event listener functions
     const handleScroll = (event: any) => {
-      if (isLoading.current) {
+      if (isLoading) {
         event.preventDefault();
       } else {
         scrollPosition.current = event.target.scrollTop;
@@ -255,7 +260,7 @@ const Messages: FC = () => {
         } else {
           status.current = 'scrolled';
         }
-
+        console.log('request more logs from scroll')
         handleGetLoggedMessages(event.target);
       }
     };
