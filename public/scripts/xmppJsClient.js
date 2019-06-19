@@ -17,7 +17,6 @@ class XmppJsClient {
   constructor() {
     this.client = undefined;
     this.credentials = undefined;
-    this.connectionTimer = undefined;
   }
 
   //
@@ -38,16 +37,10 @@ class XmppJsClient {
   }
 
   connect(event, credentials, key, settings) {
-    // TODO: not sure if all this is necessary, things got out of hand when trying to deal with a bug
     this.credentials = { username: credentials.username };
     if (this.client) {
       this.client.stop().then(() => {
-        if (this.connectionTimer) {
-          clearTimeout(this.connectionTimer);
-        }
-        this.connectionTimer = setTimeout(() => {
-          this.createConnection(event, credentials, key, settings);
-        }, 1000);
+        this.createConnection(event, credentials, key, settings);
       });
     } else {
       this.createConnection(event, credentials, key, settings);
