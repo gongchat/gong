@@ -54,27 +54,31 @@ const Messages: FC = () => {
 
   const handleOnMessageLoad = () => {
     numberOfLoadedMessages.current = numberOfLoadedMessages.current + 1;
-    if (
-      numberOfLoadedMessages.current >= numberOfMessages.current &&
-      numberOfLoadedImages.current >= numberOfImages.current
-    ) {
+    if (numberOfLoadedMessages.current >= numberOfMessages.current) {
       setTimeout(() => {
         handleScrollUpdate();
         handleGetLoggedMessages(root.current);
-        isLoading.current = false;
+        if (root.current) {
+          root.current.style.opacity = '1';
+        }
+        if (numberOfLoadedImages.current >= numberOfImages.current) {
+          isLoading.current = false;
+        }
       }, 0);
     }
   };
 
   const handleOnMediaLoad = () => {
     numberOfLoadedImages.current = numberOfLoadedImages.current + 1;
-    if (
-      numberOfLoadedMessages.current >= numberOfMessages.current &&
-      numberOfLoadedImages.current >= numberOfImages.current
-    ) {
+    if (numberOfLoadedImages.current >= numberOfImages.current) {
       setTimeout(() => {
         handleScrollUpdate();
-        isLoading.current = false;
+        if (root.current) {
+          root.current.style.opacity = '1';
+        }
+        if (numberOfLoadedMessages.current >= numberOfMessages.current) {
+          isLoading.current = false;
+        }
       }, 0);
     }
   };
@@ -167,6 +171,9 @@ const Messages: FC = () => {
         }
         isLoading.current = true;
         positionBeforeGettingLogs = element.scrollHeight;
+        if (root.current) {
+          root.current.style.opacity = '0';
+        }
         getChannelLogs(current);
       }
     }
@@ -201,6 +208,8 @@ const Messages: FC = () => {
 
       if (current && current.messages.length === 0) {
         isLoading.current = false;
+      } else if (root.current) {
+        root.current.style.opacity = '0';
       }
 
       const shouldTrimMessagesOnLoad =
