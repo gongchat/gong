@@ -78,7 +78,6 @@ const Messages: FC = () => {
         }
         if (numberOfLoadedImages >= numberOfImages) {
           isLoading = false;
-          console.log('request more logs from msg load')
           handleGetLoggedMessages(root.current);
         }
       }, 0);
@@ -95,7 +94,6 @@ const Messages: FC = () => {
         }
         if (numberOfLoadedMessages >= numberOfMessages) {
           isLoading = false;
-          console.log('request more logs from img load')
           handleGetLoggedMessages(root.current);
         }
       }, 0);
@@ -191,7 +189,6 @@ const Messages: FC = () => {
         }
         isLoading = true;
         positionBeforeGettingLogs = element.scrollHeight;
-        console.log('requesting more logs')
         getChannelLogs(current);
       }
     }
@@ -222,7 +219,6 @@ const Messages: FC = () => {
           root.current.scrollHeight - 5;
 
       // Check for logged messages
-      console.log('request more logs from new channel')
       handleGetLoggedMessages(root.current);
 
       if (shouldTrimMessagesOnLoad) {
@@ -260,7 +256,6 @@ const Messages: FC = () => {
         } else {
           status.current = 'scrolled';
         }
-        console.log('request more logs from scroll')
         handleGetLoggedMessages(event.target);
       }
     };
