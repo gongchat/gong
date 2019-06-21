@@ -18,7 +18,7 @@ const Input: FC = () => {
   const classes = useStyles();
   const [
     { current, settings, connection },
-    { sendMessage, setRoomNickname, setInputText },
+    { sendMessage, setChannelNickname, setInputText },
   ] = useContext();
   const [text, setText] = useState('');
   const [isFocused, setIsFocused] = useState(false);
@@ -31,7 +31,7 @@ const Input: FC = () => {
       if (text !== '') {
         if (current.type === 'groupchat' && text.startsWith('/nick')) {
           const room = current as IRoom;
-          setRoomNickname({
+          setChannelNickname({
             jid: current.jid,
             currentNickname: room.myNickname,
             newNickname: text.substring(6),
