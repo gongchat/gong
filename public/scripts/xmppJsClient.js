@@ -15,13 +15,21 @@ const electronStore = new ElectronStore();
 
 class XmppJsClient {
   constructor() {
-    this.client = undefined;
-    this.credentials = undefined;
+    this.xmpp = null;
+    this.credentials = null;
   }
 
   //
   // Connection
   //
+  async killConnection() {
+    if (this.xmpp) {
+      await this.xmpp.stop();
+      this.xmpp.removeAllListeners();
+      this.xmpp = null;
+    }
+  }
+
   autoConnect(event, arg) {
     this.credentials = { username: arg.credentials.username };
     keytar.getPassword('gong', arg.credentials.username).then(key => {
@@ -36,19 +44,18 @@ class XmppJsClient {
     });
   }
 
-  connect(event, credentials, key, settings) {
+  async connect(event, credentials, key, settings) {
     this.credentials = { username: credentials.username };
-    if (this.client) {
-      this.client.stop().then(() => {
-        this.createConnection(event, credentials, key, settings);
-      });
-    } else {
+    if (this.xmpp && this.xmpp.status === 'online') {
+      await this.killConnection();
+      this.createConnection(event, credentials, key, settings);
+    } else if (!this.xmpp) {
       this.createConnection(event, credentials, key, settings);
     }
   }
 
-  createConnection(event, credentials, key, settings) {
-    this.client = new client({
+  async createConnection(event, credentials, key, settings) {
+    this.xmpp = client({
       service: `xmpp://${credentials.domain}:${credentials.port}`,
       domain: credentials.domain,
       username: credentials.username,
@@ -57,16 +64,16 @@ class XmppJsClient {
     });
 
     if (isDev) {
-      debug(this.client, true);
+      debug(this.xmpp, true);
     }
 
     this.attachEvents(event, credentials, key, settings);
 
-    this.client.start().catch(console.error);
+    await this.xmpp.start().catch(console.error);
   }
 
   attachEvents(event, credentials, key, settings) {
-    this.client.on('error', err => {
+    this.xmpp.on('error', async err => {
       let stopClient = false;
 
       if (!err.code) {
@@ -106,14 +113,18 @@ class XmppJsClient {
             });
             stopClient = true;
             break;
+          case 'EPIPE':
+          case 'ERR_STREAM_WRITE_AFTER_END':
+            console.log('ERROR: Writing to an old stream');
+            break;
           default:
-            console.log('ERROR:', err);
+            console.log('ERROR: ', err);
             break;
         }
       }
 
-      if (this.client && stopClient) {
-        this.client.stop();
+      if (this.xmpp && stopClient) {
+        await this.killConnection();
       }
     });
 
@@ -121,7 +132,7 @@ class XmppJsClient {
     // this.client.on('input', input => console.log('INPUT:', input));
     // this.client.on('output', output => console.log('OUTPUT:', output));
 
-    this.client.on('online', jid => {
+    this.xmpp.on('online', jid => {
       console.log('ONLINE:', jid.toString());
       this.sendGetInfo(event, credentials.domain);
 
@@ -153,7 +164,7 @@ class XmppJsClient {
       });
     });
 
-    this.client.on('stanza', stanzaXml => {
+    this.xmpp.on('stanza', stanzaXml => {
       const stanza = stanzaXml.toJSON();
       if (stanza) {
         this.handleStanza(event, stanza);
@@ -161,13 +172,13 @@ class XmppJsClient {
     });
   }
 
-  logOff() {
+  async logOff() {
     if (this.credentials.username) {
       keytar.deletePassword('gong', this.credentials.username);
     }
     electronStore.clear();
     this.credentials = undefined;
-    this.client.stop();
+    await this.killConnection();
   }
 
   //
@@ -228,247 +239,289 @@ class XmppJsClient {
   //
 
   async sendGetInfo(event, domain) {
-    await this.client.iqCaller.request(
-      xml(
-        'iq',
-        {
-          to: `${domain}`,
-          type: 'get',
-          id: makeId(7),
-        },
-        xml('query', {
-          xmlns: 'http://jabber.org/protocol/disco#info',
-        })
-      )
-    );
-    // currently do not care about what features are supported
+    if (this.xmpp && this.xmpp.status === 'online') {
+      await this.xmpp.iqCaller
+        .request(
+          xml(
+            'iq',
+            {
+              to: `${domain}`,
+              type: 'get',
+              id: makeId(7),
+            },
+            xml('query', {
+              xmlns: 'http://jabber.org/protocol/disco#info',
+            })
+          )
+        )
+        .catch();
+      // currently do not care about what features are supported
+    }
   }
 
   async sendGetRoster(event) {
-    const response = await this.client.iqCaller.request(
-      xml(
-        'iq',
-        {
-          type: 'get',
-          id: makeId(7),
-        },
-        xml('query', {
-          xmlns: 'jabber:iq:roster',
-        })
-      )
-    );
-    event.sender.send('xmpp-roster', response);
+    if (this.xmpp && this.xmpp.status === 'online') {
+      const response = await this.xmpp.iqCaller
+        .request(
+          xml(
+            'iq',
+            {
+              type: 'get',
+              id: makeId(7),
+            },
+            xml('query', {
+              xmlns: 'jabber:iq:roster',
+            })
+          )
+        )
+        .catch();
+      event.sender.send('xmpp-roster', response);
+    }
   }
 
   async sendDiscoverItems(event, subdomain) {
-    const response = await this.client.iqCaller.request(
-      xml(
-        'iq',
-        {
-          to: (subdomain ? `${subdomain}.` : '') + `${this.credentials.domain}`,
-          type: 'get',
-          id: makeId(7),
-        },
-        xml('query', {
-          xmlns: 'http://jabber.org/protocol/disco#items',
-        })
-      )
-    );
+    if (this.xmpp && this.xmpp.status === 'online') {
+      const response = await this.xmpp.iqCaller
+        .request(
+          xml(
+            'iq',
+            {
+              to:
+                (subdomain ? `${subdomain}.` : '') +
+                `${this.credentials.domain}`,
+              type: 'get',
+              id: makeId(7),
+            },
+            xml('query', {
+              xmlns: 'http://jabber.org/protocol/disco#items',
+            })
+          )
+        )
+        .catch();
 
-    if (response.attrs.from === this.credentials.domain) {
-      event.sender.send('xmpp-discover-top-level-items', response);
-    } else {
-      event.sender.send('xmpp-discover-sub-level-items', response);
+      if (response.attrs.from === this.credentials.domain) {
+        event.sender.send('xmpp-discover-top-level-items', response);
+      } else {
+        event.sender.send('xmpp-discover-sub-level-items', response);
+      }
     }
   }
 
   async sendPong(domain, id) {
-    return await this.client.iqCaller
-      .request(
-        xml('iq', {
-          id: id,
-          from: this.credentials.jid,
-          to: domain,
-          type: 'result',
-        })
-      )
-      // TODO: This is not working, will always return an error. Possibly due to xmpp.js
-      .catch(e => {
-        /* console.log(e) */
-      });
+    if (this.xmpp && this.xmpp.status === 'online') {
+      return await this.xmpp.iqCaller
+        .request(
+          xml('iq', {
+            id: id,
+            from: this.credentials.jid,
+            to: domain,
+            type: 'result',
+          })
+        )
+        // TODO: This is not working, will always return an error. Possibly due to xmpp.js
+        .catch();
+    }
   }
 
   async sendGetVCard(event, from, to) {
-    const iqAttrs = {
-      from: from,
-      id: makeId(7),
-      type: 'get',
-    };
+    if (this.xmpp && this.xmpp.status === 'online') {
+      const iqAttrs = {
+        from: from,
+        id: makeId(7),
+        type: 'get',
+      };
 
-    if (to && to !== '') {
-      iqAttrs.to = to;
+      if (to && to !== '') {
+        iqAttrs.to = to;
+      }
+
+      const response = await this.xmpp.iqCaller
+        .request(xml('iq', iqAttrs, xml('vCard', { xmlns: 'vcard-temp' })))
+        .catch();
+
+      event.sender.send('xmpp-vcard', response);
     }
-
-    const response = await this.client.iqCaller.request(
-      xml('iq', iqAttrs, xml('vCard', { xmlns: 'vcard-temp' }))
-    );
-
-    event.sender.send('xmpp-vcard', response);
   }
 
   async sendSetVCard(event, vCard) {
     // https://xmpp.org/extensions/xep-0054.html
-    const response = await this.client.iqCaller.request(
-      xml(
-        'iq',
-        {
-          id: makeId(3),
-          type: 'set',
-        },
-        xml(
-          'vCard',
-          { xmlns: 'vcard-temp' },
-          xml('JABBERID', {}, vCard.jid.split('/')[0]),
-          xml('DESC', {}, vCard.description),
-          xml('FN', {}, vCard.fullName),
+    if (this.xmpp && this.xmpp.status === 'online') {
+      const response = await this.xmpp.iqCaller
+        .request(
           xml(
-            'N',
-            {},
-            xml('GIVEN', {}, vCard.firstName),
-            xml('MIDDLE', {}, vCard.middleName),
-            xml('FAMILY', {}, vCard.lastName)
-          ),
-          xml('NICKNAME', {}, vCard.nickname),
-          xml('URL', {}, vCard.url),
-          xml('BDAY', {}, vCard.birthday),
-          xml(
-            'ORG',
-            {},
-            xml('ORGNAME', {}, vCard.organizationName),
-            xml('ORGUNIT', {}, vCard.organizationUnit)
-          ),
-          xml('TITLE', {}, vCard.title),
-          xml('ROLE', {}, vCard.role),
-          xml(
-            'TEL',
-            {},
-            xml('WORK', {}),
-            xml('VOICE', {}),
-            xml('NUMBER', vCard.phoneNumber)
-          ),
-          xml('TEL', {}, xml('WORK', {}), xml('FAX', {}), xml('NUMBER', {})),
-          xml('TEL', {}, xml('WORK', {}), xml('MSG', {}), xml('NUMBER', {})),
-          xml(
-            'ADR',
-            {},
-            xml('WORK', {}),
-            xml('STREET', {}, vCard.street),
-            xml('EXTADD', {}, vCard.streetExtended),
-            xml('LOCALITY', {}, vCard.city),
-            xml('REGION', {}, vCard.state),
-            xml('PCODE', {}, vCard.zipCode),
-            xml('CTRY', {}, vCard.country)
-          ),
-          xml(
-            'EMAIL',
-            {},
-            xml('INTERNET', {}),
-            xml('PREF', {}),
-            xml('USERID', {}, vCard.email)
-          ),
-          xml(
-            'PHOTO',
-            {},
-            xml('TYPE', {}, vCard.photoType),
-            xml('BINVAL', {}, vCard.photo)
+            'iq',
+            {
+              id: makeId(3),
+              type: 'set',
+            },
+            xml(
+              'vCard',
+              { xmlns: 'vcard-temp' },
+              xml('JABBERID', {}, vCard.jid.split('/')[0]),
+              xml('DESC', {}, vCard.description),
+              xml('FN', {}, vCard.fullName),
+              xml(
+                'N',
+                {},
+                xml('GIVEN', {}, vCard.firstName),
+                xml('MIDDLE', {}, vCard.middleName),
+                xml('FAMILY', {}, vCard.lastName)
+              ),
+              xml('NICKNAME', {}, vCard.nickname),
+              xml('URL', {}, vCard.url),
+              xml('BDAY', {}, vCard.birthday),
+              xml(
+                'ORG',
+                {},
+                xml('ORGNAME', {}, vCard.organizationName),
+                xml('ORGUNIT', {}, vCard.organizationUnit)
+              ),
+              xml('TITLE', {}, vCard.title),
+              xml('ROLE', {}, vCard.role),
+              xml(
+                'TEL',
+                {},
+                xml('WORK', {}),
+                xml('VOICE', {}),
+                xml('NUMBER', vCard.phoneNumber)
+              ),
+              xml(
+                'TEL',
+                {},
+                xml('WORK', {}),
+                xml('FAX', {}),
+                xml('NUMBER', {})
+              ),
+              xml(
+                'TEL',
+                {},
+                xml('WORK', {}),
+                xml('MSG', {}),
+                xml('NUMBER', {})
+              ),
+              xml(
+                'ADR',
+                {},
+                xml('WORK', {}),
+                xml('STREET', {}, vCard.street),
+                xml('EXTADD', {}, vCard.streetExtended),
+                xml('LOCALITY', {}, vCard.city),
+                xml('REGION', {}, vCard.state),
+                xml('PCODE', {}, vCard.zipCode),
+                xml('CTRY', {}, vCard.country)
+              ),
+              xml(
+                'EMAIL',
+                {},
+                xml('INTERNET', {}),
+                xml('PREF', {}),
+                xml('USERID', {}, vCard.email)
+              ),
+              xml(
+                'PHOTO',
+                {},
+                xml('TYPE', {}, vCard.photoType),
+                xml('BINVAL', {}, vCard.photo)
+              )
+            )
           )
         )
-      )
-    );
+        .catch();
 
-    // TODO: send confirmation of successful update
-    // event.sender.send('xmpp-set-vcard-confirmation', response);
+      // TODO: send confirmation of successful update
+      // event.sender.send('xmpp-set-vcard-confirmation', response);
+    }
   }
 
   //
   // Sending
   //
-  sendSubscribe(jid, nickname, password) {
-    if (password) {
-      this.client.send(
-        xml(
-          'presence',
-          {
-            id: makeId(7),
-            to: `${jid}/${nickname}`,
-            from: jid,
-          },
-          xml('priority', {}, 1),
+  async sendSubscribe(jid, nickname, password) {
+    if (this.xmpp && this.xmpp.status === 'online') {
+      if (password) {
+        await this.xmpp.send(
           xml(
-            'x',
+            'presence',
             {
-              xmlns: 'http://jabber.org/protocol/muc',
+              id: makeId(7),
+              to: `${jid}/${nickname}`,
+              from: jid,
             },
-            xml('password', {}, password)
+            xml('priority', {}, 1),
+            xml(
+              'x',
+              {
+                xmlns: 'http://jabber.org/protocol/muc',
+              },
+              xml('password', {}, password)
+            )
           )
-        )
-      );
-    } else {
-      this.client.send(
-        xml(
-          'presence',
-          {
-            id: makeId(7),
-            to: `${jid}/${nickname}`,
-            from: jid,
-          },
-          xml('priority', {}, 1)
-        )
+        );
+      } else {
+        await this.xmpp.send(
+          xml(
+            'presence',
+            {
+              id: makeId(7),
+              to: `${jid}/${nickname}`,
+              from: jid,
+            },
+            xml('priority', {}, 1)
+          )
+        );
+      }
+    }
+  }
+
+  async sendUnsubscribe(jid, nickname) {
+    if (this.xmpp && this.xmpp.status === 'online') {
+      await this.xmpp.send(
+        xml('presence', {
+          id: makeId(7),
+          to: `${jid}/${nickname}`,
+          from: jid,
+          type: 'unavailable',
+        })
       );
     }
   }
 
-  sendUnsubscribe(jid, nickname) {
-    this.client.send(
-      xml('presence', {
-        id: makeId(7),
-        to: `${jid}/${nickname}`,
-        from: jid,
-        type: 'unavailable',
-      })
-    );
-  }
-
-  sendMyStatus(status) {
-    if (status === 'online') {
-      this.client.send(xml('presence', {}, xml('priority', {}, 1)));
-    } else {
-      this.client.send(
-        xml('presence', {}, xml('show', {}, status), xml('priority', {}, 1))
-      );
+  async sendMyStatus(status) {
+    if (this.xmpp && this.xmpp.status === 'online') {
+      if (status === 'online') {
+        await this.xmpp.send(xml('presence', {}, xml('priority', {}, 1)));
+      } else {
+        await this.xmpp.send(
+          xml('presence', {}, xml('show', {}, status), xml('priority', {}, 1))
+        );
+      }
     }
   }
 
-  sendRoomNickname(jid, nickname) {
-    this.client.send(xml('presence', { to: `${jid}/${nickname}` }));
+  async sendRoomNickname(jid, nickname) {
+    if (this.xmpp && this.xmpp.status === 'online') {
+      await this.xmpp.send(xml('presence', { to: `${jid}/${nickname}` }));
+    }
   }
 
   sendMessage(message) {
     // for some reason without setTimeout for a set period after sending a message
     // subsequent messages will have a delay before being sent
-    setTimeout(() => {
-      this.client.send(
-        xml(
-          'message',
-          {
-            id: message.id,
-            type: message.type,
-            to: message.to,
-            from: message.from,
-          },
-          xml('body', {}, message.body)
-        )
-      );
+    setTimeout(async () => {
+      if (this.xmpp && this.xmpp.status === 'online') {
+        await this.xmpp.send(
+          xml(
+            'message',
+            {
+              id: message.id,
+              type: message.type,
+              to: message.to,
+              from: message.from,
+            },
+            xml('body', {}, message.body)
+          )
+        );
+      }
     });
   }
 }
