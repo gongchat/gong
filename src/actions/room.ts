@@ -127,19 +127,22 @@ export const roomActions: any = {
   },
   setChannelNickname(payload: any) {
     return (state: IState): IState => {
-      ipcRenderer.send('xmpp-set-room-nickname', {
-        jid: payload.jid,
-        nickname: payload.newNickname,
-      });
+      let channelJid: string | null = null;
       const channels = state.channels.map((channel: IChannel) => {
         if (channel.jid === payload.jid && channel.type === 'groupchat') {
+          channelJid = channel.jid;
           const room = channel as IRoom;
           const user = room.users.find(
-            (u: IChannelUser) =>
-              u.nickname !== payload.newNickname &&
-              u.nickname !== payload.currentNickname
+            (u: IChannelUser) => u.nickname === payload.currentNickname
           );
-          if (user) {
+          const check = room.users.find(
+            (u: IChannelUser) => u.nickname === payload.newNickname
+          );
+          if (user && !check) {
+            ipcRenderer.send('xmpp-set-room-nickname', {
+              jid: payload.jid,
+              nickname: payload.newNickname,
+            });
             return { ...channel, myNickname: payload.newNickname };
           }
         }
@@ -149,6 +152,10 @@ export const roomActions: any = {
       return {
         ...state,
         channels,
+        current:
+          state.current && state.current.jid === channelJid
+            ? { ...state.current, myNickname: payload.newNickname }
+            : state.current,
       };
     };
   },

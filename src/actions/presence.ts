@@ -113,6 +113,14 @@ const setGroupchat = (state: IState, presence: IPresence): IState => {
         isConnecting: false,
         connectionError: 'Not authorized',
       };
+    } else if (presence.code === '409') {
+      // nickname conflict
+      room = {
+        ...room,
+        isConnected: false,
+        isConnecting: false,
+        connectionError: 'Nickname conflict',
+      };
     } else {
       room = {
         ...room,
@@ -145,17 +153,21 @@ const setGroupchat = (state: IState, presence: IPresence): IState => {
           room.users = [...room.users, newUser];
         }
       }
-
-      // if channel is the current one, update it
-      if (state.current && state.current.jid === room.jid) {
-        state.current = {
-          ...state.current,
-          users: room.users,
-        };
-      }
     }
 
-    return { ...state, channels: [...channels, room] };
+    // if channel is the current one, update it
+    let current = state.current;
+    if (state.current && state.current.jid === room.jid) {
+      current = {
+        ...state.current,
+        users: room.users,
+        isConnected: room.isConnected,
+        isConnecting: room.isConnecting,
+        connectionError: room.connectionError,
+      };
+    }
+
+    return { ...state, channels: [...channels, room], current };
   }
 
   return state;
