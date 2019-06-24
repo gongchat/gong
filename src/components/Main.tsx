@@ -47,6 +47,7 @@ const Main: FC<IProps> = () => {
 
   const handleUpdate = () => {
     ipcRenderer.send('app-update');
+    setUpdateOpen(false);
   };
 
   useEffect(() => {
