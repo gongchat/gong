@@ -1487,6 +1487,7 @@ export const ASCII_EMOJI_MAP = [
   { key: '&lt;3', emoji: '❤️' },
   { key: ':)', emoji: '😃' },
   { key: ':D', emoji: '😀' },
+  { key: ':-D', emoji: '😀' },
   { key: ':P', emoji: '😋' },
   { key: ';)', emoji: '😉' },
   { key: ';D', emoji: '😉' },
