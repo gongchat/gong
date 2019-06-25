@@ -114,6 +114,7 @@ export const roomActions: any = {
           ...state.channels.filter((c: IChannel) => c !== channel),
           room,
         ];
+        ipcRenderer.send('xmpp-unsubscribe-to-room', channel);
         ipcRenderer.send('xmpp-subscribe-to-room', payload);
         saveRooms(channels);
         return {
