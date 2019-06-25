@@ -81,7 +81,7 @@ const Settings: FC = () => {
             <div className={classes.section}>
               <div>
                 <Typography gutterBottom>
-                  Logging off will remove your custom settings and saved rooms. 
+                  Logging off will remove your custom settings and saved rooms.
                   Your chat logs will not be removed.
                 </Typography>
               </div>
@@ -170,9 +170,9 @@ const Settings: FC = () => {
                 </ListItem>
               </List>
             </div>
-            <div className={classes.content}>
-              {getContent()}
-              <div className={classes.close}>
+            <div className={classes.content}>{getContent()}</div>
+            <div className={classes.close}>
+              <div className={classes.closeButton}>
                 <IconButton onClick={handleClickClose}>
                   <CloseIcon />
                 </IconButton>
@@ -242,9 +242,13 @@ const useStyles: any = makeStyles((theme: any) => ({
   },
   close: {
     position: 'absolute',
+    width: 850,
+    margin: 'auto',
+  },
+  closeButton: {
     width: '50px',
-    top: theme.spacing(4),
-    right: 25,
+    marginLeft: 'auto',
+    marginTop: theme.spacing(1),
     '& button': {
       position: 'fixed',
     },
