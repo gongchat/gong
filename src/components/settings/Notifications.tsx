@@ -12,6 +12,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
+import SliderContainer from './SliderContainer';
 import SliderMarkers from './SliderMarkers';
 import { playAudio, SOUNDS } from '../../actions/notification';
 import { DEFAULT as DEFAULT_SETTINGS } from '../../actions/settings';
@@ -213,18 +214,20 @@ const NotificationSettings: FC = () => {
           </Select>
         </FormControl>
         <div className={classes.slider}>
-          <Slider
-            value={volume}
-            min={MIN_SIZE}
-            max={MAX_SIZE}
-            step={1}
-            onChange={(event: any, value: any) => updateVolume(value)}
-          />
-          <SliderMarkers
-            minSize={MIN_SIZE}
-            maxSize={MAX_SIZE}
-            defaultSize={DEFAULT_SIZE}
-          />
+          <SliderContainer>
+            <Slider
+              value={volume}
+              min={MIN_SIZE}
+              max={MAX_SIZE}
+              step={1}
+              onChange={(event: any, value: any) => updateVolume(value)}
+            />
+            <SliderMarkers
+              minSize={MIN_SIZE}
+              maxSize={MAX_SIZE}
+              defaultSize={DEFAULT_SIZE}
+            />
+          </SliderContainer>
         </div>
         <FormControl variant="filled">
           <InputLabel htmlFor="playAudioOnGroupchat">
@@ -534,8 +537,10 @@ const NotificationSettings: FC = () => {
 
 const useStyles: any = makeStyles((theme: any) => ({
   slider: {
-    position: 'relative',
     paddingBottom: theme.spacing(2),
+    '& > div': {
+      width: 500,
+    },
   },
   split: {
     display: 'flex',

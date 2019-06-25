@@ -6,10 +6,10 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/lab/Slider';
-import { makeStyles } from '@material-ui/styles';
 
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
+import SliderContainer from './SliderContainer';
 import SliderMarkers from './SliderMarkers';
 import { DEFAULT as DEFAULT_THEME } from '../../actions/theme';
 
@@ -22,7 +22,6 @@ const MAX_SPACING = 10;
 const DEFAULT_SPACING = 8;
 
 const Layout: FC = () => {
-  const classes = useStyles();
   const [{ theme }, { setTheme }] = useContext();
   const [spacing, setSpacing] = useState(theme.spacing(1));
   const [sidebarWidth, setSidebarWidth] = useState(theme.sidebarWidth);
@@ -150,7 +149,7 @@ const Layout: FC = () => {
   return (
     <BasePage title="Layout">
       <BaseSection title="Spacing">
-        <div className={classes.slider}>
+        <SliderContainer>
           <Slider
             value={spacing === '' ? 0 : parseInt(spacing, 10)}
             min={MIN_SPACING}
@@ -163,7 +162,7 @@ const Layout: FC = () => {
             maxSize={MAX_SPACING}
             defaultSize={DEFAULT_SPACING}
           />
-        </div>
+        </SliderContainer>
         <div>
           <TextField
             name="spacing"
@@ -182,7 +181,7 @@ const Layout: FC = () => {
         </div>
       </BaseSection>
       <BaseSection title="Sidebar Width">
-        <div className={classes.slider}>
+        <SliderContainer>
           <Slider
             value={sidebarWidth === '' ? 0 : parseInt(sidebarWidth, 10)}
             min={MIN_SIDEBAR_WIDTH}
@@ -195,7 +194,7 @@ const Layout: FC = () => {
             maxSize={MAX_SIDEBAR_WIDTH}
             defaultSize={DEFAULT_SIDEBAR_WIDTH}
           />
-        </div>
+        </SliderContainer>
         <div>
           <TextField
             name="sidebarWidth"
@@ -261,9 +260,5 @@ const Layout: FC = () => {
     </BasePage>
   );
 };
-
-const useStyles: any = makeStyles((theme: any) => ({
-  slider: { position: 'relative' },
-}));
 
 export default Layout;

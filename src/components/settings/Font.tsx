@@ -6,10 +6,10 @@ import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/lab/Slider';
-import { makeStyles } from '@material-ui/styles';
 
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
+import SliderContainer from './SliderContainer';
 import SliderMarkers from './SliderMarkers';
 import { DEFAULT as DEFAULT_THEME } from '../../actions/theme';
 
@@ -18,7 +18,6 @@ const MAX_SIZE = 20;
 const DEFAULT_SIZE = 14;
 
 const Font: FC = () => {
-  const classes = useStyles();
   const [{ theme }, { setTheme }] = useContext();
   const [font, setFont] = useState(
     theme.typography.fontFamily.split(',')[0].replace(/"/g, '')
@@ -128,7 +127,7 @@ const Font: FC = () => {
         </div>
       </BaseSection>
       <BaseSection title="Font Size">
-        <div className={classes.slider}>
+        <SliderContainer>
           <Slider
             value={size === '' ? 0 : parseInt(size, 10)}
             min={MIN_SIZE}
@@ -141,7 +140,7 @@ const Font: FC = () => {
             maxSize={MAX_SIZE}
             defaultSize={DEFAULT_SIZE}
           />
-        </div>
+        </SliderContainer>
         <div>
           <TextField
             name="size"
@@ -168,9 +167,5 @@ const Font: FC = () => {
     </BasePage>
   );
 };
-
-const useStyles: any = makeStyles((theme: any) => ({
-  slider: { position: 'relative' },
-}));
 
 export default Font;
