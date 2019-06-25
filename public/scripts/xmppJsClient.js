@@ -209,7 +209,8 @@ class XmppJsClient {
       stanza.children.length > 0 &&
       stanza.children[0].attrs.xmlns === 'urn:xmpp:ping'
     ) {
-      this.sendPong(this.credentials.domain, stanza.attrs.id);
+      // Disabled as I believe the xmpp.js library handles this for
+      // this.sendPong(this.credentials.domain, stanza.attrs.id);
     }
   }
 
@@ -318,7 +319,6 @@ class XmppJsClient {
             type: 'result',
           })
         )
-        // TODO: This is not working, will always return an error. Possibly due to xmpp.js
         .catch();
     }
   }
