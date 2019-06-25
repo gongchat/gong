@@ -27,6 +27,7 @@ interface IProps {
 //  11 = Emojis via click
 //  20 = Users
 //  21 = Users via click
+//  30 = Commands
 
 const ListSelector: FC<IProps> = ({
   handleSelection,
@@ -139,7 +140,7 @@ const ListSelector: FC<IProps> = ({
                   onClick={() => handleSelection(obj)}
                 >
                   {showValue && (
-                    <span className={classes.icon}>{obj[valueProp]}</span>
+                    <span className={classes.value}>{obj[valueProp]}</span>
                   )}
                   {showKey && (
                     <Typography>
@@ -182,15 +183,15 @@ const useStyles: any = makeStyles((theme: any) => ({
   listItem: {
     cursor: 'pointer',
     display: 'flex',
+    alignItems: 'center',
     flexWrap: 'nowrap',
     padding: theme.spacing(0.5),
     '&:hover': {
       backgroundColor: theme.palette.action.hover,
     },
   },
-  icon: {
+  value: {
     marginRight: theme.spacing(1),
-    width: theme.spacing(2),
   },
 }));
 

@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 
+import ListSelectorCommands from './ListSelectorCommands';
 import ListSelectorEmojis from './ListSelectorEmojis';
 import ListSelectorUsers from './ListSelectorUsers';
 
@@ -14,6 +15,7 @@ interface IProps {
 const ListSelectors: FC<IProps> = (props: IProps) => {
   return (
     <>
+      <ListSelectorCommands {...props} />
       <ListSelectorEmojis {...props} />
       <ListSelectorUsers {...props} />
     </>
