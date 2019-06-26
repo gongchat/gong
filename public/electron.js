@@ -174,7 +174,7 @@ app.on('ready', () => {
 //
 
 autoUpdater.on('checking-for-update', () => {
-  mainWindow.webContents.send('app-set', { hasUpdate: true });
+  // mainWindow.webContents.send('app-set', { });
 });
 autoUpdater.on('update-available', (ev, info) => {
   mainWindow.webContents.send('app-set', { hasUpdate: true });

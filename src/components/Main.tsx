@@ -68,7 +68,7 @@ const Main: FC<IProps> = () => {
   }, [theme]);
 
   useEffect(() => {
-    if (app.hasUpdate) {
+    if (app.isUpdateDownloaded) {
       setUpdateOpen(true);
     }
   }, [app]);
