@@ -86,11 +86,7 @@ const setChat = (state: IState, presence: IPresence): IState => {
     }
     let current = state.current as IUser;
     if (current && current.jid === user.jid) {
-      current = {
-        ...current,
-        sessionJid: undefined,
-        status: user.status,
-      };
+      current = user;
     }
 
     return { ...state, current, channels: [...channels, user] };
@@ -162,13 +158,7 @@ const setGroupchat = (state: IState, presence: IPresence): IState => {
     // if channel is the current one, update it
     let current = state.current;
     if (state.current && state.current.jid === room.jid) {
-      current = {
-        ...state.current,
-        users: room.users,
-        isConnected: room.isConnected,
-        isConnecting: room.isConnecting,
-        connectionError: room.connectionError,
-      };
+      current = room;
     }
 
     return { ...state, channels: [...channels, room], current };

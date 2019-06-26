@@ -129,6 +129,7 @@ export const roomActions: any = {
   setChannelNickname(payload: any) {
     return (state: IState): IState => {
       let channelJid: string | null = null;
+      let current = state.current;
       const channels = state.channels.map((channel: IChannel) => {
         if (channel.jid === payload.jid && channel.type === 'groupchat') {
           channelJid = channel.jid;
@@ -144,7 +145,11 @@ export const roomActions: any = {
               jid: payload.jid,
               nickname: payload.newNickname,
             });
-            return { ...channel, myNickname: payload.newNickname };
+            const updatedChannel: IRoom = {
+              ...(channel as IRoom),
+              myNickname: payload.newNickname,
+            };
+            return updatedChannel;
           }
         }
         return channel;
@@ -153,10 +158,7 @@ export const roomActions: any = {
       return {
         ...state,
         channels,
-        current:
-          state.current && state.current.jid === channelJid
-            ? { ...state.current, myNickname: payload.newNickname }
-            : state.current,
+        current,
       };
     };
   },

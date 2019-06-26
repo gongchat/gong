@@ -293,9 +293,6 @@ const addMessage = (
   type: string,
   rawText: string
 ): IState => {
-  // Checks if current, if it is, it will add the message to it
-  updateCurrent(state, type, message, rawText);
-
   // Looks for channel, if found, it will update it
   const updated = updateChannel(state, type, message, rawText);
   if (!updated) {
@@ -304,28 +301,6 @@ const addMessage = (
   }
 
   return { ...state };
-};
-
-const updateCurrent = (
-  state: IState,
-  type: string,
-  message: IMessage,
-  rawText: string
-) => {
-  if (
-    state.current &&
-    state.current.jid === message.channelName &&
-    state.current.type === type
-  ) {
-    message.isRead = true;
-    state.current = {
-      ...state.current,
-      messages: [...state.current.messages, message],
-      inputText: '',
-    };
-
-    handleOnMessage(state, message, type, rawText);
-  }
 };
 
 const updateChannel = (
@@ -342,6 +317,11 @@ const updateChannel = (
       if (channel.jid === message.channelName && channel.type === type) {
         channelUpdated = true;
 
+        const isCurrent = !!(
+          state.current &&
+          state.current.jid === message.channelName &&
+          state.current.type === type
+        );
         const isUnreadOne = !state.current || state.current.jid !== channel.jid;
         const isUnreadTwo =
           !(channel as IRoom).lastReadTimestamp ||
@@ -349,7 +329,7 @@ const updateChannel = (
             (channel as IRoom).lastReadTimestamp,
             'seconds'
           ) > 0;
-        message.isRead = !isUnreadOne || !isUnreadTwo;
+        message.isRead = !isUnreadOne || !isUnreadTwo || isCurrent;
 
         const newChannel: IChannel = {
           ...channel,
@@ -384,6 +364,10 @@ const updateChannel = (
         }
 
         log(state.profile.jid, channel, message);
+
+        if (isCurrent) {
+          state.current = newChannel;
+        }
 
         return newChannel;
       }
