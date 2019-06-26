@@ -1,11 +1,10 @@
 const { ipcMain } = require('electron');
-const { autoUpdater } = require('electron-updater');
 
 const logger = require('./logger');
 const settings = require('./settings');
 
 class IpcMainEvents {
-  attachEvents(app, xmppJsClient) {
+  attachEvents(app, xmppJsClient, autoUpdater) {
     // this block of functions will be called one after another during startup
     ipcMain.on('xmpp-auto-connect', (event, arg) => {
       xmppJsClient.autoConnect(event, arg);

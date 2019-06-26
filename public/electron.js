@@ -37,7 +37,7 @@ if (!isLocked) {
 // Allows audio to play before interacting with the window, see: https://github.com/electron/electron/issues/13525#issuecomment-410923391
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 
-ipcMainEvents.attachEvents(app, xmppJsClient);
+ipcMainEvents.attachEvents(app, xmppJsClient, autoUpdater);
 autoUpdater.logger = log;
 log.info('App starting...');
 
