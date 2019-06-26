@@ -167,7 +167,6 @@ const updateTypographyColor = (theme: any, color: string) => {
     theme.typography[item.prop].color = color;
   });
   const alphaColor = addAlphaToRgb(convertHexToRgb(color), 0.7);
-  console.log(alphaColor, color, convertHexToRgb(color));
   TYPOGRAPHY_SPECIAL_PROPS.forEach((prop: string) => {
     theme.typography[prop].color = alphaColor;
   });
