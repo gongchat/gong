@@ -128,11 +128,9 @@ export const roomActions: any = {
   },
   setChannelNickname(payload: any) {
     return (state: IState): IState => {
-      let channelJid: string | null = null;
       let current = state.current;
       const channels = state.channels.map((channel: IChannel) => {
         if (channel.jid === payload.jid && channel.type === 'groupchat') {
-          channelJid = channel.jid;
           const room = channel as IRoom;
           const user = room.users.find(
             (u: IChannelUser) => u.nickname === payload.currentNickname
