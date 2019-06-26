@@ -86,7 +86,11 @@ const setChat = (state: IState, presence: IPresence): IState => {
     }
     let current = state.current as IUser;
     if (current && current.jid === user.jid) {
-      current = { ...current, sessionJid: undefined };
+      current = {
+        ...current,
+        sessionJid: undefined,
+        status: user.status,
+      };
     }
 
     return { ...state, current, channels: [...channels, user] };
