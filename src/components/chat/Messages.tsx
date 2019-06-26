@@ -366,13 +366,6 @@ const Messages: FC = () => {
                     onMediaError={handleOnMediaLoad} // currently no need for its own function
                   />
                 </div>
-                {showDate && (
-                  <div className={classes.marker}>
-                    <Typography className={classes.markerValue}>
-                      <span>{message.timestamp.format('LL')}</span>
-                    </Typography>
-                  </div>
-                )}
                 {showNewMessageMarker && (
                   <div ref={newMessageMarkerRef} className={classes.marker}>
                     <Typography
@@ -383,6 +376,13 @@ const Messages: FC = () => {
                       ].join(' ')}
                     >
                       <span>New Messages</span>
+                    </Typography>
+                  </div>
+                )}
+                {showDate && (
+                  <div className={classes.marker}>
+                    <Typography className={classes.markerValue}>
+                      <span>{message.timestamp.format('LL')}</span>
                     </Typography>
                   </div>
                 )}
