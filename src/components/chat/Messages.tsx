@@ -100,9 +100,11 @@ const Messages: FC = () => {
             rootRef.current.scrollHeight + rootRef.current.offsetHeight;
         }
       } else {
+        console.log('foo');
         // handle initial scroll positions on new channel
         if (newMessageMarkerRef.current) {
           // if the new message marker is present
+          console.log('bar');
           rootRef.current.scrollTop =
             rootRef.current.scrollHeight +
             newMessageMarkerRef.current.offsetTop -
@@ -252,7 +254,8 @@ const Messages: FC = () => {
                 message.timestamp.format('L');
             const showNewMessageMarker =
               !hasNewMessageMarker &&
-              (prevMessage && prevMessage.isRead !== message.isRead);
+              ((!prevMessage && !message.isRead) ||
+                (prevMessage && prevMessage.isRead !== message.isRead));
 
             const nextMessage: any =
               index + 1 > current.messages.length
