@@ -7,12 +7,9 @@ import { makeStyles } from '@material-ui/styles';
 
 import Message from './Message';
 import { TRIM_AT } from '../../actions/channel';
-import IMessage from '../../interfaces/IMessage';
 import { usePrevious } from '../../hooks/usePrevious';
+import IMessage from '../../interfaces/IMessage';
 import IMessageUrl from '../../interfaces/IMessageUrl';
-
-let prevWindowInnerWidth: any;
-let positionBeforeGettingLogs: any;
 
 const Messages: FC = () => {
   const classes = useStyles();
@@ -23,21 +20,17 @@ const Messages: FC = () => {
 
   const prevCurrent = usePrevious(current);
 
-  // Scroll position is updated when messages are loaded from Message.tsx
-  // component. This component uses the status variable to determine what
-  // value the scroll position should be updated to.
-  //
-  // Possible values for status:
-  // - scrolled (do nothing)
-  // - bottom (scroll to bottom)
-  // - new-message-marker (scroll to the new message marker)
-  // - saved-position (scroll to the saved position for the channel)
-  // - previous-position (scroll to the position before receiving logs)
-  const status = useRef('bottom');
+  // this is done to prevent react-hooks/exhaustive-deps, would like to use a regular variable without having to disable linting
+  const isLoading = useRef(true);
+  isLoading.current = true;
+
   const scrollPosition = useRef(current ? current.scrollPosition : -1);
-  const hasScrolledToNewMessageMarker = useRef(false);
+  const scrollPositionBeforeGettingLogs = useRef(scrollPosition.current);
+  const prevWindowInnerWidth = useRef(-1);
+  const hasUpdatedScrollOnNewChannel = useRef(false);
+
   const newMessageMarkerRef = useRef<HTMLDivElement>(null);
-  const root = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   // normal variables
   const numberOfMessages = current ? current.messages.length : 0;
@@ -51,33 +44,104 @@ const Messages: FC = () => {
       )
     : 0;
 
-  let isLoading = true;
   let numberOfLoadedMessages = 0;
   let numberOfLoadedImages = 0;
 
   // when new channel before render
-  if (!prevCurrent || (current && current.jid !== prevCurrent.jid)) {
-    hasScrolledToNewMessageMarker.current = false;
-    status.current =
-      !current || current.scrollPosition === -1 ? 'bottom' : 'saved-position';
+  if (
+    (!prevCurrent && current) ||
+    (current && current.jid !== prevCurrent.jid)
+  ) {
+    // save scroll position of pervious channel
+    if (scrollPosition.current !== undefined) {
+      setChannelScrollPosition(
+        prevCurrent ? prevCurrent.jid : current.jid,
+        scrollPosition.current
+      );
+    }
+
+    // set refs to new values
+    hasUpdatedScrollOnNewChannel.current = false;
+    scrollPosition.current = current.scrollPosition;
+    scrollPositionBeforeGettingLogs.current = scrollPosition.current;
+
     if (current && current.messages.length === 0) {
-      isLoading = false;
-    } else if (root.current) {
-      root.current.style.opacity = '0';
+      isLoading.current = false;
+    } else if (rootRef.current) {
+      rootRef.current.style.opacity = '0';
     }
   }
+
+  const updateScrollPosition = () => {
+    if (rootRef.current && current) {
+      if (hasUpdatedScrollOnNewChannel.current) {
+        // handle new messages
+        if (
+          prevCurrent &&
+          prevCurrent.jid === current.jid &&
+          prevCurrent.messages[0] &&
+          current.messages[0] &&
+          prevCurrent.messages[0].timestamp.diff(
+            current.messages[0].timestamp
+          ) > 0 &&
+          rootRef.current.offsetHeight !== rootRef.current.scrollHeight
+        ) {
+          // if update is from logged messages
+          rootRef.current.scrollTop =
+            rootRef.current.scrollHeight -
+            scrollPositionBeforeGettingLogs.current;
+        } else if (
+          prevCurrent.messages.length !== current.messages.length &&
+          current.messages[current.messages.length - 1] &&
+          current.messages[current.messages.length - 1].isMe
+        ) {
+          // if update is from me
+          rootRef.current.scrollTop =
+            rootRef.current.scrollHeight + rootRef.current.offsetHeight;
+        }
+      } else {
+        // handle initial scroll positions on new channel
+        if (newMessageMarkerRef.current) {
+          // if the new message marker is present
+          rootRef.current.scrollTop =
+            rootRef.current.scrollHeight +
+            newMessageMarkerRef.current.offsetTop -
+            rootRef.current.clientHeight;
+        } else if (current && current.scrollPosition !== -1) {
+          // if there is a saved scroll position
+          rootRef.current.scrollTop = current.scrollPosition;
+        }
+        hasUpdatedScrollOnNewChannel.current = true;
+      }
+    }
+  };
+
+  const handleGetLoggedMessages = () => {
+    if (
+      !isLoading.current &&
+      rootRef.current &&
+      rootRef.current.scrollTop === 0 &&
+      current &&
+      !current.hasNoMoreLogs
+    ) {
+      rootRef.current.style.opacity = '0';
+      isLoading.current = true;
+      scrollPositionBeforeGettingLogs.current = rootRef.current.scrollHeight;
+      getChannelLogs(current);
+    }
+  };
 
   const handleOnMessageLoad = () => {
     numberOfLoadedMessages++;
     if (numberOfLoadedMessages >= numberOfMessages) {
       setTimeout(() => {
-        setStatus();
-        if (root.current) {
-          root.current.style.opacity = '1';
+        updateScrollPosition();
+        if (rootRef.current) {
+          rootRef.current.style.opacity = '1';
         }
         if (numberOfLoadedImages >= numberOfImages) {
-          isLoading = false;
-          handleGetLoggedMessages(root.current);
+          isLoading.current = false;
+          handleGetLoggedMessages();
         }
       }, 0);
     }
@@ -87,215 +151,97 @@ const Messages: FC = () => {
     numberOfLoadedImages++;
     if (numberOfLoadedImages >= numberOfImages) {
       setTimeout(() => {
-        setStatus();
-        if (root.current) {
-          root.current.style.opacity = '1';
+        updateScrollPosition();
+        if (rootRef.current) {
+          rootRef.current.style.opacity = '1';
         }
         if (numberOfLoadedMessages >= numberOfMessages) {
-          isLoading = false;
-          handleGetLoggedMessages(root.current);
+          isLoading.current = false;
+          handleGetLoggedMessages();
         }
       }, 0);
-    }
-  };
-
-  const setStatus = () => {
-    if (root.current && current) {
-      const shouldUpdateForLoggedMessages =
-        prevCurrent &&
-        prevCurrent.jid === current.jid &&
-        prevCurrent.messages.length > 0 &&
-        current.messages.length > 0 &&
-        prevCurrent.messages[0].timestamp.diff(current.messages[0].timestamp) >
-          0 &&
-        root.current &&
-        root.current.offsetHeight !== root.current.scrollHeight;
-      const shouldUpdateToNewMessageMarker =
-        !hasScrolledToNewMessageMarker.current && newMessageMarkerRef.current;
-      const shouldUpdateToSavedPosition =
-        current &&
-        current.scrollPosition !== -1 &&
-        prevCurrent.jid !== current.jid;
-      const shouldUpdateToBottom =
-        !prevCurrent ||
-        prevCurrent.jid !== current.jid ||
-        (current &&
-          prevCurrent.messages.length !== current.messages.length &&
-          current.messages.length >= 0 &&
-          current.messages[current.messages.length - 1].isMe);
-
-      if (shouldUpdateForLoggedMessages) {
-        status.current = 'previous-position';
-      } else if (shouldUpdateToNewMessageMarker) {
-        status.current = 'new-message-marker';
-      } else if (shouldUpdateToSavedPosition) {
-        status.current = 'saved-position';
-      } else if (shouldUpdateToBottom) {
-        status.current = 'bottom';
-      }
-
-      setScrollPosition();
-    }
-  };
-
-  const setScrollPosition = () => {
-    if (root.current) {
-      switch (status.current) {
-        case 'previous-position':
-          root.current.scrollTop =
-            root.current.scrollHeight - positionBeforeGettingLogs;
-          break;
-        case 'new-message-marker':
-          if (newMessageMarkerRef.current) {
-            root.current.scrollTop =
-              root.current.scrollHeight +
-              newMessageMarkerRef.current.offsetTop -
-              root.current.clientHeight;
-            hasScrolledToNewMessageMarker.current = true;
-          }
-          break;
-        case 'saved-position':
-          if (current) {
-            root.current.scrollTop = current.scrollPosition;
-          }
-          break;
-        case 'bottom':
-          root.current.scrollTop =
-            root.current.scrollHeight + root.current.offsetHeight;
-          break;
-        default:
-          break;
-      }
-
-      if (
-        root.current.scrollTop + root.current.offsetHeight >=
-        root.current.scrollHeight - 5
-      ) {
-        status.current = 'bottom';
-      }
-    }
-  };
-
-  const handleGetLoggedMessages = (element: any) => {
-    if (element) {
-      const shouldRequestLoggedMessages =
-        !isLoading &&
-        element &&
-        element.scrollTop === 0 &&
-        current &&
-        !current.hasNoMoreLogs;
-
-      if (shouldRequestLoggedMessages) {
-        if (element.offsetHeight !== element.scrollHeight) {
-          status.current = 'previous-position';
-        } else {
-          status.current = 'bottom';
-        }
-        if (root.current) {
-          root.current.style.opacity = '0';
-        }
-        isLoading = true;
-        positionBeforeGettingLogs = element.scrollHeight;
-        getChannelLogs(current);
-      }
     }
   };
 
   // useEffect for handling new channel after render
   useLayoutEffect(() => {
     if (
-      (!prevCurrent && current) ||
-      (current && current.jid !== prevCurrent.jid)
+      !isLoading.current &&
+      rootRef.current &&
+      ((!prevCurrent && current) ||
+        (current && current.jid !== prevCurrent.jid))
     ) {
-      // save scroll position of pervious channel
-      if (scrollPosition.current !== undefined) {
-        setChannelScrollPosition(
-          prevCurrent ? prevCurrent.jid : current.jid,
-          scrollPosition.current
-        );
+      // check if should get logged messages
+      if (rootRef.current.scrollTop === 0 && !current.hasNoMoreLogs) {
+        rootRef.current.style.opacity = '0';
+        isLoading.current = true;
+        scrollPositionBeforeGettingLogs.current = rootRef.current.scrollHeight;
+        getChannelLogs(current);
       }
 
-      // set refs to new values
-      scrollPosition.current = current.scrollPosition;
-
-      const shouldTrimMessagesOnLoad =
-        current &&
+      // check if should trim messages
+      if (
         current.messages.length >= TRIM_AT &&
-        root.current &&
-        root.current.scrollTop + root.current.offsetHeight >=
-          root.current.scrollHeight - 5;
-
-      // Check for logged messages
-      handleGetLoggedMessages(root.current);
-
-      if (shouldTrimMessagesOnLoad) {
-        // Check for trimmed messages
+        rootRef.current.scrollTop + rootRef.current.offsetHeight >=
+          rootRef.current.scrollHeight - 5
+      ) {
         trimOldMessages(current.jid);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    current,
-    prevCurrent,
-    getChannelLogs,
-    trimOldMessages,
-    setChannelScrollPosition,
-  ]);
+  }, [current, getChannelLogs, prevCurrent, trimOldMessages]);
 
   // useEffect for handling scrolling and resizing
   useLayoutEffect(() => {
-    const rootCurrent = root.current;
-    // Event listener functions
+    const rootCurrent = rootRef.current;
+
     const handleScroll = (event: any) => {
-      if (isLoading) {
+      if (isLoading.current) {
         event.preventDefault();
-      } else {
+      } else if (current) {
         scrollPosition.current = event.target.scrollTop;
-        if (
+        if (event.target.scrollTop === 0 && !current.hasNoMoreLogs) {
+          // handle getting of logs
+          event.target.style.opacity = '0';
+          isLoading.current = true;
+          scrollPositionBeforeGettingLogs.current = event.target.scrollHeight;
+          getChannelLogs(current);
+        } else if (
+          current.messages.length >= TRIM_AT &&
           event.target.scrollTop + event.target.offsetHeight >=
-          event.target.scrollHeight - 5
+            event.target.scrollHeight - 5
         ) {
-          status.current = 'bottom';
-          if (current && current.messages.length >= TRIM_AT) {
-            trimOldMessages(current.jid);
-          }
-        } else {
-          status.current = 'scrolled';
+          // handle trimming of messages
+          trimOldMessages(current.jid);
         }
-        handleGetLoggedMessages(event.target);
       }
     };
+
     const handleWindowResize = (event: any) => {
-      if (window.innerWidth !== prevWindowInnerWidth) {
+      if (window.innerWidth !== prevWindowInnerWidth.current) {
         handleScroll(event);
       }
-      prevWindowInnerWidth = window.innerWidth;
+      prevWindowInnerWidth.current = window.innerWidth;
     };
+
     if (rootCurrent) {
       rootCurrent.addEventListener('scroll', handleScroll);
       window.addEventListener('resize', handleWindowResize);
     }
+
     return () => {
       if (rootCurrent) {
         rootCurrent.removeEventListener('scroll', handleScroll);
       }
       window.removeEventListener('resize', handleWindowResize);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    prevCurrent,
-    current,
-    newMessageMarkerRef,
-    getChannelLogs,
-    trimOldMessages,
-    setChannelScrollPosition,
-  ]);
+  }, [current, getChannelLogs, trimOldMessages]);
 
+  // Variables used in return
   let prevMessage: IMessage;
   let hasNewMessageMarker = false;
 
   return (
-    <div className={classes.root} ref={root}>
+    <div className={classes.root} ref={rootRef}>
       {current &&
         current.messages &&
         current.messages
