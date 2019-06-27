@@ -24,7 +24,9 @@ export const INITIAL_STATE: IState = {
     version: '',
     operatingSystem: '',
     hasUpdate: undefined,
+    isCheckingForUpdate: false,
     isUpdateDownloaded: false,
+    lastDateTimeUpdatedChecked: undefined,
   },
   connection: {
     isConnecting: false,

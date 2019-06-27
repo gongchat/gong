@@ -1,6 +1,10 @@
+import { Moment } from 'moment';
+
 export default interface IApp {
   version: string;
-  hasUpdate: boolean | undefined;
-  isUpdateDownloaded: boolean;
   operatingSystem: string;
+  hasUpdate: boolean | undefined;
+  isCheckingForUpdate: boolean;
+  isUpdateDownloaded: boolean;
+  lastDateTimeUpdatedChecked: Moment | undefined;
 }

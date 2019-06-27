@@ -118,6 +118,13 @@ function createTray() {
       },
     },
     {
+      label: 'Check for Updates',
+      click: function() {
+        autoUpdater.checkForUpdates();
+      },
+    },
+    { type: 'separator' },
+    {
       label: 'Quit Gong',
       click: function() {
         isQuitting = true;
@@ -177,10 +184,20 @@ autoUpdater.on('checking-for-update', () => {
   // mainWindow.webContents.send('app-set', { });
 });
 autoUpdater.on('update-available', (ev, info) => {
-  mainWindow.webContents.send('app-set', { hasUpdate: true });
+  mainWindow.webContents.send('app-set', {
+    hasUpdate: true,
+    isCheckingForUpdate: false,
+    isUpdateDownloaded: false,
+    lastDateTimeUpdatedChecked: new Date(),
+  });
 });
 autoUpdater.on('update-not-available', (ev, info) => {
-  mainWindow.webContents.send('app-set', { hasUpdate: false });
+  mainWindow.webContents.send('app-set', {
+    hasUpdate: false,
+    isCheckingForUpdate: false,
+    isUpdateDownloaded: false,
+    lastDateTimeUpdatedChecked: new Date(),
+  });
 });
 autoUpdater.on('error', (event, error) => {
   log.error('Auto update error'); // TODO: setup a messaging system
@@ -188,11 +205,17 @@ autoUpdater.on('error', (event, error) => {
 autoUpdater.on('update-downloaded', (event, info) => {
   mainWindow.webContents.send('app-set', {
     hasUpdate: true,
+    isCheckingForUpdate: false,
     isUpdateDownloaded: true,
   });
 });
 
 app.on('ready', () => {
   log.info('Checking for updates');
+  mainWindow.webContents.send('app-set', {
+    hasUpdate: undefined,
+    isCheckingForUpdate: true,
+    isUpdateDownloaded: false,
+  });
   autoUpdater.checkForUpdates();
 });

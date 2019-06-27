@@ -57,6 +57,8 @@ class IpcMainEvents {
       xmppJsClient.sendRoomNickname(arg.jid, arg.nickname);
     });
 
+    // Settings
+
     ipcMain.on('set-settings', (event, arg) => {
       settings.set(arg);
     });
@@ -65,12 +67,20 @@ class IpcMainEvents {
       settings.set(arg);
     });
 
+    // Log Events
+
     ipcMain.on('set-log', (event, arg) => {
       logger.set(arg);
     });
 
     ipcMain.on('get-log', (event, arg) => {
       logger.get(event, arg);
+    });
+
+    // App Events
+
+    ipcMain.on('app-check-for-updates', () => {
+      autoUpdater.checkForUpdates();
     });
 
     ipcMain.on('app-update', (event, arg) => {

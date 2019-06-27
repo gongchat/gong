@@ -128,26 +128,21 @@ const Settings: FC = () => {
               <List>
                 {TABS.map((tab: any, index: number) => {
                   if (tab) {
-                    if (
-                      !selectedTab ||
-                      (tab.name === 'System' && app.operatingSystem !== 'win32')
-                    ) {
-                      return null;
-                    } else {
-                      return (
-                        <ListItem
-                          key={index}
-                          button={true}
-                          selected={tab.name === selectedTab.name}
-                          onClick={() => setSelectedTab(tab)}
-                        >
-                          <ListItemIcon className={classes.icon}>
-                            {tab.icon}
-                          </ListItemIcon>
-                          <ListItemText>{tab.name}</ListItemText>
-                        </ListItem>
-                      );
-                    }
+                    return (
+                      <ListItem
+                        key={index}
+                        button={true}
+                        selected={
+                          !!(selectedTab && tab.name === selectedTab.name)
+                        }
+                        onClick={() => setSelectedTab(tab)}
+                      >
+                        <ListItemIcon className={classes.icon}>
+                          {tab.icon}
+                        </ListItemIcon>
+                        <ListItemText>{tab.name}</ListItemText>
+                      </ListItem>
+                    );
                   } else {
                     return <Divider key={index} />;
                   }
