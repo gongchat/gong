@@ -150,7 +150,7 @@ const processMessage = (
 
   if (formattedMessage) {
     // check if message is me
-    message.isMe = message.userNickname === myChannelNickname;
+    message.isMe = message.isMe || message.userNickname === myChannelNickname;
 
     // process urls
     if (state.settings.renderVideos) {
