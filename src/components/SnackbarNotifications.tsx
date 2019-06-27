@@ -2,8 +2,10 @@ import React, { FC, useEffect, useRef } from 'react';
 import { useContext } from '../context';
 import { useSnackbar } from 'notistack';
 
-import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/styles';
+
+import CloseIcon from '@material-ui/icons/Close';
 
 import ISnackbarNotification from '../interfaces/ISnackbarNotification';
 
@@ -16,13 +18,14 @@ const SnackbarNotifications: FC = () => {
 
   useEffect(() => {
     const action = (key: any) => (
-      <Button
+      <IconButton
+        size="small"
         onClick={() => {
           closeSnackbar(key);
         }}
       >
-        Dismiss
-      </Button>
+        <CloseIcon fontSize="small" />
+      </IconButton>
     );
     if (snackbarNotifications) {
       snackbarNotifications.forEach(
