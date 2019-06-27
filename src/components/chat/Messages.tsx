@@ -35,7 +35,8 @@ const Messages: FC = () => {
   // - previous-position (scroll to the position before receiving logs)
   const status = useRef('bottom');
   const scrollPosition = useRef(current ? current.scrollPosition : -1);
-  const newMessageMarkerRef = useRef<any>(null);
+  const hasScrolledToNewMessageMarker = useRef(false);
+  const newMessageMarkerRef = useRef<HTMLDivElement>(null);
   const root = useRef<HTMLDivElement>(null);
 
   // normal variables
@@ -54,11 +55,9 @@ const Messages: FC = () => {
   let numberOfLoadedMessages = 0;
   let numberOfLoadedImages = 0;
 
-  let prevMessage: IMessage;
-  let hasNewMessageMarker = false;
-
-  // when new channel
+  // when new channel before render
   if (!prevCurrent || (current && current.jid !== prevCurrent.jid)) {
+    hasScrolledToNewMessageMarker.current = false;
     status.current =
       !current || current.scrollPosition === -1 ? 'bottom' : 'saved-position';
     if (current && current.messages.length === 0) {
@@ -72,7 +71,7 @@ const Messages: FC = () => {
     numberOfLoadedMessages++;
     if (numberOfLoadedMessages >= numberOfMessages) {
       setTimeout(() => {
-        handleScrollUpdate();
+        setStatus();
         if (root.current) {
           root.current.style.opacity = '1';
         }
@@ -88,7 +87,7 @@ const Messages: FC = () => {
     numberOfLoadedImages++;
     if (numberOfLoadedImages >= numberOfImages) {
       setTimeout(() => {
-        handleScrollUpdate();
+        setStatus();
         if (root.current) {
           root.current.style.opacity = '1';
         }
@@ -100,7 +99,7 @@ const Messages: FC = () => {
     }
   };
 
-  const handleScrollUpdate = () => {
+  const setStatus = () => {
     if (root.current && current) {
       const shouldUpdateForLoggedMessages =
         prevCurrent &&
@@ -112,9 +111,7 @@ const Messages: FC = () => {
         root.current &&
         root.current.offsetHeight !== root.current.scrollHeight;
       const shouldUpdateToNewMessageMarker =
-        (!prevCurrent ||
-          prevCurrent.messages.length === current.messages.length) &&
-        newMessageMarkerRef.current;
+        !hasScrolledToNewMessageMarker.current && newMessageMarkerRef.current;
       const shouldUpdateToSavedPosition =
         current &&
         current.scrollPosition !== -1 &&
@@ -127,18 +124,23 @@ const Messages: FC = () => {
           current.messages.length >= 0 &&
           current.messages[current.messages.length - 1].isMe);
 
-      let newStatus = status.current;
       if (shouldUpdateForLoggedMessages) {
-        newStatus = 'previous-position';
-      } else if (shouldUpdateToSavedPosition) {
-        newStatus = 'saved-position';
+        status.current = 'previous-position';
       } else if (shouldUpdateToNewMessageMarker) {
-        newStatus = 'new-message-marker';
+        status.current = 'new-message-marker';
+      } else if (shouldUpdateToSavedPosition) {
+        status.current = 'saved-position';
       } else if (shouldUpdateToBottom) {
-        newStatus = 'bottom';
+        status.current = 'bottom';
       }
 
-      switch (newStatus) {
+      setScrollPosition();
+    }
+  };
+
+  const setScrollPosition = () => {
+    if (root.current) {
+      switch (status.current) {
         case 'previous-position':
           root.current.scrollTop =
             root.current.scrollHeight - positionBeforeGettingLogs;
@@ -149,6 +151,7 @@ const Messages: FC = () => {
               root.current.scrollHeight +
               newMessageMarkerRef.current.offsetTop -
               root.current.clientHeight;
+            hasScrolledToNewMessageMarker.current = true;
           }
           break;
         case 'saved-position':
@@ -168,10 +171,8 @@ const Messages: FC = () => {
         root.current.scrollTop + root.current.offsetHeight >=
         root.current.scrollHeight - 5
       ) {
-        newStatus = 'bottom';
+        status.current = 'bottom';
       }
-
-      status.current = newStatus;
     }
   };
 
@@ -200,7 +201,7 @@ const Messages: FC = () => {
     }
   };
 
-  // useEffect for handling new channel
+  // useEffect for handling new channel after render
   useLayoutEffect(() => {
     if (
       (!prevCurrent && current) ||
@@ -229,7 +230,6 @@ const Messages: FC = () => {
 
       if (shouldTrimMessagesOnLoad) {
         // Check for trimmed messages
-        status.current = 'bottom';
         trimOldMessages(current.jid);
       }
     }
@@ -242,7 +242,7 @@ const Messages: FC = () => {
     setChannelScrollPosition,
   ]);
 
-  // useEffect for handling scrolling
+  // useEffect for handling scrolling and resizing
   useLayoutEffect(() => {
     const rootCurrent = root.current;
     // Event listener functions
@@ -290,6 +290,9 @@ const Messages: FC = () => {
     trimOldMessages,
     setChannelScrollPosition,
   ]);
+
+  let prevMessage: IMessage;
+  let hasNewMessageMarker = false;
 
   return (
     <div className={classes.root} ref={root}>
