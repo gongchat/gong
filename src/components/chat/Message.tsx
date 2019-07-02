@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useLayoutEffect, useState } from 'react';
+import React, { FC, useLayoutEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import sanitizeHtml from 'sanitize-html';
 import marked from 'marked';
@@ -16,8 +16,6 @@ interface IProps {
   message: IMessage;
   showTime: boolean;
   onMessageLoad: any;
-  onMediaLoad: any;
-  onMediaError: any;
   renderImages: boolean;
   renderVideos: boolean;
   renderGetYarn: boolean;
@@ -27,21 +25,33 @@ const Message: FC<IProps> = ({
   message,
   showTime,
   onMessageLoad,
-  onMediaLoad,
-  onMediaError,
   renderImages,
   renderVideos,
   renderGetYarn,
 }: IProps) => {
   const classes = useStyles();
+
+  const numberOfImages = useRef(
+    message.urls.filter((url: IMessageUrl) => url.type === 'image').length
+  );
+  const numberOfLoadedImages = useRef(0);
+
   const [isMe, setIsMe] = useState(false);
   const [messageBody, setMessageBody] = useState('');
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isBodyLoaded, setIsBodyLoaded] = useState(false);
+  const [isImagesLoaded, setIsImagesLoaded] = useState(
+    numberOfImages.current === 0
+  );
   const { body } = message;
 
-  useEffect(() => {
-    setIsMe(body && body.startsWith('/me ') ? true : false);
+  const onMediaLoad = () => {
+    numberOfLoadedImages.current++;
+    if (numberOfLoadedImages.current >= numberOfImages.current) {
+      setIsImagesLoaded(true);
+    }
+  };
 
+  useLayoutEffect(() => {
     let formattedMessageBody = body
       ? sanitizeHtml(marked.inlineLexer(body, []), {
           allowedTags: ALLOWED_TAGS,
@@ -74,14 +84,15 @@ const Message: FC<IProps> = ({
     });
 
     setMessageBody(formattedMessageBody);
-    setIsLoaded(true);
+    setIsMe(body && body.startsWith('/me ') ? true : false);
+    setIsBodyLoaded(true);
   }, [body]);
 
   useLayoutEffect(() => {
-    if (isLoaded) {
+    if (isBodyLoaded && isImagesLoaded) {
       onMessageLoad();
     }
-  }, [isLoaded, onMessageLoad]);
+  }, [isBodyLoaded, isImagesLoaded, onMessageLoad]);
 
   return (
     <div className={classes.root}>
@@ -119,8 +130,8 @@ const Message: FC<IProps> = ({
                 <div key={index} className={classes.video}>
                   <ReactPlayer
                     url={url.url}
-                    width={300}
-                    height={170}
+                    width={500}
+                    height={282}
                     controls={true}
                   />
                 </div>
@@ -135,8 +146,8 @@ const Message: FC<IProps> = ({
                     <div key={index} className={classes.getYarn}>
                       <iframe
                         title="get yarn clip"
-                        width={300}
-                        height={185}
+                        width={500}
+                        height={370}
                         src={`https://getyarn.io/yarn-clip/embed/${
                           values[2]
                         }?autoplay=false`}
@@ -158,7 +169,7 @@ const Message: FC<IProps> = ({
                         preload="auto"
                         autoPlay={true}
                         loop={true}
-                        height={185}
+                        width={500}
                       >
                         <source
                           src={url.url.replace('.gifv', '.mp4')}
@@ -174,7 +185,7 @@ const Message: FC<IProps> = ({
                         alt="shared"
                         src={url.url}
                         onLoad={onMediaLoad}
-                        onError={onMediaError}
+                        onError={onMediaLoad}
                       />
                     </div>
                   );
@@ -256,9 +267,10 @@ const useStyles: any = makeStyles(
       },
     },
     image: {
+      position: 'relative',
       margin: theme.spacing(2),
       marginLeft: theme.spacing(8),
-      width: 300,
+      maxWidth: 500,
       '& img': {
         width: '100%',
       },

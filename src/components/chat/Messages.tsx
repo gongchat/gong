@@ -9,7 +9,6 @@ import Message from './Message';
 import { TRIM_AT } from '../../actions/channel';
 import { usePrevious } from '../../hooks/usePrevious';
 import IMessage from '../../interfaces/IMessage';
-import IMessageUrl from '../../interfaces/IMessageUrl';
 
 const Messages: FC = () => {
   const classes = useStyles();
@@ -27,7 +26,7 @@ const Messages: FC = () => {
 
   // this is done to prevent react-hooks/exhaustive-deps, would like to use a regular variable without having to disable linting
   const isLoading = useRef(true);
-  isLoading.current = true;
+  isLoading.current = true; // reset value each time
 
   const scrollPosition = useRef(current ? current.scrollPosition : -1);
   const scrollPositionBeforeGettingLogs = useRef(scrollPosition.current);
@@ -39,18 +38,8 @@ const Messages: FC = () => {
 
   // normal variables
   const numberOfMessages = current ? current.messages.length : 0;
-  const numberOfImages = current
-    ? current.messages.reduce(
-        (total: number, message: IMessage) =>
-          total +
-          message.urls.filter((url: IMessageUrl) => url.type === 'image')
-            .length,
-        0
-      )
-    : 0;
 
   let numberOfLoadedMessages = 0;
-  let numberOfLoadedImages = 0;
 
   // when new channel before render
   if (
@@ -70,8 +59,13 @@ const Messages: FC = () => {
     scrollPosition.current = current.scrollPosition;
     scrollPositionBeforeGettingLogs.current = scrollPosition.current;
 
-    if (current && current.messages.length === 0) {
-      isLoading.current = false;
+    if (numberOfMessages === 0) {
+      if (current.hasNoMoreLogs) {
+        isLoading.current = false;
+      } else {
+        isLoading.current = true;
+        getChannelLogs(current);
+      }
     } else if (rootRef.current) {
       rootRef.current.style.opacity = '0';
     }
@@ -138,32 +132,16 @@ const Messages: FC = () => {
 
   const handleOnMessageLoad = () => {
     numberOfLoadedMessages++;
+
+    if (rootRef.current) {
+      rootRef.current.style.opacity = '1';
+    }
+
     if (numberOfLoadedMessages >= numberOfMessages) {
       setTimeout(() => {
         updateScrollPosition();
-        if (rootRef.current) {
-          rootRef.current.style.opacity = '1';
-        }
-        if (numberOfLoadedImages >= numberOfImages) {
-          isLoading.current = false;
-          handleGetLoggedMessages();
-        }
-      }, 0);
-    }
-  };
-
-  const handleOnMediaLoad = () => {
-    numberOfLoadedImages++;
-    if (numberOfLoadedImages >= numberOfImages) {
-      setTimeout(() => {
-        updateScrollPosition();
-        if (rootRef.current) {
-          rootRef.current.style.opacity = '1';
-        }
-        if (numberOfLoadedMessages >= numberOfMessages) {
-          isLoading.current = false;
-          handleGetLoggedMessages();
-        }
+        handleGetLoggedMessages();
+        isLoading.current = false;
       }, 0);
     }
   };
@@ -244,7 +222,15 @@ const Messages: FC = () => {
       }
       window.removeEventListener('resize', handleWindowResize);
     };
-  }, [current, getChannelLogs, markMessagesRead, trimOldMessages]);
+  }, [
+    current,
+    getChannelLogs,
+    markMessagesRead,
+    numberOfLoadedMessages,
+    numberOfMessages,
+    prevCurrent,
+    trimOldMessages,
+  ]);
 
   // Variables used in return
   let prevMessage: IMessage;
@@ -297,7 +283,7 @@ const Messages: FC = () => {
             }
 
             const returnVal = (
-              <React.Fragment key={index}>
+              <React.Fragment key={`${current.jid}-${message.id}-${index}`}>
                 <div
                   className={[
                     !showDate && !showNewMessageMarker && isStartOfGroup
@@ -322,8 +308,6 @@ const Messages: FC = () => {
                     renderGetYarn={settings.renderGetYarn}
                     renderImages={settings.renderImages}
                     onMessageLoad={handleOnMessageLoad}
-                    onMediaLoad={handleOnMediaLoad}
-                    onMediaError={handleOnMediaLoad} // currently no need for its own function
                   />
                 </div>
                 {showNewMessageMarker && (
