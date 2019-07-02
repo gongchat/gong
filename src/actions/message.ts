@@ -138,6 +138,35 @@ export const messageActions: any = {
       return newState;
     };
   },
+  markMessagesRead(channelJid: string) {
+    return (state: IState): IState => {
+      let current = state.current;
+      const channels = state.channels.map((channel: IChannel) => {
+        if (channel.jid === channelJid) {
+          const newChannel = {
+            ...channel,
+            messages: channel.messages.map((message: IMessage) => ({
+              ...message,
+              isRead: true,
+            })),
+            unreadMessages: 0,
+            hasUnreadMentionMe: false,
+          };
+          if (state.current && state.current.jid === channelJid) {
+            current = newChannel;
+          }
+          return newChannel;
+        } else {
+          return channel;
+        }
+      });
+      return {
+        ...state,
+        current,
+        channels,
+      };
+    };
+  },
 };
 
 const processMessage = (
@@ -334,12 +363,22 @@ const updateChannel = (
         const newChannel: IChannel = {
           ...channel,
           inputText: '',
-          messages: [...channel.messages, message],
-          unreadMessages:
-            isUnreadOne && isUnreadTwo
-              ? channel.unreadMessages + 1
-              : channel.unreadMessages,
+          messages: [
+            ...(message.isMe
+              ? channel.messages.map((message: IMessage) => ({
+                  ...message,
+                  isRead: true,
+                }))
+              : channel.messages),
+            message,
+          ],
+          unreadMessages: message.isMe
+            ? 0
+            : isUnreadOne && isUnreadTwo
+            ? channel.unreadMessages + 1
+            : channel.unreadMessages,
           hasUnreadMentionMe:
+            !message.isMe &&
             isUnreadOne &&
             (message.isMentioningMe ||
               channel.messages.find(

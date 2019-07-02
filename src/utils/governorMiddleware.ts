@@ -1,12 +1,12 @@
 import IState from '../interfaces/IState';
 
 const instanceID = new Date().getTime();
+const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 
 export default (initialState: IState, dispatch: any) => {
   let devTools: any = null;
 
   const initDevTools = () => {
-    const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
     if (reduxDevTools) {
       const name = `react-governor - ${instanceID}`;
       const features = { jump: true };
@@ -45,12 +45,13 @@ export default (initialState: IState, dispatch: any) => {
   initDevTools();
 
   return (actionKey: string, state: IState) => {
-    // to get dev tools working in production
-    if (!devTools) {
-      initDevTools();
+    if (reduxDevTools) {
+      // to get dev tools working in production
+      if (!devTools) {
+        initDevTools();
+      }
+      devTools.send({ type: actionKey }, state, {}, instanceID);
     }
-
-    devTools.send({ type: actionKey }, state, {}, instanceID);
     return state;
   };
 };

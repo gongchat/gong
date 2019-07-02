@@ -15,7 +15,12 @@ const Messages: FC = () => {
   const classes = useStyles();
   const [
     { current, settings },
-    { getChannelLogs, setChannelScrollPosition, trimOldMessages },
+    {
+      getChannelLogs,
+      setChannelScrollPosition,
+      trimOldMessages,
+      markMessagesRead,
+    },
   ] = useContext();
 
   const prevCurrent = usePrevious(current);
@@ -206,12 +211,17 @@ const Messages: FC = () => {
           scrollPositionBeforeGettingLogs.current = event.target.scrollHeight;
           getChannelLogs(current);
         } else if (
-          current.messages.length >= TRIM_AT &&
           event.target.scrollTop + event.target.offsetHeight >=
-            event.target.scrollHeight - 5
+          event.target.scrollHeight - 5
         ) {
           // handle trimming of messages
-          trimOldMessages(current.jid);
+          if (current.messages.length >= TRIM_AT) {
+            trimOldMessages(current.jid);
+          }
+          // if new message marker is present, mark messages read when scroll is at the bottom
+          if (newMessageMarkerRef.current) {
+            markMessagesRead(current.jid);
+          }
         }
       }
     };
@@ -234,7 +244,7 @@ const Messages: FC = () => {
       }
       window.removeEventListener('resize', handleWindowResize);
     };
-  }, [current, getChannelLogs, trimOldMessages]);
+  }, [current, getChannelLogs, markMessagesRead, trimOldMessages]);
 
   // Variables used in return
   let prevMessage: IMessage;
