@@ -140,7 +140,7 @@ const setGroupchat = (state: IState, presence: IPresence): IState => {
         // if user with same nickname exists, remove it
         room.users = room.users.filter(
           (u: IChannelUser) =>
-            u.jid.split('/')[0] !== presence.user.split('/')[0]
+            u.jid.split('/')[1] !== presence.user.split('/')[1]
         );
 
         // if user does not exist, add it

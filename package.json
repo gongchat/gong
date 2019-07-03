@@ -1,6 +1,6 @@
 {
   "name": "gong",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "XMPP Client",
   "author": "Gong <gongxmpp@gmail.com>",
   "license": "Apache-2.0",
