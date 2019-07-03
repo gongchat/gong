@@ -140,8 +140,8 @@ const Messages: FC = () => {
     if (numberOfLoadedMessages >= numberOfMessages) {
       setTimeout(() => {
         updateScrollPosition();
-        handleGetLoggedMessages();
         isLoading.current = false;
+        handleGetLoggedMessages();
       }, 0);
     }
   };
