@@ -166,7 +166,7 @@ const Messages: FC = () => {
       if (
         current.messages.length >= TRIM_AT &&
         rootRef.current.scrollTop + rootRef.current.offsetHeight >=
-          rootRef.current.scrollHeight - 5
+          rootRef.current.scrollHeight
       ) {
         trimOldMessages(current.jid);
       }
@@ -190,7 +190,7 @@ const Messages: FC = () => {
           getChannelLogs(current);
         } else if (
           event.target.scrollTop + event.target.offsetHeight >=
-          event.target.scrollHeight - 5
+          event.target.scrollHeight
         ) {
           // handle trimming of messages
           if (current.messages.length >= TRIM_AT) {
