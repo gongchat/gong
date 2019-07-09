@@ -28,6 +28,10 @@ const Messages: FC = () => {
   const isLoading = useRef(true);
   isLoading.current = true; // reset value each time
 
+  // same as isLoading, this is done to prevent react-hooks/exhaustive-deps, would like to use a regular variable without having to disable linting
+  const wasAtBottom = useRef(false);
+  wasAtBottom.current = false;
+
   const scrollPosition = useRef(current ? current.scrollPosition : -1);
   const scrollPositionBeforeGettingLogs = useRef(scrollPosition.current);
   const prevWindowInnerWidth = useRef(-1);
@@ -69,6 +73,13 @@ const Messages: FC = () => {
     } else if (rootRef.current) {
       rootRef.current.style.opacity = '0';
     }
+  } else {
+    // when update is not from a new channel
+    if (rootRef.current) {
+      wasAtBottom.current =
+        rootRef.current.scrollTop + rootRef.current.offsetHeight >=
+        rootRef.current.scrollHeight;
+    }
   }
 
   const updateScrollPosition = () => {
@@ -97,6 +108,12 @@ const Messages: FC = () => {
           // if update is from me
           rootRef.current.scrollTop =
             rootRef.current.scrollHeight + rootRef.current.offsetHeight;
+        } else if (wasAtBottom.current) {
+          // if at bottom stay at bottom, this should be handled by the
+          // flex-direction column-reverse, but there are edge cases where it
+          // does not always work
+          rootRef.current.scrollTop =
+            rootRef.current.scrollHeight + rootRef.current.offsetHeight;
         }
       } else {
         // handle initial scroll positions on new channel
@@ -109,6 +126,10 @@ const Messages: FC = () => {
         } else if (current && current.scrollPosition !== -1) {
           // if there is a saved scroll position
           rootRef.current.scrollTop = current.scrollPosition;
+        } else {
+          // if no scroll position matching, scroll to bottom
+          rootRef.current.scrollTop =
+            rootRef.current.scrollHeight + rootRef.current.offsetHeight;
         }
         hasUpdatedScrollOnNewChannel.current = true;
       }
@@ -201,6 +222,9 @@ const Messages: FC = () => {
             markMessagesRead(current.jid);
           }
         }
+        wasAtBottom.current =
+          event.target.scrollTop + event.target.offsetHeight >=
+          event.target.scrollHeight;
       }
     };
 
