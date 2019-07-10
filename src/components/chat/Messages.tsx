@@ -77,7 +77,7 @@ const Messages: FC = () => {
     // when update is not from a new channel
     if (rootRef.current) {
       wasAtBottom.current =
-        rootRef.current.scrollTop + rootRef.current.offsetHeight >=
+        Math.ceil(rootRef.current.scrollTop + rootRef.current.offsetHeight) >=
         rootRef.current.scrollHeight;
     }
   }
@@ -189,7 +189,7 @@ const Messages: FC = () => {
       // check if should trim messages
       if (
         current.messages.length >= TRIM_AT &&
-        rootRef.current.scrollTop + rootRef.current.offsetHeight >=
+        Math.ceil(rootRef.current.scrollTop + rootRef.current.offsetHeight) >=
           rootRef.current.scrollHeight
       ) {
         trimOldMessages(current.jid);
@@ -213,7 +213,7 @@ const Messages: FC = () => {
           scrollPositionBeforeGettingLogs.current = event.target.scrollHeight;
           getChannelLogs(current);
         } else if (
-          event.target.scrollTop + event.target.offsetHeight >=
+          Math.ceil(event.target.scrollTop + event.target.offsetHeight) >=
           event.target.scrollHeight
         ) {
           // handle trimming of messages
@@ -226,7 +226,7 @@ const Messages: FC = () => {
           }
         }
         wasAtBottom.current =
-          event.target.scrollTop + event.target.offsetHeight >=
+          Math.ceil(event.target.scrollTop + event.target.offsetHeight) >=
           event.target.scrollHeight;
       }
     };
