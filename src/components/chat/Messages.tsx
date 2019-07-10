@@ -161,8 +161,11 @@ const Messages: FC = () => {
     if (numberOfLoadedMessages >= numberOfMessages) {
       setTimeout(() => {
         updateScrollPosition();
-        isLoading.current = false;
-        handleGetLoggedMessages();
+        // need to include in setTimeout so scroll event occurs before the updates below
+        setTimeout(() => {
+          isLoading.current = false;
+          handleGetLoggedMessages();
+        });
       }, 0);
     }
   };
