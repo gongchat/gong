@@ -42,36 +42,34 @@ export const channelActions: any = {
   },
   selectChannel(channelJid: string) {
     return (state: IState): IState => {
-      const channels: IChannel[] = state.channels.map(
-        (channel: IChannel) => {
-          if (channel.jid === channelJid) {
-            const newChannel = {
-              ...channel,
-              unreadMessages: 0,
-              hasUnreadMentionMe: false,
-            };
-            if (channel.type === 'groupchat') {
-              (newChannel as IRoom).lastReadTimestamp = moment();
-              if (newChannel.messages && newChannel.messages.length > 0) {
-                (newChannel as IRoom).lastReadMessageId =
-                  channel.messages[channel.messages.length - 1].id;
-              }
+      const channels: IChannel[] = state.channels.map((channel: IChannel) => {
+        if (channel.jid === channelJid) {
+          const newChannel = {
+            ...channel,
+            unreadMessages: 0,
+            hasUnreadMentionMe: false,
+          };
+          if (channel.type === 'groupchat') {
+            (newChannel as IRoom).lastReadTimestamp = moment();
+            if (newChannel.messages && newChannel.messages.length > 0) {
+              (newChannel as IRoom).lastReadMessageId =
+                channel.messages[channel.messages.length - 1].id;
             }
-            return newChannel;
-          } else {
-            if (state.current && state.current.jid === channel.jid) {
-              return {
-                ...channel,
-                messages: channel.messages.map((message: IMessage) => ({
-                  ...message,
-                  isRead: true,
-                })),
-              };
-            }
-            return channel;
           }
+          return newChannel;
+        } else {
+          if (state.current && state.current.jid === channel.jid) {
+            return {
+              ...channel,
+              messages: channel.messages.map((message: IMessage) => ({
+                ...message,
+                isRead: true,
+              })),
+            };
+          }
+          return channel;
         }
-      );
+      });
       const newState: IState = {
         ...state,
         current: channels.find(
@@ -123,28 +121,20 @@ export const channelActions: any = {
   },
   setChannelLogs({ channelJid, messages, hasNoMoreLogs }) {
     return (state: IState): IState => {
-      messages.forEach((message: IMessage) => {
-        message.timestamp = moment(message.timestamp);
-        message.isRead = true;
-      });
-
-      const current =
-        state.current && state.current.jid === channelJid
-          ? {
-              ...state.current,
-              messages:
-                messages.length > 0
-                  ? [...messages, ...state.current.messages]
-                  : state.current.messages,
-              hasNoMoreLogs,
-              isRequestingLogs: false,
-            }
-          : state.current;
+      let messageIndex = 0;
 
       const channels = state.channels.map((c: IChannel) => {
         if (c.jid === channelJid) {
+          messageIndex = c.messageIndex + 1;
+          messages.forEach((message: IMessage) => {
+            message.timestamp = moment(message.timestamp);
+            message.isRead = true;
+            message.index = messageIndex;
+            messageIndex++;
+          });
           return {
             ...c,
+            messageIndex,
             messages:
               messages.length > 0 ? [...messages, ...c.messages] : c.messages,
             hasNoMoreLogs,
@@ -154,6 +144,20 @@ export const channelActions: any = {
           return c;
         }
       });
+
+      const current =
+        state.current && state.current.jid === channelJid
+          ? {
+              ...state.current,
+              messageIndex,
+              messages:
+                messages.length > 0
+                  ? [...messages, ...state.current.messages]
+                  : state.current.messages,
+              hasNoMoreLogs,
+              isRequestingLogs: false,
+            }
+          : state.current;
 
       return {
         ...state,
@@ -181,11 +185,7 @@ export const channelActions: any = {
           return channel;
         }
       });
-      if (
-        updatedChannel &&
-        state.current &&
-        state.current.jid === jid
-      ) {
+      if (updatedChannel && state.current && state.current.jid === jid) {
         newState.current = updatedChannel;
       }
       return newState;

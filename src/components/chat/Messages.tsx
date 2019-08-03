@@ -310,7 +310,7 @@ const Messages: FC = () => {
             }
 
             const returnVal = (
-              <React.Fragment key={`${current.jid}-${message.id}-${index}`}>
+              <React.Fragment key={message.index}>
                 <div
                   className={[
                     !showDate && !showNewMessageMarker && isStartOfGroup

@@ -6,6 +6,7 @@ export default interface IChannel {
   jid: string;
   name: string;
   inputText: string;
+  messageIndex: number;
   messages: IMessage[];
   unreadMessages: number;
   hasUnreadMentionMe: boolean;
