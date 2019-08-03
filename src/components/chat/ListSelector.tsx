@@ -54,56 +54,60 @@ const ListSelector: FC<IProps> = ({
 
   useEffect(() => {
     const handleKeyDown = (event: any) => {
-      const maxIndex = list.length - 1;
-      let itemHeight = 0;
-      let scrollTop = 0; // position of the top of the viewable height
-      let offsetHeight = 0; // viewable height
-      let scrollHeight = 0; // full height of div
-      let newIndex = 0;
+      if (!event.shiftKey) {
+        const maxIndex = list.length - 1;
+        let itemHeight = 0;
+        let scrollTop = 0; // position of the top of the viewable height
+        let offsetHeight = 0; // viewable height
+        let scrollHeight = 0; // full height of div
+        let newIndex = 0;
 
-      if (listRef.current) {
-        itemHeight = listRef.current.children[0]
-          ? listRef.current.children[0].scrollHeight
-          : 0;
-        scrollTop = listRef.current.scrollTop;
-        offsetHeight = listRef.current.offsetHeight;
-        scrollHeight = listRef.current.scrollHeight;
+        if (listRef.current) {
+          itemHeight = listRef.current.children[0]
+            ? listRef.current.children[0].scrollHeight
+            : 0;
+          scrollTop = listRef.current.scrollTop;
+          offsetHeight = listRef.current.offsetHeight;
+          scrollHeight = listRef.current.scrollHeight;
 
-        switch (event.key) {
-          case 'ArrowUp':
-            newIndex = currListIndex > 0 ? currListIndex - 1 : maxIndex;
-            if (listRef.current && scrollTop > itemHeight * newIndex) {
-              listRef.current.scrollTop = itemHeight * newIndex;
-            } else if (newIndex === maxIndex) {
-              listRef.current.scrollTop = scrollHeight;
-            }
-            currListIndex = newIndex;
-            setListIndex(newIndex);
-            break;
-          case 'ArrowDown':
-            newIndex = currListIndex < maxIndex ? currListIndex + 1 : 0;
-            if (
-              listRef.current &&
-              scrollTop + offsetHeight < itemHeight * (newIndex + 1)
-            ) {
-              listRef.current.scrollTop =
-                itemHeight * (newIndex + 1) - offsetHeight;
-            } else if (newIndex === 0) {
-              listRef.current.scrollTop = 0;
-            }
-            currListIndex = newIndex;
-            setListIndex(newIndex);
-            break;
-          case 'Tab':
-          case 'Enter':
-            event.preventDefault();
-            handleSelection(list[currListIndex]);
-            break;
-          case 'Escape':
-            setSelectorIndex(-1);
-            break;
-          default:
-            break;
+          switch (event.key) {
+            case 'ArrowUp':
+              newIndex = currListIndex > 0 ? currListIndex - 1 : maxIndex;
+              if (listRef.current && scrollTop > itemHeight * newIndex) {
+                listRef.current.scrollTop = itemHeight * newIndex;
+              } else if (newIndex === maxIndex) {
+                listRef.current.scrollTop = scrollHeight;
+              }
+              currListIndex = newIndex;
+              setListIndex(newIndex);
+              break;
+            case 'ArrowDown':
+              newIndex = currListIndex < maxIndex ? currListIndex + 1 : 0;
+              if (
+                listRef.current &&
+                scrollTop + offsetHeight < itemHeight * (newIndex + 1)
+              ) {
+                listRef.current.scrollTop =
+                  itemHeight * (newIndex + 1) - offsetHeight;
+              } else if (newIndex === 0) {
+                listRef.current.scrollTop = 0;
+              }
+              currListIndex = newIndex;
+              setListIndex(newIndex);
+              break;
+            case 'Tab':
+            case 'Enter':
+              if (!event.shiftKey) {
+                event.preventDefault();
+                handleSelection(list[currListIndex]);
+              }
+              break;
+            case 'Escape':
+              setSelectorIndex(-1);
+              break;
+            default:
+              break;
+          }
         }
       }
     };

@@ -66,9 +66,17 @@ const Input: FC = () => {
   };
 
   const handleKeyDown = (event: any) => {
-    const preventDefaultOn = ['Enter', 'Tab', 'Escape', 'ArrowUp', 'ArrowDown'];
-    if (listSelectorIndex > 0 && preventDefaultOn.includes(event.key)) {
-      event.preventDefault();
+    if (listSelectorIndex > 0) {
+      const preventDefaultOn = [
+        'Enter',
+        'Tab',
+        'Escape',
+        'ArrowUp',
+        'ArrowDown',
+      ];
+      if (preventDefaultOn.includes(event.key) && !event.shiftKey) {
+        event.preventDefault();
+      }
     } else if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       send();
