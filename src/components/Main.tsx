@@ -17,8 +17,6 @@ import Settings from './settings/Settings';
 
 const { ipcRenderer } = window.require('electron');
 
-let reconnectTimer: any;
-
 interface IProps {
   path: string;
   noThrow: boolean;
@@ -30,6 +28,7 @@ const Main: FC<IProps> = () => {
   const [goToLogin, setGoToLogin] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
 
+  const reconnectTimer = useRef<any>();
   const shouldReconnect = useRef(true);
 
   const loadFont = (fontFamily: string) => {
@@ -86,11 +85,11 @@ const Main: FC<IProps> = () => {
           clearTimeout(reconnectTimer.current);
         }
         if (!reconnectTimer.current) {
-          reconnectTimer = setTimeout(() => {
+          reconnectTimer.current = setTimeout(() => {
             autoConnect();
           });
         } else {
-          reconnectTimer = setTimeout(() => {
+          reconnectTimer.current = setTimeout(() => {
             autoConnect();
           }, 10000);
         }
