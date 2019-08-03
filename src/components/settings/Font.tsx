@@ -63,7 +63,7 @@ const Font: FC = () => {
   const handleFontChange = (event: any) => {
     const newFont = event.target.value;
     setFont(newFont);
-    if (fontTimer) {
+    if (fontTimer.current) {
       clearTimeout(fontTimer.current);
     }
     fontTimer.current = setTimeout(() => {
@@ -73,7 +73,7 @@ const Font: FC = () => {
 
   const updateSize = (value: any) => {
     setSize(value);
-    if (sizeTimer) {
+    if (sizeTimer.current) {
       clearTimeout(sizeTimer.current);
     }
     sizeTimer.current = setTimeout(() => {

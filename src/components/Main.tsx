@@ -82,10 +82,10 @@ const Main: FC<IProps> = () => {
         !connection.isConnecting &&
         !connection.isConnected
       ) {
-        if (reconnectTimer) {
-          clearTimeout(reconnectTimer);
+        if (reconnectTimer.current) {
+          clearTimeout(reconnectTimer.current);
         }
-        if (!reconnectTimer) {
+        if (!reconnectTimer.current) {
           reconnectTimer = setTimeout(() => {
             autoConnect();
           });

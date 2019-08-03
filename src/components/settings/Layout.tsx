@@ -70,7 +70,7 @@ const Layout: FC = () => {
 
   const updateSpacing = (value: any) => {
     setSpacing(value);
-    if (spacingTimer) {
+    if (spacingTimer.current) {
       clearTimeout(spacingTimer.current);
     }
     spacingTimer.current = setTimeout(() => {
@@ -87,7 +87,7 @@ const Layout: FC = () => {
 
   const updateSidebarWidth = (value: any) => {
     setSidebarWidth(value);
-    if (sidebarWidthTimer) {
+    if (sidebarWidthTimer.current) {
       clearTimeout(sidebarWidthTimer.current);
     }
     sidebarWidthTimer.current = setTimeout(() => {

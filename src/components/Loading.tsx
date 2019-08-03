@@ -44,7 +44,7 @@ const Loading: FC<IProps> = () => {
         ) {
           setText('Unable to find the server, retrying connection');
           setShowLogin(true);
-          if (reconnectTimer) {
+          if (reconnectTimer.current) {
             clearTimeout(reconnectTimer.current);
             setText('Server not found, retrying connection');
           }

@@ -95,7 +95,7 @@ const NotificationSettings: FC = () => {
   const updateVolume = (value: any) => {
     setVolume(value);
     playAudio(soundName, value);
-    if (volumeTimer) {
+    if (volumeTimer.current) {
       clearTimeout(volumeTimer.current);
     }
     volumeTimer.current = setTimeout(() => {
