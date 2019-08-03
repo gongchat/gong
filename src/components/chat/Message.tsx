@@ -256,12 +256,15 @@ const useStyles: any = makeStyles(
       flex: '0 1 100%',
       padding: theme.spacing(2),
       paddingLeft: theme.spacing(8),
+      overflowX: 'auto',
+      overflowY: 'hidden',
     },
     getYarn: {
       flex: '0 1 100%',
       padding: theme.spacing(2),
       paddingLeft: theme.spacing(8),
-      overflow: 'hidden',
+      overflowX: 'auto',
+      overflowY: 'hidden',
       '& iframe': {
         border: 'none',
       },
@@ -271,6 +274,8 @@ const useStyles: any = makeStyles(
       margin: theme.spacing(2),
       marginLeft: theme.spacing(8),
       maxWidth: 500,
+      overflowX: 'auto',
+      overflowY: 'hidden',
       '& img': {
         width: '100%',
       },
@@ -278,6 +283,8 @@ const useStyles: any = makeStyles(
     gifv: {
       margin: theme.spacing(2),
       marginLeft: theme.spacing(8),
+      overflowX: 'auto',
+      overflowY: 'hidden',
     },
     me: {
       color: theme.palette.text.secondary,
