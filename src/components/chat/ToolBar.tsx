@@ -116,6 +116,9 @@ const ToolBar: FC = () => {
                         key={index}
                         onClick={() => handleSessionSelection(connection.jid)}
                       >
+                        <div className={classes.menuItemStatus}>
+                          <Status status={connection.status} />
+                        </div>
                         {connection.jid.split('/')[1]}
                       </MenuItem>
                     )
@@ -172,6 +175,9 @@ const useStyles: any = makeStyles((theme: any) => ({
     '&:hover': {
       cursor: 'pointer',
     },
+  },
+  menuItemStatus: {
+    paddingRight: theme.spacing(),
   },
 }));
 
