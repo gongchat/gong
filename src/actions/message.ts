@@ -14,6 +14,7 @@ import { saveRooms } from './channel';
 import { handleOnMessage } from './notification';
 
 import { stringToHexColor } from '../utils/colorUtils';
+import { makeId } from '../utils/stringUtils';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -79,6 +80,11 @@ export const messageActions: any = {
       let channelUsers: IChannelUser[] = [];
       let myChannelNickname = '';
 
+      // assign internal id if one is not received
+      if (!messageReceive.id) {
+        messageReceive.id = `gong-${makeId}`;
+      }
+
       switch (messageReceive.type) {
         case 'groupchat':
           if (channel) {
@@ -105,6 +111,12 @@ export const messageActions: any = {
             // update session jid
             if (channel.sessionJid !== messageReceive.from) {
               channel.sessionJid = messageReceive.from;
+              const session = channel.connections.find(
+                connection => connection.jid === messageReceive.from
+              );
+              if (session) {
+                channel.status = session.status;
+              }
             }
             if (newState.current && newState.current.jid === channel.jid) {
               (newState.current as IUser).sessionJid = messageReceive.from;

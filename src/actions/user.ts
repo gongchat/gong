@@ -94,4 +94,32 @@ export const userActions: any = {
       };
     };
   },
+  setSessionJid(userJid: string, sessionJid: string) {
+    return (state: IState): IState => {
+      let current = state.current;
+      const newState = {
+        ...state,
+        channels: state.channels.map((channel: IChannel) => {
+          if (channel.type === 'groupchat' || channel.jid !== userJid) {
+            return channel;
+          }
+          const user = channel as IUser;
+          const connection = user.connections.find(u => u.jid === sessionJid);
+          const updatedUser = {
+            ...channel,
+            sessionJid,
+            status: connection ? connection.status : user.status,
+          };
+          if (current && current.jid === updatedUser.jid) {
+            current = updatedUser;
+          }
+          return updatedUser;
+        }),
+      };
+      if (current && current.jid === userJid) {
+        newState.current = current;
+      }
+      return newState;
+    };
+  },
 };

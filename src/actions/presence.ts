@@ -77,13 +77,10 @@ const setChat = (state: IState, presence: IPresence): IState => {
     user = {
       ...user,
       status: priorityConnection ? priorityConnection.status : 'offline',
+      sessionJid: priorityConnection ? priorityConnection.jid : undefined,
       connections,
     };
 
-    // update sessionJid
-    if (presence.status === 'offline') {
-      user.sessionJid = undefined;
-    }
     let current = state.current as IUser;
     if (current && current.jid === user.jid) {
       current = user;
