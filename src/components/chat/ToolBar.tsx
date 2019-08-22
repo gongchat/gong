@@ -60,6 +60,10 @@ const ToolBar: FC = () => {
         default:
           break;
       }
+    } else {
+      setName('');
+      setStatus('');
+      setSessionName('');
     }
   }, [current]);
 
