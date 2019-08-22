@@ -131,7 +131,13 @@ const Messages: FC = () => {
           rootRef.current.scrollTop =
             rootRef.current.scrollHeight + rootRef.current.offsetHeight;
         }
-        hasUpdatedScrollOnNewChannel.current = true;
+        // TODO: This is a poor work around for detecting when a scroll
+        // completes, need to figure out how to properly detect when a scroll
+        // finishes. If the scrolling finishes before or after the timeout
+        // unwanted behaviors can occur.
+        setTimeout(() => {
+          hasUpdatedScrollOnNewChannel.current = true;
+        }, 1000);
       }
     }
   };
@@ -206,23 +212,25 @@ const Messages: FC = () => {
         event.preventDefault();
       } else if (current) {
         scrollPosition.current = event.target.scrollTop;
-        if (event.target.scrollTop === 0 && !current.hasNoMoreLogs) {
-          // handle getting of logs
-          event.target.style.opacity = '0';
-          isLoading.current = true;
-          scrollPositionBeforeGettingLogs.current = event.target.scrollHeight;
-          getChannelLogs(current);
-        } else if (
-          Math.ceil(event.target.scrollTop + event.target.offsetHeight) >=
-          event.target.scrollHeight
-        ) {
-          // handle trimming of messages
-          if (current.messages.length >= TRIM_AT) {
-            trimOldMessages(current.jid);
-          }
-          // if new message marker is present, mark messages read when scroll is at the bottom
-          if (newMessageMarkerRef.current) {
-            markMessagesRead(current.jid);
+        if (hasUpdatedScrollOnNewChannel.current) {
+          if (event.target.scrollTop === 0 && !current.hasNoMoreLogs) {
+            // handle getting of logs
+            event.target.style.opacity = '0';
+            isLoading.current = true;
+            scrollPositionBeforeGettingLogs.current = event.target.scrollHeight;
+            getChannelLogs(current);
+          } else if (
+            Math.ceil(event.target.scrollTop + event.target.offsetHeight) >=
+            event.target.scrollHeight
+          ) {
+            // handle trimming of messages
+            if (current.messages.length >= TRIM_AT) {
+              trimOldMessages(current.jid);
+            }
+            // if new message marker is present, mark messages read when scroll is at the bottom
+            if (newMessageMarkerRef.current) {
+              markMessagesRead(current.jid);
+            }
           }
         }
         wasAtBottom.current =
