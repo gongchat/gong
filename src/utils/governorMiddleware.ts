@@ -17,15 +17,12 @@ export default (initialState: IState, dispatch: any) => {
         devTools.subscribe((data: any) => {
           switch (data.type) {
             case 'START':
-              console.log('1');
               devTools.init(initialState);
               break;
             case 'RESET':
-              console.log('2');
               dispatch({ newState: initialState });
               break;
             case 'DISPATCH':
-              console.log('3');
               switch (data.payload.type) {
                 case 'JUMP_TO_STATE':
                 case 'JUMP_TO_ACTION': {
