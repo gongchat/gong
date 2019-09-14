@@ -1,12 +1,11 @@
 import IApp from './IApp';
 import IChannel from './IChannel';
 import IConnection from './IConnection';
-import IDiscoverRoom from './IDiscoverRoom';
+import IDiscover from './IDiscover';
+import INotifications from './INotifications';
 import IProfile from './IProfile';
 import IRoom from './IRoom';
 import ISettings from './ISettings';
-import ISnackbarNotification from './ISnackbarNotification';
-import ISubdomain from './ISubdomain';
 import IUser from './IUser';
 
 export default interface IState {
@@ -14,19 +13,10 @@ export default interface IState {
   connection: IConnection;
   settings: ISettings;
   profile: IProfile;
-
   channels: Array<IRoom | IChannel | IUser>;
   current?: IChannel | IRoom | IUser;
-
-  showDiscover: boolean;
-  isSubdomainsLoaded: boolean;
-  subdomains: ISubdomain[];
-  isRoomsLoaded: boolean;
-  rooms: IDiscoverRoom[];
-
-  showSettings: boolean;
-  snackbarNotifications: ISnackbarNotification[];
-  menuBarNotification: string;
+  discover: IDiscover;
+  notifications: INotifications;
 
   // TODO: once theme is better defined convert to an interface
   theme: any;

@@ -46,15 +46,18 @@ export const INITIAL_STATE: IState = {
     color: '',
     vCard: DEFAULT_VCARD,
   },
-  snackbarNotifications: [],
-  showDiscover: false,
-  isSubdomainsLoaded: false,
-  subdomains: [],
-  isRoomsLoaded: false,
-  rooms: [],
-  showSettings: false,
+  notifications: {
+    snackbar: [],
+    menuBar: '',
+  },
+  discover: {
+    isOpen: false,
+    isSubdomainsLoaded: false,
+    subdomains: [],
+    isRoomsLoaded: false,
+    rooms: [],
+  },
   theme: getTheme(),
-  menuBarNotification: '',
 };
 
 const contract = {

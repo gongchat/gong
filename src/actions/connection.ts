@@ -47,18 +47,15 @@ export const connectionActions: any = {
         });
 
         // handle reconnecting message if already authenticated
-        let snackbarNotifications = state.snackbarNotifications;
+        let snackbar = state.notifications.snackbar;
         if (state.connection.hasSavedCredentials) {
-          const snackbarNotification: ISnackbarNotification = {
+          const notification: ISnackbarNotification = {
             id: new Date().getTime() + Math.random() + '',
             source: 'connection',
             variant: 'info',
             message: 'Attempting to reconnect...',
           };
-          snackbarNotifications = [
-            ...snackbarNotifications,
-            snackbarNotification,
-          ];
+          snackbar = [...snackbar, notification];
         }
 
         return {
@@ -70,7 +67,10 @@ export const connectionActions: any = {
             hasSavedCredentials: true,
             connectionError: '',
           },
-          snackbarNotifications,
+          notifications: {
+            ...state.notifications,
+            snackbar,
+          },
         };
       }
     };
@@ -132,18 +132,18 @@ export const connectionActions: any = {
       ipcRenderer.send('xmpp-get-vcard', { from: payload.jid });
 
       // handle reconnected message if already authenticated
-      let snackbarNotifications = state.snackbarNotifications;
+      let notifications = { ...state.notifications };
       if (state.connection.hasSavedCredentials) {
-        const snackbarNotification: ISnackbarNotification = {
+        const notification: ISnackbarNotification = {
           id: new Date().getTime() + Math.random() + '',
           source: 'connection',
           variant: 'success',
           message: 'Connected!',
         };
-        snackbarNotifications = [
-          ...snackbarNotifications,
-          snackbarNotification,
-        ];
+        notifications = {
+          ...state.notifications,
+          snackbar: [...notifications.snackbar, notification],
+        };
       }
 
       return {
@@ -151,25 +151,22 @@ export const connectionActions: any = {
         connection,
         settings,
         profile,
-        snackbarNotifications,
+        notifications,
       };
     };
   },
   // TODO: turn payload into an interface
   connectionFailed(payload: any) {
     return (state: IState): IState => {
-      let snackbarNotifications = state.snackbarNotifications;
+      let snackbar = state.notifications.snackbar;
       if (state.connection.hasSavedCredentials) {
-        const snackbarNotification: ISnackbarNotification = {
+        const notification: ISnackbarNotification = {
           id: new Date().getTime() + Math.random() + '',
           source: 'connection',
           variant: 'error',
           message: payload.error,
         };
-        snackbarNotifications = [
-          ...snackbarNotifications,
-          snackbarNotification,
-        ];
+        snackbar = [...snackbar, notification];
       }
 
       if (
@@ -188,7 +185,10 @@ export const connectionActions: any = {
           isConnecting: false,
           connectionError: payload.error,
         },
-        snackbarNotifications,
+        notifications: {
+          ...state.notifications,
+          snackbar,
+        },
       };
     };
   },

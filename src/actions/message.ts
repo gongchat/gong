@@ -58,15 +58,18 @@ export const messageActions: any = {
       if (messageReceive.type === 'error') {
         return {
           ...state,
-          snackbarNotifications: [
-            ...state.snackbarNotifications,
-            {
-              id: new Date().getTime() + Math.random() + '',
-              source: 'message',
-              variant: 'error',
-              message: `Unable to send message to ${messageReceive.from}`,
-            },
-          ],
+          notifications: {
+            ...state.notifications,
+            snackbar: [
+              ...state.notifications.snackbar,
+              {
+                id: new Date().getTime() + Math.random() + '',
+                source: 'message',
+                variant: 'error',
+                message: `Unable to send message to ${messageReceive.from}`,
+              },
+            ],
+          },
         };
       }
 

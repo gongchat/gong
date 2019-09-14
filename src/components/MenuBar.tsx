@@ -19,11 +19,12 @@ interface IProps {
 
 const MenuBar: FC<IProps> = ({ showOffline }: IProps) => {
   const classes = useStyles();
-  const [{ connection, menuBarNotification, channels }] = useContext();
+  const [{ connection, notifications, channels }] = useContext();
+  const { menuBar } = notifications;
   const [isFlashing, setIsFlashing] = useState(false);
   const [notification, setNotification] = useState('');
   const [countOfUnreadMessages, setCountOfUnreadMessages] = useState(0);
-  const prevMenuBarNotification = usePrevious(menuBarNotification);
+  const prevMenuBarNotification = usePrevious(menuBar);
   const menuBarNotificationFrequency = notification
     ? notification.split(',')[0]
     : '';
@@ -54,22 +55,22 @@ const MenuBar: FC<IProps> = ({ showOffline }: IProps) => {
   }, [channels]);
 
   useEffect(() => {
-    if (menuBarNotification !== '') {
+    if (menuBar !== '') {
       if (
-        menuBarNotification !== prevMenuBarNotification &&
-        (!isFlashing || menuBarNotification.split(',')[0] === 'once')
+        menuBar !== prevMenuBarNotification &&
+        (!isFlashing || menuBar.split(',')[0] === 'once')
       ) {
         setNotification('');
         setTimeout(() => {
-          setNotification(menuBarNotification);
-          setIsFlashing(menuBarNotification.split(',')[0] === 'repeat');
+          setNotification(menuBar);
+          setIsFlashing(menuBar.split(',')[0] === 'repeat');
         }, 1);
       }
     } else {
       setNotification('');
       setIsFlashing(false);
     }
-  }, [menuBarNotification, isFlashing, prevMenuBarNotification]);
+  }, [menuBar, isFlashing, prevMenuBarNotification]);
 
   return (
     <div

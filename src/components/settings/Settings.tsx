@@ -52,7 +52,8 @@ const TABS = [
 
 const Settings: FC = () => {
   const classes = useStyles();
-  const [{ showSettings, app }, { toggleShowSettings, logOff }] = useContext();
+  const [{ settings, app }, { toggleShowSettings, logOff }] = useContext();
+  const { isOpen } = settings;
   const [goToLogin, setGoToLogin] = useState(false);
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
 
@@ -114,7 +115,7 @@ const Settings: FC = () => {
     return (
       <Dialog
         fullScreen={true}
-        open={showSettings}
+        open={isOpen}
         className={classes.dialog}
         BackdropProps={{ className: classes.dialog }}
         PaperProps={{ className: classes.dialog }}
@@ -183,6 +184,9 @@ const Settings: FC = () => {
 const useStyles: any = makeStyles((theme: any) => ({
   dialog: {
     background: 'transparent',
+    '& > div:first-child': {
+      paddingTop: 0,
+    },
   },
   dialogContent: {
     display: 'flex',

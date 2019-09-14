@@ -1,4 +1,6 @@
 export default interface ISettings {
+  isOpen: boolean;
+
   jid: string;
   domain: string;
   username: string;

@@ -11,7 +11,8 @@ import ISnackbarNotification from '../interfaces/ISnackbarNotification';
 
 const SnackbarNotifications: FC = () => {
   const classes = useStyles();
-  const [{ snackbarNotifications }, { removeFromSnackbar }] = useContext();
+  const [{ notifications }, { removeFromSnackbar }] = useContext();
+  const { snackbar } = notifications;
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const displayed = useRef<string[]>([]);
@@ -27,28 +28,27 @@ const SnackbarNotifications: FC = () => {
         <CloseIcon fontSize="small" />
       </IconButton>
     );
-    if (snackbarNotifications) {
-      snackbarNotifications.forEach(
-        (notification: ISnackbarNotification, index: number) => {
-          if (!displayed.current.find((id: string) => id === notification.id)) {
-            enqueueSnackbar(notification.message, {
-              variant: notification.variant,
-              anchorOrigin: { vertical: 'top', horizontal: 'right' },
-              className: classes.notification,
-              action,
-            } as any);
-            removeFromSnackbar(notification.id);
-            displayed.current.push(notification.id);
-          }
+    if (snackbar) {
+      snackbar.forEach((notification: ISnackbarNotification) => {
+        if (!displayed.current.find((id: string) => id === notification.id)) {
+          enqueueSnackbar(notification.message, {
+            variant: notification.variant,
+            anchorOrigin: { vertical: 'top', horizontal: 'right' },
+            className: classes.notification,
+            action,
+          } as any);
+          removeFromSnackbar(notification.id);
+          displayed.current.push(notification.id);
         }
-      );
+      });
     }
   }, [
     classes.notification,
-    snackbarNotifications,
+    notifications.snackbar,
     enqueueSnackbar,
     removeFromSnackbar,
     closeSnackbar,
+    snackbar,
   ]);
 
   return null;

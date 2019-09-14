@@ -7,6 +7,7 @@ const electronStore = new ElectronStore();
 const { ipcRenderer } = window.require('electron');
 
 export const DEFAULT: ISettings = {
+  isOpen: false,
   jid: '',
   domain: '',
   username: '',
@@ -39,7 +40,10 @@ export const settingsActions: any = {
   toggleShowSettings() {
     return (state: IState): IState => ({
       ...state,
-      showSettings: !state.showSettings,
+      settings: {
+        ...state.settings,
+        isOpen: !state.settings.isOpen,
+      },
     });
   },
   setAndSaveSettings(settings: any) {
@@ -66,6 +70,7 @@ export const mapSettingsSavedToSettings = (
   settings: ISettingsSaved
 ): ISettings => {
   const mappedSettings: ISettings = {
+    isOpen: false,
     jid: settings.jid,
     domain: settings.domain,
     username: settings.username,

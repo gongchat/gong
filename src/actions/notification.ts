@@ -28,18 +28,21 @@ export const notificationActions: any = {
   addToSnackbar(notification: ISnackbarNotifications) {
     return (state: IState): IState => ({
       ...state,
-      snackbarNotifications: [
-        ...state.snackbarNotifications,
-        notification,
-      ],
+      notifications: {
+        ...state.notifications,
+        snackbar: [...state.notifications.snackbar, notification],
+      },
     });
   },
   removeFromSnackbar(id: string) {
     return (state: IState): IState => ({
       ...state,
-      snackbarNotifications: state.snackbarNotifications.filter(
-        (notification: ISnackbarNotifications) => notification.id !== id
-      ),
+      notifications: {
+        ...state.notifications,
+        snackbar: state.notifications.snackbar.filter(
+          (notification: ISnackbarNotifications) => notification.id !== id
+        ),
+      },
     });
   },
 };
@@ -82,7 +85,7 @@ export const setMenuBarNotificationOnChannelSelect = (state: IState) => {
     .reduce((a: number, channel: IChannel) => a + channel.unreadMessages, 0);
 
   if (groupChatUnread === 0 && chatUnread === 0) {
-    state.menuBarNotification = '';
+    state.notifications.menuBar = '';
   } else {
     if (state.profile.status !== 'dnd') {
       if (
@@ -118,9 +121,9 @@ export const setMenuBarNotificationOnChannelSelect = (state: IState) => {
         frequency = settings.flashMenuBarOnChatFrequency;
       }
       if (frequency !== '') {
-        state.menuBarNotification = `${frequency},${key}`;
+        state.notifications.menuBar = `${frequency},${key}`;
       } else {
-        state.menuBarNotification = '';
+        state.notifications.menuBar = '';
       }
     }
   }
@@ -348,9 +351,9 @@ const setMenuBarNotificationOnMessage = (state: IState, message: IMessage) => {
         chatMessagesUnread > 0 ? settings.flashMenuBarOnChatFrequency : 'once';
     }
     if (frequency !== '') {
-      state.menuBarNotification = `${frequency},${key}`;
+      state.notifications.menuBar = `${frequency},${key}`;
     } else {
-      state.menuBarNotification = '';
+      state.notifications.menuBar = '';
     }
   }
 };

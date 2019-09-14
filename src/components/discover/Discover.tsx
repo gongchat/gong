@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState } from 'react';
 import { useContext } from '../../context';
 
 import Button from '@material-ui/core/Button';
@@ -24,21 +24,20 @@ import ISubdomain from '../../interfaces/ISubdomain';
 const Discover: FC = () => {
   const classes = useStyles();
   const [
-    {
-      profile,
-      isSubdomainsLoaded,
-      subdomains,
-      isRoomsLoaded,
-      rooms,
-      showDiscover,
-    },
+    { profile, discover },
     { setShowDiscover, discoverItems, addRoomToChannels },
   ] = useContext();
+  const {
+    isSubdomainsLoaded,
+    subdomains,
+    isRoomsLoaded,
+    rooms,
+    isOpen,
+  } = discover;
   const nickname =
     profile.vCard && profile.vCard.nickname
       ? profile.vCard.nickname
       : profile.username;
-  const [open, setOpen] = useState(false);
   const [selectedSubdomainJid, setSelectedSubdomainJid] = useState('');
   const [tabIndex, setTabIndex] = useState(0);
   const [form, setForm] = useState({
@@ -49,8 +48,8 @@ const Discover: FC = () => {
   });
 
   const handleClose = () => {
-    setOpen(false);
     setShowDiscover(false);
+    setSelectedSubdomainJid('');
   };
 
   const handleSelectSubdomain = (jid: string) => {
@@ -100,16 +99,45 @@ const Discover: FC = () => {
     });
   };
 
-  useEffect(() => {
-    if (open !== showDiscover) {
-      setOpen(showDiscover);
-      setTabIndex(0);
+  const RoomListContent = () => {
+    if (selectedSubdomainJid !== '' && !isRoomsLoaded) {
+      return (
+        <ListItem>
+          <ListItemText>Looking for rooms...</ListItemText>
+        </ListItem>
+      );
     }
-  }, [open, showDiscover]);
+
+    if (selectedSubdomainJid !== '' && isRoomsLoaded && rooms.length === 0) {
+      return (
+        <ListItem>
+          <ListItemText>No rooms found</ListItemText>
+        </ListItem>
+      );
+    }
+
+    if (rooms.length > 0) {
+      return rooms.map((room: any) => (
+        <ListItem
+          key={room.jid}
+          button={true}
+          dense={true}
+          onClick={() => handleSelectRoom(room)}
+        >
+          <ListItemText>{room.name}</ListItemText>
+          <ListItemIcon className={classes.icon}>
+            {room.isAdded ? <DeleteIcon /> : <AddIcon />}
+          </ListItemIcon>
+        </ListItem>
+      ));
+    }
+
+    return <div />;
+  };
 
   return (
     <Dialog
-      open={open}
+      open={isOpen}
       onClose={handleClose}
       className={classes.dialog}
       BackdropProps={{ className: classes.dialog }}
@@ -129,11 +157,6 @@ const Discover: FC = () => {
           <>
             <div className={classes.list}>
               <List className={classes.subdomains}>
-                {/* 
-                  // TODO: This will show loading forever if there are no items to
-                  discover. Need to implement a away to check if it comes back
-                  empty 
-                */}
                 <ListItem button={true} dense={true} onClick={manuallyAddARoom}>
                   <ListItemText>Manually Add a Room</ListItemText>
                 </ListItem>
@@ -162,39 +185,7 @@ const Discover: FC = () => {
               </List>
             </div>
             <div className={classes.list}>
-              <List className={classes.rooms}>
-                {/* 
-                  // TODO: Same as above, this will show loading forever if 
-                  there are no items to discover. Need to implement a away to 
-                  check if it comes back empty 
-                */}
-                {selectedSubdomainJid !== '' && !isRoomsLoaded && (
-                  <ListItem>
-                    <ListItemText>Looking for rooms...</ListItemText>
-                  </ListItem>
-                )}
-                {selectedSubdomainJid !== '' &&
-                  isRoomsLoaded &&
-                  rooms.length === 0 && (
-                    <ListItem>
-                      <ListItemText>No rooms found</ListItemText>
-                    </ListItem>
-                  )}
-                {rooms.length > 0 &&
-                  rooms.map((room: any) => (
-                    <ListItem
-                      key={room.jid}
-                      button={true}
-                      dense={true}
-                      onClick={() => handleSelectRoom(room)}
-                    >
-                      <ListItemText>{room.name}</ListItemText>
-                      <ListItemIcon className={classes.icon}>
-                        {room.isAdded ? <DeleteIcon /> : <AddIcon />}
-                      </ListItemIcon>
-                    </ListItem>
-                  ))}
-              </List>
+              <List className={classes.rooms}>{RoomListContent()}</List>
             </div>
           </>
         )}

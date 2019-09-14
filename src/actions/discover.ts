@@ -5,15 +5,28 @@ import ISubdomain from '../interfaces/ISubdomain';
 const { ipcRenderer } = window.require('electron');
 
 export const discoverActions: any = {
-  setShowDiscover(value: boolean) {
+  setShowDiscover(isOpen: boolean) {
     return (state: IState): IState => {
-      if (value === true) {
+      if (isOpen) {
         ipcRenderer.send('xmpp-discover-top-level-items');
+        return {
+          ...state,
+          discover: {
+            ...state.discover,
+            isOpen,
+            isSubdomainsLoaded: false,
+            subdomains: [],
+            isRoomsLoaded: false,
+            rooms: [],
+          },
+        };
       }
       return {
         ...state,
-        showDiscover: value,
-        isSubdomainsLoaded: false,
+        discover: {
+          ...state.discover,
+          isOpen,
+        },
       };
     };
   },
@@ -22,22 +35,32 @@ export const discoverActions: any = {
       ipcRenderer.send('xmpp-discover-sub-level-items', subdomain);
       return {
         ...state,
-        isRoomsLoaded: false,
+        discover: {
+          ...state.discover,
+          isRoomsLoaded: false,
+          rooms: [],
+        },
       };
     };
   },
   setDiscoverRooms(rooms: IDiscoverRoom[]) {
     return (state: IState): IState => ({
       ...state,
-      isRoomsLoaded: true,
-      rooms,
+      discover: {
+        ...state.discover,
+        isRoomsLoaded: true,
+        rooms,
+      },
     });
   },
   setDiscoverSubdomains(subdomains: ISubdomain[]) {
     return (state: IState): IState => ({
       ...state,
-      isSubdomainsLoaded: true,
-      subdomains,
+      discover: {
+        ...state.discover,
+        isSubdomainsLoaded: true,
+        subdomains,
+      },
     });
   },
 };
