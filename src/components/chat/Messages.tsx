@@ -13,7 +13,7 @@ import IMessage from '../../interfaces/IMessage';
 const Messages: FC = () => {
   const classes = useStyles();
   const [
-    { current, settings },
+    { current, settings, connection },
     {
       getChannelLogs,
       setChannelScrollPosition,
@@ -144,6 +144,7 @@ const Messages: FC = () => {
 
   const handleGetLoggedMessages = () => {
     if (
+      connection.isConnected &&
       !isLoading.current &&
       rootRef.current &&
       rootRef.current.scrollTop === 0 &&
