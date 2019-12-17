@@ -52,6 +52,9 @@ function createWindow() {
     backgroundColor: '#fff',
     frame: false,
     icon: path.join(__dirname, 'icons/1024x1024.png'),
+    webPreferences: {
+      nodeIntegration: true,
+    },
   });
 
   mainWindow.loadURL(

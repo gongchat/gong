@@ -3,14 +3,13 @@ import { useContext } from '../../context';
 
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Slider from '@material-ui/core/Slider';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
-import Slider from '@material-ui/lab/Slider';
 
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 import SliderContainer from './SliderContainer';
-import SliderMarkers from './SliderMarkers';
 import { DEFAULT as DEFAULT_THEME } from '../../actions/theme';
 
 const MIN_SIDEBAR_WIDTH = 150;
@@ -52,7 +51,8 @@ const Layout: FC = () => {
         if (
           code === 8 ||
           (code >= 35 && code <= 46) ||
-          (code >= 96 || code <= 105)
+          code >= 96 ||
+          code <= 105
         ) {
           return;
         }
@@ -127,8 +127,8 @@ const Layout: FC = () => {
   };
 
   useEffect(() => {
-    setSpacing(theme.spacing.unit);
-  }, [theme.spacing.unit]);
+    setSpacing(theme.spacing());
+  }, [theme]);
 
   useEffect(() => {
     setSidebarWidth(theme.sidebarWidth);
@@ -151,16 +151,18 @@ const Layout: FC = () => {
       <BaseSection title="Spacing">
         <SliderContainer>
           <Slider
+            valueLabelDisplay="auto"
+            defaultValue={DEFAULT_SPACING}
             value={spacing === '' ? 0 : parseInt(spacing, 10)}
             min={MIN_SPACING}
             max={MAX_SPACING}
             step={1}
+            marks={[
+              { label: MIN_SPACING, value: MIN_SPACING },
+              { label: DEFAULT_SPACING, value: DEFAULT_SPACING },
+              { label: MAX_SPACING, value: MAX_SPACING },
+            ]}
             onChange={(event: any, value: any) => updateSpacing(value)}
-          />
-          <SliderMarkers
-            minSize={MIN_SPACING}
-            maxSize={MAX_SPACING}
-            defaultSize={DEFAULT_SPACING}
           />
         </SliderContainer>
         <div>
@@ -183,16 +185,18 @@ const Layout: FC = () => {
       <BaseSection title="Sidebar Width">
         <SliderContainer>
           <Slider
+            valueLabelDisplay="auto"
+            defaultValue={DEFAULT_SIDEBAR_WIDTH}
             value={sidebarWidth === '' ? 0 : parseInt(sidebarWidth, 10)}
             min={MIN_SIDEBAR_WIDTH}
             max={MAX_SIDEBAR_WIDTH}
             step={1}
+            marks={[
+              { label: MIN_SIDEBAR_WIDTH, value: MIN_SIDEBAR_WIDTH },
+              { label: DEFAULT_SIDEBAR_WIDTH, value: DEFAULT_SIDEBAR_WIDTH },
+              { label: MAX_SIDEBAR_WIDTH, value: MAX_SIDEBAR_WIDTH },
+            ]}
             onChange={(event: any, value: any) => updateSidebarWidth(value)}
-          />
-          <SliderMarkers
-            minSize={MIN_SIDEBAR_WIDTH}
-            maxSize={MAX_SIDEBAR_WIDTH}
-            defaultSize={DEFAULT_SIDEBAR_WIDTH}
           />
         </SliderContainer>
         <div>
