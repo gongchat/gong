@@ -199,6 +199,7 @@ const useStyles: any = makeStyles((theme: any) => ({
     flexWrap: 'nowrap',
     justifyContent: 'center',
     padding: '0 !important',
+    overflowY: 'auto',
   },
   menubar: {
     opacity: 0,
