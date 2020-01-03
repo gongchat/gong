@@ -13,6 +13,7 @@ const SliderContainer: FC<IProps> = ({ children }: IProps) => {
 const useStyles: any = makeStyles((theme: any) => ({
   root: {
     position: 'relative',
+    // display: 'flex',
     margin: theme.spacing(0, 1, 2, 1),
   },
 }));

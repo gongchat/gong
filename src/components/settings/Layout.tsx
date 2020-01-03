@@ -10,6 +10,7 @@ import TextField from '@material-ui/core/TextField';
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 import SliderContainer from './SliderContainer';
+import SliderMarkers from './SliderMarkers';
 import { DEFAULT as DEFAULT_THEME } from '../../actions/theme';
 
 const MIN_SIDEBAR_WIDTH = 150;
@@ -164,6 +165,11 @@ const Layout: FC = () => {
             ]}
             onChange={(event: any, value: any) => updateSpacing(value)}
           />
+          <SliderMarkers
+            minSize={MIN_SPACING}
+            maxSize={MAX_SPACING}
+            defaultSize={DEFAULT_SPACING}
+          />
         </SliderContainer>
         <div>
           <TextField
@@ -197,6 +203,11 @@ const Layout: FC = () => {
               { label: MAX_SIDEBAR_WIDTH, value: MAX_SIDEBAR_WIDTH },
             ]}
             onChange={(event: any, value: any) => updateSidebarWidth(value)}
+          />
+          <SliderMarkers
+            minSize={MIN_SIDEBAR_WIDTH}
+            maxSize={MAX_SIDEBAR_WIDTH}
+            defaultSize={DEFAULT_SIDEBAR_WIDTH}
           />
         </SliderContainer>
         <div>

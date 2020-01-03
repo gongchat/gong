@@ -10,6 +10,7 @@ import Slider from '@material-ui/core/Slider';
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 import SliderContainer from './SliderContainer';
+import SliderMarkers from './SliderMarkers';
 import { DEFAULT as DEFAULT_THEME } from '../../actions/theme';
 
 const MIN_SIZE = 8;
@@ -129,6 +130,7 @@ const Font: FC = () => {
       <BaseSection title="Font Size">
         <SliderContainer>
           <Slider
+            valueLabelDisplay="auto"
             defaultValue={DEFAULT_SIZE}
             value={size === '' ? 0 : parseInt(size, 10)}
             min={MIN_SIZE}
@@ -140,6 +142,11 @@ const Font: FC = () => {
               { label: MAX_SIZE, value: MAX_SIZE },
             ]}
             onChange={(event: any, value: any) => updateSize(value)}
+          />
+          <SliderMarkers
+            minSize={MIN_SIZE}
+            maxSize={MAX_SIZE}
+            defaultSize={DEFAULT_SIZE}
           />
         </SliderContainer>
         <div>
