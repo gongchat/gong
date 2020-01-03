@@ -43,7 +43,7 @@ const SliderMarkers: FC<IProps> = ({
 
 const useStyles: any = makeStyles((theme: any) => ({
   root: {
-    height: 11,
+    height: 10,
     position: 'absolute',
     top: 14,
   },
