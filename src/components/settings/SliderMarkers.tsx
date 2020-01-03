@@ -7,12 +7,14 @@ interface IProps {
   minSize: number;
   maxSize: number;
   defaultSize: number;
+  showLabels: null | boolean;
 }
 
 const SliderMarkers: FC<IProps> = ({
   minSize,
   maxSize,
   defaultSize,
+  showLabels = false,
 }: IProps) => {
   const classes = useStyles();
 
@@ -28,6 +30,13 @@ const SliderMarkers: FC<IProps> = ({
           className={classes.marker}
         >
           <span className={classes.dot} />
+          {showLabels && (
+            <>
+              {i === minSize && <Typography>{minSize}</Typography>}
+              {i === defaultSize && <Typography>{defaultSize}</Typography>}
+              {i === maxSize && <Typography>{maxSize}</Typography>}
+            </>
+          )}
         </div>
       );
     }
