@@ -10,14 +10,15 @@
   },
   "main": "public/electron.js",
   "scripts": {
-    "react": "react-scripts start",
+    "start:react": "react-scripts start",
+    "start:electron": "electron .",
+    "start": "concurrently \"cross-env BROWSER=none PORT=3100 npm run start:react\" \"wait-on http://localhost:3100 && npm run start:electron\"",
+    "test": "react-scripts test",
     "build": "react-scripts build",
-    "start": "concurrently \"cross-env BROWSER=none PORT=3100 npm run react\" \"wait-on http://localhost:3100 && electron .\" --kill-others",
     "pack": "electron-builder --dir",
     "dist": "npm run build && electron-builder",
     "release:mac": "electron-builder build -m -p always",
-    "release:linux-windows": "electron-builder build -l -w -p always",
-    "test": "react-scripts test"
+    "release:linux-windows": "electron-builder build -l -w -p always"
   },
   "dependencies": {
     "@material-ui/core": "4.8.0",
@@ -61,7 +62,7 @@
     "@types/webfontloader": "1.6.29",
     "concurrently": "5.0.2",
     "cross-env": "6.0.3",
-    "electron": "7.1.5",
+    "electron": "7.1.7",
     "electron-builder": "21.2.0",
     "electron-rebuild": "1.8.8",
     "node-sass": "4.13.0",
@@ -86,10 +87,10 @@
   },
   "homepage": "./",
   "engines": {
-    "node": "10.13.0"
+    "node": "12.14.0"
   },
   "build": {
-    "nodeVersion": "10.13.0",
+    "nodeVersion": "12.14.0",
     "appId": "com.github.gongchat.gong",
     "productName": "Gong",
     "icon": "build/icons/",
