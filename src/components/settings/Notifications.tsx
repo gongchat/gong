@@ -7,7 +7,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import Slider from '@material-ui/lab/Slider';
+import Slider from '@material-ui/core/Slider';
 import { makeStyles } from '@material-ui/styles';
 
 import BasePage from './BasePage';
@@ -216,17 +216,20 @@ const NotificationSettings: FC = () => {
         <div className={classes.slider}>
           <SliderContainer>
             <Slider
+              valueLabelDisplay="auto"
+              defaultValue={DEFAULT_SIZE}
               value={volume}
               min={MIN_SIZE}
               max={MAX_SIZE}
               step={1}
+              marks={[
+                { label: MIN_SIZE, value: MIN_SIZE },
+                { label: DEFAULT_SIZE, value: DEFAULT_SIZE },
+                { label: MAX_SIZE, value: MAX_SIZE },
+              ]}
               onChange={(event: any, value: any) => updateVolume(value)}
             />
-            <SliderMarkers
-              minSize={MIN_SIZE}
-              maxSize={MAX_SIZE}
-              defaultSize={DEFAULT_SIZE}
-            />
+            <SliderMarkers size={MAX_SIZE - MIN_SIZE} />
           </SliderContainer>
         </div>
         <FormControl variant="filled">

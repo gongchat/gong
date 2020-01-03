@@ -44,7 +44,8 @@ const Font: FC = () => {
         if (
           code === 8 ||
           (code >= 35 && code <= 46) ||
-          (code >= 96 || code <= 105)
+          code >= 96 ||
+          code <= 105
         ) {
           return;
         }
@@ -129,17 +130,20 @@ const Font: FC = () => {
       <BaseSection title="Font Size">
         <SliderContainer>
           <Slider
+            valueLabelDisplay="auto"
+            defaultValue={DEFAULT_SIZE}
             value={size === '' ? 0 : parseInt(size, 10)}
             min={MIN_SIZE}
             max={MAX_SIZE}
             step={1}
+            marks={[
+              { label: MIN_SIZE, value: MIN_SIZE },
+              { label: DEFAULT_SIZE, value: DEFAULT_SIZE },
+              { label: MAX_SIZE, value: MAX_SIZE },
+            ]}
             onChange={(event: any, value: any) => updateSize(value)}
           />
-          <SliderMarkers
-            minSize={MIN_SIZE}
-            maxSize={MAX_SIZE}
-            defaultSize={DEFAULT_SIZE}
-          />
+          <SliderMarkers size={MAX_SIZE - MIN_SIZE} />
         </SliderContainer>
         <div>
           <TextField

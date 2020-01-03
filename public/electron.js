@@ -6,11 +6,13 @@ const debug = require('electron-debug');
 debug({ enabled: true, showDevTools: false });
 
 const isDev = require('electron-is-dev');
-const {
-  default: installExtension,
-  REACT_DEVELOPER_TOOLS,
-  REDUX_DEVTOOLS,
-} = require('electron-devtools-installer');
+
+// TODO: electron-devtools-installer currently does not support electron 7+. Reference: https://github.com/MarshallOfSound/electron-devtools-installer/issues/122
+// const {
+//   default: installExtension,
+//   REACT_DEVELOPER_TOOLS,
+//   REDUX_DEVTOOLS,
+// } = require('electron-devtools-installer');
 
 const operatingSystem = process.platform; // supported values: darwin (mac), linux, win32 (this is also 64bit)
 const path = require('path');
@@ -52,6 +54,9 @@ function createWindow() {
     backgroundColor: '#fff',
     frame: false,
     icon: path.join(__dirname, 'icons/1024x1024.png'),
+    webPreferences: {
+      nodeIntegration: true,
+    },
   });
 
   mainWindow.loadURL(
@@ -169,11 +174,12 @@ app.on('ready', () => {
     createTray();
   }
 
-  [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS].forEach(extension => {
-    installExtension(extension.id)
-      .then(name => console.log(`Added Extension:  ${name}`))
-      .catch(err => console.log('An error occurred: ', err));
-  });
+  // TODO: electron-devtools-installer currently does not support electron 7+. Reference: https://github.com/MarshallOfSound/electron-devtools-installer/issues/122
+  // [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS].forEach(extension => {
+  //   installExtension(extension.id)
+  //     .then(name => console.log(`Added Extension:  ${name}`))
+  //     .catch(err => console.log('An error occurred: ', err));
+  // });
 });
 
 //

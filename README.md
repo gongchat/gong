@@ -1,23 +1,18 @@
 # Gong &middot; [![Build Status](https://travis-ci.org/gongchat/gong.svg?branch=master)](https://travis-ci.org/gongchat/gong) ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
-Gong is a Electron + React XMPP Client. Currently under development and is in alpha.
+Gong is an XMPP chat client made with Electron and React.
 
-## Running the Application
+## Setting up your Application
 
-### XMPP Server
-
-If you do not have an XMPP server [Openfire](https://www.igniterealtime.org/projects/openfire/) is a good option.
-
-### Node
-
-1.  `xmpp.js@0.7.0` requires node 10.13.0+. I have tried versions 10.0.0 and 11.5.0 and was unable to run the project.
-
-### Keytar
-
-This application uses Keytar to encrypt and decrypt your password. A key is generated and saved to your operating systems password manager. The encrypted
-password is saved along with your settings in the `config.json` file.
-
-If you are on linux you and do not already have `libsecret` installed run `sudo apt-get install libsecret-1-dev` before running `npm install`.
+1. XMPP server
+   - [Openfire](https://www.igniterealtime.org/projects/openfire/) is a good option.
+2. Node.js and npm
+   - 12.14.0 is recommend
+3. Keytar
+   - This application uses Keytar to encrypt and decrypt your password. A key is generated and saved to your operating systems password manager. The encrypted password is saved along with your settings in the `config.json` file.
+   - If you are on linux you and do not already have `libsecret` installed run `sudo apt-get install libsecret-1-dev` before running `npm install`.
+4. Project dependencies
+   - Run `npm install` at the project root in your terminal of choice.
 
 ## Starting up the Application
 
@@ -62,5 +57,7 @@ The location of the `config.json` file is different depending on your operating 
         at bootstrapNodeJSCore (internal/bootstrap/node.js:622:3)
     ```
 
-  - For Windows run `.\node_modules\.bin\electron-rebuild`
-  - For Linux run `./node_modules/.bin/electron-rebuild`
+  - For Windows run `.\node_modules\.bin\electron-rebuild`.
+  - For Linux run `./node_modules/.bin/electron-rebuild`.
+- Sometimes your cached version of the application can cause issues. This will also delete your current Gong configuration.
+  - For WIndows delete the folder `C:/Users/<username>/AppData/Roaming/gong`.
