@@ -143,11 +143,7 @@ const Font: FC = () => {
             ]}
             onChange={(event: any, value: any) => updateSize(value)}
           />
-          <SliderMarkers
-            minSize={MIN_SIZE}
-            maxSize={MAX_SIZE}
-            defaultSize={DEFAULT_SIZE}
-          />
+          <SliderMarkers size={MAX_SIZE - MIN_SIZE} />
         </SliderContainer>
         <div>
           <TextField

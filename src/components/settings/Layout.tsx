@@ -165,11 +165,7 @@ const Layout: FC = () => {
             ]}
             onChange={(event: any, value: any) => updateSpacing(value)}
           />
-          <SliderMarkers
-            minSize={MIN_SPACING}
-            maxSize={MAX_SPACING}
-            defaultSize={DEFAULT_SPACING}
-          />
+          <SliderMarkers size={MAX_SPACING - MIN_SPACING} />
         </SliderContainer>
         <div>
           <TextField
@@ -204,11 +200,7 @@ const Layout: FC = () => {
             ]}
             onChange={(event: any, value: any) => updateSidebarWidth(value)}
           />
-          <SliderMarkers
-            minSize={MIN_SIDEBAR_WIDTH}
-            maxSize={MAX_SIDEBAR_WIDTH}
-            defaultSize={DEFAULT_SIDEBAR_WIDTH}
-          />
+          <SliderMarkers size={MAX_SIDEBAR_WIDTH - MIN_SIDEBAR_WIDTH} />
         </SliderContainer>
         <div>
           <TextField

@@ -229,11 +229,7 @@ const NotificationSettings: FC = () => {
               ]}
               onChange={(event: any, value: any) => updateVolume(value)}
             />
-            <SliderMarkers
-              minSize={MIN_SIZE}
-              maxSize={MAX_SIZE}
-              defaultSize={DEFAULT_SIZE}
-            />
+            <SliderMarkers size={MAX_SIZE - MIN_SIZE} />
           </SliderContainer>
         </div>
         <FormControl variant="filled">

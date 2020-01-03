@@ -1,42 +1,26 @@
 import React, { FC } from 'react';
 
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
 interface IProps {
-  minSize: number;
-  maxSize: number;
-  defaultSize: number;
-  showLabels: null | boolean;
+  size: number;
 }
 
-const SliderMarkers: FC<IProps> = ({
-  minSize,
-  maxSize,
-  defaultSize,
-  showLabels = false,
-}: IProps) => {
+const SliderMarkers: FC<IProps> = ({ size }: IProps) => {
   const classes = useStyles();
 
   const getMarkers = () => {
     const markers: any[] = [];
-    for (let i = minSize; i <= maxSize; i++) {
+    for (let i = 0; i <= size; i++) {
       markers.push(
         <div
           key={i}
           style={{
-            width: `${(1.0 / (maxSize - minSize)) * 500.0}px`,
+            width: `${(1.0 / size) * 500.0}px`,
           }}
           className={classes.marker}
         >
           <span className={classes.dot} />
-          {showLabels && (
-            <>
-              {i === minSize && <Typography>{minSize}</Typography>}
-              {i === defaultSize && <Typography>{defaultSize}</Typography>}
-              {i === maxSize && <Typography>{maxSize}</Typography>}
-            </>
-          )}
         </div>
       );
     }
