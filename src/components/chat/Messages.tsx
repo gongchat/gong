@@ -274,107 +274,98 @@ const Messages: FC = () => {
 
   return (
     <div className={classes.root} ref={rootRef}>
+      <div className={classes.filler} />
       {current &&
         current.messages &&
-        current.messages
-          .map((message: IMessage, index: number) => {
-            const showDate =
-              !prevMessage ||
-              prevMessage.timestamp.format('L') !==
-                message.timestamp.format('L');
-            const showNewMessageMarker =
-              !hasNewMessageMarker &&
-              ((!prevMessage && !message.isRead) ||
-                (prevMessage && prevMessage.isRead !== message.isRead));
+        current.messages.map((message: IMessage, index: number) => {
+          const showDate =
+            !prevMessage ||
+            prevMessage.timestamp.format('L') !== message.timestamp.format('L');
+          const showNewMessageMarker =
+            !hasNewMessageMarker &&
+            ((!prevMessage && !message.isRead) ||
+              (prevMessage && prevMessage.isRead !== message.isRead));
 
-            const nextMessage: any =
-              index + 1 > current.messages.length
-                ? undefined
-                : current.messages[index + 1];
-            const isNextShowDate = nextMessage
-              ? nextMessage.timestamp.format('L') !==
-                message.timestamp.format('L')
-              : false;
-            const isNextShowNewMessageMarker =
-              !hasNewMessageMarker &&
-              nextMessage &&
-              !nextMessage.isRead &&
-              nextMessage.isRead !== message.isRead;
+          const nextMessage: any =
+            index + 1 > current.messages.length
+              ? undefined
+              : current.messages[index + 1];
+          const isNextShowDate = nextMessage
+            ? nextMessage.timestamp.format('L') !==
+              message.timestamp.format('L')
+            : false;
+          const isNextShowNewMessageMarker =
+            !hasNewMessageMarker &&
+            nextMessage &&
+            !nextMessage.isRead &&
+            nextMessage.isRead !== message.isRead;
 
-            const isStartOfGroup =
-              !prevMessage ||
-              prevMessage.userNickname !== message.userNickname ||
-              moment
-                .duration(message.timestamp.diff(prevMessage.timestamp))
-                .asMinutes() > 2;
-            const isEndOfGroup =
-              !nextMessage ||
-              nextMessage.userNickname !== message.userNickname ||
-              moment
-                .duration(nextMessage.timestamp.diff(message.timestamp))
-                .asMinutes() > 2;
+          const isStartOfGroup =
+            !prevMessage ||
+            prevMessage.userNickname !== message.userNickname ||
+            moment
+              .duration(message.timestamp.diff(prevMessage.timestamp))
+              .asMinutes() > 2;
+          const isEndOfGroup =
+            !nextMessage ||
+            nextMessage.userNickname !== message.userNickname ||
+            moment
+              .duration(nextMessage.timestamp.diff(message.timestamp))
+              .asMinutes() > 2;
 
-            if (showNewMessageMarker) {
-              hasNewMessageMarker = true;
-            }
+          if (showNewMessageMarker) {
+            hasNewMessageMarker = true;
+          }
 
-            const returnVal = (
-              <React.Fragment key={message.index}>
-                <div
-                  className={[
-                    !showDate && !showNewMessageMarker && isStartOfGroup
-                      ? `${classes.startOfGroupPadding} ${
-                          classes.startOfGroupBorder
-                        }`
-                      : '',
-                    isEndOfGroup &&
-                    !isNextShowDate &&
-                    !isNextShowNewMessageMarker
-                      ? classes.endOfGroupPadding
-                      : '',
-                  ].join(' ')}
-                >
-                  <Message
-                    key={index}
-                    message={message}
-                    showTime={
-                      isStartOfGroup || showDate || showNewMessageMarker
-                    }
-                    renderVideos={settings.renderVideos}
-                    renderGetYarn={settings.renderGetYarn}
-                    renderImages={settings.renderImages}
-                    onMessageLoad={handleOnMessageLoad}
-                  />
+          const returnVal = (
+            <React.Fragment key={message.index}>
+              {showDate && (
+                <div className={classes.marker}>
+                  <Typography className={classes.markerValue}>
+                    <span>{message.timestamp.format('LL')}</span>
+                  </Typography>
                 </div>
-                {showNewMessageMarker && (
-                  <div ref={newMessageMarkerRef} className={classes.marker}>
-                    <Typography
-                      color="error"
-                      className={[
-                        classes.markerValue,
-                        classes.newMessageMarkerValue,
-                      ].join(' ')}
-                    >
-                      <span>New Messages</span>
-                    </Typography>
-                  </div>
-                )}
-                {showDate && (
-                  <div className={classes.marker}>
-                    <Typography className={classes.markerValue}>
-                      <span>{message.timestamp.format('LL')}</span>
-                    </Typography>
-                  </div>
-                )}
-              </React.Fragment>
-            );
+              )}
+              {showNewMessageMarker && (
+                <div ref={newMessageMarkerRef} className={classes.marker}>
+                  <Typography
+                    color="error"
+                    className={[
+                      classes.markerValue,
+                      classes.newMessageMarkerValue,
+                    ].join(' ')}
+                  >
+                    <span>New Messages</span>
+                  </Typography>
+                </div>
+              )}
+              <div
+                className={[
+                  !showDate && !showNewMessageMarker && isStartOfGroup
+                    ? `${classes.startOfGroupPadding} ${classes.startOfGroupBorder}`
+                    : '',
+                  isEndOfGroup && !isNextShowDate && !isNextShowNewMessageMarker
+                    ? classes.endOfGroupPadding
+                    : '',
+                ].join(' ')}
+              >
+                <Message
+                  key={index}
+                  message={message}
+                  showTime={isStartOfGroup || showDate || showNewMessageMarker}
+                  renderVideos={settings.renderVideos}
+                  renderGetYarn={settings.renderGetYarn}
+                  renderImages={settings.renderImages}
+                  onMessageLoad={handleOnMessageLoad}
+                />
+              </div>
+            </React.Fragment>
+          );
 
-            prevMessage = message;
+          prevMessage = message;
 
-            return returnVal;
-          })
-          .reverse() // using reverse so messages stay at the bottom
-      }
+          return returnVal;
+        })}
     </div>
   );
 };
@@ -387,7 +378,7 @@ const useStyles: any = makeStyles((theme: any) => ({
     paddingTop: theme.spacing(1),
     overflowY: 'scroll',
     display: 'flex',
-    flexDirection: 'column-reverse', // using reverse so messages stay at the bottom
+    flexDirection: 'column',
     position: 'relative',
   },
   filler: {

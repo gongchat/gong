@@ -23,12 +23,14 @@ const useStyles: any = makeStyles((theme: any) => ({
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
+    overflowY: 'hidden',
   },
   chat: {
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-end',
+    overflowY: 'auto',
   },
 }));
 

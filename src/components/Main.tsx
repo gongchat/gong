@@ -152,6 +152,7 @@ const useStyles: any = makeStyles((theme: any) => ({
     display: 'flex',
     flexWrap: 'nowrap',
     flexGrow: 1,
+    overflowY: 'hidden',
   },
   bars: {
     display: 'flex',
@@ -170,7 +171,7 @@ const useStyles: any = makeStyles((theme: any) => ({
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
     flexDirection: 'column',
-    overflowX: 'hidden',
+    overflow: 'hidden',
   },
   right: {
     flex: `0 0 ${theme.sidebarWidth * 0.9}px`,
