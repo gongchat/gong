@@ -33,8 +33,7 @@ const ListSelectorUsers: FC<IProps> = ({
         (u: IChannelUser) => u.jid === obj.jid
       );
       if (user) {
-        const length = text.length;
-        if (text === '' || length === 0) {
+        if (text === '' || text.length === 0) {
           setText(`@${user.nickname} `);
         } else {
           const indexOfLastAt = text.lastIndexOf('@');
@@ -42,7 +41,7 @@ const ListSelectorUsers: FC<IProps> = ({
             setText(`${text}@${user.nickname} `);
           } else {
             const charsBeforeLastAt = text
-              .substring(indexOfLastAt, length)
+              .substring(indexOfLastAt, text.length)
               .toLowerCase();
             if (
               charsBeforeLastAt.length - 1 > obj.nickname.length ||
