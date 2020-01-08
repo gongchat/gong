@@ -153,7 +153,6 @@ const useStyles: any = makeStyles((theme: any) => ({
     flexDirection: 'column',
     flexShrink: 0,
   },
-  left: {},
   middle: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
@@ -161,7 +160,6 @@ const useStyles: any = makeStyles((theme: any) => ({
     flexDirection: 'column',
     overflow: 'hidden',
   },
-  right: {},
 }));
 
 export default Main;
