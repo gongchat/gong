@@ -95,6 +95,86 @@ export const channelActions: any = {
       }),
     });
   },
+  setSearchText(jid: string, text: string) {
+    let current: IChannel;
+    return (state: IState): IState => ({
+      ...state,
+      channels: state.channels.map((channel: IChannel) => {
+        if (channel.jid === jid) {
+          current = {
+            ...channel,
+            isSearching: true,
+            searchText: text,
+            searchResults: [],
+          };
+          ipcRenderer.send('search-log', {
+            user: state.profile.jid,
+            jid: jid,
+            order: current.searchOrder,
+            text: current.searchText,
+          });
+          return current;
+        } else {
+          return channel;
+        }
+      }),
+      current:
+        state.current && state.current.jid === jid ? current : state.current,
+    });
+  },
+  setSearchOrder(jid: string, order: string) {
+    let current: IChannel;
+    return (state: IState): IState => ({
+      ...state,
+      channels: state.channels.map((channel: IChannel) => {
+        if (channel.jid === jid) {
+          current = {
+            ...channel,
+            isSearching: true,
+            searchOrder: order,
+            searchResults: [],
+          };
+          ipcRenderer.send('search-log', {
+            user: state.profile.jid,
+            jid: jid,
+            order: current.searchOrder,
+            text: current.searchText,
+          });
+          return current;
+        } else {
+          return channel;
+        }
+      }),
+      current:
+        state.current && state.current.jid === jid ? current : state.current,
+    });
+  },
+  setSearchResults(results: any) {
+    let current: IChannel;
+    return (state: IState): IState => ({
+      ...state,
+      channels: state.channels.map((channel: IChannel) => {
+        if (channel.jid === results.jid) {
+          results.messages.forEach((message: IMessage) => {
+            message.timestamp = moment(message.timestamp);
+            message.isRead = true;
+          });
+          current = {
+            ...channel,
+            isSearching: false,
+            searchResults: results.messages,
+          };
+          return current;
+        } else {
+          return channel;
+        }
+      }),
+      current:
+        state.current && state.current.jid === results.jid
+          ? current
+          : state.current,
+    });
+  },
   setChannelScrollPosition(channelJid: string, position: number) {
     return (state: IState): IState => ({
       ...state,

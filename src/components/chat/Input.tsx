@@ -165,7 +165,12 @@ const Input: FC = () => {
               onChange={handleChange}
               onKeyDown={handleKeyDown}
               className={classes.textField}
-              InputProps={{ className: classes.textareaRoot }}
+              InputProps={{
+                className: [
+                  classes.textareaRoot,
+                  text === '' ? classes.emptyInput : '',
+                ].join(' '),
+              }}
               rowsMax={8}
               inputRef={inputRef}
               disabled={
@@ -227,6 +232,11 @@ const useStyles: any = makeStyles((theme: any) => ({
   textareaRoot: {
     '& fieldset': {
       borderColor: `${theme.palette.backgroundInput} !important`,
+    },
+  },
+  emptyInput: {
+    '& textarea': {
+      whiteSpace: 'nowrap',
     },
   },
   inputRightInline: {

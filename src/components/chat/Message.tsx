@@ -89,7 +89,7 @@ const Message: FC<IProps> = ({
   }, [body]);
 
   useLayoutEffect(() => {
-    if (isBodyLoaded && isImagesLoaded) {
+    if (isBodyLoaded && isImagesLoaded && onMessageLoad) {
       onMessageLoad();
     }
   }, [isBodyLoaded, isImagesLoaded, onMessageLoad]);
@@ -148,9 +148,7 @@ const Message: FC<IProps> = ({
                         title="get yarn clip"
                         width={500}
                         height={370}
-                        src={`https://getyarn.io/yarn-clip/embed/${
-                          values[2]
-                        }?autoplay=false`}
+                        src={`https://getyarn.io/yarn-clip/embed/${values[2]}?autoplay=false`}
                       />
                     </div>
                   );
@@ -197,103 +195,101 @@ const Message: FC<IProps> = ({
   );
 };
 
-const useStyles: any = makeStyles(
-  (theme: any): any => ({
-    root: {
+const useStyles: any = makeStyles((theme: any): any => ({
+  root: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    flexShrink: 0,
+    '&:hover .timestamp': {
+      opacity: '1 !important',
+    },
+  },
+  message: {
+    width: '100%',
+    position: 'relative',
+    display: 'table',
+  },
+  timestamp: {
+    color: theme.palette.text.secondary,
+    paddingRight: theme.spacing(1),
+    fontSize: '0.7rem',
+    opacity: 0.5,
+    whiteSpace: 'nowrap',
+    width: '50px',
+    textAlign: 'right',
+    flexShrink: 0,
+    display: 'table-cell',
+  },
+  timestampHide: {
+    opacity: 0,
+  },
+  user: {
+    whiteSpace: 'nowrap',
+    fontWeight: 'bold',
+  },
+  text: {
+    display: 'table-cell',
+  },
+  body: {
+    paddingLeft: theme.spacing(1),
+    color: theme.palette.text.primary,
+    overflowWrap: 'break-word',
+    wordBreak: 'break-word',
+    '& .mention': {
+      backgroundColor: fade(theme.palette.primary.light, 0.1),
+      color: theme.palette.primary.light,
+    },
+    '& .mention-me': {
+      backgroundColor: fade(theme.palette.secondary.light, 0.2),
+      color: theme.palette.secondary.light,
+    },
+    '& a': {
+      color: theme.palette.primary.main,
+      textDecoration: 'none',
+    },
+  },
+  video: {
+    flex: '0 1 100%',
+    padding: theme.spacing(2),
+    paddingLeft: theme.spacing(8),
+    overflowX: 'auto',
+    overflowY: 'hidden',
+  },
+  getYarn: {
+    flex: '0 1 100%',
+    padding: theme.spacing(2),
+    paddingLeft: theme.spacing(8),
+    overflowX: 'auto',
+    overflowY: 'hidden',
+    '& iframe': {
+      border: 'none',
+    },
+  },
+  image: {
+    position: 'relative',
+    margin: theme.spacing(2),
+    marginLeft: theme.spacing(8),
+    maxWidth: 500,
+    overflowX: 'auto',
+    overflowY: 'hidden',
+    '& img': {
       width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      flexShrink: 0,
-      '&:hover .timestamp': {
-        opacity: '1 !important',
-      },
     },
-    message: {
-      width: '100%',
-      position: 'relative',
-      display: 'table',
-    },
-    timestamp: {
-      color: theme.palette.text.secondary,
-      paddingRight: theme.spacing(1),
-      fontSize: '0.7rem',
-      opacity: 0.5,
-      whiteSpace: 'nowrap',
-      width: '50px',
-      textAlign: 'right',
-      flexShrink: 0,
-      display: 'table-cell',
-    },
-    timestampHide: {
-      opacity: 0,
-    },
-    user: {
-      whiteSpace: 'nowrap',
-      fontWeight: 'bold',
-    },
-    text: {
-      display: 'table-cell',
-    },
-    body: {
-      paddingLeft: theme.spacing(1),
-      color: theme.palette.text.primary,
-      overflowWrap: 'break-word',
-      wordBreak: 'break-word',
-      '& .mention': {
-        backgroundColor: fade(theme.palette.primary.light, 0.1),
-        color: theme.palette.primary.light,
-      },
-      '& .mention-me': {
-        backgroundColor: fade(theme.palette.secondary.light, 0.2),
-        color: theme.palette.secondary.light,
-      },
-      '& a': {
-        color: theme.palette.primary.main,
-        textDecoration: 'none',
-      },
-    },
-    video: {
-      flex: '0 1 100%',
-      padding: theme.spacing(2),
-      paddingLeft: theme.spacing(8),
-      overflowX: 'auto',
-      overflowY: 'hidden',
-    },
-    getYarn: {
-      flex: '0 1 100%',
-      padding: theme.spacing(2),
-      paddingLeft: theme.spacing(8),
-      overflowX: 'auto',
-      overflowY: 'hidden',
-      '& iframe': {
-        border: 'none',
-      },
-    },
-    image: {
-      position: 'relative',
-      margin: theme.spacing(2),
-      marginLeft: theme.spacing(8),
-      maxWidth: 500,
-      overflowX: 'auto',
-      overflowY: 'hidden',
-      '& img': {
-        width: '100%',
-      },
-    },
-    gifv: {
-      margin: theme.spacing(2),
-      marginLeft: theme.spacing(8),
-      overflowX: 'auto',
-      overflowY: 'hidden',
-    },
-    me: {
-      color: theme.palette.text.secondary,
-    },
-    copyOnly: {
-      position: 'absolute',
-      opacity: 0,
-    },
-  })
-);
+  },
+  gifv: {
+    margin: theme.spacing(2),
+    marginLeft: theme.spacing(8),
+    overflowX: 'auto',
+    overflowY: 'hidden',
+  },
+  me: {
+    color: theme.palette.text.secondary,
+  },
+  copyOnly: {
+    position: 'absolute',
+    opacity: 0,
+  },
+}));
 
 export default Message;

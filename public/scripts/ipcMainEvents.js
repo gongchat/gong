@@ -77,6 +77,10 @@ class IpcMainEvents {
       logger.get(event, arg);
     });
 
+    ipcMain.on('search-log', (event, arg) => {
+      logger.search(event, arg);
+    });
+
     // App Events
 
     ipcMain.on('app-check-for-updates', () => {

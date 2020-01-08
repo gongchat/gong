@@ -464,6 +464,10 @@ const addToOpenChannels = (
     hasUnreadMentionMe: message.isMentioningMe,
     scrollPosition: -1,
     hasNoMoreLogs: undefined,
+    isSearching: false,
+    searchText: '',
+    searchOrder: 'newest',
+    searchResults: [],
   };
   state.channels = [...state.channels, newChannel];
 

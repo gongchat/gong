@@ -30,6 +30,10 @@ export const mapToUsers = (jsXml: any): IUser[] => {
       connections: [],
       scrollPosition: -1,
       vCard: undefined,
+      isSearching: false,
+      searchText: '',
+      searchOrder: 'newest',
+      searchResults: [],
     };
     return newUser;
   });

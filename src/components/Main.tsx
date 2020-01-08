@@ -108,15 +108,9 @@ const Main: FC<IProps> = () => {
         <ToolBar />
       </div>
       <div className={classes.content}>
-        <div className={classes.left}>
-          <SidebarLeft />
-        </div>
+        <SidebarLeft />
         <div className={classes.middle}>{current && <Chat />}</div>
-        {current && current.type === 'groupchat' && (
-          <div className={classes.right}>
-            <SidebarRight />
-          </div>
-        )}
+        <SidebarRight />
       </div>
       <Discover />
       <Settings />
@@ -159,13 +153,7 @@ const useStyles: any = makeStyles((theme: any) => ({
     flexDirection: 'column',
     flexShrink: 0,
   },
-  left: {
-    flex: `0 0 ${theme.sidebarWidth}px`,
-    display: 'flex',
-    flexDirection: 'column',
-    width: theme.sidebarWidth,
-    backgroundColor: theme.palette.background.default,
-  },
+  left: {},
   middle: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
@@ -173,11 +161,7 @@ const useStyles: any = makeStyles((theme: any) => ({
     flexDirection: 'column',
     overflow: 'hidden',
   },
-  right: {
-    flex: `0 0 ${theme.sidebarWidth * 0.9}px`,
-    backgroundColor: theme.palette.background.default,
-    overflowX: 'hidden',
-  },
+  right: {},
 }));
 
 export default Main;
