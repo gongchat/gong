@@ -33,31 +33,26 @@ const ListSelectorUsers: FC<IProps> = ({
         (u: IChannelUser) => u.jid === obj.jid
       );
       if (user) {
-        if (text === '') {
+        if (text === '' || text.length === 0) {
           setText(`@${user.nickname} `);
         } else {
-          const length = text.length;
-          if (length === 0) {
-            setText(`@${user.nickname} `);
+          const indexOfLastAt = text.lastIndexOf('@');
+          if (indexOfLastAt === -1) {
+            setText(`${text}@${user.nickname} `);
           } else {
-            const indexOfLastAt = text.lastIndexOf('@');
-            if (indexOfLastAt === -1) {
+            const charsBeforeLastAt = text
+              .substring(indexOfLastAt, text.length)
+              .toLowerCase();
+            if (
+              charsBeforeLastAt.length - 1 > obj.nickname.length ||
+              `@${obj.nickname
+                .toLowerCase()
+                .substring(0, charsBeforeLastAt.length - 1)}` !==
+                charsBeforeLastAt
+            ) {
               setText(`${text}@${user.nickname} `);
             } else {
-              const charsBeforeLastAt = text.substring(indexOfLastAt, length);
-              if (
-                charsBeforeLastAt.length - 1 > obj.nickname.length ||
-                `@${obj.nickname.substring(
-                  0,
-                  charsBeforeLastAt.length - 1
-                )}` !== charsBeforeLastAt
-              ) {
-                setText(`${text}@${user.nickname} `);
-              } else {
-                setText(
-                  `${text.substring(0, indexOfLastAt)}@${user.nickname} `
-                );
-              }
+              setText(`${text.substring(0, indexOfLastAt)}@${user.nickname} `);
             }
           }
         }
