@@ -137,6 +137,18 @@ const Input: FC = () => {
     }
   }, [current, prevCurrent, setInputText]);
 
+  useEffect(() => {
+    const handleEsc = (event: any) => {
+      if (event.key === 'Escape' && inputRef.current) {
+        inputRef.current.focus();
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, []);
+
   return (
     <>
       {current && (

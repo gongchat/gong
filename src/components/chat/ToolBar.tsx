@@ -196,19 +196,16 @@ const ToolBar: FC = () => {
                 </InputAdornment>
               }
               endAdornment={
-                searchTextLocal === '' ? (
-                  <></>
-                ) : (
-                  <InputAdornment position="end">
-                    <CloseIcon
-                      onClick={handleSearchClear}
-                      className={[
-                        classes.inputIcon,
-                        classes.clickableIcon,
-                      ].join(' ')}
-                    />
-                  </InputAdornment>
-                )
+                <InputAdornment position="end">
+                  <CloseIcon
+                    onClick={handleSearchClear}
+                    className={[
+                      classes.inputIcon,
+                      classes.clickableIcon,
+                      searchTextLocal !== '' ? '' : classes.hideIcon,
+                    ].join(' ')}
+                  />
+                </InputAdornment>
               }
               placeholder="Search"
               value={searchTextLocal}
@@ -291,6 +288,9 @@ const useStyles: any = makeStyles((theme: any) => ({
   },
   clickableIcon: {
     cursor: 'pointer',
+  },
+  hideIcon: {
+    opacity: 0,
   },
 }));
 

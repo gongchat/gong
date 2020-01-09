@@ -99,8 +99,8 @@ const SearchResult: FC = () => {
               </>
             ) : (
               <Typography>
-                {current.searchResults.length} record
-                {current.searchResults.length > 1 ? '' : 's'} found
+                {current.searchResults.length.toLocaleString()} record
+                {current.searchResults.length === 1 ? '' : 's'} found
               </Typography>
             )}
           </div>
@@ -128,6 +128,7 @@ const SearchResult: FC = () => {
             .map((message: IMessage, index: number) => (
               <Paper key={index} className={classes.message}>
                 <Message
+                  variant="cozy"
                   key={index}
                   message={message}
                   showTime={true}

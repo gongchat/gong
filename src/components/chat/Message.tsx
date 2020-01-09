@@ -3,6 +3,7 @@ import ReactPlayer from 'react-player';
 import sanitizeHtml from 'sanitize-html';
 import marked from 'marked';
 
+import Avatar from '@material-ui/core/Avatar';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
@@ -13,6 +14,7 @@ import { EMOJIS, ASCII_EMOJI_MAP } from '../../utils/emojis';
 import { ALLOWED_TAGS, ALLOWED_ATTRIBUTES } from '../../utils/sanitizeConfig';
 
 interface IProps {
+  variant?: 'compact' | 'cozy';
   message: IMessage;
   showTime: boolean;
   onMessageLoad: any;
@@ -22,6 +24,7 @@ interface IProps {
 }
 
 const Message: FC<IProps> = ({
+  variant = 'compact',
   message,
   showTime,
   onMessageLoad,
@@ -96,31 +99,72 @@ const Message: FC<IProps> = ({
 
   return (
     <div className={classes.root}>
-      <Typography className={classes.message}>
-        <span
-          className={[
-            'timestamp',
-            classes.timestamp,
-            showTime ? classes.timestamp : classes.timestampHide,
-          ].join(' ')}
+      {variant === 'compact' ? (
+        <Typography
+          className={[classes.message, classes.compactMessage].join(' ')}
         >
-          <span className={classes.copyOnly}>[</span>
-          {message.timestamp.format('h:mm A')}
-          <span className={classes.copyOnly}>]</span>
-        </span>
-        <span className={classes.text}>
-          <span className={classes.user} style={{ color: message.color }}>
-            {message.userNickname}
-            <span className={classes.copyOnly}>: </span>
-          </span>
           <span
-            className={[classes.body, isMe && classes.me].join(' ')}
-            dangerouslySetInnerHTML={{
-              __html: isMe ? `*${messageBody.substring(4)}*` : messageBody,
-            }}
-          />
-        </span>
-      </Typography>
+            className={[
+              'timestamp',
+              [classes.timestamp, classes.compactTimestamp].join(' '),
+              !showTime ? classes.timestampHide : '',
+            ].join(' ')}
+          >
+            <span className={classes.copyOnly}>[</span>
+            {message.timestamp.format('h:mm A')}
+            <span className={classes.copyOnly}>]</span>
+          </span>
+          <span className={[classes.text, classes.compactText].join(' ')}>
+            <span className={classes.user} style={{ color: message.color }}>
+              {message.userNickname}
+              <span className={classes.copyOnly}>: </span>
+            </span>
+            <span
+              className={[
+                classes.body,
+                classes.compactBody,
+                isMe && classes.me,
+              ].join(' ')}
+              dangerouslySetInnerHTML={{
+                __html: isMe ? `*${messageBody.substring(4)}*` : messageBody,
+              }}
+            />
+          </span>
+        </Typography>
+      ) : (
+        <div className={classes.cozy}>
+          <div className={classes.avatar}>
+            <Avatar />
+          </div>
+          <div>
+            <Typography>
+              <span
+                className={[classes.user, classes.cozyUser].join(' ')}
+                style={{ color: message.color }}
+              >
+                {message.userNickname}
+              </span>
+              <span
+                className={[
+                  'timestamp',
+                  classes.timestamp,
+                  showTime ? classes.timestamp : classes.timestampHide,
+                ].join(' ')}
+              >
+                {message.timestamp.calendar()}
+              </span>
+            </Typography>
+            <Typography className={classes.message}>
+              <span
+                className={[classes.body, isMe && classes.me].join(' ')}
+                dangerouslySetInnerHTML={{
+                  __html: isMe ? `*${messageBody.substring(4)}*` : messageBody,
+                }}
+              />
+            </Typography>
+          </div>
+        </div>
+      )}
       {message.urls && (
         <>
           {renderVideos &&
@@ -205,21 +249,31 @@ const useStyles: any = makeStyles((theme: any): any => ({
       opacity: '1 !important',
     },
   },
+  cozy: {
+    display: 'flex',
+  },
+  avatar: {
+    padding: theme.spacing(0.5, 1, 0, 0),
+  },
   message: {
     width: '100%',
     position: 'relative',
+  },
+  compactMessage: {
     display: 'table',
   },
   timestamp: {
     color: theme.palette.text.secondary,
-    paddingRight: theme.spacing(1),
     fontSize: '0.7rem',
     opacity: 0.5,
     whiteSpace: 'nowrap',
-    width: '50px',
-    textAlign: 'right',
-    flexShrink: 0,
+  },
+  compactTimestamp: {
+    paddingRight: theme.spacing(),
     display: 'table-cell',
+    flexShrink: 0,
+    textAlign: 'right',
+    width: '50px',
   },
   timestampHide: {
     opacity: 0,
@@ -228,11 +282,14 @@ const useStyles: any = makeStyles((theme: any): any => ({
     whiteSpace: 'nowrap',
     fontWeight: 'bold',
   },
-  text: {
+  cozyUser: {
+    paddingRight: theme.spacing(),
+  },
+  text: {},
+  compactText: {
     display: 'table-cell',
   },
   body: {
-    paddingLeft: theme.spacing(1),
     color: theme.palette.text.primary,
     overflowWrap: 'break-word',
     wordBreak: 'break-word',
@@ -248,6 +305,9 @@ const useStyles: any = makeStyles((theme: any): any => ({
       color: theme.palette.primary.main,
       textDecoration: 'none',
     },
+  },
+  compactBody: {
+    paddingLeft: theme.spacing(1),
   },
   video: {
     flex: '0 1 100%',
