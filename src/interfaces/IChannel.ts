@@ -12,4 +12,9 @@ export default interface IChannel {
   hasUnreadMentionMe: boolean;
   scrollPosition: number;
   hasNoMoreLogs: boolean | undefined;
+
+  isSearching: boolean;
+  searchText: string;
+  searchOrder: string; // newest, oldest
+  searchResults: IMessage[];
 }

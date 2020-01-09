@@ -56,47 +56,49 @@ const SidebarLeft: FC = () => {
 
   return (
     <div className={classes.root}>
-      <div className={classes.upper}>
-        <div className={classes.channels}>
-          <Channels
-            title="Open Channels"
-            hideIfEmpty={true}
-            canAdd={false}
-            prefix="@"
-            channels={channels.filter(
-              (channel: IChannel) => channel.order === 10
-            )}
-          />
-          <Channels
-            title="Rooms"
-            hideIfEmpty={false}
-            canAdd={true}
-            prefix="#"
-            channels={channels.filter(
-              (channel: IChannel) => channel.order === 20
-            )}
-          />
-          <Users
-            users={
-              channels.filter(
-                (channel: IChannel) => channel.order === 30
-              ) as IUser[]
-            }
-          />
-        </div>
-      </div>
-      <div className={classes.profile}>
-        <div className={classes.me}>
-          <div className={classes.groupItem}>
-            <Me />
+      <div className={classes.content}>
+        <div className={classes.upper}>
+          <div className={classes.channels}>
+            <Channels
+              title="Open Channels"
+              hideIfEmpty={true}
+              canAdd={false}
+              prefix="@"
+              channels={channels.filter(
+                (channel: IChannel) => channel.order === 10
+              )}
+            />
+            <Channels
+              title="Rooms"
+              hideIfEmpty={false}
+              canAdd={true}
+              prefix="#"
+              channels={channels.filter(
+                (channel: IChannel) => channel.order === 20
+              )}
+            />
+            <Users
+              users={
+                channels.filter(
+                  (channel: IChannel) => channel.order === 30
+                ) as IUser[]
+              }
+            />
           </div>
-          <IconButton
-            disableRipple={true}
-            className={classes.iconButton}
-            onClick={() => toggleShowSettings()}
-          >
-            <SettingsIcon />
-          </IconButton>
+        </div>
+        <div className={classes.profile}>
+          <div className={classes.me}>
+            <div className={classes.groupItem}>
+              <Me />
+            </div>
+            <IconButton
+              disableRipple={true}
+              className={classes.iconButton}
+              onClick={() => toggleShowSettings()}
+            >
+              <SettingsIcon />
+            </IconButton>
+          </div>
         </div>
       </div>
     </div>
@@ -105,14 +107,24 @@ const SidebarLeft: FC = () => {
 
 const useStyles: any = makeStyles((theme: any) => ({
   root: {
+    flex: `0 0 ${theme.sidebarWidth}px`,
+    display: 'flex',
+    flexDirection: 'column',
+    width: theme.sidebarWidth,
+    backgroundColor: theme.palette.background.default,
+    overflowY: 'hidden',
+  },
+  content: {
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
+    overflowY: 'hidden',
   },
   upper: {
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
+    overflowY: 'hidden',
   },
   channels: {
     overflowY: 'auto',

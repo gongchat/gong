@@ -39,6 +39,10 @@ export const roomActions: any = {
         scrollPosition: -1,
         lastReadTimestamp: undefined,
         lastReadMessageId: '',
+        isSearching: false,
+        searchText: '',
+        searchOrder: 'newest',
+        searchResults: [],
       };
       const channels: IChannel[] = [...state.channels, room];
       ipcRenderer.send('xmpp-subscribe-to-room', roomJoin);
@@ -74,6 +78,10 @@ export const roomActions: any = {
           hasUnreadMentionMe: false,
           hasNoMoreLogs: undefined,
           scrollPosition: -1,
+          isSearching: false,
+          searchText: '',
+          searchOrder: 'newest',
+          searchResults: [],
         };
         return {
           ...state,
@@ -112,6 +120,10 @@ export const roomActions: any = {
           scrollPosition: -1,
           lastReadTimestamp: undefined,
           lastReadMessageId: '',
+          isSearching: false,
+          searchText: '',
+          searchOrder: 'newest',
+          searchResults: [],
         };
         const channels: IChannel[] = [
           ...state.channels.filter((c: IChannel) => c !== channel),
@@ -207,6 +219,10 @@ export const addSavedRoomsToChannels = (state: IState): IState => {
           scrollPosition: -1,
           lastReadTimestamp: moment(roomSaved.lastReadTimestamp),
           lastReadMessageId: roomSaved.lastReadMessageId,
+          isSearching: false,
+          searchText: '',
+          searchOrder: 'newest',
+          searchResults: [],
         };
         return room;
       }),

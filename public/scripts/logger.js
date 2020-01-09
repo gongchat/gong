@@ -108,6 +108,46 @@ class Logger {
       messages,
     });
   }
+
+  search(event, arg) {
+    const { user, jid, order, text } = arg;
+    const matchedMessages = [];
+    const logsElectronStore = new ElectronStore({
+      cwd: `logs/${user.split('/')[0]}/${jid}`,
+      name: 'index',
+    });
+    const logs = logsElectronStore.get('logs');
+    if (logs) {
+      let orderedLogs;
+      if (order === 'oldest') {
+        orderedLogs = logs;
+      } else {
+        orderedLogs = logs.reverse();
+      }
+      orderedLogs.forEach((log, index) => {
+        const messagesElectronStore = new ElectronStore({
+          cwd: `logs/${user.split('/')[0]}/${jid}`,
+          name: logs[index],
+        });
+        const messages = messagesElectronStore.get('messages');
+        let orderedMessages;
+        if (order === 'oldest') {
+          orderedMessages = messages;
+        } else {
+          orderedMessages = messages.reverse();
+        }
+        orderedMessages.forEach(message => {
+          if (message.body.toLowerCase().includes(text.toLowerCase())) {
+            matchedMessages.push(message);
+          }
+        });
+      });
+    }
+    event.sender.send('search-log', {
+      jid: arg.jid,
+      messages: matchedMessages,
+    });
+  }
 }
 
 const logger = new Logger();

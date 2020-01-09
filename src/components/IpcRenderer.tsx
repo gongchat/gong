@@ -57,6 +57,10 @@ const IpcRenderer: FC = () => {
     ipcRenderer.on('get-log', (event: any, arg: any) => {
       actions.setChannelLogs(arg);
     });
+
+    ipcRenderer.on('search-log', (event: any, arg: any) => {
+      actions.setSearchResults(arg);
+    });
   }, [actions]);
 
   return null;
