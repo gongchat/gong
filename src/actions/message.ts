@@ -27,7 +27,6 @@ export const messageActions: any = {
         const newState: IState = { ...state };
         const message: IMessage = {
           id: messageSend.id,
-          index: 0,
           channelName: messageSend.channelName,
           to: messageSend.to,
           from: messageSend.from,
@@ -134,7 +133,6 @@ export const messageActions: any = {
 
       const message: IMessage = {
         id: messageReceive.id,
-        index: 0,
         channelName,
         to: newState.settings.jid,
         from: messageReceive.from,
@@ -380,7 +378,6 @@ const updateChannel = (
         const newChannel: IChannel = {
           ...channel,
           inputText: '',
-          messageIndex: channel.messageIndex + 1,
           messages: [
             ...(message.isMe
               ? channel.messages.map((message: IMessage) => ({
@@ -388,7 +385,7 @@ const updateChannel = (
                   isRead: true,
                 }))
               : channel.messages),
-            { ...message, index: channel.messageIndex + 1 },
+            { ...message },
           ],
           unreadMessages: message.isMe
             ? 0
@@ -458,7 +455,6 @@ const addToOpenChannels = (
     jid: message.channelName,
     name: message.channelName,
     inputText: '',
-    messageIndex: 0,
     messages: [message],
     unreadMessages: message.isRead ? 1 : 0,
     hasUnreadMentionMe: message.isMentioningMe,

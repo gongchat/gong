@@ -315,7 +315,7 @@ const Messages: FC = () => {
           }
 
           const returnVal = (
-            <React.Fragment key={message.index}>
+            <React.Fragment key={index}>
               {showDate && (
                 <div className={classes.marker}>
                   <Typography className={classes.markerValue}>

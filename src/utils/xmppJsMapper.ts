@@ -22,7 +22,6 @@ export const mapToUsers = (jsXml: any): IUser[] => {
       status: 'offline',
       color: stringToHexColor(item.attrs.name),
       inputText: '',
-      messageIndex: 0,
       messages: [],
       unreadMessages: 0,
       hasUnreadMentionMe: false,
