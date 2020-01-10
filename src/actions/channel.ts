@@ -103,7 +103,7 @@ export const channelActions: any = {
         if (channel.jid === jid) {
           current = {
             ...channel,
-            isSearching: true,
+            isSearching: !!text,
             searchText: text,
             searchResults: [],
           };

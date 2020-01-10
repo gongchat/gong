@@ -12,10 +12,13 @@ import IMessage from '../../interfaces/IMessage';
 import IMessageUrl from '../../interfaces/IMessageUrl';
 import { EMOJIS, ASCII_EMOJI_MAP } from '../../utils/emojis';
 import { ALLOWED_TAGS, ALLOWED_ATTRIBUTES } from '../../utils/sanitizeConfig';
+import { getAbbreviation } from '../../utils/stringUtils';
 
 interface IProps {
   variant?: 'compact' | 'cozy';
   message: IMessage;
+  highlightWord?: string;
+  showAvatar: boolean;
   showTime: boolean;
   onMessageLoad: any;
   renderImages: boolean;
@@ -26,6 +29,8 @@ interface IProps {
 const Message: FC<IProps> = ({
   variant = 'compact',
   message,
+  highlightWord = '',
+  showAvatar,
   showTime,
   onMessageLoad,
   renderImages,
@@ -92,6 +97,18 @@ const Message: FC<IProps> = ({
   }, [body]);
 
   useLayoutEffect(() => {
+    // highlight any words
+    if (highlightWord) {
+      setMessageBody(formattedBody =>
+        formattedBody.replace(
+          new RegExp(highlightWord, 'ig'),
+          (word: string) => `<span class="highlight">${word}</span>`
+        )
+      );
+    }
+  }, [highlightWord]);
+
+  useLayoutEffect(() => {
     if (isBodyLoaded && isImagesLoaded && onMessageLoad) {
       onMessageLoad();
     }
@@ -133,9 +150,11 @@ const Message: FC<IProps> = ({
         </Typography>
       ) : (
         <div className={classes.cozy}>
-          <div className={classes.avatar}>
-            <Avatar />
-          </div>
+          {showAvatar && (
+            <div className={classes.avatar}>
+              <Avatar>{getAbbreviation(message.userNickname)}</Avatar>
+            </div>
+          )}
           <div>
             <Typography>
               <span
@@ -147,7 +166,7 @@ const Message: FC<IProps> = ({
               <span
                 className={[
                   'timestamp',
-                  classes.timestamp,
+                  [classes.timestamp, classes.cozyTimestamp].join(' '),
                   showTime ? classes.timestamp : classes.timestampHide,
                 ].join(' ')}
               >
@@ -156,7 +175,7 @@ const Message: FC<IProps> = ({
             </Typography>
             <Typography className={classes.message}>
               <span
-                className={[classes.body, isMe && classes.me].join(' ')}
+                className={[classes.body, isMe ? classes.me : ''].join(' ')}
                 dangerouslySetInnerHTML={{
                   __html: isMe ? `*${messageBody.substring(4)}*` : messageBody,
                 }}
@@ -264,16 +283,19 @@ const useStyles: any = makeStyles((theme: any): any => ({
   },
   timestamp: {
     color: theme.palette.text.secondary,
-    fontSize: '0.7rem',
     opacity: 0.5,
     whiteSpace: 'nowrap',
   },
   compactTimestamp: {
+    fontSize: '0.7rem',
     paddingRight: theme.spacing(),
     display: 'table-cell',
     flexShrink: 0,
     textAlign: 'right',
     width: '50px',
+  },
+  cozyTimestamp: {
+    fontSize: '0.8rem',
   },
   timestampHide: {
     opacity: 0,
@@ -304,6 +326,10 @@ const useStyles: any = makeStyles((theme: any): any => ({
     '& a': {
       color: theme.palette.primary.main,
       textDecoration: 'none',
+    },
+    '& .highlight': {
+      backgroundColor: fade(theme.palette.secondary.light, 0.25),
+      borderRadius: 3,
     },
   },
   compactBody: {
