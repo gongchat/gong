@@ -11,6 +11,12 @@ import { makeStyles } from '@material-ui/styles';
 import IMessage from '../../interfaces/IMessage';
 import IMessageUrl from '../../interfaces/IMessageUrl';
 import { EMOJIS, ASCII_EMOJI_MAP } from '../../utils/emojis';
+import {
+  getRegExpWithAt,
+  getHtmlWithAt,
+  getRegExpWithoutAt,
+  getHtmlWithoutAt,
+} from '../../utils/mentionUtils';
 import { ALLOWED_TAGS, ALLOWED_ATTRIBUTES } from '../../utils/sanitizeConfig';
 
 interface IProps {
@@ -61,6 +67,20 @@ const Message: FC<IProps> = ({
           allowedAttributes: ALLOWED_ATTRIBUTES,
         })
       : '';
+
+    // replace users
+    if (message.mentions.length > 0) {
+      message.mentions.forEach((mention: string) => {
+        formattedMessageBody = formattedMessageBody.replace(
+          getRegExpWithAt(mention),
+          getHtmlWithAt(isMe, mention)
+        );
+        formattedMessageBody = formattedMessageBody.replace(
+          getRegExpWithoutAt(mention),
+          getHtmlWithoutAt(isMe, mention)
+        );
+      });
+    }
 
     // replace any string emojis
     const matches = formattedMessageBody.match(/:([^:]*):/g);

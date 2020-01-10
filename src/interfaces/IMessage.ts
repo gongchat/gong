@@ -9,6 +9,7 @@ export default interface IMessage {
   from: string;
   body: string;
   urls: IMessageUrl[];
+  mentions: string[];
   timestamp: Moment;
   userNickname: string;
   color: string;
