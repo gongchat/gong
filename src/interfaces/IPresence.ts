@@ -3,7 +3,7 @@ export default interface IPresence {
   priority: number;
   status: string;
   user: string;
-  role: string;
+  role: 'moderator' | 'participant';
   affiliation: string;
   code: string;
 }
