@@ -201,20 +201,14 @@ export const channelActions: any = {
   },
   setChannelLogs({ channelJid, messages, hasNoMoreLogs }) {
     return (state: IState): IState => {
-      let messageIndex = 0;
-
       const channels = state.channels.map((c: IChannel) => {
         if (c.jid === channelJid) {
-          messageIndex = c.messageIndex + 1;
           messages.forEach((message: IMessage) => {
             message.timestamp = moment(message.timestamp);
             message.isRead = true;
-            message.index = messageIndex;
-            messageIndex++;
           });
           return {
             ...c,
-            messageIndex,
             messages:
               messages.length > 0 ? [...messages, ...c.messages] : c.messages,
             hasNoMoreLogs,
@@ -229,7 +223,6 @@ export const channelActions: any = {
         state.current && state.current.jid === channelJid
           ? {
               ...state.current,
-              messageIndex,
               messages:
                 messages.length > 0
                   ? [...messages, ...state.current.messages]
