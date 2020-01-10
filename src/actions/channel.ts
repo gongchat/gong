@@ -103,7 +103,7 @@ export const channelActions: any = {
         if (channel.jid === jid) {
           current = {
             ...channel,
-            isSearching: true,
+            isSearching: !!text,
             searchText: text,
             searchResults: [],
           };
@@ -122,7 +122,7 @@ export const channelActions: any = {
         state.current && state.current.jid === jid ? current : state.current,
     });
   },
-  setSearchOrder(jid: string, order: string) {
+  setSearchOrder(jid: string, order: 'newest' | 'oldest') {
     let current: IChannel;
     return (state: IState): IState => ({
       ...state,
@@ -276,7 +276,7 @@ export const saveRooms = (channels: IChannel[]) => {
         const roomSaved: IRoomSaved = {
           jid: room.jid,
           name: room.name,
-          type: room.type,
+          type: 'groupchat',
           nickname: room.myNickname,
           password: room.password,
           lastReadTimestamp: room.lastReadTimestamp,

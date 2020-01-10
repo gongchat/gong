@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { Redirect } from 'react-router';
 import { useContext } from '../../context';
 
@@ -108,6 +108,18 @@ const Settings: FC = () => {
       }
     }
   };
+
+  useEffect(() => {
+    const handleEsc = (event: any) => {
+      if (event.key === 'Escape' && isOpen) {
+        toggleShowSettings();
+      }
+    };
+    window.addEventListener('keydown', handleEsc, true); // TODO: why does useCapture have to be false?
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, [isOpen, toggleShowSettings]);
 
   if (goToLogin) {
     return <Redirect to="/login" />;
