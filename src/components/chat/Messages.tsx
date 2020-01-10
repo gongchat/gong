@@ -352,6 +352,7 @@ const Messages: FC = () => {
                 <Message
                   key={index}
                   message={message}
+                  showAvatar={false}
                   showTime={isStartOfGroup || showDate || showNewMessageMarker}
                   renderVideos={settings.renderVideos}
                   renderGetYarn={settings.renderGetYarn}

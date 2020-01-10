@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useRef } from 'react';
 import { useContext } from '../../context';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -35,6 +35,8 @@ const SearchResult: FC = () => {
     !current ? 0 : Math.ceil(current.searchResults.length / PAGE_SIZE)
   );
   const [currentPage, setCurrentPage] = useState(1);
+
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const handleOrderOnChange = (
     event: React.ChangeEvent<{}>,
@@ -79,6 +81,12 @@ const SearchResult: FC = () => {
     }
   }, [current, prevCurrent]);
 
+  useEffect(() => {
+    if (resultsRef.current) {
+      resultsRef.current.scrollTop = 0;
+    }
+  }, [currentPage]);
+
   return (
     <div className={classes.root}>
       {current && (
@@ -120,7 +128,7 @@ const SearchResult: FC = () => {
           </Tabs>
         </Toolbar>
       )}
-      <div className={classes.messages}>
+      <div ref={resultsRef} className={classes.messages}>
         {current &&
           !current.isSearching &&
           current.searchResults
@@ -129,6 +137,8 @@ const SearchResult: FC = () => {
               <Paper key={index} className={classes.message}>
                 <Message
                   variant="cozy"
+                  showAvatar={true}
+                  highlightWord={current.searchText}
                   key={index}
                   message={message}
                   showTime={true}
