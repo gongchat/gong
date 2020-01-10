@@ -15,12 +15,7 @@ import { handleOnMessage } from './notification';
 
 import { stringToHexColor } from '../utils/colorUtils';
 import { makeId } from '../utils/stringUtils';
-import {
-  getRegExpWithAt,
-  getRegExpWithoutAt,
-  getHtmlWithAt,
-  getHtmlWithoutAt,
-} from '../utils/mentionUtils';
+import { getRegExpWithAt, getRegExpWithoutAt } from '../utils/mentionUtils';
 
 const { ipcRenderer } = window.require('electron');
 
