@@ -51,7 +51,7 @@ const Message: FC<IProps> = ({
   const [isImagesLoaded, setIsImagesLoaded] = useState(
     numberOfImages.current === 0
   );
-  const { body } = message;
+  const { body, mentions } = message;
 
   const onMediaLoad = () => {
     numberOfLoadedImages.current++;
@@ -69,8 +69,8 @@ const Message: FC<IProps> = ({
       : '';
 
     // replace users
-    if (message.mentions.length > 0) {
-      message.mentions.forEach((mention: string) => {
+    if (mentions && mentions.length > 0) {
+      mentions.forEach((mention: string) => {
         formattedMessageBody = formattedMessageBody.replace(
           getRegExpWithAt(mention),
           getHtmlWithAt(isMe, mention)
@@ -109,7 +109,7 @@ const Message: FC<IProps> = ({
     setMessageBody(formattedMessageBody);
     setIsMe(body && body.startsWith('/me ') ? true : false);
     setIsBodyLoaded(true);
-  }, [body]);
+  }, [body, mentions, isMe]);
 
   useLayoutEffect(() => {
     if (isBodyLoaded && isImagesLoaded && onMessageLoad) {
