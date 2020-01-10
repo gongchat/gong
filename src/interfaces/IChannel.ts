@@ -1,7 +1,7 @@
 import IMessage from './IMessage';
 
 export default interface IChannel {
-  type: string; // chat, groupchat
+  type: 'chat' | 'groupchat';
   order: number; // open - 10, rooms - 20, roster - 30
   jid: string;
   name: string;
@@ -15,6 +15,6 @@ export default interface IChannel {
 
   isSearching: boolean;
   searchText: string;
-  searchOrder: string; // newest, oldest
+  searchOrder: 'newest' | 'oldest';
   searchResults: IMessage[];
 }
