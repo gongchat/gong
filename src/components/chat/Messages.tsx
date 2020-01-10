@@ -119,10 +119,7 @@ const Messages: FC = () => {
         // handle initial scroll positions on new channel
         if (newMessageMarkerRef.current) {
           // if the new message marker is present
-          rootRef.current.scrollTop =
-            rootRef.current.scrollHeight +
-            newMessageMarkerRef.current.offsetTop -
-            rootRef.current.clientHeight;
+          rootRef.current.scrollTop = newMessageMarkerRef.current.offsetTop;
         } else if (current && current.scrollPosition !== -1) {
           // if there is a saved scroll position
           rootRef.current.scrollTop = current.scrollPosition;
