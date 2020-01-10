@@ -13,7 +13,7 @@ export default interface IVCard {
   role: string;
   phoneNumber: string;
   street: string;
-  streetExtended: string; // apt, suite, etc
+  streetExtended: string;
   city: string; // locality
   state: string; // region
   zipCode: string;

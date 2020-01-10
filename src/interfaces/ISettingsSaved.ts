@@ -8,13 +8,13 @@ export default interface ISettingsSaved {
 
   minimizeToTrayOnClose: boolean;
 
-  systemNotificationOnGroupchat: string; // always, unread, never
-  systemNotificationOnMentionMe: string; // always, unread, never
-  systemNotificationOnChat: string; // always, unread, never
+  systemNotificationOnGroupchat: 'always' | 'unread' | 'never';
+  systemNotificationOnMentionMe: 'always' | 'unread' | 'never';
+  systemNotificationOnChat: 'always' | 'unread' | 'never';
 
-  flashFrameOnGroupchat: string; // unread, never
-  flashFrameOnMentionMe: string; // unread, never
-  flashFrameOnChat: string; // unread, never
+  flashFrameOnGroupchat: 'unread' | 'never';
+  flashFrameOnMentionMe: 'unread' | 'never';
+  flashFrameOnChat: 'unread' | 'never';
 
   renderVideos: boolean;
   renderGetYarn: boolean;
@@ -22,13 +22,14 @@ export default interface ISettingsSaved {
 
   soundName: string;
   soundVolume: number;
-  playAudioOnGroupchat: string; // always, unread, never
-  playAudioOnChat: string; // always, unread, never
-  playAudioOnMentionMe: string; // always, unread, never
-  flashMenuBarOnGroupchat: string; // always, unread, never
-  flashMenuBarOnGroupchatFrequency: string; // once, repeat, never
-  flashMenuBarOnMentionMe: string; // always, unread, never
-  flashMenuBarOnMentionMeFrequency: string; // once, repeat, never
-  flashMenuBarOnChat: string; // once, repeat, never
-  flashMenuBarOnChatFrequency: string; // once, repeat, never
+  playAudioOnGroupchat: 'always' | 'unread' | 'never';
+  playAudioOnChat: 'always' | 'unread' | 'never';
+  playAudioOnMentionMe: 'always' | 'unread' | 'never';
+
+  flashMenuBarOnGroupchat: 'always' | 'unread' | 'never';
+  flashMenuBarOnGroupchatFrequency: 'once' | 'repeat' | 'never';
+  flashMenuBarOnMentionMe: 'always' | 'unread' | 'never';
+  flashMenuBarOnMentionMeFrequency: 'once' | 'repeat' | 'never';
+  flashMenuBarOnChat: 'always' | 'unread' | 'never';
+  flashMenuBarOnChatFrequency: 'once' | 'repeat' | 'never';
 }
