@@ -15,6 +15,7 @@ import { handleOnMessage } from './notification';
 
 import { stringToHexColor } from '../utils/colorUtils';
 import { makeId } from '../utils/stringUtils';
+import { getRegExpWithAt, getRegExpWithoutAt } from '../utils/mentionUtils';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -27,12 +28,12 @@ export const messageActions: any = {
         const newState: IState = { ...state };
         const message: IMessage = {
           id: messageSend.id,
-          index: 0,
           channelName: messageSend.channelName,
           to: messageSend.to,
           from: messageSend.from,
           body: messageSend.body,
           urls: [],
+          mentions: [],
           timestamp: moment(),
           userNickname:
             newState.profile.vCard && newState.profile.vCard.fullName
@@ -134,12 +135,12 @@ export const messageActions: any = {
 
       const message: IMessage = {
         id: messageReceive.id,
-        index: 0,
         channelName,
         to: newState.settings.jid,
         from: messageReceive.from,
         body: messageReceive.body,
         urls: [],
+        mentions: [],
         timestamp: messageReceive.timestamp,
         isMe: false,
         isRead: false,
@@ -217,36 +218,17 @@ const processMessage = (
     channelUsers.forEach((user: IChannelUser) => {
       const isMe = user.nickname === myChannelNickname;
 
-      // handle mentions with @
-      const htmlWithAt = `<span class="${isMe ? 'mention-me' : 'mention'}">@${
-        user.nickname
-      }</span>`;
-      const regExpWithAt = new RegExp(`@${user.nickname}\\b`, 'gi');
+      const isMentioned =
+        getRegExpWithAt(user.nickname).test(formattedMessage) ||
+        getRegExpWithoutAt(user.nickname).test(formattedMessage);
 
-      // handle mentions without @
-      const htmlWithoutAt = `<span class="${isMe ? 'mention-me' : 'mention'}">${
-        user.nickname
-      }</span>`;
-      const regExpWithoutAt = new RegExp(
-        // TODO: test@test matches, should not match so emails get generated properly
-        `(?<=[^a-zA-Z0-9@]|\\s|^)${user.nickname}(?=\\W|\\s+|$)(?=[^@]|$)`,
-        'gi'
-      );
-
-      // if mentioned me
-      message.isMentioningMe =
-        message.isMentioningMe ||
-        ((regExpWithAt.test(formattedMessage) ||
-          regExpWithoutAt.test(formattedMessage)) &&
-          !message.isHistory &&
-          isMe);
-
-      // replace all the things
-      formattedMessage = formattedMessage.replace(regExpWithAt, htmlWithAt);
-      formattedMessage = formattedMessage.replace(
-        regExpWithoutAt,
-        htmlWithoutAt
-      );
+      if (isMentioned) {
+        // if mentioned
+        message.mentions.push(user.nickname);
+        // if mentioned me
+        message.isMentioningMe =
+          message.isMentioningMe || (!message.isHistory && isMe);
+      }
     });
 
     // handle new lines
@@ -380,7 +362,6 @@ const updateChannel = (
         const newChannel: IChannel = {
           ...channel,
           inputText: '',
-          messageIndex: channel.messageIndex + 1,
           messages: [
             ...(message.isMe
               ? channel.messages.map((message: IMessage) => ({
@@ -388,7 +369,7 @@ const updateChannel = (
                   isRead: true,
                 }))
               : channel.messages),
-            { ...message, index: channel.messageIndex + 1 },
+            { ...message },
           ],
           unreadMessages: message.isMe
             ? 0
@@ -458,7 +439,6 @@ const addToOpenChannels = (
     jid: message.channelName,
     name: message.channelName,
     inputText: '',
-    messageIndex: 0,
     messages: [message],
     unreadMessages: message.isRead ? 1 : 0,
     hasUnreadMentionMe: message.isMentioningMe,
