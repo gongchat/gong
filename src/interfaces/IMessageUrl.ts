@@ -1,4 +1,4 @@
 export default interface IMessageUrl {
-  type: string;
+  type: 'image' | 'video' | 'getyarn';
   url: string;
 }

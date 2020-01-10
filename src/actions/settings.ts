@@ -92,6 +92,7 @@ export const mapSettingsSavedToSettings = (
     playAudioOnGroupchat: settings.playAudioOnGroupchat,
     playAudioOnChat: settings.playAudioOnChat,
     playAudioOnMentionMe:
+      //@ts-ignore for backwards compatibility
       settings.playAudioOnMentionMe === 'all'
         ? 'always'
         : settings.playAudioOnMentionMe,
@@ -99,19 +100,25 @@ export const mapSettingsSavedToSettings = (
     flashFrameOnGroupchat:
       settings.flashFrameOnGroupchat === undefined
         ? DEFAULT.flashFrameOnGroupchat
-        : settings.flashFrameOnGroupchat === 'always'
+        : //
+        //@ts-ignore for backwards compatibility
+        settings.flashFrameOnGroupchat === 'always'
         ? 'unread'
         : settings.flashFrameOnGroupchat,
     flashFrameOnChat:
       settings.flashFrameOnChat === undefined
         ? DEFAULT.flashFrameOnChat
-        : settings.flashFrameOnChat === 'always'
+        : //
+        //@ts-ignore for backwards compatibility
+        settings.flashFrameOnChat === 'always'
         ? 'unread'
         : settings.flashFrameOnChat,
     flashFrameOnMentionMe:
       settings.flashFrameOnMentionMe === undefined
         ? DEFAULT.flashFrameOnMentionMe
-        : settings.flashFrameOnMentionMe === 'always'
+        : //
+        //@ts-ignore for backwards compatibility
+        settings.flashFrameOnMentionMe === 'always'
         ? 'unread'
         : settings.flashFrameOnMentionMe,
     // flash menu bar
