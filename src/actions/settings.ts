@@ -46,6 +46,15 @@ export const settingsActions: any = {
       },
     });
   },
+  setShowSettings(value: boolean) {
+    return (state: IState): IState => ({
+      ...state,
+      settings: {
+        ...state.settings,
+        isOpen: value,
+      },
+    });
+  },
   setAndSaveSettings(settings: any) {
     return (state: IState): IState => {
       let savedSettings: ISettingsSaved = electronStore.get('settings');
