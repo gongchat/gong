@@ -60,4 +60,4 @@ The location of the `config.json` file is different depending on your operating 
   - For Windows run `.\node_modules\.bin\electron-rebuild`.
   - For Linux run `./node_modules/.bin/electron-rebuild`.
 - Sometimes your cached version of the application can cause issues. This will also delete your current Gong configuration.
-  - For WIndows delete the folder `C:/Users/<username>/AppData/Roaming/gong`.
+  - For Windows delete the folder `C:/Users/<username>/AppData/Roaming/gong`.
