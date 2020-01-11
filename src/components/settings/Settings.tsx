@@ -52,7 +52,10 @@ const TABS = [
 
 const Settings: FC = () => {
   const classes = useStyles();
-  const [{ settings, app }, { toggleShowSettings, logOff }] = useContext();
+  const [
+    { settings, app },
+    { toggleShowSettings, setShowSettings, logOff },
+  ] = useContext();
   const { isOpen } = settings;
   const [goToLogin, setGoToLogin] = useState(false);
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
@@ -111,15 +114,15 @@ const Settings: FC = () => {
 
   useEffect(() => {
     const handleEsc = (event: any) => {
-      if (event.key === 'Escape' && isOpen) {
-        toggleShowSettings();
+      if (event.key === 'Escape') {
+        setShowSettings(false);
       }
     };
     window.addEventListener('keydown', handleEsc, true); // TODO: why does useCapture have to be false?
     return () => {
       window.removeEventListener('keydown', handleEsc);
     };
-  }, [isOpen, toggleShowSettings]);
+  }, [setShowSettings]);
 
   if (goToLogin) {
     return <Redirect to="/login" />;
