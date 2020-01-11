@@ -26,6 +26,7 @@ export const INITIAL_STATE: IState = {
     hasUpdate: undefined,
     isCheckingForUpdate: false,
     isUpdateDownloaded: false,
+    isAutoUpdateError: false,
     lastDateTimeUpdatedChecked: undefined,
   },
   connection: {

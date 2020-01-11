@@ -6,7 +6,9 @@ import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Link from '@material-ui/core/Link';
 import Switch from '@material-ui/core/Switch';
+import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
 import CheckIcon from '@material-ui/icons/CheckCircle';
@@ -16,8 +18,6 @@ import NewReleasesIcon from '@material-ui/icons/NewReleases';
 import BasePage from './BasePage';
 import BaseSection from './BaseSection';
 import { DEFAULT as DEFAULT_SETTINGS } from '../../actions/settings';
-import { Typography } from '@material-ui/core/Typography';
-import { Link } from '@material-ui/core';
 
 const System: FC = () => {
   const classes = useStyles();
@@ -120,13 +120,15 @@ const System: FC = () => {
           )}
           {app.isAutoUpdateError && (
             <Typography>
-              Please update manually:
+              Please check{' '}
               <Link href="https://github.com/gongchat/gong/releases/latest/">
                 GitHub
-              </Link>
+              </Link>{' '}
+              or the{' '}
               <Link href="https://gongchat.github.io/download/">
                 Official Site
-              </Link>
+              </Link>{' '}
+              for any updates.
             </Typography>
           )}
         </div>
