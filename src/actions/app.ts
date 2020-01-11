@@ -26,6 +26,7 @@ export const appActions: any = {
         hasUpdate: undefined,
         isCheckingForUpdate: true,
         isUpdateDownloaded: false,
+        isAutoUpdateError: false,
         lastDateTimeUpdatedChecked: undefined,
       },
     });

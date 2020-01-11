@@ -6,5 +6,6 @@ export default interface IApp {
   hasUpdate: boolean | undefined;
   isCheckingForUpdate: boolean;
   isUpdateDownloaded: boolean;
+  isAutoUpdateError: boolean;
   lastDateTimeUpdatedChecked: Moment | undefined;
 }
