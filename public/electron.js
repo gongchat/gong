@@ -194,6 +194,7 @@ autoUpdater.on('update-available', (ev, info) => {
     hasUpdate: true,
     isCheckingForUpdate: false,
     isUpdateDownloaded: false,
+    isAutoUpdateError: false,
     lastDateTimeUpdatedChecked: new Date(),
   });
 });
@@ -202,17 +203,26 @@ autoUpdater.on('update-not-available', (ev, info) => {
     hasUpdate: false,
     isCheckingForUpdate: false,
     isUpdateDownloaded: false,
+    isAutoUpdateError: false,
     lastDateTimeUpdatedChecked: new Date(),
   });
 });
 autoUpdater.on('error', (event, error) => {
-  log.error('Auto update error'); // TODO: setup a messaging system
+  log.error('Auto update error');
+  mainWindow.webContents.send('app-set', {
+    hasUpdate: undefined,
+    isCheckingForUpdate: false,
+    isUpdateDownloaded: false,
+    isAutoUpdateError: true,
+    lastDateTimeUpdatedChecked: new Date(),
+  });
 });
 autoUpdater.on('update-downloaded', (event, info) => {
   mainWindow.webContents.send('app-set', {
     hasUpdate: true,
     isCheckingForUpdate: false,
     isUpdateDownloaded: true,
+    isAutoUpdateError: false,
   });
 });
 
@@ -222,6 +232,7 @@ app.on('ready', () => {
     hasUpdate: undefined,
     isCheckingForUpdate: true,
     isUpdateDownloaded: false,
+    isAutoUpdateError: false,
   });
   autoUpdater.checkForUpdates();
 });
