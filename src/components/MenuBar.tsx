@@ -87,7 +87,9 @@ const MenuBar: FC<IProps> = ({ showOffline }: IProps) => {
         <div className={classes.text}>
           <Typography>Gong</Typography>
           {!connection.isConnected && showOffline && (
-            <Typography variant="caption">offline</Typography>
+            <Typography variant="caption" color="error">
+              offline
+            </Typography>
           )}
           {countOfUnreadMessages > 0 && (
             <Typography variant="caption">

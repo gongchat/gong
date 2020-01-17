@@ -5,6 +5,7 @@ import {
   DEFAULT as DEFAULT_SETTINGS,
 } from './settings';
 import { INITIAL_STATE } from '../context';
+import IChannel from '../interfaces/IChannel';
 import IConnection from '../interfaces/IConnection';
 import ICredentials from '../interfaces/ICredentials';
 import IProfile from '../interfaces/IProfile';
@@ -177,6 +178,19 @@ export const connectionActions: any = {
         return { ...INITIAL_STATE };
       }
 
+      // handle rooms
+      const channels = state.channels.map((channel: IChannel) => {
+        if (channel.type === 'groupchat') {
+          return {
+            ...channel,
+            isConnecting: false,
+            isConnected: false,
+          };
+        } else {
+          return channel;
+        }
+      });
+
       return {
         ...state,
         connection: {
@@ -189,6 +203,7 @@ export const connectionActions: any = {
           ...state.notifications,
           snackbar,
         },
+        channels,
       };
     };
   },
