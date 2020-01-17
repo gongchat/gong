@@ -33,6 +33,14 @@
       font-family: sans-serif;
     }
   </style>
+  <script>
+    const log = window.require('electron-log');
+    window.onerror((error) => {
+      if (log) {
+        log.error(error);
+      }
+    });
+  </script>
 </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

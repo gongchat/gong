@@ -1,3 +1,4 @@
+const log = require('electron-log');
 const ElectronStore = require('electron-store');
 const CryptoJS = require('crypto-js');
 const keytar = require('keytar');
@@ -24,6 +25,7 @@ class XmppJsClient {
   //
   async killConnection() {
     if (this.xmpp) {
+      log.info('Killing XMPP connection');
       await this.xmpp.stop();
       this.xmpp.removeAllListeners();
       this.xmpp = null;
@@ -55,6 +57,8 @@ class XmppJsClient {
   }
 
   async createConnection(event, credentials, key, settings) {
+    log.info(`XMPP is attempting to connect to ${credentials.domain}`);
+
     this.xmpp = client({
       service: `xmpp://${credentials.domain}:${credentials.port}`,
       domain: credentials.domain,
@@ -74,6 +78,8 @@ class XmppJsClient {
 
   attachEvents(event, credentials, key, settings) {
     this.xmpp.on('error', async err => {
+      log.info(`XMPP error: ${err}`);
+
       let stopClient = false;
 
       if (!err.code) {
@@ -129,7 +135,9 @@ class XmppJsClient {
     });
 
     this.xmpp.on('online', jid => {
+      log.info(`XMPP has connected to ${jid}`);
       console.log('ONLINE:', jid.toString());
+
       this.sendGetInfo(event, credentials.domain);
 
       if (settings) {
@@ -158,6 +166,10 @@ class XmppJsClient {
         port: credentials.port,
         password: credentials.password,
       });
+    });
+
+    this.xmpp.on('offline', () => {
+      log.info('XMPP is offline');
     });
 
     this.xmpp.on('stanza', stanzaXml => {
@@ -219,7 +231,6 @@ class XmppJsClient {
         (stanza.children[1] && stanza.children[1].name === 'body')
       ) {
         // message
-        const body = stanza.children.find(child => child.name === 'body');
         event.sender.send('xmpp-reply', stanza);
       } else if (stanza.children[1]) {
         // TODO: not sure if this is only when user is done typing?
@@ -434,6 +445,8 @@ class XmppJsClient {
   //
   async sendSubscribe(jid, nickname, password) {
     if (this.xmpp && this.xmpp.status === 'online') {
+      log.info(`XMPP is sending a subscribe request to ${jid}`);
+
       if (password) {
         await this.xmpp.send(
           xml(
@@ -466,6 +479,8 @@ class XmppJsClient {
           )
         );
       }
+    } else {
+      log.error(`XMPP is offline, but tried to subscribe to ${jid}`);
     }
   }
 
