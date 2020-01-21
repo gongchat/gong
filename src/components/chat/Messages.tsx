@@ -83,6 +83,7 @@ const Messages: FC = () => {
   }
 
   const updateScrollPosition = () => {
+    console.log('updaing the scroll position');
     if (rootRef.current && current) {
       if (hasUpdatedScrollOnNewChannel.current) {
         // handle new messages
@@ -97,6 +98,7 @@ const Messages: FC = () => {
           rootRef.current.offsetHeight !== rootRef.current.scrollHeight
         ) {
           // if update is from logged messages
+          console.log('updaing the scroll position, logged messages');
           rootRef.current.scrollTop =
             rootRef.current.scrollHeight -
             scrollPositionBeforeGettingLogs.current;
@@ -106,12 +108,12 @@ const Messages: FC = () => {
           current.messages[current.messages.length - 1].isMe
         ) {
           // if update is from me
+          console.log('updaing the scroll position, from me');
           rootRef.current.scrollTop =
             rootRef.current.scrollHeight + rootRef.current.offsetHeight;
         } else if (wasAtBottom.current) {
-          // if at bottom stay at bottom, this should be handled by the
-          // flex-direction column-reverse, but there are edge cases where it
-          // does not always work
+          // if at bottom stay at bottom
+          console.log('updaing the scroll position, stay at bottom');
           rootRef.current.scrollTop =
             rootRef.current.scrollHeight + rootRef.current.offsetHeight;
         }
@@ -119,12 +121,15 @@ const Messages: FC = () => {
         // handle initial scroll positions on new channel
         if (newMessageMarkerRef.current) {
           // if the new message marker is present
+          console.log('updaing the scroll position, new message marker');
           rootRef.current.scrollTop = newMessageMarkerRef.current.offsetTop;
         } else if (current && current.scrollPosition !== -1) {
           // if there is a saved scroll position
+          console.log('updaing the scroll position, saved scroll position');
           rootRef.current.scrollTop = current.scrollPosition;
         } else {
           // if no scroll position matching, scroll to bottom
+          console.log('updaing the scroll position, default to the bottom');
           rootRef.current.scrollTop =
             rootRef.current.scrollHeight + rootRef.current.offsetHeight;
         }
@@ -164,6 +169,7 @@ const Messages: FC = () => {
 
     if (numberOfLoadedMessages >= numberOfMessages) {
       setTimeout(() => {
+        console.log('messages have loaded');
         updateScrollPosition();
         // need to include in setTimeout so scroll event occurs before the updates below
         setTimeout(() => {
@@ -184,6 +190,7 @@ const Messages: FC = () => {
     ) {
       // check if should get logged messages
       if (rootRef.current.scrollTop === 0 && !current.hasNoMoreLogs) {
+        console.log('loading, getting logged messages');
         rootRef.current.style.opacity = '0';
         isLoading.current = true;
         scrollPositionBeforeGettingLogs.current = rootRef.current.scrollHeight;
@@ -196,6 +203,7 @@ const Messages: FC = () => {
         Math.ceil(rootRef.current.scrollTop + rootRef.current.offsetHeight) >=
           rootRef.current.scrollHeight
       ) {
+        console.log('loading, trimming messages');
         trimOldMessages(current.jid);
       }
     }
@@ -221,6 +229,8 @@ const Messages: FC = () => {
             Math.ceil(event.target.scrollTop + event.target.offsetHeight) >=
             event.target.scrollHeight
           ) {
+            console.log('at the bottom');
+
             // handle trimming of messages
             if (current.messages.length >= TRIM_AT) {
               trimOldMessages(current.jid);
