@@ -18,6 +18,7 @@ class XmppJsClient {
   constructor() {
     this.xmpp = null;
     this.credentials = null;
+    this.pingInterval = null;
   }
 
   //
@@ -166,6 +167,15 @@ class XmppJsClient {
         port: credentials.port,
         password: credentials.password,
       });
+
+      // ping it
+      clearInterval(this.pingInterval);
+      this.pingInterval = setInterval(() => {
+        console.log('interval', this.pingInterval);
+        if (this.xmpp && this.xmpp.status === 'online') {
+          this.sendPing();
+        }
+      }, 10000);
     });
 
     this.xmpp.on('offline', () => {
@@ -312,6 +322,23 @@ class XmppJsClient {
       } else {
         event.sender.send('xmpp-discover-sub-level-items', response);
       }
+    }
+  }
+
+  async sendPing() {
+    if (this.xmpp && this.xmpp.status === 'online') {
+      return await this.xmpp.iqCaller.request(
+        xml(
+          'iq',
+          {
+            from: this.credentials.jid,
+            to: this.credentials.domain,
+            id: makeId(7),
+            type: 'get',
+          },
+          xml('ping', { xmlns: 'urn:xmpp:ping' })
+        )
+      );
     }
   }
 
