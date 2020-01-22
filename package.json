@@ -118,7 +118,8 @@
         "AppImage",
         "deb"
       ],
-      "icon": "build/icons/"
+      "icon": "build/icons/",
+      "category": "Chat"
     },
     "mac": {
       "icon": "build/icons/"
