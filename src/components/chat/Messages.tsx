@@ -347,6 +347,7 @@ const Messages: FC = () => {
                 ].join(' ')}
               >
                 <Message
+                  channel={current}
                   message={message}
                   showAvatar={false}
                   showTime={isStartOfGroup || showDate || showNewMessageMarker}
