@@ -347,7 +347,8 @@ const Messages: FC = () => {
                 ].join(' ')}
               >
                 <Message
-                  key={index}
+                  key={message.id + '-' + index}
+                  channel={current}
                   message={message}
                   showAvatar={false}
                   showTime={isStartOfGroup || showDate || showNewMessageMarker}
