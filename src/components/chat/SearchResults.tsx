@@ -139,7 +139,7 @@ const SearchResult: FC = () => {
                   variant="cozy"
                   showAvatar={true}
                   highlightWord={current.searchText}
-                  key={index}
+                  key={message.id + '-' + index}
                   message={message}
                   showTime={true}
                   renderVideos={false}
