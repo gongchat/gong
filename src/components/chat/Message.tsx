@@ -130,7 +130,14 @@ const Message: FC<IProps> = ({
     setMessageBody(formattedMessageBody);
     setIsMe(body && body.startsWith('/me ') ? true : false);
     setIsBodyLoaded(true);
-  }, [body, mentions, isMe]);
+  }, [
+    body,
+    mentions,
+    isMe,
+    channel,
+    message.isMentioningMe,
+    message.myNickname,
+  ]);
 
   useLayoutEffect(() => {
     // highlight any words
