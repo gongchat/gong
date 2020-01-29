@@ -58,7 +58,7 @@ const Channels: FC<IProps> = ({
             )
             .map((channel: IChannel, index: number) => (
               <Channel
-                key={index}
+                key={channel.jid + '-' + index}
                 prefix={prefix}
                 channel={channel as IRoom}
                 isSelected={current && current.jid === channel.jid}
@@ -70,7 +70,7 @@ const Channels: FC<IProps> = ({
             .sort((a: IChannel, b: IChannel) => a.name.localeCompare(b.name))
             .map((channel: IChannel, index: number) => (
               <Channel
-                key={index}
+                key={channel.jid + '-' + index}
                 prefix={prefix}
                 channel={channel as IRoom}
                 isSelected={current && current.jid === channel.jid}
@@ -81,7 +81,7 @@ const Channels: FC<IProps> = ({
             .sort((a: IChannel, b: IChannel) => a.name.localeCompare(b.name))
             .map((channel: IChannel, index: number) => (
               <Channel
-                key={index}
+                key={channel.jid + '-' + index}
                 prefix={prefix}
                 channel={channel as IRoom}
                 isSelected={current && current.jid === channel.jid}

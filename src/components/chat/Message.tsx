@@ -233,7 +233,10 @@ const Message: FC<IProps> = ({
             message.urls
               .filter((url: IMessageUrl) => url.type === 'video')
               .map((url: IMessageUrl, index: number) => (
-                <div key={index} className={classes.video}>
+                <div
+                  key={message.id + '-video-' + index}
+                  className={classes.video}
+                >
                   <ReactPlayer
                     url={url.url}
                     width={500}
@@ -249,7 +252,10 @@ const Message: FC<IProps> = ({
                 const values = url.url.split('/');
                 if (values.length >= 3) {
                   return (
-                    <div key={index} className={classes.getYarn}>
+                    <div
+                      key={message.id + '-getyarn-' + index}
+                      className={classes.getYarn}
+                    >
                       <iframe
                         title="get yarn clip"
                         width={500}
@@ -268,7 +274,10 @@ const Message: FC<IProps> = ({
               .map((url: IMessageUrl, index: number) => {
                 if (url.url.toLowerCase().endsWith('.gifv')) {
                   return (
-                    <div key={index} className={classes.gifv}>
+                    <div
+                      key={message.id + '-gifv-' + index}
+                      className={classes.gifv}
+                    >
                       <video
                         preload="auto"
                         autoPlay={true}
@@ -284,7 +293,10 @@ const Message: FC<IProps> = ({
                   );
                 } else {
                   return (
-                    <div key={index} className={classes.image}>
+                    <div
+                      key={message.id + '-image-' + index}
+                      className={classes.image}
+                    >
                       <img
                         alt="shared"
                         src={url.url}
