@@ -26,6 +26,10 @@ export const messageActions: any = {
 
       if (state.current && state.current.type === 'chat') {
         const newState: IState = { ...state };
+        const nickname =
+          newState.profile.vCard && newState.profile.vCard.fullName
+            ? newState.profile.vCard.fullName
+            : newState.profile.username;
         const message: IMessage = {
           id: messageSend.id,
           channelName: messageSend.channelName,
@@ -35,10 +39,8 @@ export const messageActions: any = {
           urls: [],
           mentions: [],
           timestamp: moment(),
-          userNickname:
-            newState.profile.vCard && newState.profile.vCard.fullName
-              ? newState.profile.vCard.fullName
-              : newState.profile.username,
+          userNickname: nickname,
+          myNickname: nickname,
           color: newState.profile.color,
           isMe: true,
           isRead: true,
@@ -147,6 +149,7 @@ export const messageActions: any = {
         isHistory: messageReceive.isHistory,
         isMentioningMe: false,
         userNickname,
+        myNickname: myChannelNickname,
         color,
       };
 
@@ -216,7 +219,7 @@ const processMessage = (
 
     // handle mentions this only applies to IRoom
     channelUsers.forEach((user: IChannelUser) => {
-      const isMe = user.nickname === myChannelNickname;
+      const isMentioningMe = user.nickname === myChannelNickname;
 
       const isMentioned =
         getRegExpWithAt(user.nickname).test(formattedMessage) ||
@@ -226,8 +229,7 @@ const processMessage = (
         // if mentioned
         message.mentions.push(user.nickname);
         // if mentioned me
-        message.isMentioningMe =
-          message.isMentioningMe || (!message.isHistory && isMe);
+        message.isMentioningMe = message.isMentioningMe || isMentioningMe;
       }
     });
 

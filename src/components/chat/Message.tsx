@@ -8,8 +8,11 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
+import IChannel from '../../interfaces/IChannel';
 import IMessage from '../../interfaces/IMessage';
 import IMessageUrl from '../../interfaces/IMessageUrl';
+import IRoom from '../../interfaces/IRoom';
+
 import { EMOJIS, ASCII_EMOJI_MAP } from '../../utils/emojis';
 import {
   getRegExpWithAt,
@@ -22,6 +25,7 @@ import { getAbbreviation } from '../../utils/stringUtils';
 
 interface IProps {
   variant?: 'compact' | 'cozy';
+  channel?: IChannel;
   message: IMessage;
   highlightWord?: string;
   showAvatar: boolean;
@@ -34,6 +38,7 @@ interface IProps {
 
 const Message: FC<IProps> = ({
   variant = 'compact',
+  channel,
   message,
   highlightWord = '',
   showAvatar,
@@ -76,13 +81,24 @@ const Message: FC<IProps> = ({
     // replace users
     if (mentions && mentions.length > 0) {
       mentions.forEach((mention: string) => {
+        const checkMentionMe2 =
+          message.myNickname !== null &&
+          message.myNickname !== undefined &&
+          message.myNickname === mention;
+        const checkMentionMe1 =
+          (message.myNickname === null || message.myNickname === undefined) &&
+          !!channel &&
+          channel.type === 'groupchat' &&
+          (channel as IRoom).myNickname === mention;
+        const isMentioningMe =
+          message.isMentioningMe && (checkMentionMe2 || checkMentionMe1);
         formattedMessageBody = formattedMessageBody.replace(
           getRegExpWithAt(mention),
-          getHtmlWithAt(isMe, mention)
+          getHtmlWithAt(isMentioningMe, mention)
         );
         formattedMessageBody = formattedMessageBody.replace(
           getRegExpWithoutAt(mention),
-          getHtmlWithoutAt(isMe, mention)
+          getHtmlWithoutAt(isMentioningMe, mention)
         );
       });
     }
@@ -114,7 +130,14 @@ const Message: FC<IProps> = ({
     setMessageBody(formattedMessageBody);
     setIsMe(body && body.startsWith('/me ') ? true : false);
     setIsBodyLoaded(true);
-  }, [body, mentions, isMe]);
+  }, [
+    body,
+    mentions,
+    isMe,
+    channel,
+    message.isMentioningMe,
+    message.myNickname,
+  ]);
 
   useLayoutEffect(() => {
     // highlight any words
@@ -210,7 +233,10 @@ const Message: FC<IProps> = ({
             message.urls
               .filter((url: IMessageUrl) => url.type === 'video')
               .map((url: IMessageUrl, index: number) => (
-                <div key={index} className={classes.video}>
+                <div
+                  key={message.id + '-video-' + index}
+                  className={classes.video}
+                >
                   <ReactPlayer
                     url={url.url}
                     width={500}
@@ -226,7 +252,10 @@ const Message: FC<IProps> = ({
                 const values = url.url.split('/');
                 if (values.length >= 3) {
                   return (
-                    <div key={index} className={classes.getYarn}>
+                    <div
+                      key={message.id + '-getyarn-' + index}
+                      className={classes.getYarn}
+                    >
                       <iframe
                         title="get yarn clip"
                         width={500}
@@ -245,7 +274,10 @@ const Message: FC<IProps> = ({
               .map((url: IMessageUrl, index: number) => {
                 if (url.url.toLowerCase().endsWith('.gifv')) {
                   return (
-                    <div key={index} className={classes.gifv}>
+                    <div
+                      key={message.id + '-gifv-' + index}
+                      className={classes.gifv}
+                    >
                       <video
                         preload="auto"
                         autoPlay={true}
@@ -261,7 +293,10 @@ const Message: FC<IProps> = ({
                   );
                 } else {
                   return (
-                    <div key={index} className={classes.image}>
+                    <div
+                      key={message.id + '-image-' + index}
+                      className={classes.image}
+                    >
                       <img
                         alt="shared"
                         src={url.url}

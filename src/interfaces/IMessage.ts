@@ -12,6 +12,7 @@ export default interface IMessage {
   mentions: string[];
   timestamp: Moment;
   userNickname: string;
+  myNickname: string;
   color: string;
   isRead: boolean;
   isHistory: boolean;

@@ -159,6 +159,7 @@ export const roomActions: any = {
               ...(channel as IRoom),
               myNickname: payload.newNickname,
             };
+            current = updatedChannel;
             return updatedChannel;
           }
         }
