@@ -315,7 +315,7 @@ const Messages: FC = () => {
           }
 
           const returnVal = (
-            <React.Fragment key={index}>
+            <React.Fragment key={message.id + '-' + index}>
               {showDate && (
                 <div className={classes.marker}>
                   <Typography className={classes.markerValue}>
@@ -347,7 +347,7 @@ const Messages: FC = () => {
                 ].join(' ')}
               >
                 <Message
-                  key={index}
+                  channel={current}
                   message={message}
                   showAvatar={false}
                   showTime={isStartOfGroup || showDate || showNewMessageMarker}
