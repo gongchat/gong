@@ -5,6 +5,7 @@ import marked from 'marked';
 
 import Avatar from '@material-ui/core/Avatar';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import { useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
@@ -49,6 +50,7 @@ const Message: FC<IProps> = ({
   renderGetYarn,
 }: IProps) => {
   const classes = useStyles();
+  const theme = useTheme();
 
   const numberOfImages = useRef(
     message.urls.filter((url: IMessageUrl) => url.type === 'image').length
@@ -235,14 +237,16 @@ const Message: FC<IProps> = ({
               .map((url: IMessageUrl, index: number) => (
                 <div
                   key={message.id + '-video-' + index}
-                  className={classes.video}
+                  className={classes.media}
                 >
-                  <ReactPlayer
-                    url={url.url}
-                    width={500}
-                    height={282}
-                    controls={true}
-                  />
+                  <div className={classes.video}>
+                    <ReactPlayer
+                      url={url.url}
+                      width={500}
+                      height={282}
+                      controls={true}
+                    />
+                  </div>
                 </div>
               ))}
           {renderGetYarn &&
@@ -254,14 +258,16 @@ const Message: FC<IProps> = ({
                   return (
                     <div
                       key={message.id + '-getyarn-' + index}
-                      className={classes.getYarn}
+                      className={classes.media}
                     >
-                      <iframe
-                        title="get yarn clip"
-                        width={500}
-                        height={370}
-                        src={`https://getyarn.io/yarn-clip/embed/${values[2]}?autoplay=false`}
-                      />
+                      <div className={classes.getYarn}>
+                        <iframe
+                          title="get yarn clip"
+                          width={500}
+                          height={370}
+                          src={`https://getyarn.io/yarn-clip/embed/${values[2]}?autoplay=false`}
+                        />
+                      </div>
                     </div>
                   );
                 } else {
@@ -276,33 +282,52 @@ const Message: FC<IProps> = ({
                   return (
                     <div
                       key={message.id + '-gifv-' + index}
-                      className={classes.gifv}
+                      className={classes.media}
                     >
-                      <video
-                        preload="auto"
-                        autoPlay={true}
-                        loop={true}
-                        width={500}
-                      >
-                        <source
-                          src={url.url.replace('.gifv', '.mp4')}
-                          type="video/mp4"
-                        />
-                      </video>
+                      <div className={classes.gifv}>
+                        <video
+                          preload="auto"
+                          autoPlay={true}
+                          loop={true}
+                          width={500}
+                        >
+                          <source
+                            src={url.url.replace('.gifv', '.mp4')}
+                            type="video/mp4"
+                          />
+                        </video>
+                      </div>
                     </div>
                   );
                 } else {
+                  const isGiphy = url.url.includes('giphy.com');
                   return (
                     <div
                       key={message.id + '-image-' + index}
-                      className={classes.image}
+                      className={classes.media}
                     >
-                      <img
-                        alt="shared"
-                        src={url.url}
-                        onLoad={onMediaLoad}
-                        onError={onMediaLoad}
-                      />
+                      <div className={classes.image}>
+                        <img
+                          alt="shared"
+                          src={url.url}
+                          onLoad={onMediaLoad}
+                          onError={onMediaLoad}
+                        />
+                        {isGiphy && theme.palette.type === 'dark' && (
+                          <img
+                            className={classes.giphyLogo}
+                            src="/images/Poweredby_100px-Black_VertLogo.png"
+                            alt="Giphy attribution"
+                          />
+                        )}
+                        {isGiphy && theme.palette.type === 'light' && (
+                          <img
+                            className={classes.giphyLogo}
+                            src="/images/Poweredby_100px-White_VertLogo.png"
+                            alt="Giphy attribution"
+                          />
+                        )}
+                      </div>
                     </div>
                   );
                 }
@@ -390,6 +415,7 @@ const useStyles: any = makeStyles((theme: any): any => ({
   compactBody: {
     paddingLeft: theme.spacing(1),
   },
+  media: {},
   video: {
     flex: '0 1 100%',
     padding: theme.spacing(2),
@@ -423,6 +449,9 @@ const useStyles: any = makeStyles((theme: any): any => ({
     marginLeft: theme.spacing(8),
     overflowX: 'auto',
     overflowY: 'hidden',
+  },
+  giphyLogo: {
+    width: '75px !important',
   },
   me: {
     color: theme.palette.text.secondary,
