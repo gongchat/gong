@@ -40,10 +40,12 @@ const SidebarLeft: FC = () => {
             )
           : -1;
 
-        if (event.key === 'PageUp') {
-          selectChannel(sortedChannels[index > 0 ? index - 1 : maxIndex].jid);
-        } else if (event.key === 'PageDown') {
-          selectChannel(sortedChannels[index < maxIndex ? index + 1 : 0].jid);
+        if (sortedChannels && sortedChannels.length > 0) {
+          if (event.key === 'PageUp') {
+            selectChannel(sortedChannels[index > 0 ? index - 1 : maxIndex].jid);
+          } else if (event.key === 'PageDown') {
+            selectChannel(sortedChannels[index < maxIndex ? index + 1 : 0].jid);
+          }
         }
       }
     };
