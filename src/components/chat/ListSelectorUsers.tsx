@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect } from 'react';
 import { useContext } from '../../context';
 import moment from 'moment';
 
-import ListSelector from './ListSelector';
+import ListSelectorBase from './ListSelectorBase';
 import IChannelUser from '../../interfaces/IChannelUser';
 import IRoom from '../../interfaces/IRoom';
 
@@ -138,7 +138,7 @@ const ListSelectorUsers: FC<IProps> = ({
     <>
       {(selectorIndex === userListSelectorIndex ||
         selectorIndex === userListSelectorIndex + 1) && (
-        <ListSelector
+        <ListSelectorBase
           title={'USERS MATCHING'}
           term={term}
           list={channelUsers}

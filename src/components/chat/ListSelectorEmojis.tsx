@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from 'react';
 
-import ListSelector from './ListSelector';
+import ListSelectorBase from './ListSelectorBase';
 import Emojis, { EMOJIS } from '../../utils/emojis';
 
 export const emojiListSelectorIndex = 10;
@@ -102,7 +102,7 @@ const ListSelectorEmojis: FC<IProps> = ({
     <>
       {(selectorIndex === emojiListSelectorIndex ||
         selectorIndex === emojiListSelectorIndex + 1) && (
-        <ListSelector
+        <ListSelectorBase
           title={'EMOJIS MATCHING'}
           term={term}
           list={emojis}

@@ -1,11 +1,12 @@
 import React, { FC, useState, useEffect } from 'react';
 import { useContext } from '../../context';
 
-import ListSelector from './ListSelector';
+import ListSelectorBase from './ListSelectorBase';
 
 export const commandListSelectorIndex = 30;
 
 const COMMANDS = [
+  { key: 'Grab a giphy', value: '/giphy' },
   { key: 'Sends messages as me', value: '/me' },
   { key: 'Changes your nickname for this room', value: '/nick' },
 ];
@@ -63,7 +64,7 @@ const ListSelectorCommands: FC<IProps> = ({
     <>
       {(selectorIndex === commandListSelectorIndex ||
         selectorIndex === commandListSelectorIndex + 1) && (
-        <ListSelector
+        <ListSelectorBase
           title={'COMMANDS MATCHING'}
           term={term}
           list={commands}
@@ -76,6 +77,7 @@ const ListSelectorCommands: FC<IProps> = ({
           setSelectorIndex={setSelectorIndex}
           itemPrefix={''}
           itemSuffix={''}
+          spaceBetween={true}
         />
       )}
     </>
