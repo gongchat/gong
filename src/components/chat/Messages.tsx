@@ -302,57 +302,62 @@ const Messages: FC = () => {
               hasNewMessageMarker = true;
             }
 
-          const returnVal = (
-            <React.Fragment key={message.id + '-' + index}>
-              {showDate && (
-                <div className={classes.marker}>
-                  <Typography className={classes.markerValue}>
-                    <span>{message.timestamp.format('LL')}</span>
-                  </Typography>
+            const returnVal = (
+              <React.Fragment key={message.id + '-' + index}>
+                {showDate && (
+                  <div className={classes.marker}>
+                    <Typography className={classes.markerValue}>
+                      <span>{message.timestamp.format('LL')}</span>
+                    </Typography>
+                  </div>
+                )}
+                {showNewMessageMarker && (
+                  <div ref={newMessageMarkerRef} className={classes.marker}>
+                    <Typography
+                      color="error"
+                      className={[
+                        classes.markerValue,
+                        classes.newMessageMarkerValue,
+                      ].join(' ')}
+                    >
+                      <span>New Messages</span>
+                    </Typography>
+                  </div>
+                )}
+                <div
+                  className={[
+                    !showDate && !showNewMessageMarker && isStartOfGroup
+                      ? `${classes.startOfGroupPadding} ${classes.startOfGroupBorder}`
+                      : '',
+                    isEndOfGroup &&
+                    !isNextShowDate &&
+                    !isNextShowNewMessageMarker
+                      ? classes.endOfGroupPadding
+                      : '',
+                  ].join(' ')}
+                >
+                  <Message
+                    channel={current}
+                    message={message}
+                    showAvatar={false}
+                    showTime={
+                      isStartOfGroup || showDate || showNewMessageMarker
+                    }
+                    renderVideos={settings.renderVideos}
+                    renderGetYarn={settings.renderGetYarn}
+                    renderImages={settings.renderImages}
+                    onMessageLoad={handleOnMessageLoad}
+                  />
                 </div>
-              )}
-              {showNewMessageMarker && (
-                <div ref={newMessageMarkerRef} className={classes.marker}>
-                  <Typography
-                    color="error"
-                    className={[
-                      classes.markerValue,
-                      classes.newMessageMarkerValue,
-                    ].join(' ')}
-                  >
-                    <span>New Messages</span>
-                  </Typography>
-                </div>
-              )}
-              <div
-                className={[
-                  !showDate && !showNewMessageMarker && isStartOfGroup
-                    ? `${classes.startOfGroupPadding} ${classes.startOfGroupBorder}`
-                    : '',
-                  isEndOfGroup && !isNextShowDate && !isNextShowNewMessageMarker
-                    ? classes.endOfGroupPadding
-                    : '',
-                ].join(' ')}
-              >
-                <Message
-                  channel={current}
-                  message={message}
-                  showAvatar={false}
-                  showTime={isStartOfGroup || showDate || showNewMessageMarker}
-                  renderVideos={settings.renderVideos}
-                  renderGetYarn={settings.renderGetYarn}
-                  renderImages={settings.renderImages}
-                  onMessageLoad={handleOnMessageLoad}
-                />
-              </div>
-            </React.Fragment>
-          );
+              </React.Fragment>
+            );
 
-          prevMessage = message;
+            prevMessage = message;
 
-          return returnVal;
-        })}
-    </div>
+            return returnVal;
+          })}
+      </div>
+    </>
   );
 };
 
