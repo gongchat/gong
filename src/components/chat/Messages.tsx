@@ -19,6 +19,15 @@ import {
 import { shouldScrollTo, isAtBottom } from './../../utils/messagesUtils';
 import { TRIM_AT } from '../../actions/channel';
 
+interface IScrollData {
+  numberOfMessages: number;
+  numberOfLoadedMessages: number;
+  scrolledOnNewChannel: boolean;
+  position: number;
+  positionBeforeLogs: number;
+  prevWindowInnerWidth: number;
+}
+
 const Messages: FC = () => {
   const classes = useStyles();
   const [
@@ -33,150 +42,192 @@ const Messages: FC = () => {
 
   const prevCurrent = usePrevious(current);
 
-  const [isLoaded, setIsLoaded] = useState(false);
   const [isMessagesLoaded, setIsMessagesLoaded] = useState(false);
 
-  const [numberOfMessages, setNumberOfMessages] = useState(
-    current ? current.messages.length : 0
-  );
-  const [numberOfLoadedMessages, setNumberOfLoadedMessages] = useState(0);
-  const _numberOfLoadedMessages = useRef(0);
-
-  const [scrollTo, setScrollTo] = useState();
-  const [scrolledOnNewChannel, setScrolledOnNewChannel] = useState(false);
-
-  const [position, setPosition] = useState(
-    current ? current.scrollPosition : -1
-  );
-  const [positionBeforeLogs, setPositionBeforeLogs] = useState(-1);
-  const [prevWindowInnerWidth, setPrevWindowInnerWidth] = useState(-1);
+  const [scrollData, setScrollData] = useState<IScrollData>({
+    numberOfMessages: 0,
+    numberOfLoadedMessages: 0,
+    scrolledOnNewChannel: false,
+    position: -1,
+    positionBeforeLogs: -1,
+    prevWindowInnerWidth: -1,
+  });
+  const numberOfLoadedMessages = useRef(0);
 
   const newMessageMarkerRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
 
   const handleOnMessageLoad = () => {
-    const newCount = _numberOfLoadedMessages.current + 1;
-    if (newCount < numberOfMessages) {
-      _numberOfLoadedMessages.current = newCount;
+    const newCount = numberOfLoadedMessages.current + 1;
+    if (newCount < numberOfLoadedMessages.current) {
     } else {
-      setIsMessagesLoaded(true);
-
-      setNumberOfLoadedMessages(newCount);
-      if (
-        // TODO: have to do this or else error is thrown when trying to set
-        // properties, this is not needed as the function below does all the
-        // checking. This is done throughout this component.
-        rootRef.current &&
-        shouldGetLoggedMessagesOnLoad(
-          scrolledOnNewChannel,
-          prevCurrent,
-          current,
-          rootRef.current
-        )
-      ) {
-        rootRef.current.style.opacity = '0';
-        setIsLoaded(false);
-        setIsMessagesLoaded(false);
-        setPositionBeforeLogs(rootRef.current.scrollHeight);
-        getChannelLogs(current);
-      }
+      console.log('we are loaded');
+      setScrollData(_scrollData => {
+        if (numberOfLoadedMessages.current === newCount && !isMessagesLoaded) {
+          setIsMessagesLoaded(true);
+          return {
+            ..._scrollData,
+            numberOfLoadedMessages: numberOfLoadedMessages.current,
+          };
+        }
+        return _scrollData;
+      });
     }
   };
 
-  // RESETS VALUES ON NEW CHANNEL
+  // Reset scrollData on new channel
   useLayoutEffect(() => {
-    if (current && !updateIsForCurrentChannel(prevCurrent, current)) {
-      console.log(current.jid);
-      _numberOfLoadedMessages.current = 0;
-      setChannelScrollPosition(
-        prevCurrent ? prevCurrent.jid : current.jid,
-        position
-      );
-      setScrollTo('');
-      setNumberOfMessages(current ? current.messages.length : 0);
-      setNumberOfLoadedMessages(0);
-      setPosition(current ? current.scrollPosition : -1);
-      setPositionBeforeLogs(-1);
-      setIsLoaded(false);
-      setIsMessagesLoaded(false);
-    }
-  }, [prevCurrent, current, position, setChannelScrollPosition]);
+    setScrollData(_scrollData => {
+      let data = { ..._scrollData };
+      if (!updateIsForCurrentChannel(prevCurrent, current)) {
+        data.numberOfMessages = 0;
+        data.numberOfLoadedMessages = 0;
+        data.scrolledOnNewChannel = false;
+        data.position = -1;
+        data.positionBeforeLogs = -1;
+        data.prevWindowInnerWidth = -1;
 
-  // SCROLL TO WHEN LOADED
-  useLayoutEffect(() => {
-    if (isMessagesLoaded) {
-      console.log('foo bar');
-      setScrollTo(
-        shouldScrollTo(
-          prevCurrent,
-          current,
-          rootRef.current,
-          newMessageMarkerRef.current
-        )
-      );
-      setScrolledOnNewChannel(true);
-    }
-  }, [prevCurrent, current, isMessagesLoaded]);
+        // TODO: set the scroll position
+        // scrollIt(shouldScrollTo()); 
 
-  // ON LOAD - checks
-  useLayoutEffect(() => {
-    if (rootRef.current && current && isMessagesLoaded && !isLoaded) {
-      if (
-        shouldGetLoggedMessagesOnLoad(
-          scrolledOnNewChannel,
-          prevCurrent,
-          current,
-          rootRef.current
-        )
-      ) {
-        rootRef.current.style.opacity = '0';
-        setIsLoaded(false);
         setIsMessagesLoaded(false);
-        setPositionBeforeLogs(rootRef.current.scrollHeight);
-        getChannelLogs(current);
-      }
+        return data;
+      } else if (rootRef.current) {
+        console.log('update on same channel');
+        // set the scroll position
 
-      if (
-        shouldTrimMessagesOnLoad(
-          prevCurrent,
-          current,
-          rootRef.current,
-          scrolledOnNewChannel
-        )
-      ) {
-        setIsLoaded(false);
-        setIsMessagesLoaded(false);
-        trimOldMessages(current.jid);
-      }
+        if (
+          shouldGetLoggedMessagesOnLoad(prevCurrent, current, rootRef.current)
+        ) {
+          console.log('logged messages');
+          rootRef.current.style.opacity = '0';
+          data.positionBeforeLogs = rootRef.current.scrollHeight;
+          getChannelLogs(current);
+          setIsMessagesLoaded(false);
+        }
 
-      setIsLoaded(true);
+        if (
+          current &&
+          shouldTrimMessagesOnLoad(
+            prevCurrent,
+            current,
+            rootRef.current,
+            _scrollData.scrolledOnNewChannel
+          )
+        ) {
+          console.log('trim messages');
+          trimOldMessages(current.jid);
+          setIsMessagesLoaded(false);
+        }
+
+        return data;
+      }
+      return _scrollData;
+    });
+  }, [prevCurrent, current, getChannelLogs, trimOldMessages]);
+
+  useLayoutEffect(() => {
+    console.log('isLoaded use effect')
+    if (isMessagesLoaded && rootRef.current) {
+      console.log('isLoaded use effect - opacity')
+      rootRef.current.style.opacity = '1';
     }
-  }, [
-    isLoaded,
-    isMessagesLoaded,
-    scrolledOnNewChannel,
-    current,
-    getChannelLogs,
-    prevCurrent,
-    trimOldMessages,
-  ]);
+  }, [isMessagesLoaded]);
+
+  // // RESETS VALUES ON NEW CHANNEL
+  // useLayoutEffect(() => {
+  //   if (current && !updateIsForCurrentChannel(prevCurrent, current)) {
+  //     console.log(current.jid);
+  //     _numberOfLoadedMessages.current = 0;
+  //     setChannelScrollPosition(
+  //       prevCurrent ? prevCurrent.jid : current.jid,
+  //       position
+  //     );
+  //     setScrollTo('');
+  //     setNumberOfMessages(current ? current.messages.length : 0);
+  //     setNumberOfLoadedMessages(0);
+  //     setPosition(current ? current.scrollPosition : -1);
+  //     setPositionBeforeLogs(-1);
+  //     setIsLoaded(false);
+  //     setIsMessagesLoaded(false);
+  //   }
+  // }, [prevCurrent, current, position, setChannelScrollPosition]);
+
+  // // SCROLL TO WHEN LOADED
+  // useLayoutEffect(() => {
+  //   if (isMessagesLoaded) {
+  //     console.log('foo bar');
+  //     setScrollTo(
+  //       shouldScrollTo(
+  //         prevCurrent,
+  //         current,
+  //         rootRef.current,
+  //         newMessageMarkerRef.current
+  //       )
+  //     );
+  //     setScrolledOnNewChannel(true);
+  //   }
+  // }, [prevCurrent, current, isMessagesLoaded]);
+
+  // // ON LOAD - checks
+  // useLayoutEffect(() => {
+  //   if (rootRef.current && current && isMessagesLoaded && !isLoaded) {
+  //     if (
+  //       shouldGetLoggedMessagesOnLoad(
+  //         scrolledOnNewChannel,
+  //         prevCurrent,
+  //         current,
+  //         rootRef.current
+  //       )
+  //     ) {
+  //       rootRef.current.style.opacity = '0';
+  //       setIsLoaded(false);
+  //       setIsMessagesLoaded(false);
+  //       setPositionBeforeLogs(rootRef.current.scrollHeight);
+  //       getChannelLogs(current);
+  //     }
+
+  //     if (
+  //       shouldTrimMessagesOnLoad(
+  //         prevCurrent,
+  //         current,
+  //         rootRef.current,
+  //         scrolledOnNewChannel
+  //       )
+  //     ) {
+  //       setIsLoaded(false);
+  //       setIsMessagesLoaded(false);
+  //       trimOldMessages(current.jid);
+  //     }
+
+  //     setIsLoaded(true);
+  //   }
+  // }, [
+  //   isLoaded,
+  //   isMessagesLoaded,
+  //   scrolledOnNewChannel,
+  //   current,
+  //   getChannelLogs,
+  //   prevCurrent,
+  //   trimOldMessages,
+  // ]);
 
   // ON SCROLL and RESIZE
   useLayoutEffect(() => {
     const rootCurrent = rootRef.current;
 
     const handleScroll = (event: any) => {
-      if (!isLoaded) {
+      if (!scrollData.scrolledOnNewChannel) {
         event.preventDefault();
       } else if (current) {
-        if (scrolledOnNewChannel) {
-          setPosition(event.target.scrollTop);
+        setScrollData(_scrollData => {
+          const data = { ..._scrollData };
+          data.position = event.target.scrollTop;
           if (event.target.scrollTop === 0 && !current.hasNoMoreLogs) {
             // handle getting of logs
             event.target.style.opacity = '0';
-            setIsLoaded(false);
+            data.positionBeforeLogs = event.target.scrollHeight;
             setIsMessagesLoaded(false);
-            setPositionBeforeLogs(event.target.scrollHeight);
             getChannelLogs(current);
           } else if (isAtBottom(event.target)) {
             // handle trimming of messages
@@ -189,7 +240,8 @@ const Messages: FC = () => {
               markMessagesRead(current.jid);
             }
           }
-        }
+          return data;
+        });
         // wasAtBottom.current =
         //   Math.ceil(event.target.scrollTop + event.target.offsetHeight) >=
         //   event.target.scrollHeight;
@@ -197,10 +249,12 @@ const Messages: FC = () => {
     };
 
     const handleWindowResize = (event: any) => {
-      if (window.innerWidth !== prevWindowInnerWidth) {
-        handleScroll(event);
-      }
-      setPrevWindowInnerWidth(window.innerWidth);
+      setScrollData(_scrollData => {
+        if (window.innerWidth !== _scrollData.prevWindowInnerWidth) {
+          handleScroll(event);
+        }
+        return { ..._scrollData, prevWindowInnerWidth: window.innerWidth };
+      });
     };
 
     if (rootCurrent) {
@@ -214,30 +268,22 @@ const Messages: FC = () => {
       }
       window.removeEventListener('resize', handleWindowResize);
     };
-  }, [
-    current,
-    isLoaded,
-    scrolledOnNewChannel,
-    prevWindowInnerWidth,
-    markMessagesRead,
-    getChannelLogs,
-    trimOldMessages,
-  ]);
+  }, [current, markMessagesRead, getChannelLogs, trimOldMessages]);
 
-  // when scroll to changes
-  useEffect(() => {
-    scrollIt(
-      scrollTo,
-      rootRef.current,
-      newMessageMarkerRef.current,
-      current,
-      positionBeforeLogs
-    );
-    if (rootRef.current) {
-      rootRef.current.style.opacity = '1';
-    }
-    setScrolledOnNewChannel(true);
-  }, [scrollTo, current, positionBeforeLogs]);
+  // // when scroll to changes
+  // useEffect(() => {
+  //   scrollIt(
+  //     scrollTo,
+  //     rootRef.current,
+  //     newMessageMarkerRef.current,
+  //     current,
+  //     positionBeforeLogs
+  //   );
+  //   if (rootRef.current) {
+  //     rootRef.current.style.opacity = '1';
+  //   }
+  //   setScrolledOnNewChannel(true);
+  // }, [scrollTo, current, positionBeforeLogs]);
 
   // Variables used in return
   let prevMessage: IMessage;
@@ -245,7 +291,7 @@ const Messages: FC = () => {
 
   return (
     <>
-      <MessagesDebug
+      {/* <MessagesDebug
         isLoaded={isLoaded}
         isMessagesLoaded={isMessagesLoaded}
         numberOfMessages={numberOfMessages}
@@ -256,7 +302,7 @@ const Messages: FC = () => {
         positionBeforeLogs={positionBeforeLogs}
         prevWindowInnerWidth={prevWindowInnerWidth}
         current={current}
-      />
+      /> */}
       <div className={classes.root} ref={rootRef}>
         <div className={classes.filler} />
         {current &&

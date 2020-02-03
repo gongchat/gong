@@ -2,20 +2,11 @@ import IChannel from './../interfaces/IChannel';
 import { TRIM_AT } from './../actions/channel';
 
 export const shouldGetLoggedMessagesOnLoad = (
-  hasScrolledOnNewChannel: boolean,
   prevCurrent: IChannel | undefined,
   current: IChannel | undefined,
   element: HTMLDivElement | null
 ) => {
-  console.log('foo', hasScrolledOnNewChannel, prevCurrent, current, element);
-  if (
-    hasScrolledOnNewChannel &&
-    element &&
-    element.scrollTop === 0 &&
-    current &&
-    !current.hasNoMoreLogs
-  ) {
-    console.log('bar');
+  if (element && element.scrollTop === 0 && current && !current.hasNoMoreLogs) {
     return true;
   }
   return false;
@@ -23,13 +14,14 @@ export const shouldGetLoggedMessagesOnLoad = (
 
 export const shouldTrimMessagesOnLoad = (
   prevCurrent: IChannel,
-  current: IChannel,
+  current: IChannel | undefined,
   element: HTMLDivElement,
   hasScrolledOnNewChannel: boolean
 ) => {
   if (
     hasScrolledOnNewChannel &&
     element &&
+    current &&
     current.messages.length >= TRIM_AT &&
     isAtBottom(element)
   ) {
