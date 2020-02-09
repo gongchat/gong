@@ -56,9 +56,9 @@ const Channels: FC<IProps> = ({
                 )
                 .asSeconds()
             )
-            .map((channel: IChannel, index: number) => (
+            .map((channel: IChannel) => (
               <Channel
-                key={channel.jid + '-' + index}
+                key={channel.jid}
                 prefix={prefix}
                 channel={channel as IRoom}
                 isSelected={current && current.jid === channel.jid}
@@ -68,9 +68,9 @@ const Channels: FC<IProps> = ({
           channels
             .filter((channel: IChannel) => channel.unreadMessages === 0)
             .sort((a: IChannel, b: IChannel) => a.name.localeCompare(b.name))
-            .map((channel: IChannel, index: number) => (
+            .map((channel: IChannel) => (
               <Channel
-                key={channel.jid + '-' + index}
+                key={channel.jid}
                 prefix={prefix}
                 channel={channel as IRoom}
                 isSelected={current && current.jid === channel.jid}
@@ -79,9 +79,9 @@ const Channels: FC<IProps> = ({
         {!theme.sortChannelsByMostRecentUnread &&
           channels
             .sort((a: IChannel, b: IChannel) => a.name.localeCompare(b.name))
-            .map((channel: IChannel, index: number) => (
+            .map((channel: IChannel) => (
               <Channel
-                key={channel.jid + '-' + index}
+                key={channel.jid}
                 prefix={prefix}
                 channel={channel as IRoom}
                 isSelected={current && current.jid === channel.jid}
