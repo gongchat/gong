@@ -31,6 +31,7 @@ const useStyles: any = makeStyles((theme: any) => ({
     flexDirection: 'column',
     justifyContent: 'flex-end',
     overflowY: 'auto',
+    position: 'relative',
   },
 }));
 

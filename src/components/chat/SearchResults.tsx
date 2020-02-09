@@ -144,7 +144,6 @@ const SearchResult: FC = () => {
                   renderVideos={false}
                   renderGetYarn={false}
                   renderImages={false}
-                  onMessageLoad={null}
                 />
               </Paper>
             ))}
