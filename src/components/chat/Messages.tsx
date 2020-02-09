@@ -81,7 +81,6 @@ const Messages: FC = () => {
           current &&
           !current.hasNoMoreLogs
         ) {
-          console.log('on load, getting logged messages');
           scrollData.current.hasScrolledOnLoad = false;
           scrollData.current.positionBeforeLogs = rootRef.current.scrollTop;
           getChannelLogs(current);
@@ -159,7 +158,6 @@ const Messages: FC = () => {
         // check for logs
         if (current.messages.length === 0 && !current.hasNoMoreLogs) {
           scrollData.current.positionBeforeLogs = rootRef.current.scrollHeight;
-          console.log('channel has no messages, getting the logs');
           getChannelLogs(current);
         }
 
@@ -191,7 +189,6 @@ const Messages: FC = () => {
       scrollData.current.position = event.target.scrollTop;
       if (event.target.scrollTop === 0 && current && !current.hasNoMoreLogs) {
         // handle getting of logs
-        console.log('getting logs from scroll');
         scrollData.current.positionBeforeLogs = event.target.scrollHeight;
         getChannelLogs(current);
         return;
