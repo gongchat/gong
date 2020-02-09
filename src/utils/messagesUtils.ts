@@ -1,46 +1,39 @@
 import IChannel from './../interfaces/IChannel';
-import { TRIM_AT } from './../actions/channel';
 
-export const shouldGetLoggedMessagesOnLoad = (
-  prevCurrent: IChannel | undefined,
-  current: IChannel | undefined,
-  element: HTMLDivElement | null
-) => {
-  if (element && element.scrollTop === 0 && current && !current.hasNoMoreLogs) {
-    return true;
-  }
-  return false;
-};
-
-export const shouldTrimMessagesOnLoad = (
-  prevCurrent: IChannel,
-  current: IChannel | undefined,
-  element: HTMLDivElement,
-  hasScrolledOnNewChannel: boolean
-) => {
-  if (
-    hasScrolledOnNewChannel &&
-    element &&
-    current &&
-    current.messages.length >= TRIM_AT &&
-    isAtBottom(element)
-  ) {
-    return true;
-  }
-  return false;
-};
+export interface IScrollData {
+  numberOfMessages: number;
+  numberOfLoadedMessages: number;
+  isMessagesLoaded: boolean;
+  scrollTo: 'bottom' | 'new-message-marker' | 'saved' | 'before-logs' | '';
+  hasScrolledOnLoad: boolean;
+  hasScrolledOnNewChannel: boolean;
+  userHasScrolled: boolean;
+  isProgrammaticallyScrolling: boolean;
+  wasAtBottom: boolean;
+  position: number;
+  positionBeforeLogs: number;
+  prevWindowInnerWidth: number;
+}
 
 export const scrollIt = (
-  to: 'bottom' | 'new-message-marker' | 'before-logs' | 'saved',
+  scrollData: IScrollData,
   element: HTMLDivElement | null,
   newMessageMarker: HTMLDivElement | null,
-  channel: IChannel | undefined,
-  scrollPositionBeforeLogs: number
+  channel: IChannel | undefined
 ) => {
-  if (element && channel) {
-    switch (to) {
+  if (
+    element &&
+    channel &&
+    scrollData.scrollTo &&
+    // new-message-marker and saved should only be scrolled to once
+    (!scrollData.hasScrolledOnNewChannel ||
+      scrollData.scrollTo === 'bottom' ||
+      scrollData.scrollTo === 'before-logs')
+  ) {
+    scrollData.isProgrammaticallyScrolling = true;
+    switch (scrollData.scrollTo) {
       case 'before-logs':
-        scrollToBeforeLogs(element, scrollPositionBeforeLogs);
+        scrollToBeforeLogs(element, scrollData.positionBeforeLogs);
         break;
       case 'bottom':
         scrollToBottom(element);
@@ -55,6 +48,9 @@ export const scrollIt = (
         scrollToBottom(element);
         break;
     }
+    setTimeout(() => {
+      scrollData.isProgrammaticallyScrolling = false;
+    });
   }
 };
 
@@ -62,7 +58,7 @@ const scrollToBeforeLogs = (
   element: HTMLDivElement,
   positionBeforeGettingLogs: number
 ) => {
-  element.scrollTop = element.scrollHeight - positionBeforeGettingLogs;
+  element.scrollTop = element.scrollHeight - positionBeforeGettingLogs + 1;
 };
 
 const scrollToBottom = (element: HTMLDivElement) => {
@@ -86,23 +82,33 @@ export const shouldScrollTo = (
   prevCurrent: IChannel,
   current: IChannel | undefined,
   element: HTMLDivElement | null,
-  newMessageMarker: HTMLDivElement | null
-): 'bottom' | 'new-message-marker' | 'before-logs' | 'saved' => {
+  newMessageMarker: HTMLDivElement | null,
+  scrollData: IScrollData
+): 'bottom' | 'new-message-marker' | 'before-logs' | 'saved' | '' => {
   if (current && element) {
-    if (shouldScrollToBottom(prevCurrent, current, element)) {
-      return 'bottom';
-    }
-    if (shouldScrollToNewMessageMarker(newMessageMarker)) {
+    if (
+      shouldScrollToNewMessageMarker(prevCurrent, current, newMessageMarker)
+    ) {
       return 'new-message-marker';
     }
     if (shouldScrollToBeforeLogs(prevCurrent, current)) {
       return 'before-logs';
     }
-    if (shouldScrollToSaved(current)) {
+    if (shouldScrollToSaved(prevCurrent, current)) {
       return 'saved';
     }
+    if (
+      shouldScrollToBottom(
+        prevCurrent,
+        current,
+        element,
+        scrollData.wasAtBottom
+      )
+    ) {
+      return 'bottom';
+    }
   }
-  return 'bottom';
+  return '';
 };
 
 // BEFORE LOGS
@@ -126,8 +132,13 @@ const shouldScrollToBeforeLogs = (prevCurrent: IChannel, current: IChannel) => {
 const shouldScrollToBottom = (
   prevCurrent: IChannel,
   current: IChannel,
-  element: HTMLDivElement
+  element: HTMLDivElement,
+  wasAtBottom: boolean
 ) => {
+  if (!prevCurrent || wasAtBottom) {
+    return true;
+  }
+
   const isUpdateForCurrentChannel = updateIsForCurrentChannel(
     prevCurrent,
     current
@@ -148,7 +159,7 @@ const shouldScrollToBottom = (
   if (
     isUpdateForCurrentChannel &&
     isUpdateForNewMessages &&
-    isAtBottom(element)
+    (isAtBottom(element) || wasAtBottom)
   ) {
     return true;
   }
@@ -158,17 +169,23 @@ const shouldScrollToBottom = (
 
 // NEW MESSAGE MARKER
 const shouldScrollToNewMessageMarker = (
+  prevCurrent: IChannel,
+  current: IChannel,
   newMessageMarker: HTMLDivElement | null
 ) => {
-  if (newMessageMarker) {
+  if (!updateIsForCurrentChannel(prevCurrent, current) && newMessageMarker) {
     return true;
   }
   return false;
 };
 
 // SAVED
-const shouldScrollToSaved = (current: IChannel) => {
-  if (current && current.scrollPosition !== -1) {
+const shouldScrollToSaved = (prevCurrent: IChannel, current: IChannel) => {
+  if (
+    current &&
+    current.scrollPosition !== -1 &&
+    !updateIsForCurrentChannel(prevCurrent, current)
+  ) {
     return true;
   }
   return false;
@@ -182,7 +199,7 @@ export const updateIsForCurrentChannel = (
   prevCurrent: IChannel | undefined,
   current: IChannel | undefined
 ) => {
-  return !prevCurrent || (current && prevCurrent.jid === current.jid);
+  return prevCurrent && current && prevCurrent.jid === current.jid;
 };
 
 export const updateIsForNewMessages = (

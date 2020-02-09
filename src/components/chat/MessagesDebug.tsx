@@ -1,87 +1,62 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 
 import { makeStyles } from '@material-ui/styles';
 
 import IChannel from '../../interfaces/IChannel';
+import { IScrollData } from './../../utils/messagesUtils';
+
+// TODO: This does not update on each change
+// This is because scrollData is a useRef. Need to figure out how to force
+// updates for just this component in Messages.tsx without updating the state.
+// Certain values such as the position value will be a bit more tricky to handle
+// as the Message.tsx component relies on a prev state value. This value will be
+// lost when trying to set the position value that to update this component.
+//
 
 interface IProps {
-  isLoaded: boolean;
-  isMessagesLoaded: boolean;
-  numberOfMessages: number;
-  numberOfLoadedMessages: number;
-  scrollTo: string;
-  scrolledOnNewChannel: boolean;
-  position: number;
-  positionBeforeLogs: number;
-  prevWindowInnerWidth: number;
-  current: IChannel | undefined;
+  scrollData: IScrollData;
+  channel: IChannel | undefined;
 }
 
-const MessageDebug: FC<IProps> = ({
-  isLoaded,
-  isMessagesLoaded,
-  numberOfMessages,
-  numberOfLoadedMessages,
-  scrollTo,
-  scrolledOnNewChannel,
-  position,
-  positionBeforeLogs,
-  prevWindowInnerWidth,
-  current,
-}) => {
+const MessageDebug: FC<IProps> = ({ scrollData, channel }) => {
   const classes = useStyles();
-
-  useEffect(() => {
-    console.info('isLoaded', isLoaded);
-    console.info('isMessagesLoaded', isMessagesLoaded);
-    console.info('numberOfMessages', numberOfMessages);
-    console.info('numberOfLoadedMessages', numberOfLoadedMessages);
-    console.info('scrollTo', scrollTo);
-    console.info('scrolledOnNewChannel', scrolledOnNewChannel);
-    console.info('position', position);
-    console.info('positionBeforeLogs', positionBeforeLogs);
-    console.info('prevWindowInnerWidth', prevWindowInnerWidth);
-    console.info('current', current);
-  }, [
-    isLoaded,
-    isMessagesLoaded,
+  const {
     numberOfMessages,
     numberOfLoadedMessages,
+    isMessagesLoaded,
     scrollTo,
-    scrolledOnNewChannel,
+    hasScrolledOnLoad,
+    hasScrolledOnNewChannel,
+    userHasScrolled,
+    isProgrammaticallyScrolling,
+    wasAtBottom,
     position,
     positionBeforeLogs,
     prevWindowInnerWidth,
-    current,
-  ]);
+  } = scrollData;
 
   return (
     <div className={classes.root}>
       <table>
         <tbody>
           <tr>
-            <td>isLoaded</td>
-            <td>{isLoaded.toString()}</td>
+            <td>
+              {numberOfLoadedMessages.toLocaleString()}/
+              {numberOfMessages.toLocaleString()} messages loaded
+            </td>
+            <td></td>
           </tr>
           <tr>
             <td>isMessagesLoaded</td>
             <td>{isMessagesLoaded.toString()}</td>
           </tr>
           <tr>
-            <td>numberOfMessages</td>
-            <td>{numberOfMessages.toLocaleString()}</td>
-          </tr>
-          <tr>
-            <td>numberOfLoadedMessages</td>
-            <td>{numberOfLoadedMessages.toLocaleString()}</td>
-          </tr>
-          <tr>
             <td>scrollTo</td>
             <td>{scrollTo}</td>
           </tr>
           <tr>
-            <td>scrolledOnNewChannel</td>
-            <td>{scrolledOnNewChannel.toString()}</td>
+            <td>isProgrammaticallyScrolling</td>
+            <td>{isProgrammaticallyScrolling.toString()}</td>
           </tr>
           <tr>
             <td>position</td>
@@ -92,12 +67,28 @@ const MessageDebug: FC<IProps> = ({
             <td>{positionBeforeLogs.toLocaleString()}</td>
           </tr>
           <tr>
+            <td>wasAtBottom</td>
+            <td>{wasAtBottom.toString()}</td>
+          </tr>
+          <tr>
+            <td>userHasScrolled</td>
+            <td>{userHasScrolled.toString()}</td>
+          </tr>
+          <tr>
+            <td>hasScrolledOnLoad</td>
+            <td>{hasScrolledOnLoad.toString()}</td>
+          </tr>
+          <tr>
+            <td>hasScrolledOnNewChannel</td>
+            <td>{hasScrolledOnNewChannel.toString()}</td>
+          </tr>
+          <tr>
             <td>prevWindowInnerWidth</td>
             <td>{prevWindowInnerWidth.toLocaleString()}</td>
           </tr>
           <tr>
-            <td>current.scrollPosition</td>
-            <td>{current?.scrollPosition.toLocaleString()}</td>
+            <td>channel.scrollPosition</td>
+            <td>{channel?.scrollPosition.toLocaleString()}</td>
           </tr>
         </tbody>
       </table>

@@ -1,4 +1,4 @@
-import React, { FC, useLayoutEffect, useRef, useState } from 'react';
+import React, { FC, useLayoutEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import sanitizeHtml from 'sanitize-html';
 import marked from 'marked';
@@ -31,7 +31,9 @@ interface IProps {
   highlightWord?: string;
   showAvatar: boolean;
   showTime: boolean;
-  onMessageLoad: any;
+  onMessageLoad?: any;
+  onMessageUnload?: any;
+  onMediaLoad?: any;
   renderImages: boolean;
   renderVideos: boolean;
   renderGetYarn: boolean;
@@ -45,6 +47,8 @@ const Message: FC<IProps> = ({
   showAvatar,
   showTime,
   onMessageLoad,
+  onMessageUnload,
+  onMediaLoad,
   renderImages,
   renderVideos,
   renderGetYarn,
@@ -52,23 +56,14 @@ const Message: FC<IProps> = ({
   const classes = useStyles();
   const theme = useTheme();
 
-  const numberOfImages = useRef(
-    message.urls.filter((url: IMessageUrl) => url.type === 'image').length
-  );
-  const numberOfLoadedImages = useRef(0);
-
   const [isMe, setIsMe] = useState(false);
   const [messageBody, setMessageBody] = useState('');
   const [isBodyLoaded, setIsBodyLoaded] = useState(false);
-  const [isImagesLoaded, setIsImagesLoaded] = useState(
-    numberOfImages.current === 0
-  );
   const { body, mentions } = message;
 
-  const onMediaLoad = () => {
-    numberOfLoadedImages.current++;
-    if (numberOfLoadedImages.current >= numberOfImages.current) {
-      setIsImagesLoaded(true);
+  const handleOnMediaLoad = () => {
+    if (onMediaLoad) {
+      onMediaLoad();
     }
   };
 
@@ -154,10 +149,15 @@ const Message: FC<IProps> = ({
   }, [highlightWord]);
 
   useLayoutEffect(() => {
-    if (isBodyLoaded && isImagesLoaded && onMessageLoad) {
+    if (isBodyLoaded && onMessageLoad) {
       onMessageLoad();
     }
-  }, [isBodyLoaded, isImagesLoaded, onMessageLoad]);
+    return () => {
+      if (isBodyLoaded && onMessageUnload) {
+        onMessageUnload();
+      }
+    };
+  }, [isBodyLoaded, onMessageLoad, onMessageUnload]);
 
   return (
     <div className={classes.root}>
@@ -310,8 +310,8 @@ const Message: FC<IProps> = ({
                         <img
                           alt="shared"
                           src={url.url}
-                          onLoad={onMediaLoad}
-                          onError={onMediaLoad}
+                          onLoad={handleOnMediaLoad}
+                          onError={handleOnMediaLoad}
                         />
                         {isGiphy && theme.palette.type === 'dark' && (
                           <img
