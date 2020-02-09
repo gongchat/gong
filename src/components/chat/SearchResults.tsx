@@ -133,8 +133,11 @@ const SearchResult: FC = () => {
           !current.isSearching &&
           current.searchResults
             .slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
-            .map((message: IMessage, index: number) => (
-              <Paper key={message.id + '-' + index} className={classes.message}>
+            .map((message: IMessage) => (
+              <Paper
+                key={message.id + '-' + message.timestamp.valueOf()}
+                className={classes.message}
+              >
                 <Message
                   variant="cozy"
                   showAvatar={true}

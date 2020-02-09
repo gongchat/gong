@@ -169,9 +169,9 @@ const ToolBar: FC = () => {
                   }}
                 >
                   {(current as IUser).connections.map(
-                    (connection: IUserConnection, index: number) => (
+                    (connection: IUserConnection) => (
                       <MenuItem
-                        key={connection.jid + '-' + index}
+                        key={connection.jid}
                         onClick={() => handleSessionSelection(connection.jid)}
                       >
                         <div className={classes.menuItemStatus}>
