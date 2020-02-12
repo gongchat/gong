@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useLayoutEffect, useRef } from 'react';
 import { useContext } from '../../context';
 import moment from 'moment';
 
@@ -106,6 +106,65 @@ const Messages: FC = () => {
     }
   };
 
+  // ON SCROLL and RESIZE
+  useLayoutEffect(() => {
+    const rootCurrent = rootRef.current;
+
+    const handleScroll = (event: any) => {
+      scrollData.current.position = event.target.scrollTop;
+      scrollData.current.wasAtBottom = isAtBottom(event.target);
+
+      if (!scrollData.current.isMessagesLoaded) {
+        event.preventDefault();
+        return;
+      }
+
+      if (scrollData.current.isProgrammaticallyScrolling) {
+        scrollData.current.isProgrammaticallyScrolling = false;
+      } else {
+        scrollData.current.userHasScrolled = true;
+
+        if (event.target.scrollTop === 0 && current && !current.hasNoMoreLogs) {
+          // handle getting of logs
+          scrollData.current.positionBeforeLogs = event.target.scrollHeight;
+          getChannelLogs(current);
+          return;
+        }
+
+        if (isAtBottom(event.target) && current) {
+          // handle trimming of messages
+          if (current.messages.length >= TRIM_AT) {
+            trimOldMessages(current.jid);
+          }
+          // if new message marker is present, mark messages read when scroll
+          // is at the bottom
+          if (newMessageMarkerRef.current) {
+            markMessagesRead(current.jid);
+          }
+        }
+      }
+    };
+
+    const handleWindowResize = (event: any) => {
+      if (window.innerWidth !== scrollData.current.prevWindowInnerWidth) {
+        handleScroll(event);
+      }
+      scrollData.current.prevWindowInnerWidth = window.innerWidth;
+    };
+
+    if (rootCurrent) {
+      rootCurrent.addEventListener('scroll', handleScroll);
+      window.addEventListener('resize', handleWindowResize);
+    }
+
+    return () => {
+      if (rootCurrent) {
+        rootCurrent.removeEventListener('scroll', handleScroll);
+      }
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, [current, markMessagesRead, getChannelLogs, trimOldMessages]);
+
   // handle updates, only cares about new channel or new messages
   // messages can be new or old (from logs)
   //
@@ -119,7 +178,7 @@ const Messages: FC = () => {
   // - resetting scrollData
   // - determining where to scroll when all messages are loaded
   //
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (current && rootRef.current) {
       const isNewChannel = !updateIsForCurrentChannel(prevCurrent, current);
       const isNewMessages = updateIsForNewMessages(prevCurrent, current);
@@ -171,65 +230,6 @@ const Messages: FC = () => {
       }
     }
   }, [prevCurrent, current, getChannelLogs, setChannelScrollPosition]);
-
-  // ON SCROLL and RESIZE
-  useEffect(() => {
-    const rootCurrent = rootRef.current;
-
-    const handleScroll = (event: any) => {
-      if (!scrollData.current.isMessagesLoaded) {
-        event.preventDefault();
-        return;
-      }
-
-      scrollData.current.position = event.target.scrollTop;
-
-      if (!scrollData.current.isProgrammaticallyScrolling) {
-        scrollData.current.userHasScrolled = true;
-
-        if (event.target.scrollTop === 0 && current && !current.hasNoMoreLogs) {
-          // handle getting of logs
-          scrollData.current.positionBeforeLogs = event.target.scrollHeight;
-          getChannelLogs(current);
-          return;
-        }
-
-        if (isAtBottom(event.target) && current) {
-          scrollData.current.wasAtBottom = true;
-          // handle trimming of messages
-          if (current.messages.length >= TRIM_AT) {
-            trimOldMessages(current.jid);
-          }
-          // if new message marker is present, mark messages read when scroll
-          // is at the bottom
-          if (newMessageMarkerRef.current) {
-            markMessagesRead(current.jid);
-          }
-        } else {
-          scrollData.current.wasAtBottom = false;
-        }
-      }
-    };
-
-    const handleWindowResize = (event: any) => {
-      if (window.innerWidth !== scrollData.current.prevWindowInnerWidth) {
-        handleScroll(event);
-      }
-      scrollData.current.prevWindowInnerWidth = window.innerWidth;
-    };
-
-    if (rootCurrent) {
-      rootCurrent.addEventListener('scroll', handleScroll);
-      window.addEventListener('resize', handleWindowResize);
-    }
-
-    return () => {
-      if (rootCurrent) {
-        rootCurrent.removeEventListener('scroll', handleScroll);
-      }
-      window.removeEventListener('resize', handleWindowResize);
-    };
-  }, [current, markMessagesRead, getChannelLogs, trimOldMessages]);
 
   // Variables used in return
   let prevMessage: IMessage;
