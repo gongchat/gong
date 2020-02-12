@@ -7,6 +7,7 @@ export default interface IUser extends IChannel {
   username: string;
   group: string;
   status: string;
+  statusText: string;
   color: string;
   unreadMessages: number;
   connections: IUserConnection[];

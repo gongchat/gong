@@ -49,6 +49,7 @@ const setChat = (state: IState, presence: IPresence): IState => {
           return {
             ...connection,
             status: presence.status,
+            statusText: presence.statusText,
             priority: presence.priority,
           };
         } else {
@@ -63,6 +64,7 @@ const setChat = (state: IState, presence: IPresence): IState => {
         jid: presence.from,
         priority: presence.priority,
         status: presence.status,
+        statusText: presence.statusText,
       };
       connections = [...connections, newConnection];
     }
@@ -77,6 +79,7 @@ const setChat = (state: IState, presence: IPresence): IState => {
     user = {
       ...user,
       status: priorityConnection ? priorityConnection.status : 'offline',
+      statusText: priorityConnection ? priorityConnection.statusText : '',
       sessionJid: priorityConnection ? priorityConnection.jid : undefined,
       connections,
     };

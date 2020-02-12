@@ -1,14 +1,17 @@
 import React, { FC } from 'react';
 import { useContext } from '../../context';
 
+import Divider from '@material-ui/core/Divider';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
 import Status from './Status';
+import { EMOJIS } from './../../utils/emojis';
 
 const STATUSES = [
   { value: 'online', title: 'Online' },
+  null,
   { value: 'chat', title: 'Chatty' },
   { value: 'away', title: 'Away' },
   { value: 'xa', title: 'Extended Away' },
@@ -33,6 +36,8 @@ const StatusMenu: FC<IProps> = ({ open, anchorEl, onClose }: IProps) => {
     onClose();
   };
 
+  const openCustomStatus = () => {};
+
   return (
     <Popover
       open={open}
@@ -48,25 +53,49 @@ const StatusMenu: FC<IProps> = ({ open, anchorEl, onClose }: IProps) => {
       }}
     >
       <div className={classes.root}>
-        {STATUSES.map((status: any, index: number) => (
-          <div
-            key={index}
-            onClick={() => handleStatusClick(status.value)}
-            className={classes.item}
-          >
-            <div className={classes.rowOne}>
-              <div className={classes.status}>
-                <Status status={status.value} />
+        {STATUSES.map((status: any, index: number) =>
+          status ? (
+            <div
+              key={index}
+              onClick={() => handleStatusClick(status.value)}
+              className={classes.item}
+            >
+              <div
+                className={[
+                  classes.rowOne,
+                  status.description ? classes.noBottomPadding : '',
+                ]
+                  .join(' ')
+                  .trim()}
+              >
+                <div className={classes.status}>
+                  <Status status={status.value} />
+                </div>
+                <Typography className={classes.title}>
+                  {status.title}
+                </Typography>
               </div>
-              <Typography className={classes.title}>{status.title}</Typography>
+              {status.description && (
+                <Typography className={classes.description} variant="caption">
+                  <small>{status.description}</small>
+                </Typography>
+              )}
             </div>
-            {status.description && (
-              <Typography className={classes.description} variant="caption">
-                <small>{status.description}</small>
-              </Typography>
-            )}
+          ) : (
+            <Divider key={`${index}-divider`} />
+          )
+        )}
+        <Divider />
+        <div className={classes.item} onClick={openCustomStatus}>
+          <div className={classes.rowOne}>
+            <div className={classes.status}>
+              <span role="img" aria-label="Set a custom status">
+                😄
+              </span>
+            </div>
+            <Typography className={classes.title}>Set my status</Typography>
           </div>
-        ))}
+        </div>
       </div>
     </Popover>
   );
@@ -101,6 +130,9 @@ const useStyles: any = makeStyles((theme: any) => ({
     opacity: 0.7,
     padding: theme.spacing(1, 2),
     paddingTop: 0,
+  },
+  noBottomPadding: {
+    paddingBottom: 0,
   },
 }));
 
