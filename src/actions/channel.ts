@@ -157,6 +157,7 @@ export const channelActions: any = {
       channels: state.channels.map((channel: IChannel) => {
         if (channel.jid === results.jid) {
           results.messages.forEach((message: IMessage) => {
+            message.sessionId = uuid.v4();
             message.timestamp = moment(message.timestamp);
             message.isRead = true;
           });
