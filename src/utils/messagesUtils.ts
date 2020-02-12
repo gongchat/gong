@@ -21,16 +21,7 @@ export const scrollIt = (
   newMessageMarker: HTMLDivElement | null,
   channel: IChannel | undefined
 ) => {
-  if (
-    element &&
-    channel &&
-    scrollData.scrollTo
-    // new-message-marker and saved should only be scrolled to once
-    // (!scrollData.hasScrolledOnNewChannel ||
-    //   scrollData.scrollTo === 'bottom' ||
-    //   scrollData.scrollTo === 'before-logs'
-    //   )
-  ) {
+  if (element && channel && scrollData.scrollTo) {
     scrollData.isProgrammaticallyScrolling = true;
     switch (scrollData.scrollTo) {
       case 'before-logs':
