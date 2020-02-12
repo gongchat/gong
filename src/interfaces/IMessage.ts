@@ -4,6 +4,7 @@ import IMessageUrl from './IMessageUrl';
 
 export default interface IMessage {
   id: string;
+  sessionId: string;
   channelName: string;
   to: string;
   from: string;

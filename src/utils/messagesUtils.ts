@@ -21,15 +21,7 @@ export const scrollIt = (
   newMessageMarker: HTMLDivElement | null,
   channel: IChannel | undefined
 ) => {
-  if (
-    element &&
-    channel &&
-    scrollData.scrollTo &&
-    // new-message-marker and saved should only be scrolled to once
-    (!scrollData.hasScrolledOnNewChannel ||
-      scrollData.scrollTo === 'bottom' ||
-      scrollData.scrollTo === 'before-logs')
-  ) {
+  if (element && channel && scrollData.scrollTo) {
     scrollData.isProgrammaticallyScrolling = true;
     switch (scrollData.scrollTo) {
       case 'before-logs':
@@ -48,9 +40,6 @@ export const scrollIt = (
         scrollToBottom(element);
         break;
     }
-    setTimeout(() => {
-      scrollData.isProgrammaticallyScrolling = false;
-    });
   }
 };
 
@@ -58,11 +47,15 @@ const scrollToBeforeLogs = (
   element: HTMLDivElement,
   positionBeforeGettingLogs: number
 ) => {
-  element.scrollTop = element.scrollHeight - positionBeforeGettingLogs + 1;
+  if (positionBeforeGettingLogs === 0) {
+    element.scrollTop = element.scrollHeight;
+  } else {
+    element.scrollTop = element.scrollHeight - positionBeforeGettingLogs + 1;
+  }
 };
 
 const scrollToBottom = (element: HTMLDivElement) => {
-  element.scrollTop = element.scrollHeight + element.offsetHeight;
+  element.scrollTop = element.scrollHeight;
 };
 
 const scrollToNewMessageMarker = (
@@ -144,6 +137,11 @@ const shouldScrollToBottom = (
     current
   );
   const isUpdateForNewMessages = updateIsForNewMessages(prevCurrent, current);
+
+  // if new channel and gotten this far (last check) then go to bottom
+  if (!isUpdateForCurrentChannel) {
+    return true;
+  }
 
   // checks if the latest message was from me
   if (
