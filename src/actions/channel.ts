@@ -1,4 +1,5 @@
 import moment from 'moment';
+import uuid from 'uuid';
 
 import IChannel from '../interfaces/IChannel';
 import IMessage from '../interfaces/IMessage';
@@ -204,6 +205,7 @@ export const channelActions: any = {
       const channels = state.channels.map((c: IChannel) => {
         if (c.jid === channelJid) {
           messages.forEach((message: IMessage) => {
+            message.sessionId = uuid.v4();
             message.timestamp = moment(message.timestamp);
             message.isRead = true;
           });

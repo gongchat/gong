@@ -182,31 +182,32 @@ const Messages: FC = () => {
         return;
       }
 
+      scrollData.current.position = event.target.scrollTop;
+
       if (!scrollData.current.isProgrammaticallyScrolling) {
         scrollData.current.userHasScrolled = true;
-      }
 
-      scrollData.current.position = event.target.scrollTop;
-      if (event.target.scrollTop === 0 && current && !current.hasNoMoreLogs) {
-        // handle getting of logs
-        scrollData.current.positionBeforeLogs = event.target.scrollHeight;
-        getChannelLogs(current);
-        return;
-      }
+        if (event.target.scrollTop === 0 && current && !current.hasNoMoreLogs) {
+          // handle getting of logs
+          scrollData.current.positionBeforeLogs = event.target.scrollHeight;
+          getChannelLogs(current);
+          return;
+        }
 
-      if (isAtBottom(event.target) && current) {
-        scrollData.current.wasAtBottom = true;
-        // handle trimming of messages
-        if (current.messages.length >= TRIM_AT) {
-          trimOldMessages(current.jid);
+        if (isAtBottom(event.target) && current) {
+          scrollData.current.wasAtBottom = true;
+          // handle trimming of messages
+          if (current.messages.length >= TRIM_AT) {
+            trimOldMessages(current.jid);
+          }
+          // if new message marker is present, mark messages read when scroll
+          // is at the bottom
+          if (newMessageMarkerRef.current) {
+            markMessagesRead(current.jid);
+          }
+        } else {
+          scrollData.current.wasAtBottom = false;
         }
-        // if new message marker is present, mark messages read when scroll
-        // is at the bottom
-        if (newMessageMarkerRef.current) {
-          markMessagesRead(current.jid);
-        }
-      } else {
-        scrollData.current.wasAtBottom = false;
       }
     };
 
