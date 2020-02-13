@@ -1,11 +1,13 @@
-import React, { FC } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { useContext } from '../../context';
 
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
+import IChannel from '../../interfaces/IChannel';
 import IChannelUser from '../../interfaces/IChannelUser';
+import IUser from '../../interfaces/IUser';
 import { getAbbreviation } from '../../utils/stringUtils';
 
 interface IProps {
@@ -15,11 +17,21 @@ interface IProps {
 
 const ChannelUser: FC<IProps> = ({ user, showAvatar }: IProps) => {
   const classes = useStyles();
-  const { selectRoomUser } = useContext()[1];
+  const [{ channels }, { selectRoomUser }] = useContext();
+  const [channel, setChannel] = useState<IUser | undefined>(undefined);
 
   const handleOnClick = () => {
     selectRoomUser(user);
   };
+
+  useEffect(() => {
+    setChannel(
+      channels.find(
+        (c: IChannel) =>
+          c.type === 'chat' && c.jid === user.userJid.split('/')[0]
+      ) as IUser
+    );
+  }, [channels, user.userJid]);
 
   return (
     <div
@@ -30,7 +42,14 @@ const ChannelUser: FC<IProps> = ({ user, showAvatar }: IProps) => {
     >
       {showAvatar && (
         <div className={classes.avatar}>
-          <Avatar className={classes.img}>
+          <Avatar
+            className={classes.img}
+            src={
+              channel && channel.vCard
+                ? `data:${channel.vCard.photoType};base64,${channel.vCard.photo}`
+                : ''
+            }
+          >
             {getAbbreviation(user.nickname)}
           </Avatar>
         </div>
