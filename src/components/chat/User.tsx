@@ -57,10 +57,12 @@ const User: FC<IProps> = ({ user, isSelected, showAvatar }: IProps) => {
     <>
       <div
         className={[
-          classes.root,
           isSelected ? classes.active : '',
+          classes.root,
           showAvatar ? '' : classes.rootNarrow,
-        ].join(' ')}
+        ]
+          .join(' ')
+          .trim()}
         onClick={handleOnClick}
         onContextMenu={handleOnContextMenu}
       >
@@ -155,10 +157,10 @@ const useStyles: any = makeStyles((theme: any) => ({
     padding: theme.spacing(0.5, 1),
   },
   content: {
+    flexGrow: 1,
     overflow: 'hidden',
   },
   text: {
-    flexGrow: 1,
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflowX: 'hidden',

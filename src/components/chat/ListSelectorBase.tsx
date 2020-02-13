@@ -185,11 +185,13 @@ const ListSelectorBase: FC<IProps> = ({
                 <div
                   key={obj[keyProp]}
                   className={[
-                    classes.listItem,
-                    listIndex === index ? classes.current : '',
                     spaceBetween ? 'space-between' : '',
+                    classes.listItem,
                     variant,
-                  ].join(' ')}
+                    listIndex === index ? classes.current : '',
+                  ]
+                    .join(' ')
+                    .trim()}
                   onClick={() => handleSelection(obj)}
                 >
                   {variant === 'vertical-text' && (

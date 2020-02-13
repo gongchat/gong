@@ -61,7 +61,9 @@ const Group: FC<IProps> = ({
                 badge: [
                   classes.badge,
                   hasUnreadMentionMe ? classes.badgeFlash : '',
-                ].join(' '),
+                ]
+                  .join(' ')
+                  .trim(),
               }}
               color="error"
             >

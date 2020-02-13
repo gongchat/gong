@@ -67,62 +67,76 @@ const Message: FC<IProps> = ({
     }
   };
 
-  useLayoutEffect(() => {
-    let formattedMessageBody = body
-      ? sanitizeHtml(marked.inlineLexer(body, []), {
-          allowedTags: ALLOWED_TAGS,
-          allowedAttributes: ALLOWED_ATTRIBUTES,
-        })
-      : '';
-
-    // replace users
-    if (mentions && mentions.length > 0) {
-      mentions.forEach((mention: string) => {
-        const checkMentionMe2 =
-          message.myNickname !== null &&
-          message.myNickname !== undefined &&
-          message.myNickname === mention;
-        const checkMentionMe1 =
-          (message.myNickname === null || message.myNickname === undefined) &&
-          !!channel &&
-          channel.type === 'groupchat' &&
-          (channel as IRoom).myNickname === mention;
-        const isMentioningMe =
-          message.isMentioningMe && (checkMentionMe2 || checkMentionMe1);
-        formattedMessageBody = formattedMessageBody.replace(
-          getRegExpWithAt(mention),
-          getHtmlWithAt(isMentioningMe, mention)
-        );
-        formattedMessageBody = formattedMessageBody.replace(
-          getRegExpWithoutAt(mention),
-          getHtmlWithoutAt(isMentioningMe, mention)
-        );
-      });
+  const makeMarked = (body: string): string => {
+    let parsedText = marked(body, { breaks: true, headerIds: false });
+    // default messages should be inline
+    if (parsedText.startsWith('<p>')) {
+      parsedText = parsedText.substring(3, parsedText.length - 5);
     }
-
-    // replace any string emojis
-    const matches = formattedMessageBody.match(/:([^:]*):/g);
-    if (matches) {
-      matches.forEach(element => {
-        const emoji = EMOJIS[element.substring(1, element.length - 1)];
-        if (emoji) {
-          formattedMessageBody = formattedMessageBody.replace(element, emoji);
-        }
-      });
-    }
-
-    // replace characters with emojis
-    ASCII_EMOJI_MAP.forEach(item => {
-      formattedMessageBody = formattedMessageBody.replace(
-        new RegExp(
-          '(?<=^|\\s)' +
-            item.key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') +
-            '(?=$|\\s)',
-          'g'
-        ),
-        item.emoji
-      );
+    return sanitizeHtml(parsedText, {
+      allowedTags: ALLOWED_TAGS,
+      allowedAttributes: ALLOWED_ATTRIBUTES,
+      // @ts-ignore: need to wait for @types to update
+      disallowedTagsMode: 'escape',
     });
+  };
+
+  useLayoutEffect(() => {
+    let formattedMessageBody = body;
+
+    if (formattedMessageBody) {
+      // mark it DOWN!!!!
+      formattedMessageBody = makeMarked(formattedMessageBody);
+
+      // replace users
+      if (mentions && mentions.length > 0) {
+        mentions.forEach((mention: string) => {
+          const checkMentionMe2 =
+            message.myNickname !== null &&
+            message.myNickname !== undefined &&
+            message.myNickname === mention;
+          const checkMentionMe1 =
+            (message.myNickname === null || message.myNickname === undefined) &&
+            !!channel &&
+            channel.type === 'groupchat' &&
+            (channel as IRoom).myNickname === mention;
+          const isMentioningMe =
+            message.isMentioningMe && (checkMentionMe2 || checkMentionMe1);
+          formattedMessageBody = formattedMessageBody.replace(
+            getRegExpWithAt(mention),
+            getHtmlWithAt(isMentioningMe, mention)
+          );
+          formattedMessageBody = formattedMessageBody.replace(
+            getRegExpWithoutAt(mention),
+            getHtmlWithoutAt(isMentioningMe, mention)
+          );
+        });
+      }
+
+      // replace any string emojis
+      const matches = formattedMessageBody.match(/:([^:]*):/g);
+      if (matches) {
+        matches.forEach(element => {
+          const emoji = EMOJIS[element.substring(1, element.length - 1)];
+          if (emoji) {
+            formattedMessageBody = formattedMessageBody.replace(element, emoji);
+          }
+        });
+      }
+
+      // replace characters with emojis
+      ASCII_EMOJI_MAP.forEach(item => {
+        formattedMessageBody = formattedMessageBody.replace(
+          new RegExp(
+            '(?<=^|\\s)' +
+              item.key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') +
+              '(?=$|\\s)',
+            'g'
+          ),
+          item.emoji
+        );
+      });
+    }
 
     setMessageBody(formattedMessageBody);
     setIsMe(body && body.startsWith('/me ') ? true : false);
@@ -170,7 +184,9 @@ const Message: FC<IProps> = ({
               'timestamp',
               [classes.timestamp, classes.compactTimestamp].join(' '),
               !showTime ? classes.timestampHide : '',
-            ].join(' ')}
+            ]
+              .join(' ')
+              .trim()}
           >
             <span className={classes.copyOnly}>[</span>
             {message.timestamp.format('h:mm A')}
@@ -185,8 +201,10 @@ const Message: FC<IProps> = ({
               className={[
                 classes.body,
                 classes.compactBody,
-                isMe && classes.me,
-              ].join(' ')}
+                isMe ? classes.me : '',
+              ]
+                .join(' ')
+                .trim()}
               dangerouslySetInnerHTML={{
                 __html: isMe ? `*${messageBody.substring(4)}*` : messageBody,
               }}
@@ -220,7 +238,9 @@ const Message: FC<IProps> = ({
             </Typography>
             <Typography className={classes.message}>
               <span
-                className={[classes.body, isMe ? classes.me : ''].join(' ')}
+                className={[classes.body, isMe ? classes.me : '']
+                  .join(' ')
+                  .trim()}
                 dangerouslySetInnerHTML={{
                   __html: isMe ? `*${messageBody.substring(4)}*` : messageBody,
                 }}
@@ -346,6 +366,18 @@ const useStyles: any = makeStyles((theme: any): any => ({
     flexShrink: 0,
     '&:hover .timestamp': {
       opacity: '1 !important',
+    },
+    '& blockquote': {
+      borderLeft: `5px solid ${theme.palette.background.default}`,
+      paddingLeft: theme.spacing(2),
+    },
+    '& pre': {
+      backgroundColor: theme.palette.background.default,
+      padding: theme.spacing(),
+    },
+    '& code': {
+      backgroundColor: theme.palette.background.default,
+      padding: theme.spacing(0.25, 0.5),
     },
   },
   cozy: {
