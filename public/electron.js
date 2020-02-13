@@ -123,6 +123,41 @@ function createTray() {
       },
     },
     {
+      label: 'Set status',
+      submenu: [
+        {
+          label: 'Online',
+          click: function() {
+            xmppJsClient.sendMyStatus({ status: 'online', statusText: '' });
+          },
+        },
+        {
+          label: 'Chatty',
+          click: function() {
+            xmppJsClient.sendMyStatus({ status: 'chat', statusText: '' });
+          },
+        },
+        {
+          label: 'Away',
+          click: function() {
+            xmppJsClient.sendMyStatus({ status: 'away', statusText: '' });
+          },
+        },
+        {
+          label: 'Extended Away',
+          click: function() {
+            xmppJsClient.sendMyStatus({ status: 'xa', statusText: '' });
+          },
+        },
+        {
+          label: 'Do not Disturb',
+          click: function() {
+            xmppJsClient.sendMyStatus({ status: 'dnd', statusText: '' });
+          },
+        },
+      ],
+    },
+    {
       label: 'Check for Updates',
       click: function() {
         autoUpdater.checkForUpdates();

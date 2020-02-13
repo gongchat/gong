@@ -44,6 +44,7 @@ export const INITIAL_STATE: IState = {
     username: '',
     group: '',
     status: '',
+    statusText: '',
     color: '',
     vCard: DEFAULT_VCARD,
   },

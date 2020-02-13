@@ -24,6 +24,7 @@ const ToolBar: FC = () => {
   const [name, setName] = useState('');
   const [status, setStatus] = useState('');
   const [sessionName, setSessionName] = useState('');
+  const [statusText, setStatusText] = useState('');
   const [searchTextLocal, setSearchTextLocal] = useState(
     current ? current.searchText : ''
   );
@@ -104,6 +105,7 @@ const ToolBar: FC = () => {
           );
           setStatus(user.status);
           setSessionName(user.sessionJid ? user.sessionJid.split('/')[1] : '');
+          setStatusText(user.statusText || '');
           break;
         default:
           break;
@@ -112,6 +114,7 @@ const ToolBar: FC = () => {
       setName('');
       setStatus('');
       setSessionName('');
+      setStatusText('');
     }
   }, [current]);
 
@@ -127,7 +130,7 @@ const ToolBar: FC = () => {
         <Typography>{settings.domain}</Typography>
       </div>
       <div className={classes.right}>
-        <Typography>
+        <Typography className={classes.name}>
           <span className={classes.symbol}>
             {current && current.type === 'groupchat' && '# '}
             {current && current.type === 'chat' && '@ '}
@@ -182,6 +185,14 @@ const ToolBar: FC = () => {
                     )
                   )}
                 </Popover>
+                <div className={classes.divider} />
+                <Typography
+                  className={classes.statusText}
+                  color="textSecondary"
+                  variant="caption"
+                >
+                  {statusText}
+                </Typography>
               </>
             )}
           </>
@@ -243,11 +254,24 @@ const useStyles: any = makeStyles((theme: any) => ({
     backgroundColor: theme.palette.background.paper,
     borderBottom: '1px solid ' + theme.palette.divider,
     padding: theme.spacing(2),
+    overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
     '& p': {
       paddingRight: theme.spacing(1),
     },
+  },
+  name: {
+    flexShrink: 0,
+    maxWidth: '40%',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  statusText: {
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
   },
   filler: {
     flexGrow: 1,

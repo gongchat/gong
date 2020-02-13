@@ -70,9 +70,7 @@ const User: FC<IProps> = ({ user, isSelected, showAvatar }: IProps) => {
               {user.vCard && user.vCard.photo ? (
                 <Avatar
                   className={classes.img}
-                  src={`data:${user.vCard.photoType};base64,${
-                    user.vCard.photo
-                  }`}
+                  src={`data:${user.vCard.photoType};base64,${user.vCard.photo}`}
                 />
               ) : (
                 <Avatar className={classes.img}>
@@ -89,7 +87,18 @@ const User: FC<IProps> = ({ user, isSelected, showAvatar }: IProps) => {
             </div>
           )}
         </div>
-        <Typography className={classes.title}>{displayName}</Typography>
+        <div className={classes.content}>
+          <div className={classes.text}>
+            <Typography className={classes.title}>{displayName}</Typography>
+          </div>
+          {user.statusText && showAvatar && (
+            <div className={classes.text}>
+              <Typography className={classes.statusText} variant="caption">
+                {user.statusText}
+              </Typography>
+            </div>
+          )}
+        </div>
         {user.unreadMessages > 0 && (
           <Badge
             badgeContent={user.unreadMessages}
@@ -145,13 +154,18 @@ const useStyles: any = makeStyles((theme: any) => ({
   rootNarrow: {
     padding: theme.spacing(0.5, 1),
   },
-  title: {
+  content: {
+    overflow: 'hidden',
+  },
+  text: {
     flexGrow: 1,
-    width: '100px',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflowX: 'hidden',
     marginRight: '20px',
+  },
+  title: {
+    display: 'inline',
   },
   avatar: {
     position: 'relative',

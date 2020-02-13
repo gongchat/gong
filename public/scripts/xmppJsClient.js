@@ -526,11 +526,24 @@ class XmppJsClient {
 
   async sendMyStatus(status) {
     if (this.xmpp && this.xmpp.status === 'online') {
-      if (status === 'online') {
-        await this.xmpp.send(xml('presence', {}, xml('priority', {}, 1)));
+      if (status.status === 'online') {
+        await this.xmpp.send(
+          xml(
+            'presence',
+            {},
+            xml('status', {}, status.statusText),
+            xml('priority', {}, 1)
+          )
+        );
       } else {
         await this.xmpp.send(
-          xml('presence', {}, xml('show', {}, status), xml('priority', {}, 1))
+          xml(
+            'presence',
+            {},
+            xml('show', {}, status.status),
+            xml('status', {}, status.statusText),
+            xml('priority', {}, 1)
+          )
         );
       }
     }

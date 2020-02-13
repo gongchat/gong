@@ -20,6 +20,7 @@ export const mapToUsers = (jsXml: any): IUser[] => {
       name: item.attrs.name,
       group: item.children[0].children[0],
       status: 'offline',
+      statusText: '',
       color: stringToHexColor(item.attrs.name),
       inputText: '',
       messages: [],
@@ -57,6 +58,9 @@ export const mapToPresence = (jsXml: any): IPresence => {
   const status: any = jsXml.children.find(
     (child: any) => child.name === 'show'
   );
+  const statusText: any = jsXml.children.find(
+    (child: any) => child.name === 'status'
+  );
   const presence: IPresence = {
     from: jsXml.attrs.from,
     status:
@@ -65,6 +69,7 @@ export const mapToPresence = (jsXml: any): IPresence => {
         : status
         ? status.children[0]
         : 'online',
+    statusText: statusText && statusText.children ? statusText.children[0] : '',
     priority: priority === undefined ? undefined : priority.children[0],
     user: !x
       ? undefined

@@ -34,10 +34,29 @@ export const DEFAULT_VCARD: IVCard = {
 export const userActions: any = {
   setMyStatus(status: string) {
     return (state: IState): IState => {
-      ipcRenderer.send('xmpp-my-status', status);
+      ipcRenderer.send('xmpp-my-status', {
+        status,
+        statusText: state.profile.statusText,
+      });
       return {
         ...state,
-        profile: { ...state.profile, status },
+        // TODO: add a new property to the profile to keep track of requests
+        // statusText will be set on the acknowledgement
+        // profile: { ...state.profile, status },
+      };
+    };
+  },
+  setMyStatusText(statusText: string) {
+    return (state: IState): IState => {
+      ipcRenderer.send('xmpp-my-status', {
+        status: state.profile.status,
+        statusText,
+      });
+      return {
+        ...state,
+        // TODO: add a new property to the profile to keep track of requests
+        // statusText will be set on the acknowledgement
+        // profile: { ...state.profile, statusText },
       };
     };
   },
