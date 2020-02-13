@@ -1,4 +1,6 @@
 export const ALLOWED_TAGS = [
+  'h1',
+  'h2',
   'h3',
   'h4',
   'h5',
@@ -27,7 +29,6 @@ export const ALLOWED_TAGS = [
   'th',
   'td',
   'pre',
-  'iframe',
   'span',
 ];
 
