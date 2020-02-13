@@ -123,6 +123,7 @@ export const connectionActions: any = {
         username: payload.username,
         group: '',
         status: 'online',
+        statusText: '',
         color: stringToHexColor(payload.username),
         vCard: DEFAULT_VCARD,
       };

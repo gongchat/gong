@@ -5,6 +5,7 @@ export default interface IProfile {
   username: string;
   group: string;
   status: string;
+  statusText: string;
   color: string;
   vCard: IVCard;
 }

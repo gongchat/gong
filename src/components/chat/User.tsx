@@ -87,12 +87,16 @@ const User: FC<IProps> = ({ user, isSelected, showAvatar }: IProps) => {
             </div>
           )}
         </div>
-        <div className={classes.text}>
-          <Typography className={classes.title}>{displayName}</Typography>
-          {user.statusText && (
-            <Typography className={classes.statusText} variant="caption">
-              {user.statusText}
-            </Typography>
+        <div className={classes.content}>
+          <div className={classes.text}>
+            <Typography className={classes.title}>{displayName}</Typography>
+          </div>
+          {user.statusText && showAvatar && (
+            <div className={classes.text}>
+              <Typography className={classes.statusText} variant="caption">
+                {user.statusText}
+              </Typography>
+            </div>
           )}
         </div>
         {user.unreadMessages > 0 && (
@@ -150,13 +154,18 @@ const useStyles: any = makeStyles((theme: any) => ({
   rootNarrow: {
     padding: theme.spacing(0.5, 1),
   },
+  content: {
+    overflow: 'hidden',
+  },
   text: {
     flexGrow: 1,
-    width: '100px',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflowX: 'hidden',
     marginRight: '20px',
+  },
+  title: {
+    display: 'inline',
   },
   avatar: {
     position: 'relative',
@@ -173,11 +182,6 @@ const useStyles: any = makeStyles((theme: any) => ({
     right: 5,
     border: '2px solid ' + theme.palette.background.default,
     borderRadius: '50%',
-  },
-  statusText: {
-    // textOverflow: 'ellipsis',
-    // overflowX: 'hidden',
-    // whiteSpace: 'nowrap',
   },
   statusOnly: {
     marginRight: theme.spacing(1),

@@ -34,9 +34,7 @@ const Me: FC = () => {
           {profile.vCard && profile.vCard.photoType ? (
             <Avatar
               className={classes.img}
-              src={`data:${profile.vCard.photoType};base64,${
-                profile.vCard.photo
-              }`}
+              src={`data:${profile.vCard.photoType};base64,${profile.vCard.photo}`}
             />
           ) : (
             <Avatar className={classes.img}>
@@ -47,7 +45,18 @@ const Me: FC = () => {
             <Status status={profile.status} />
           </div>
         </div>
-        <Typography className={classes.title}>{displayName}</Typography>
+        <div className={classes.text}>
+          <div className={classes.text}>
+            <Typography className={classes.title}>{displayName}</Typography>
+          </div>
+          {profile.statusText && (
+            <div className={classes.text}>
+              <Typography className={classes.statusText} variant="caption">
+                {profile.statusText}
+              </Typography>
+            </div>
+          )}
+        </div>
       </div>
       <StatusMenu
         anchorEl={meRef.current}

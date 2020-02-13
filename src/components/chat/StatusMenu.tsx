@@ -1,13 +1,18 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { useContext } from '../../context';
 
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
 import Status from './Status';
-import { EMOJIS } from './../../utils/emojis';
+import TextField from '@material-ui/core/TextField';
 
 const STATUSES = [
   { value: 'online', title: 'Online' },
@@ -29,14 +34,28 @@ interface IProps {
 
 const StatusMenu: FC<IProps> = ({ open, anchorEl, onClose }: IProps) => {
   const classes = useStyles();
-  const { setMyStatus } = useContext()[1];
+  const [{ profile }, { setMyStatus, setMyStatusText }] = useContext();
+  const [statusText, setStatusText] = useState(profile.statusText);
+  const [customStatusOpen, setCustomStatusOpen] = useState(false);
 
   const handleStatusClick = (status: string) => {
     setMyStatus(status);
     onClose();
   };
 
-  const openCustomStatus = () => {};
+  const openCustomStatus = () => {
+    setCustomStatusOpen(true);
+  };
+
+  const closeCustomStatus = () => {
+    setCustomStatusOpen(false);
+  };
+
+  const setCustomStatus = () => {
+    setMyStatusText(statusText);
+    setCustomStatusOpen(false);
+    onClose();
+  };
 
   return (
     <Popover
@@ -96,6 +115,30 @@ const StatusMenu: FC<IProps> = ({ open, anchorEl, onClose }: IProps) => {
             <Typography className={classes.title}>Set my status</Typography>
           </div>
         </div>
+        <Dialog open={customStatusOpen} onClose={closeCustomStatus}>
+          <DialogTitle>Set a custom status</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              value={statusText}
+              onChange={(event: any) => setStatusText(event.target.value)}
+              margin="dense"
+              label="Custom Status"
+              type="text"
+              fullWidth={true}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeCustomStatus}>Cancel</Button>
+            <Button
+              onClick={setCustomStatus}
+              color="primary"
+              variant="contained"
+            >
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </Popover>
   );
