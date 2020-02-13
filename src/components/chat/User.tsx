@@ -6,6 +6,7 @@ import Badge from '@material-ui/core/Badge';
 import Dialog from '@material-ui/core/Dialog';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
@@ -91,13 +92,27 @@ const User: FC<IProps> = ({ user, isSelected, showAvatar }: IProps) => {
         </div>
         <div className={classes.content}>
           <div className={classes.text}>
-            <Typography className={classes.title}>{displayName}</Typography>
+            <Tooltip
+              title={displayName}
+              interactive={true}
+              arrow={true}
+              enterDelay={1000}
+            >
+              <Typography className={classes.title}>{displayName}</Typography>
+            </Tooltip>
           </div>
           {user.statusText && showAvatar && (
             <div className={classes.text}>
-              <Typography className={classes.statusText} variant="caption">
-                {user.statusText}
-              </Typography>
+              <Tooltip
+                title={user.statusText}
+                interactive={true}
+                arrow={true}
+                enterDelay={1000}
+              >
+                <Typography className={classes.statusText} variant="caption">
+                  {user.statusText}
+                </Typography>
+              </Tooltip>
             </div>
           )}
         </div>

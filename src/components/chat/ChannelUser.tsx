@@ -2,6 +2,7 @@ import React, { FC, useState, useEffect } from 'react';
 import { useContext } from '../../context';
 
 import Avatar from '@material-ui/core/Avatar';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
@@ -54,9 +55,16 @@ const ChannelUser: FC<IProps> = ({ user, showAvatar }: IProps) => {
           </Avatar>
         </div>
       )}
-      <Typography className={classes.title} style={{ color: user.color }}>
-        {user.nickname}
-      </Typography>
+      <Tooltip
+        title={user.nickname}
+        interactive={true}
+        arrow={true}
+        enterDelay={1000}
+      >
+        <Typography className={classes.title} style={{ color: user.color }}>
+          {user.nickname}
+        </Typography>
+      </Tooltip>
     </div>
   );
 };
