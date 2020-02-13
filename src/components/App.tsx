@@ -5,6 +5,7 @@ import { SnackbarProvider } from 'notistack';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 
+import EventEmitterHandler from './EventEmitterHandler';
 import IpcRenderer from './IpcRenderer';
 import Routes from './Routes';
 import SnackbarNotifications from './SnackbarNotifications';
@@ -24,6 +25,7 @@ const App: FC = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <IpcRenderer />
+      <EventEmitterHandler />
       <Routes />
       <SnackbarProvider maxSnack={3}>
         <SnackbarNotifications />
