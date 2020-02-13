@@ -7,7 +7,7 @@ export const commandListSelectorIndex = 30;
 
 const COMMANDS = [
   { key: 'Grab a giphy', value: '/giphy', scope: 'all' },
-  { key: 'Sends messages as me', value: '/me', scope: 'groupchat' },
+  { key: 'Sends messages as me', value: '/me', scope: 'all' },
   {
     key: 'Changes your nickname for this room',
     value: '/nick',
