@@ -323,7 +323,9 @@ const Messages: FC = () => {
                     !isNextShowNewMessageMarker
                       ? classes.endOfGroupPadding
                       : '',
-                  ].join(' ')}
+                  ]
+                    .join(' ')
+                    .trim()}
                 >
                   <Message
                     channel={current}

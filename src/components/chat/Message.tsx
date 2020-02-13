@@ -170,7 +170,9 @@ const Message: FC<IProps> = ({
               'timestamp',
               [classes.timestamp, classes.compactTimestamp].join(' '),
               !showTime ? classes.timestampHide : '',
-            ].join(' ')}
+            ]
+              .join(' ')
+              .trim()}
           >
             <span className={classes.copyOnly}>[</span>
             {message.timestamp.format('h:mm A')}
@@ -185,8 +187,10 @@ const Message: FC<IProps> = ({
               className={[
                 classes.body,
                 classes.compactBody,
-                isMe && classes.me,
-              ].join(' ')}
+                isMe ? classes.me : '',
+              ]
+                .join(' ')
+                .trim()}
               dangerouslySetInnerHTML={{
                 __html: isMe ? `*${messageBody.substring(4)}*` : messageBody,
               }}
@@ -220,7 +224,9 @@ const Message: FC<IProps> = ({
             </Typography>
             <Typography className={classes.message}>
               <span
-                className={[classes.body, isMe ? classes.me : ''].join(' ')}
+                className={[classes.body, isMe ? classes.me : '']
+                  .join(' ')
+                  .trim()}
                 dangerouslySetInnerHTML={{
                   __html: isMe ? `*${messageBody.substring(4)}*` : messageBody,
                 }}

@@ -57,10 +57,12 @@ const User: FC<IProps> = ({ user, isSelected, showAvatar }: IProps) => {
     <>
       <div
         className={[
-          classes.root,
           isSelected ? classes.active : '',
+          classes.root,
           showAvatar ? '' : classes.rootNarrow,
-        ].join(' ')}
+        ]
+          .join(' ')
+          .trim()}
         onClick={handleOnClick}
         onContextMenu={handleOnContextMenu}
       >
