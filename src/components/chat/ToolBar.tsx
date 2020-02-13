@@ -5,6 +5,7 @@ import InputBase from '@material-ui/core/InputBase';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import MenuItem from '@material-ui/core/MenuItem';
 import Popover from '@material-ui/core/Popover';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
@@ -127,16 +128,25 @@ const ToolBar: FC = () => {
   return (
     <div className={classes.root}>
       <div className={classes.left}>
-        <Typography>{settings.domain}</Typography>
+        <Tooltip
+          title={settings.domain}
+          interactive={true}
+          arrow={true}
+          enterDelay={1000}
+        >
+          <Typography>{settings.domain}</Typography>
+        </Tooltip>
       </div>
       <div className={classes.right}>
-        <Typography className={classes.name}>
-          <span className={classes.symbol}>
-            {current && current.type === 'groupchat' && '# '}
-            {current && current.type === 'chat' && '@ '}
-          </span>
-          {name}
-        </Typography>
+        <Tooltip title={name} interactive={true} arrow={true} enterDelay={1000}>
+          <Typography className={classes.name}>
+            <span className={classes.symbol}>
+              {current && current.type === 'groupchat' && '# '}
+              {current && current.type === 'chat' && '@ '}
+            </span>
+            {name}
+          </Typography>
+        </Tooltip>
         {current &&
           current.type === 'groupchat' &&
           (current as IRoom).connectionError && (
@@ -150,14 +160,21 @@ const ToolBar: FC = () => {
             {sessionName && (
               <>
                 <div className={classes.divider} />
-                <Typography
-                  className={classes.sessionJid}
-                  color="textSecondary"
-                  variant="caption"
-                  onClick={handleSessionClick}
+                <Tooltip
+                  title={sessionName}
+                  interactive={true}
+                  arrow={true}
+                  enterDelay={1000}
                 >
-                  {sessionName}
-                </Typography>
+                  <Typography
+                    className={classes.sessionJid}
+                    color="textSecondary"
+                    variant="caption"
+                    onClick={handleSessionClick}
+                  >
+                    {sessionName}
+                  </Typography>
+                </Tooltip>
                 <Popover
                   open={open}
                   anchorEl={anchorEl}
@@ -186,13 +203,20 @@ const ToolBar: FC = () => {
                   )}
                 </Popover>
                 <div className={classes.divider} />
-                <Typography
-                  className={classes.statusText}
-                  color="textSecondary"
-                  variant="caption"
+                <Tooltip
+                  title={statusText}
+                  interactive={true}
+                  arrow={true}
+                  enterDelay={1000}
                 >
-                  {statusText}
-                </Typography>
+                  <Typography
+                    className={classes.statusText}
+                    color="textSecondary"
+                    variant="caption"
+                  >
+                    {statusText}
+                  </Typography>
+                </Tooltip>
               </>
             )}
           </>

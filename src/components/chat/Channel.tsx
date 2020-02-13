@@ -5,6 +5,7 @@ import Badge from '@material-ui/core/Badge';
 import Dialog from '@material-ui/core/Dialog';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/styles';
@@ -76,7 +77,14 @@ const Channel: FC<IProps> = ({ channel, isSelected, prefix }: IProps) => {
           >
             {prefix}
           </Typography>
-          <Typography className={classes.name}>{name}</Typography>
+          <Tooltip
+            title={name}
+            interactive={true}
+            arrow={true}
+            enterDelay={1000}
+          >
+            <Typography className={classes.name}>{name}</Typography>
+          </Tooltip>
           {channel.unreadMessages > 0 && (
             <Badge
               badgeContent={channel.unreadMessages}
