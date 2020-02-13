@@ -23,7 +23,9 @@ const ChannelUser: FC<IProps> = ({ user, showAvatar }: IProps) => {
 
   return (
     <div
-      className={[classes.root, showAvatar ? '' : classes.rootNarrow].join(' ')}
+      className={[classes.root, showAvatar ? '' : classes.rootNarrow]
+        .join(' ')
+        .trim()}
       onClick={handleOnClick}
     >
       {showAvatar && (

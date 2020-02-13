@@ -61,7 +61,9 @@ const Channel: FC<IProps> = ({ channel, isSelected, prefix }: IProps) => {
             ? classes.connected
             : classes.notConnected,
           isSelected ? classes.active : '',
-        ].join(' ')}
+        ]
+          .join(' ')
+          .trim()}
       >
         <div
           className={classes.content}
@@ -82,7 +84,9 @@ const Channel: FC<IProps> = ({ channel, isSelected, prefix }: IProps) => {
                 badge: [
                   classes.badge,
                   channel.hasUnreadMentionMe ? classes.badgeFlash : '',
-                ].join(' '),
+                ]
+                  .join(' ')
+                  .trim(),
               }}
               color="error"
             >

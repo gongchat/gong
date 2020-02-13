@@ -57,10 +57,12 @@ const User: FC<IProps> = ({ user, isSelected, showAvatar }: IProps) => {
     <>
       <div
         className={[
-          classes.root,
           isSelected ? classes.active : '',
+          classes.root,
           showAvatar ? '' : classes.rootNarrow,
-        ].join(' ')}
+        ]
+          .join(' ')
+          .trim()}
         onClick={handleOnClick}
         onContextMenu={handleOnContextMenu}
       >
@@ -70,9 +72,7 @@ const User: FC<IProps> = ({ user, isSelected, showAvatar }: IProps) => {
               {user.vCard && user.vCard.photo ? (
                 <Avatar
                   className={classes.img}
-                  src={`data:${user.vCard.photoType};base64,${
-                    user.vCard.photo
-                  }`}
+                  src={`data:${user.vCard.photoType};base64,${user.vCard.photo}`}
                 />
               ) : (
                 <Avatar className={classes.img}>

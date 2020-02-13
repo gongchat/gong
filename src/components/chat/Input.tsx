@@ -181,7 +181,9 @@ const Input: FC = () => {
                 className: [
                   classes.textareaRoot,
                   text === '' ? classes.emptyInput : '',
-                ].join(' '),
+                ]
+                  .join(' ')
+                  .trim(),
               }}
               rowsMax={8}
               inputRef={inputRef}
