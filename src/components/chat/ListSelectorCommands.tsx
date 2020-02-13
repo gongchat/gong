@@ -6,9 +6,13 @@ import ListSelectorBase from './ListSelectorBase';
 export const commandListSelectorIndex = 30;
 
 const COMMANDS = [
-  { key: 'Grab a giphy', value: '/giphy' },
-  { key: 'Sends messages as me', value: '/me' },
-  { key: 'Changes your nickname for this room', value: '/nick' },
+  { key: 'Grab a giphy', value: '/giphy', scope: 'all' },
+  { key: 'Sends messages as me', value: '/me', scope: 'all' },
+  {
+    key: 'Changes your nickname for this room',
+    value: '/nick',
+    scope: 'groupchat',
+  },
 ];
 
 interface IProps {
@@ -39,7 +43,7 @@ const ListSelectorCommands: FC<IProps> = ({
   };
 
   useEffect(() => {
-    if (current && current.type === 'groupchat') {
+    if (current) {
       if (
         selectorIndex !== commandListSelectorIndex + 1 &&
         selectorIndex !== -1
@@ -48,7 +52,11 @@ const ListSelectorCommands: FC<IProps> = ({
           setSelectorIndex(commandListSelectorIndex);
           setTerm(text);
           setCommands(
-            COMMANDS.filter(command => command.value.startsWith(text))
+            COMMANDS.filter(
+              command =>
+                command.value.startsWith(text) &&
+                (command.scope === 'all' || command.scope === current.type)
+            )
           );
         } else if (selectorIndex === commandListSelectorIndex) {
           setSelectorIndex(0);
