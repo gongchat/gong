@@ -30,7 +30,7 @@ const ChannelUsers: FC<IProps> = ({ users, title }: IProps) => {
             .reverse()
             .map((user: IChannelUser) => (
               <ChannelUser
-                key={user.jid}
+                key={user.channelJid}
                 user={user}
                 showAvatar={theme.sidebarRightShowAvatar}
               />

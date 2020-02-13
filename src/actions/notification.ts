@@ -3,6 +3,8 @@ import IMessage from '../interfaces/IMessage';
 import ISnackbarNotifications from '../interfaces/ISnackbarNotification';
 import IState from '../interfaces/IState';
 
+import EventEmitter from '../utils/eventEmitter';
+
 export const SOUNDS = [
   { name: '!', fileName: '!.mp3' },
   { name: '140.85', fileName: '140.85.mp3' },
@@ -191,8 +193,8 @@ const shouldFlashFrame = (
       // on message
       if (
         settings.flashFrameOnGroupchat !== 'never' &&
-        (settings.flashFrameOnGroupchat === 'unread' &&
-          (!message.isRead || !document.hasFocus()))
+        settings.flashFrameOnGroupchat === 'unread' &&
+        (!message.isRead || !document.hasFocus())
       ) {
         return true;
       }
@@ -200,8 +202,8 @@ const shouldFlashFrame = (
       if (
         message.isMentioningMe &&
         settings.flashFrameOnMentionMe !== 'never' &&
-        (settings.flashFrameOnMentionMe === 'unread' &&
-          (!message.isRead || !document.hasFocus()))
+        settings.flashFrameOnMentionMe === 'unread' &&
+        (!message.isRead || !document.hasFocus())
       ) {
         return true;
       }
@@ -210,8 +212,8 @@ const shouldFlashFrame = (
     if (type === 'chat') {
       if (
         settings.flashFrameOnChat !== 'never' &&
-        (settings.flashFrameOnChat === 'unread' &&
-          (!message.isRead || !document.hasFocus()))
+        settings.flashFrameOnChat === 'unread' &&
+        (!message.isRead || !document.hasFocus())
       ) {
         return true;
       }
@@ -292,6 +294,8 @@ const sendSystemNotificationOnMessage = (
       win.setAlwaysOnTop(true);
       win.focus();
       win.setAlwaysOnTop(false);
+
+      EventEmitter.dispatch('selectChannel', message.channelName);
     };
   }
 };

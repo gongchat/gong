@@ -55,12 +55,13 @@ export const roomActions: any = {
   selectRoomUser(user: IChannelUser) {
     return (state: IState): IState => {
       let channel = state.channels.find(
-        (c: IChannel) => c.jid === user.jid && c.type === 'chat'
+        (c: IChannel) => c.jid === user.userJid && c.type === 'chat'
       );
 
       if (!channel) {
         channel = state.channels.find(
-          (c: IChannel) => c.jid === user.jid.split('/')[0] && c.type === 'chat'
+          (c: IChannel) =>
+            c.jid === user.userJid.split('/')[0] && c.type === 'chat'
         );
       }
 
@@ -68,8 +69,8 @@ export const roomActions: any = {
         const newChannel: IChannel = {
           type: 'chat',
           order: 10,
-          jid: user.jid,
-          name: user.jid,
+          jid: user.userJid,
+          name: user.userJid,
           inputText: '',
           messages: [],
           unreadMessages: 0,
