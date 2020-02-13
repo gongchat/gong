@@ -199,9 +199,7 @@ const processMessage = (
   channelUsers: IChannelUser[],
   myChannelNickname: string
 ) => {
-  let formattedMessage = message.body;
-
-  if (formattedMessage) {
+  if (message.body) {
     // check if message is me
     message.isMe = message.isMe || message.userNickname === myChannelNickname;
 
@@ -216,17 +214,13 @@ const processMessage = (
       message.urls = [...message.urls, ...getImageUrls(message.body)];
     }
 
-    // escape tags
-    formattedMessage = formattedMessage.replace(/</g, '&lt;');
-    formattedMessage = formattedMessage.replace(/>/g, '&gt;');
-
     // handle mentions this only applies to IRoom
     channelUsers.forEach((user: IChannelUser) => {
       const isMentioningMe = user.nickname === myChannelNickname;
 
       const isMentioned =
-        getRegExpWithAt(user.nickname).test(formattedMessage) ||
-        getRegExpWithoutAt(user.nickname).test(formattedMessage);
+        getRegExpWithAt(user.nickname).test(message.body) ||
+        getRegExpWithoutAt(user.nickname).test(message.body);
 
       if (isMentioned) {
         // if mentioned
@@ -235,11 +229,6 @@ const processMessage = (
         message.isMentioningMe = message.isMentioningMe || isMentioningMe;
       }
     });
-
-    // handle new lines
-    message.body = formattedMessage
-      .replace(/\n\r/g, '<br />')
-      .replace(/\n/g, '<br />');
   }
 };
 

@@ -22,7 +22,9 @@ const ColorPicker: FC<IProps> = ({ item, onSelection }: IProps) => {
               className={[
                 classes.color,
                 item.color === color.color[shade] ? classes.selected : '',
-              ].join(' ')}
+              ]
+                .join(' ')
+                .trim()}
               style={{ backgroundColor: color.color[shade] || 'transparent' }}
               onClick={() => onSelection(color.color[shade], color.name, shade)}
             />

@@ -214,7 +214,9 @@ const ToolBar: FC = () => {
                       classes.inputIcon,
                       classes.clickableIcon,
                       searchTextLocal !== '' ? '' : classes.hideIcon,
-                    ].join(' ')}
+                    ]
+                      .join(' ')
+                      .trim()}
                   />
                 </InputAdornment>
               }
