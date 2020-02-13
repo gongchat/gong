@@ -157,10 +157,10 @@ const useStyles: any = makeStyles((theme: any) => ({
     padding: theme.spacing(0.5, 1),
   },
   content: {
+    flexGrow: 1,
     overflow: 'hidden',
   },
   text: {
-    flexGrow: 1,
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflowX: 'hidden',
