@@ -3,7 +3,7 @@ import IMessage from '../interfaces/IMessage';
 import ISnackbarNotifications from '../interfaces/ISnackbarNotification';
 import IState from '../interfaces/IState';
 
-import { EventEmitter } from '../utils/eventEmitter';
+import EventEmitter from '../utils/eventEmitter';
 
 export const SOUNDS = [
   { name: '!', fileName: '!.mp3' },
@@ -295,9 +295,7 @@ const sendSystemNotificationOnMessage = (
       win.focus();
       win.setAlwaysOnTop(false);
 
-      if (state.current) {
-        EventEmitter.dispatch('selectChannel', state.current.jid);
-      }
+      EventEmitter.dispatch('selectChannel', message.channelName);
     };
   }
 };

@@ -1,8 +1,6 @@
 import { FC, useEffect } from 'react';
 import { useContext } from '../context';
-import { EventEmitter } from '../utils/eventEmitter';
-
-const { ipcRenderer } = window.require('electron');
+import EventEmitter from '../utils/eventEmitter';
 
 const EventEmitterHandler: FC = () => {
   const actions = useContext()[1];
@@ -10,8 +8,8 @@ const EventEmitterHandler: FC = () => {
   useEffect(() => {
     // Do not call multiple actions inside an EventEmitter subscribe
 
-    EventEmitter.subscribe('selectChannel', (event: any) =>
-      actions.selectChannel(event.jid)
+    EventEmitter.subscribe('selectChannel', (data: any) =>
+      actions.selectChannel(data)
     );
   }, [actions]);
 

@@ -30,7 +30,7 @@ const ListSelectorUsers: FC<IProps> = ({
   const handleSelection = (obj: any) => {
     if (obj) {
       const user: any = channelUsers.find(
-        (u: IChannelUser) => u.jid === obj.jid
+        (u: IChannelUser) => u.channelJid === obj.channelJid
       );
       if (user) {
         if (text === '' || text.length === 0) {

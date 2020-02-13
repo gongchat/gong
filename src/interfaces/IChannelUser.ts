@@ -1,7 +1,8 @@
 import { Moment } from 'moment';
 
 export default interface IChannelUser {
-  jid: string;
+  channelJid: string;
+  userJid: string;
   role: 'moderator' | 'participant';
   nickname: string;
   color: string;

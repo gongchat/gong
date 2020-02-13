@@ -1,5 +1,4 @@
-// @ts-ignore
-export const EventEmitter = {
+const EventEmitter = {
   events: {},
   dispatch: function(event: any, data: any) {
     if (!this.events[event]) {
@@ -11,5 +10,9 @@ export const EventEmitter = {
     if (!this.events[event]) {
       this.events[event] = [];
     }
+    this.events[event].push(callback);
   },
 };
+
+Object.freeze(EventEmitter);
+export default EventEmitter;

@@ -12,11 +12,12 @@ export const presenceActions: any = {
   setPresence(payload: IPresence) {
     return (state: IState): IState => {
       if (payload.from === state.profile.jid) {
-        return setMe(state, payload);
+        return setMe({ ...state }, payload);
       } else if (!payload.user && !payload.code) {
-        return setChat(state, payload);
+        return setChat({ ...state }, payload);
       } else {
-        return setGroupchat(state, payload);
+        const newState = setGroupchat({ ...state }, payload);
+        return newState;
       }
     };
   },
@@ -146,21 +147,24 @@ const setGroupchat = (state: IState, presence: IPresence): IState => {
         // remove user if status is no longer online
         room.users = [
           ...room.users.filter(
-            (user: IChannelUser) => user.jid !== presence.user
+            (user: IChannelUser) => user.channelJid !== presence.from
           ),
         ];
       } else {
         // if user with same nickname exists, remove it
         room.users = room.users.filter(
           (u: IChannelUser) =>
-            u.jid.split('/')[1] !== presence.user.split('/')[1]
+            u.channelJid.split('/')[1] !== presence.from.split('/')[1]
         );
 
         // if user does not exist, add it
-        if (!room.users.find((u: IChannelUser) => u.jid === presence.user)) {
+        if (
+          !room.users.find((u: IChannelUser) => u.channelJid === presence.from)
+        ) {
           const nickname: string = presence.from.split('/')[1];
           const newUser: IChannelUser = {
-            jid: presence.user,
+            channelJid: presence.from,
+            userJid: presence.user,
             role: presence.role,
             nickname,
             color: stringToHexColor(nickname),
