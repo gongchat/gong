@@ -89,13 +89,13 @@ const ListSelectorGiphy: FC<IProps> = ({
           titleRight={
             theme.palette.type === 'dark' ? (
               <img
-                src="/images/PoweredBy_200px-Black_HorizLogo.png"
+                src="./images/PoweredBy_200px-Black_HorizLogo.png"
                 alt="Giphy attribution"
                 height="20"
               />
             ) : (
               <img
-                src="/images/PoweredBy_200px-White_HorizLogo.png"
+                src="./images/PoweredBy_200px-White_HorizLogo.png"
                 alt="Giphy attribution"
                 height="20"
               />
