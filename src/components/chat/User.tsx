@@ -56,76 +56,81 @@ const User: FC<IProps> = ({ user, isSelected, showAvatar }: IProps) => {
 
   return (
     <>
-      <div
-        className={[
-          isSelected ? classes.active : '',
-          classes.root,
-          showAvatar ? '' : classes.rootNarrow,
-        ]
-          .join(' ')
-          .trim()}
-        onClick={handleOnClick}
-        onContextMenu={handleOnContextMenu}
-      >
-        <div className={classes.avatar}>
-          {showAvatar ? (
-            <div>
-              {user.vCard && user.vCard.photo ? (
-                <Avatar
-                  className={classes.img}
-                  src={`data:${user.vCard.photoType};base64,${user.vCard.photo}`}
-                />
-              ) : (
-                <Avatar className={classes.img}>
-                  <Typography>{getAbbreviation(displayName)}</Typography>
-                </Avatar>
-              )}
-              <div className={classes.status}>
-                <Status status={user.status} />
-              </div>
-            </div>
-          ) : (
-            <div className={classes.statusOnly}>
-              <Status status={user.status} />
-            </div>
-          )}
-        </div>
-        <div className={classes.content}>
-          <div className={classes.text}>
-            <Tooltip
-              title={displayName}
-              interactive={true}
-              arrow={true}
-              enterDelay={1000}
-            >
-              <Typography className={classes.title}>{displayName}</Typography>
-            </Tooltip>
-          </div>
-          {user.statusText && showAvatar && (
-            <div className={classes.text}>
-              <Tooltip
-                title={user.statusText}
-                interactive={true}
-                arrow={true}
-                enterDelay={1000}
-              >
+      <Tooltip
+        title={
+          <>
+            <Typography className={classes.title}>{displayName}</Typography>
+            {user.statusText && (
+              <>
+                <br />
                 <Typography className={classes.statusText} variant="caption">
                   {user.statusText}
                 </Typography>
-              </Tooltip>
+              </>
+            )}
+          </>
+        }
+        interactive={true}
+        arrow={true}
+        enterDelay={1000}
+      >
+        <div
+          className={[
+            isSelected ? classes.active : '',
+            classes.root,
+            showAvatar ? '' : classes.rootNarrow,
+          ]
+            .join(' ')
+            .trim()}
+          onClick={handleOnClick}
+          onContextMenu={handleOnContextMenu}
+        >
+          <div className={classes.avatar}>
+            {showAvatar ? (
+              <div>
+                {user.vCard && user.vCard.photo ? (
+                  <Avatar
+                    className={classes.img}
+                    src={`data:${user.vCard.photoType};base64,${user.vCard.photo}`}
+                  />
+                ) : (
+                  <Avatar className={classes.img}>
+                    <Typography>{getAbbreviation(displayName)}</Typography>
+                  </Avatar>
+                )}
+                <div className={classes.status}>
+                  <Status status={user.status} />
+                </div>
+              </div>
+            ) : (
+              <div className={classes.statusOnly}>
+                <Status status={user.status} />
+              </div>
+            )}
+          </div>
+          <div className={classes.content}>
+            <div className={classes.text}>
+              <Typography className={classes.title}>{displayName}</Typography>
             </div>
+            {user.statusText && showAvatar && (
+              <div className={classes.text}>
+                <Typography className={classes.statusText} variant="caption">
+                  {user.statusText}
+                </Typography>
+              </div>
+            )}
+          </div>
+          {user.unreadMessages > 0 && (
+            <Badge
+              badgeContent={user.unreadMessages}
+              classes={{ badge: classes.badge }}
+              color="error"
+            >
+              <span />
+            </Badge>
           )}
         </div>
-        {user.unreadMessages > 0 && (
-          <Badge
-            badgeContent={user.unreadMessages}
-            classes={{ badge: classes.badge }}
-            color="error"
-          >
-            <span />
-          </Badge>
-        )}
-      </div>
+      </Tooltip>
       <Menu
         id="context-menu"
         anchorEl={anchorEl}

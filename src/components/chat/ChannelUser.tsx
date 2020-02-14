@@ -35,37 +35,37 @@ const ChannelUser: FC<IProps> = ({ user, showAvatar }: IProps) => {
   }, [channels, user.userJid]);
 
   return (
-    <div
-      className={[classes.root, showAvatar ? '' : classes.rootNarrow]
-        .join(' ')
-        .trim()}
-      onClick={handleOnClick}
+    <Tooltip
+      title={user.nickname}
+      interactive={true}
+      arrow={true}
+      enterDelay={1000}
     >
-      {showAvatar && (
-        <div className={classes.avatar}>
-          <Avatar
-            className={classes.img}
-            src={
-              channel && channel.vCard
-                ? `data:${channel.vCard.photoType};base64,${channel.vCard.photo}`
-                : ''
-            }
-          >
-            {getAbbreviation(user.nickname)}
-          </Avatar>
-        </div>
-      )}
-      <Tooltip
-        title={user.nickname}
-        interactive={true}
-        arrow={true}
-        enterDelay={1000}
+      <div
+        className={[classes.root, showAvatar ? '' : classes.rootNarrow]
+          .join(' ')
+          .trim()}
+        onClick={handleOnClick}
       >
+        {showAvatar && (
+          <div className={classes.avatar}>
+            <Avatar
+              className={classes.img}
+              src={
+                channel && channel.vCard
+                  ? `data:${channel.vCard.photoType};base64,${channel.vCard.photo}`
+                  : ''
+              }
+            >
+              {getAbbreviation(user.nickname)}
+            </Avatar>
+          </div>
+        )}
         <Typography className={classes.title} style={{ color: user.color }}>
           {user.nickname}
         </Typography>
-      </Tooltip>
-    </div>
+      </div>
+    </Tooltip>
   );
 };
 
