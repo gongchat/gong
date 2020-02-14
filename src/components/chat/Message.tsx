@@ -336,14 +336,14 @@ const Message: FC<IProps> = ({
                         {isGiphy && theme.palette.type === 'dark' && (
                           <img
                             className={classes.giphyLogo}
-                            src="/images/Poweredby_100px-Black_VertLogo.png"
+                            src="./images/Poweredby_100px-Black_VertLogo.png"
                             alt="Giphy attribution"
                           />
                         )}
                         {isGiphy && theme.palette.type === 'light' && (
                           <img
                             className={classes.giphyLogo}
-                            src="/images/Poweredby_100px-White_VertLogo.png"
+                            src="./images/Poweredby_100px-White_VertLogo.png"
                             alt="Giphy attribution"
                           />
                         )}
