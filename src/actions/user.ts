@@ -99,8 +99,6 @@ export const userActions: any = {
           to: user.jid,
         });
       });
-      // update user status to online after roster is received
-      ipcRenderer.send('xmpp-my-status', 'online');
       return {
         ...state,
         profile: { ...state.profile, status: 'online' },
