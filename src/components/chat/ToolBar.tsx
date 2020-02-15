@@ -202,21 +202,25 @@ const ToolBar: FC = () => {
                     )
                   )}
                 </Popover>
-                <div className={classes.divider} />
-                <Tooltip
-                  title={statusText}
-                  interactive={true}
-                  arrow={true}
-                  enterDelay={1000}
-                >
-                  <Typography
-                    className={classes.statusText}
-                    color="textSecondary"
-                    variant="caption"
-                  >
-                    {statusText}
-                  </Typography>
-                </Tooltip>
+                {statusText && (
+                  <>
+                    <div className={classes.divider} />
+                    <Tooltip
+                      title={statusText}
+                      interactive={true}
+                      arrow={true}
+                      enterDelay={1000}
+                    >
+                      <Typography
+                        className={classes.statusText}
+                        color="textSecondary"
+                        variant="caption"
+                      >
+                        {statusText}
+                      </Typography>
+                    </Tooltip>
+                  </>
+                )}
               </>
             )}
           </>
