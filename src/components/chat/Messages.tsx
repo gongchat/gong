@@ -138,7 +138,10 @@ const Messages: FC = () => {
           }
           // if new message marker is present, mark messages read when scroll
           // is at the bottom
-          if (newMessageMarkerRef.current) {
+          if (
+            newMessageMarkerRef.current &&
+            event.target.scrollHeight > event.target.clientHeight
+          ) {
             markMessagesRead(current.jid);
           }
         }
