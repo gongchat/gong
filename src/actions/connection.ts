@@ -122,7 +122,7 @@ export const connectionActions: any = {
         jid: payload.jid,
         username: payload.username,
         group: '',
-        status: 'online',
+        status: '',
         statusText: '',
         color: stringToHexColor(payload.username),
         vCard: DEFAULT_VCARD,
@@ -130,8 +130,9 @@ export const connectionActions: any = {
 
       const settings: ISettings = mapSettingsSavedToSettings(settingsSaved);
 
-      ipcRenderer.send('xmpp-roster');
+      ipcRenderer.send('xmpp-my-status', { status: 'online', statusText: '' });
       ipcRenderer.send('xmpp-get-vcard', { from: payload.jid });
+      ipcRenderer.send('xmpp-roster');
 
       // handle reconnected message if already authenticated
       let notifications = { ...state.notifications };
