@@ -100,8 +100,8 @@ export const userActions: any = {
         });
       });
 
-      // need to send after getting roster as the XMPP server will return
-      // the status for each user
+      // Need to send after getting roster as the XMPP server will return
+      // the status for each user.
       ipcRenderer.send('xmpp-my-status', { status: 'online', statusText: '' });
 
       return {
