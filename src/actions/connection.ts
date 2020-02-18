@@ -130,7 +130,6 @@ export const connectionActions: any = {
 
       const settings: ISettings = mapSettingsSavedToSettings(settingsSaved);
 
-      ipcRenderer.send('xmpp-my-status', { status: 'online', statusText: '' });
       ipcRenderer.send('xmpp-get-vcard', { from: payload.jid });
       ipcRenderer.send('xmpp-roster');
 
