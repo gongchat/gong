@@ -61,6 +61,7 @@ export const mapToPresence = (jsXml: any): IPresence => {
   const statusText: any = jsXml.children.find(
     (child: any) => child.name === 'status'
   );
+  const xStatus = x && x.children.find(child => child.name === 'status');
   const presence: IPresence = {
     from: jsXml.attrs.from,
     status:
@@ -78,7 +79,7 @@ export const mapToPresence = (jsXml: any): IPresence => {
       : jsXml.attrs.from,
     role: itemAttrs && itemAttrs.role,
     affiliation: itemAttrs && itemAttrs.affiliation,
-    code: error && error.attrs.code,
+    code: xStatus ? xStatus.attrs.code : '',
   };
   return presence;
 };
