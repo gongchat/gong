@@ -9,6 +9,8 @@ import IChannel from '../interfaces/IChannel';
 import IConnection from '../interfaces/IConnection';
 import ICredentials from '../interfaces/ICredentials';
 import IProfile from '../interfaces/IProfile';
+import IRoom from '../interfaces/IRoom';
+import IRoomJoin from '../interfaces/IRoomJoin';
 import ISettings from '../interfaces/ISettings';
 import ISettingsSaved from '../interfaces/ISettingsSaved';
 import ISnackbarNotification from '../interfaces/ISnackbarNotification';
@@ -215,6 +217,55 @@ export const connectionActions: any = {
         ...INITIAL_STATE,
         connection: { ...INITIAL_STATE.connection, hasSavedCredentials: false },
       };
+    };
+  },
+  // TODO: map to an interface?
+  handlePingError(payload: any) {
+    return (state: IState): IState => {
+      const error = payload.children.find(child => child.name === 'error');
+      if (error) {
+        // is its recipent not available?
+        // TODO: https://xmpp.org/extensions/xep-0410.html shows not-acceptable, testing locally I am seeing varying results.
+        // For example: `error.children.name` such as recipient-unavailable, not-acceptable, bad-request. For now it
+        // will assume all but service-unavailable should require a reconnect.
+        if (
+          error &&
+          error.children.find(child => child.name !== 'service-unavailable')
+        ) {
+          // if yes look in channels using channel jid / my nickname
+          const channel = state.channels.find(
+            channel =>
+              channel.type === 'groupchat' &&
+              `${channel.jid}/${(channel as IRoom).myNickname}` ===
+                payload.attrs.from
+          ) as IRoom;
+          if (channel) {
+            // if found set status to offline and send request to subscribe to the channel
+            const channelJoin: IRoomJoin = {
+              jid: channel.jid,
+              channelName: channel.name,
+              nickname: channel.myNickname,
+              password: channel.password,
+            };
+            ipcRenderer.send('xmpp-subscribe-to-room', channelJoin);
+            return {
+              ...state,
+              channels: state.channels.map(_channel => {
+                if (_channel.jid === channel.jid) {
+                  return {
+                    ...channel,
+                    isConnected: false,
+                    isConnecting: true,
+                  };
+                } else {
+                  return _channel;
+                }
+              }),
+            };
+          }
+        }
+      }
+      return state;
     };
   },
 };

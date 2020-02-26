@@ -171,9 +171,8 @@ class XmppJsClient {
       // ping it
       clearInterval(this.pingInterval);
       this.pingInterval = setInterval(() => {
-        console.log('interval', this.pingInterval);
         if (this.xmpp && this.xmpp.status === 'online') {
-          this.sendPing();
+          this.sendPing(this.credentials.domain);
         }
       }, 10000);
     });
@@ -225,10 +224,10 @@ class XmppJsClient {
     if (
       stanza.children &&
       stanza.children.length > 0 &&
-      stanza.children[0].attrs.xmlns === 'urn:xmpp:ping'
+      stanza.children[0].attrs.xmlns === 'urn:xmpp:ping' &&
+      stanza.attrs.type === 'error'
     ) {
-      // Disabled as I believe the xmpp.js library handles this for
-      // this.sendPong(this.credentials.domain, stanza.attrs.id);
+      event.sender.send('xmpp-ping-error', stanza);
     }
   }
 
@@ -325,14 +324,14 @@ class XmppJsClient {
     }
   }
 
-  async sendPing() {
+  async sendPing(to) {
     if (this.xmpp && this.xmpp.status === 'online') {
       return await this.xmpp.iqCaller.request(
         xml(
           'iq',
           {
             from: this.credentials.jid,
-            to: this.credentials.domain,
+            to: to,
             id: makeId(7),
             type: 'get',
           },
@@ -342,6 +341,7 @@ class XmppJsClient {
     }
   }
 
+  // TODO: this will be handled by xmpp.js, see: https://github.com/xmppjs/xmpp.js/issues/629
   async sendPong(domain, id) {
     if (this.xmpp && this.xmpp.status === 'online') {
       return await this.xmpp.iqCaller

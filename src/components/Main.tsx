@@ -8,12 +8,13 @@ import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/styles';
 
 import Chat from './chat/Chat';
+import Discover from './discover/Discover';
+import MenuBar from './MenuBar';
+import Ping from './Ping';
+import Settings from './settings/Settings';
 import SidebarLeft from './chat/SidebarLeft';
 import SidebarRight from './chat/SidebarRight';
 import ToolBar from './chat/ToolBar';
-import Discover from './discover/Discover';
-import MenuBar from './MenuBar';
-import Settings from './settings/Settings';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -112,6 +113,7 @@ const Main: FC<IProps> = () => {
         <div className={classes.middle}>{current && <Chat />}</div>
         <SidebarRight />
       </div>
+      <Ping />
       <Discover />
       <Settings />
       <Snackbar

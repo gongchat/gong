@@ -57,6 +57,10 @@ class IpcMainEvents {
       xmppJsClient.sendRoomNickname(arg.jid, arg.nickname);
     });
 
+    ipcMain.on('xmpp-send-ping', (event, arg) => {
+      xmppJsClient.sendPing(arg);
+    });
+
     // Settings
 
     ipcMain.on('set-settings', (event, arg) => {

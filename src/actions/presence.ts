@@ -2,11 +2,14 @@ import IChannel from '../interfaces/IChannel';
 import IChannelUser from '../interfaces/IChannelUser';
 import IPresence from '../interfaces/IPresence';
 import IRoom from '../interfaces/IRoom';
+import IRoomJoin from '../interfaces/IRoomJoin';
 import IState from '../interfaces/IState';
 import IUser from '../interfaces/IUser';
 import IUserConnection from '../interfaces/IUserConnection';
 
 import { stringToHexColor } from '../utils/colorUtils';
+
+const { ipcRenderer } = window.require('electron');
 
 export const presenceActions: any = {
   setPresence(payload: IPresence) {
@@ -150,6 +153,10 @@ const setGroupchat = (state: IState, presence: IPresence): IState => {
             (user: IChannelUser) => user.channelJid !== presence.from
           ),
         ];
+        // if is from me
+        if (`${room.jid}/${room.myNickname}` === presence.from) {
+          handleGroupchatPresenceCode(presence.code, room);
+        }
       } else {
         // if user with same nickname exists, remove it
         room.users = room.users.filter(
@@ -185,4 +192,45 @@ const setGroupchat = (state: IState, presence: IPresence): IState => {
   }
 
   return state;
+};
+
+const handleGroupchatPresenceCode = (code: string, room: IRoom) => {
+  const channelJoin: IRoomJoin = {
+    jid: room.jid,
+    channelName: room.name,
+    nickname: room.myNickname,
+    password: room.password,
+  };
+
+  // Status code reference: https://xmpp.org/registrar/mucstatus.html
+  switch (code) {
+    case '301': // banned from room
+      room.isConnected = false;
+      room.isConnecting = false;
+      room.connectionError = 'Banned from room';
+      break;
+    case '307': // kicked from room
+      room.isConnected = false;
+      room.isConnecting = true;
+      room.connectionError = 'Kicked from room';
+      setTimeout(() => {
+        ipcRenderer.send('xmpp-subscribe-to-room', channelJoin);
+      }, 30_000);
+      break;
+    case '321': // affiliation change
+      room.isConnected = false;
+      room.isConnecting = false;
+      room.connectionError = 'Affiliation change';
+      break;
+    case '322': // members-only
+      room.isConnected = false;
+      room.isConnecting = false;
+      room.connectionError = 'Members-only and you are not a member';
+      break;
+    case '332': // system shutdown
+      room.isConnected = false;
+      room.isConnecting = false;
+      room.connectionError = 'System shutdown';
+      break;
+  }
 };

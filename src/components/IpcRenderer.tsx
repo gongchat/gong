@@ -54,6 +54,10 @@ const IpcRenderer: FC = () => {
       actions.setUserVCard(mapToVCard(arg));
     });
 
+    ipcRenderer.on('xmpp-ping-error', (event: any, arg: any) => {
+      actions.handlePingError(arg);
+    });
+
     ipcRenderer.on('get-log', (event: any, arg: any) => {
       actions.setChannelLogs(arg);
     });

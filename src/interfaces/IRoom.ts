@@ -12,4 +12,5 @@ export default interface IRoom extends IChannel {
   connectionError: string;
   lastReadTimestamp: Moment | undefined;
   lastReadMessageId: string;
+  lastPingedTimestamp: Moment | undefined;
 }

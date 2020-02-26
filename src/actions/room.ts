@@ -38,6 +38,7 @@ export const roomActions: any = {
         scrollPosition: -1,
         lastReadTimestamp: undefined,
         lastReadMessageId: '',
+        lastPingedTimestamp: undefined,
         isSearching: false,
         searchText: '',
         searchOrder: 'newest',
@@ -118,6 +119,7 @@ export const roomActions: any = {
           scrollPosition: -1,
           lastReadTimestamp: undefined,
           lastReadMessageId: '',
+          lastPingedTimestamp: undefined,
           isSearching: false,
           searchText: '',
           searchOrder: 'newest',
@@ -174,6 +176,32 @@ export const roomActions: any = {
       };
     };
   },
+  sendRoomPings() {
+    return (state: IState): IState => {
+      const channels = [...state.channels];
+      let didPing = false;
+      channels.forEach(channel => {
+        if (channel.type === 'groupchat') {
+          const room = channel as IRoom;
+          if (room.isConnected) {
+            ipcRenderer.send(
+              'xmpp-send-ping',
+              `${room.jid}/${room.myNickname}`
+            );
+            didPing = true;
+            room.lastPingedTimestamp = moment();
+          }
+        }
+      });
+      if (didPing) {
+        return {
+          ...state,
+          channels,
+        };
+      }
+      return state;
+    };
+  },
 };
 
 export const addSavedRoomsToChannels = (state: IState): IState => {
@@ -217,6 +245,7 @@ export const addSavedRoomsToChannels = (state: IState): IState => {
           scrollPosition: -1,
           lastReadTimestamp: moment(roomSaved.lastReadTimestamp),
           lastReadMessageId: roomSaved.lastReadMessageId,
+          lastPingedTimestamp: undefined,
           isSearching: false,
           searchText: '',
           searchOrder: 'newest',
