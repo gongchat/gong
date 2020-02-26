@@ -55,7 +55,7 @@ const System: FC = () => {
         } else {
           clearInterval(interval);
         }
-      }, 60000);
+      }, 60_000);
     }
     return () => {
       if (interval) {

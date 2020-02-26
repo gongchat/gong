@@ -83,7 +83,7 @@ const Layout: FC = () => {
           : value;
       setTheme([{ themeKey: 'theme.spacing.unit', value }]);
       setSpacing(value);
-    }, 1000);
+    }, 1_000);
   };
 
   const updateSidebarWidth = (value: any) => {
@@ -100,7 +100,7 @@ const Layout: FC = () => {
           : value;
       setTheme([{ themeKey: 'sidebarWidth', value }]);
       setSidebarWidth(value);
-    }, 1000);
+    }, 1_000);
   };
 
   const handleSwitchChange = (event: any, action: any) => {

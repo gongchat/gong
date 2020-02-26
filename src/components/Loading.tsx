@@ -51,7 +51,7 @@ const Loading: FC<IProps> = () => {
           reconnectTimer.current = setTimeout(() => {
             setText('Looking for the server');
             autoConnect();
-          }, 10000);
+          }, 10_000);
         }
       }
     }

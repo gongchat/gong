@@ -69,7 +69,7 @@ const Font: FC = () => {
     }
     fontTimer.current = setTimeout(() => {
       setTheme([{ themeKey: 'typography.fontFamily', value: newFont }]);
-    }, 1000);
+    }, 1_000);
   };
 
   const updateSize = (value: any) => {
@@ -82,7 +82,7 @@ const Font: FC = () => {
       setTheme([{ themeKey: 'typography.fontSize', value }]);
       // need to set again in case size is out of bounds
       setSize(value);
-    }, 1000);
+    }, 1_000);
   };
 
   const reset = () => {
