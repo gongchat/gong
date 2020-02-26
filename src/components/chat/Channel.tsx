@@ -55,60 +55,61 @@ const Channel: FC<IProps> = ({ channel, isSelected, prefix }: IProps) => {
 
   return (
     <>
-      <div
-        className={[
-          classes.root,
-          channel.isConnected || channel.type === 'chat'
-            ? classes.connected
-            : classes.notConnected,
-          isSelected ? classes.active : '',
-        ]
-          .join(' ')
-          .trim()}
+      <Tooltip
+        title={name}
+        interactive={true}
+        arrow={true}
+        placement="right"
+        enterDelay={1_000}
       >
         <div
-          className={classes.content}
-          onContextMenu={handleOnContextMenu}
-          onClick={handleOnClick}
+          className={[
+            classes.root,
+            channel.isConnected || channel.type === 'chat'
+              ? classes.connected
+              : classes.notConnected,
+            isSelected ? classes.active : '',
+          ]
+            .join(' ')
+            .trim()}
         >
-          <Typography
-            className={classes.hashtag}
-            color={channel.connectionError ? 'error' : 'textPrimary'}
+          <div
+            className={classes.content}
+            onContextMenu={handleOnContextMenu}
+            onClick={handleOnClick}
           >
-            {prefix}
-          </Typography>
-          <Tooltip
-            title={name}
-            interactive={true}
-            arrow={true}
-            enterDelay={1_000}
-          >
-            <Typography className={classes.name}>{name}</Typography>
-          </Tooltip>
-          {channel.unreadMessages > 0 && (
-            <Badge
-              badgeContent={channel.unreadMessages}
-              classes={{
-                badge: [
-                  classes.badge,
-                  channel.hasUnreadMentionMe ? classes.badgeFlash : '',
-                ]
-                  .join(' ')
-                  .trim(),
-              }}
-              color="error"
+            <Typography
+              className={classes.hashtag}
+              color={channel.connectionError ? 'error' : 'textPrimary'}
             >
-              <span />
-            </Badge>
-          )}
+              {prefix}
+            </Typography>
+            <Typography className={classes.name}>{name}</Typography>
+            {channel.unreadMessages > 0 && (
+              <Badge
+                badgeContent={channel.unreadMessages}
+                classes={{
+                  badge: [
+                    classes.badge,
+                    channel.hasUnreadMentionMe ? classes.badgeFlash : '',
+                  ]
+                    .join(' ')
+                    .trim(),
+                }}
+                color="error"
+              >
+                <span />
+              </Badge>
+            )}
+          </div>
+          <Typography
+            className={classes.close}
+            onClick={() => removeChannel(channel.jid)}
+          >
+            <CloseIcon className={classes.closeIcon} />
+          </Typography>
         </div>
-        <Typography
-          className={classes.close}
-          onClick={() => removeChannel(channel.jid)}
-        >
-          <CloseIcon className={classes.closeIcon} />
-        </Typography>
-      </div>
+      </Tooltip>
       <Menu
         id="context-menu"
         anchorEl={anchorEl}

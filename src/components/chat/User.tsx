@@ -71,6 +71,7 @@ const User: FC<IProps> = ({ user, isSelected, showAvatar }: IProps) => {
           </>
         }
         interactive={true}
+        placement="right"
         arrow={true}
         enterDelay={1_000}
       >
