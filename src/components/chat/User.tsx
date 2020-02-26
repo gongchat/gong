@@ -72,7 +72,7 @@ const User: FC<IProps> = ({ user, isSelected, showAvatar }: IProps) => {
         }
         interactive={true}
         arrow={true}
-        enterDelay={1000}
+        enterDelay={1_000}
       >
         <div
           className={[

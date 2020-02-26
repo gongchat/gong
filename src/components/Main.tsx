@@ -92,7 +92,7 @@ const Main: FC<IProps> = () => {
         } else {
           reconnectTimer.current = setTimeout(() => {
             autoConnect();
-          }, 10000);
+          }, 10_000);
         }
       }
     }

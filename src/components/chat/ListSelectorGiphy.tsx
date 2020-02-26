@@ -71,7 +71,7 @@ const ListSelectorGiphy: FC<IProps> = ({
         }
         searchTimer.current = setTimeout(() => {
           fetchIt(newText);
-        }, 1000);
+        }, 1_000);
       }
       if (selectorIndex === giphyListSelectorIndex && !setVisibility) {
         setSelectorIndex(0);

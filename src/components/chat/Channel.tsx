@@ -81,7 +81,7 @@ const Channel: FC<IProps> = ({ channel, isSelected, prefix }: IProps) => {
             title={name}
             interactive={true}
             arrow={true}
-            enterDelay={1000}
+            enterDelay={1_000}
           >
             <Typography className={classes.name}>{name}</Typography>
           </Tooltip>

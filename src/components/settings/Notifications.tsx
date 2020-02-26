@@ -103,7 +103,7 @@ const NotificationSettings: FC = () => {
       setAndSaveSettings({ soundVolume: value });
       // need to set again in case size is out of bounds
       setVolume(value);
-    }, 1000);
+    }, 1_000);
   };
 
   const reset = () => {

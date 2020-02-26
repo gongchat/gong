@@ -56,7 +56,7 @@ const Group: FC<IProps> = ({
             title={title}
             interactive={true}
             arrow={true}
-            enterDelay={1000}
+            enterDelay={1_000}
           >
             <Typography className={classes.title} onClick={handleChange}>
               {title}

@@ -39,7 +39,7 @@ const ChannelUser: FC<IProps> = ({ user, showAvatar }: IProps) => {
       title={user.nickname}
       interactive={true}
       arrow={true}
-      enterDelay={1000}
+      enterDelay={1_000}
     >
       <div
         className={[classes.root, showAvatar ? '' : classes.rootNarrow]

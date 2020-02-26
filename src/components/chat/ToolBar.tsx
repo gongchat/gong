@@ -61,7 +61,7 @@ const ToolBar: FC = () => {
       if (current) {
         setSearchText(current.jid, newSearchValue);
       }
-    }, 1000);
+    }, 1_000);
   };
 
   const handleSearchClear = () => {
@@ -132,13 +132,13 @@ const ToolBar: FC = () => {
           title={settings.domain}
           interactive={true}
           arrow={true}
-          enterDelay={1000}
+          enterDelay={1_000}
         >
           <Typography>{settings.domain}</Typography>
         </Tooltip>
       </div>
       <div className={classes.right}>
-        <Tooltip title={name} interactive={true} arrow={true} enterDelay={1000}>
+        <Tooltip title={name} interactive={true} arrow={true} enterDelay={1_000}>
           <Typography className={classes.name}>
             <span className={classes.symbol}>
               {current && current.type === 'groupchat' && '# '}
@@ -164,7 +164,7 @@ const ToolBar: FC = () => {
                   title={sessionName}
                   interactive={true}
                   arrow={true}
-                  enterDelay={1000}
+                  enterDelay={1_000}
                 >
                   <Typography
                     className={classes.sessionJid}
@@ -209,7 +209,7 @@ const ToolBar: FC = () => {
                       title={statusText}
                       interactive={true}
                       arrow={true}
-                      enterDelay={1000}
+                      enterDelay={1_000}
                     >
                       <Typography
                         className={classes.statusText}
