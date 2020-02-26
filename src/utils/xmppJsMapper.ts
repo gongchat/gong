@@ -79,7 +79,12 @@ export const mapToPresence = (jsXml: any): IPresence => {
       : jsXml.attrs.from,
     role: itemAttrs && itemAttrs.role,
     affiliation: itemAttrs && itemAttrs.affiliation,
-    code: xStatus ? xStatus.attrs.code : '',
+    code:
+      error && error.attrs.code
+        ? error.attrs.code
+        : xStatus
+        ? xStatus.attrs.code
+        : '',
   };
   return presence;
 };
