@@ -76,6 +76,8 @@ const Message: FC<IProps> = ({
       {
         allowedTags: ALLOWED_TAGS,
         allowedAttributes: ALLOWED_ATTRIBUTES,
+        // @ts-ignore: need to wait for @types to update
+        disallowedTagsMode: 'escape',
       }
     );
 
