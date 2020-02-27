@@ -67,19 +67,17 @@ const Message: FC<IProps> = ({
     }
   };
 
-  const makeMarked = (body: string): string => {
-    let parsedText = marked(body, { breaks: true, headerIds: false });
-    // default messages should be inline
-    if (parsedText.startsWith('<p>')) {
-      parsedText = parsedText.substring(3, parsedText.length - 5);
-    }
-    return sanitizeHtml(parsedText, {
-      allowedTags: ALLOWED_TAGS,
-      allowedAttributes: ALLOWED_ATTRIBUTES,
-      // @ts-ignore: need to wait for @types to update
-      disallowedTagsMode: 'escape',
-    });
-  };
+  const makeMarked = (body: string): string =>
+    sanitizeHtml(
+      marked(body.replace(/</g, '&lt;').replace(/>/g, '&gt;'), {
+        breaks: true,
+        headerIds: false,
+      }),
+      {
+        allowedTags: ALLOWED_TAGS,
+        allowedAttributes: ALLOWED_ATTRIBUTES,
+      }
+    );
 
   useLayoutEffect(() => {
     let formattedMessageBody = body;
@@ -442,6 +440,10 @@ const useStyles: any = makeStyles((theme: any): any => ({
     '& .highlight': {
       backgroundColor: fade(theme.palette.secondary.light, 0.25),
       borderRadius: 3,
+    },
+    '& p:first-child': {
+      display: 'inline',
+      padding: 0,
     },
   },
   compactBody: {
