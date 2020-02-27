@@ -85,7 +85,6 @@ const Message: FC<IProps> = ({
     let formattedMessageBody = body;
 
     if (formattedMessageBody) {
-      // mark it DOWN!!!!
       formattedMessageBody = makeMarked(formattedMessageBody);
 
       // replace users
