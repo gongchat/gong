@@ -51,7 +51,6 @@ const Login: FC<IProps> = () => {
         <MenuBar showOffline={false} />
         <ValidatorForm onSubmit={handleSubmit} className={classes.form}>
           <div className={classes.content}>
-            <Typography className={classes.title}>Welcome to Gong</Typography>
             <TextValidator
               name="domain"
               onChange={(event: any) => setDomain(event.target.value)}
@@ -140,12 +139,6 @@ const useStyles: any = makeStyles((theme: any) => ({
     display: 'flex',
     flexDirection: 'column',
   },
-  title: {
-    fontSize: '2rem',
-    textAlign: 'center',
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
-  },
   form: {
     overflowY: 'auto',
     display: 'flex',
@@ -164,6 +157,7 @@ const useStyles: any = makeStyles((theme: any) => ({
   content: {
     display: 'flex',
     flexDirection: 'column',
+    marginTop: theme.spacing(4),
     '& > *:last-child': {
       marginBottom: theme.spacing(4),
     },
