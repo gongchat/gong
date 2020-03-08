@@ -6,7 +6,6 @@ import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
 import MenuBar from './MenuBar';
