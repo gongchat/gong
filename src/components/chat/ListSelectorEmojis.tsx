@@ -21,7 +21,7 @@ const ListSelectorEmojis: FC<IProps> = ({
   focusInput,
 }: IProps) => {
   const [term, setTerm] = useState('');
-  const [emojis, setEmojis] = useState();
+  const [emojis, setEmojis] = useState<any[] | never[]>([]);
 
   const handleSelection = (object: any) => {
     if (object) {

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 import IChannel from '../interfaces/IChannel';
 import IChannelUser from '../interfaces/IChannelUser';
@@ -33,7 +33,7 @@ export const messageActions: any = {
             : newState.profile.username;
         const message: IMessage = {
           id: messageSend.id,
-          sessionId: uuid.v4(),
+          sessionId: uuid(),
           channelName: messageSend.channelName,
           to: messageSend.to,
           from: messageSend.from,
@@ -139,7 +139,7 @@ export const messageActions: any = {
 
       const message: IMessage = {
         id: messageReceive.id,
-        sessionId: uuid.v4(),
+        sessionId: uuid(),
         channelName,
         to: newState.settings.jid,
         from: messageReceive.from,

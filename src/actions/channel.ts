@@ -1,5 +1,5 @@
 import moment from 'moment';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 import IChannel from '../interfaces/IChannel';
 import IMessage from '../interfaces/IMessage';
@@ -157,7 +157,7 @@ export const channelActions: any = {
       channels: state.channels.map((channel: IChannel) => {
         if (channel.jid === results.jid) {
           results.messages.forEach((message: IMessage) => {
-            message.sessionId = uuid.v4();
+            message.sessionId = uuid();
             message.timestamp = moment(message.timestamp);
             message.isRead = true;
           });
@@ -206,7 +206,7 @@ export const channelActions: any = {
       const channels = state.channels.map((c: IChannel) => {
         if (c.jid === channelJid) {
           messages.forEach((message: IMessage) => {
-            message.sessionId = uuid.v4();
+            message.sessionId = uuid();
             message.timestamp = moment(message.timestamp);
             message.isRead = true;
           });
