@@ -225,14 +225,14 @@ export const channelActions: any = {
       const current =
         state.current && state.current.jid === channelJid
           ? {
-            ...state.current,
-            messages:
-              messages.length > 0
-                ? [...messages, ...state.current.messages]
-                : state.current.messages,
-            hasNoMoreLogs,
-            isRequestingLogs: false,
-          }
+              ...state.current,
+              messages:
+                messages.length > 0
+                  ? [...messages, ...state.current.messages]
+                  : state.current.messages,
+              hasNoMoreLogs,
+              isRequestingLogs: false,
+            }
           : state.current;
 
       return {

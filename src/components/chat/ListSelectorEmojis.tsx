@@ -34,10 +34,10 @@ const ListSelectorEmojis: FC<IProps> = ({
             text.length === 0
               ? 0
               : text.lastIndexOf(':') === -1
-                ? text.length - 1
-                : text.lastIndexOf(' ') > text.lastIndexOf(':')
-                  ? text.lastIndexOf(' ') + 1
-                  : text.lastIndexOf(':')
+              ? text.length - 1
+              : text.lastIndexOf(' ') > text.lastIndexOf(':')
+              ? text.lastIndexOf(' ') + 1
+              : text.lastIndexOf(':')
           )}:${object.key}: `
         );
       }
@@ -58,7 +58,7 @@ const ListSelectorEmojis: FC<IProps> = ({
           if (
             emojiCommandIndex !== -1 &&
             !EMOJIS[
-            text.substring(emojiCommandPrevIndex + 1, emojiCommandIndex)
+              text.substring(emojiCommandPrevIndex + 1, emojiCommandIndex)
             ]
           ) {
             const emojiWord = text.substring(emojiCommandIndex);
@@ -74,9 +74,9 @@ const ListSelectorEmojis: FC<IProps> = ({
               setEmojis(
                 newTerm.length === 0
                   ? Emojis.map((x: any) => ({ x, r: Math.random() }))
-                    .sort((a: any, b: any) => a.r - b.r)
-                    .map((a: any) => a.x)
-                    .slice(0, 20)
+                      .sort((a: any, b: any) => a.r - b.r)
+                      .map((a: any) => a.x)
+                      .slice(0, 20)
                   : matchingEmojis
               );
             }
@@ -102,21 +102,21 @@ const ListSelectorEmojis: FC<IProps> = ({
     <>
       {(selectorIndex === emojiListSelectorIndex ||
         selectorIndex === emojiListSelectorIndex + 1) && (
-          <ListSelectorBase
-            title={'EMOJIS MATCHING'}
-            term={term}
-            list={emojis}
-            showKey={true}
-            keyProp={'key'}
-            showValue={true}
-            valueProp={'value'}
-            handleSelection={handleSelection}
-            selectorIndex={selectorIndex}
-            setSelectorIndex={setSelectorIndex}
-            itemPrefix={':'}
-            itemSuffix={':'}
-          />
-        )}
+        <ListSelectorBase
+          title={'EMOJIS MATCHING'}
+          term={term}
+          list={emojis}
+          showKey={true}
+          keyProp={'key'}
+          showValue={true}
+          valueProp={'value'}
+          handleSelection={handleSelection}
+          selectorIndex={selectorIndex}
+          setSelectorIndex={setSelectorIndex}
+          itemPrefix={':'}
+          itemSuffix={':'}
+        />
+      )}
     </>
   );
 };

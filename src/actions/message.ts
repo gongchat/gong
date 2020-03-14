@@ -102,8 +102,8 @@ export const messageActions: any = {
             const channelUser: IChannelUser | undefined = !channel.users
               ? undefined
               : channel.users.find(
-                (u: IChannelUser) => u.nickname === userNickname
-              );
+                  (u: IChannelUser) => u.nickname === userNickname
+                );
             if (channelUser) {
               userNickname = channelUser.nickname;
               color = channelUser.color;
@@ -359,17 +359,17 @@ const updateChannel = (
           messages: [
             ...(message.isMe
               ? channel.messages.map((message: IMessage) => ({
-                ...message,
-                isRead: true,
-              }))
+                  ...message,
+                  isRead: true,
+                }))
               : channel.messages),
             { ...message },
           ],
           unreadMessages: message.isMe
             ? 0
             : isUnreadOne && isUnreadTwo
-              ? channel.unreadMessages + 1
-              : channel.unreadMessages,
+            ? channel.unreadMessages + 1
+            : channel.unreadMessages,
           hasUnreadMentionMe:
             !message.isMe &&
             isUnreadOne &&
