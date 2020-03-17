@@ -1,11 +1,12 @@
+const isDev = require('electron-is-dev');
 const log = require('electron-log');
 const ElectronStore = require('electron-store');
-const CryptoJS = require('crypto-js');
-const keytar = require('keytar');
-const isDev = require('electron-is-dev');
 
 const { client, xml } = require('@xmpp/client');
 const debug = require('@xmpp/debug');
+
+const CryptoJS = require('crypto-js');
+const keytar = require('keytar');
 
 const appSettings = require('./settings');
 
@@ -33,7 +34,7 @@ class XmppJsClient {
     }
   }
 
-  autoConnect(event, arg) {
+  autoConnect(arg, event) {
     this.credentials = { username: arg.credentials.username };
     keytar.getPassword('gong', arg.credentials.username).then(key => {
       arg.credentials.password = key
@@ -41,7 +42,7 @@ class XmppJsClient {
             CryptoJS.enc.Utf8
           )
         : arg.credentials.password;
-      this.connect(event, arg.credentials, key, {
+      return this.connect(event, arg.credentials, key, {
         minimizeToTrayOnClose: arg.minimizeToTrayOnClose,
       });
     });
@@ -51,13 +52,13 @@ class XmppJsClient {
     this.credentials = { username: credentials.username };
     if (this.xmpp && this.xmpp.status === 'online') {
       await this.killConnection();
-      this.createConnection(event, credentials, key, settings);
+      return this.createConnection(event, credentials, key, settings);
     } else if (!this.xmpp) {
-      this.createConnection(event, credentials, key, settings);
+      return this.createConnection(event, credentials, key, settings);
     }
   }
 
-  async createConnection(event, credentials, key, settings) {
+  createConnection(event, credentials, key, settings) {
     log.info(`XMPP is attempting to connect to ${credentials.domain}`);
 
     this.xmpp = client({
@@ -74,7 +75,7 @@ class XmppJsClient {
 
     this.attachEvents(event, credentials, key, settings);
 
-    await this.xmpp.start().catch(console.error);
+    return this.xmpp.start();
   }
 
   attachEvents(event, credentials, key, settings) {
@@ -276,23 +277,22 @@ class XmppJsClient {
     }
   }
 
-  async sendGetRoster(event) {
+  sendGetRoster() {
     if (this.xmpp && this.xmpp.status === 'online') {
-      const response = await this.xmpp.iqCaller
-        .request(
-          xml(
-            'iq',
-            {
-              type: 'get',
-              id: makeId(7),
-            },
-            xml('query', {
-              xmlns: 'jabber:iq:roster',
-            })
-          )
+      return this.xmpp.iqCaller.request(
+        xml(
+          'iq',
+          {
+            type: 'get',
+            id: makeId(7),
+          },
+          xml('query', {
+            xmlns: 'jabber:iq:roster',
+          })
         )
-        .catch();
-      event.sender.send('xmpp-roster', response);
+      );
+    } else {
+      return Promise.reject();
     }
   }
 
@@ -577,7 +577,7 @@ class XmppJsClient {
   }
 }
 
-function makeId(length) {
+const makeId = length => {
   var text = '';
   var possible = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
@@ -586,8 +586,8 @@ function makeId(length) {
   }
 
   return text;
-}
+};
 
 const xmppJsClient = new XmppJsClient();
-
+Object.freeze(xmppJsClient);
 module.exports = xmppJsClient;

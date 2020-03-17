@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/gongchat/gong.git"
   },
-  "main": "public/electron.js",
+  "main": "public/main.js",
   "scripts": {
     "start:react": "react-scripts start",
     "start:electron": "electron .",
@@ -32,6 +32,7 @@
     "electron-devtools-installer": "2.2.4",
     "electron-is-dev": "1.1.0",
     "electron-log": "4.0.7",
+    "electron-promise-ipc": "2.1.0",
     "electron-store": "5.1.1",
     "electron-updater": "4.2.0",
     "keytar": "5.4.0",
