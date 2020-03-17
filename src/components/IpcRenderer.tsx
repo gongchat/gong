@@ -31,7 +31,7 @@ const IpcRenderer: FC = () => {
     });
 
     ipcRenderer.on('xmpp-roster', (event: any, arg: any) => {
-      actions.addUsersToChannels(mapToUsers(arg));
+      // actions.addUsersToChannels(mapToUsers(arg));
     });
 
     ipcRenderer.on('xmpp-presence', (event: any, arg: any) => {

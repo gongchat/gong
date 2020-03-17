@@ -20,35 +20,42 @@ import { stringToHexColor } from '../utils/colorUtils';
 const ElectronStore = window.require('electron-store');
 const electronStore = new ElectronStore();
 const { ipcRenderer } = window.require('electron');
+const promiseIpc = window.require('electron-promise-ipc');
 
 export const connectionActions: any = {
-  autoConnect() {
-    return (state: IState): IState => {
-      const settingsSaved: ISettingsSaved = electronStore.get('settings');
-      if (settingsSaved === undefined) {
-        return {
-          ...state,
-          connection: {
-            isConnecting: false,
-            isConnected: false,
-            isAuthenticated: false,
-            hasSavedCredentials: false,
-            connectionError: '',
-          },
-        };
-      } else {
-        const credentials: ICredentials = {
-          domain: settingsSaved.domain,
-          username: settingsSaved.username,
-          resource: settingsSaved.resource,
-          port: settingsSaved.port,
-          password: settingsSaved.password,
-        };
-        ipcRenderer.send('xmpp-auto-connect', {
+  async autoConnect() {
+    const settingsSaved: ISettingsSaved = electronStore.get('settings');
+    if (settingsSaved === undefined) {
+      return (state: IState): IState => ({
+        ...state,
+        connection: {
+          isConnecting: false,
+          isConnected: false,
+          isAuthenticated: false,
+          hasSavedCredentials: false,
+          connectionError: '',
+        },
+      });
+    } else {
+      const credentials: ICredentials = {
+        domain: settingsSaved.domain,
+        username: settingsSaved.username,
+        resource: settingsSaved.resource,
+        port: settingsSaved.port,
+        password: settingsSaved.password,
+      };
+      const results = await promiseIpc
+        .send('xmpp-auto-connect', {
           credentials,
           minimizeToTrayOnClose: settingsSaved.minimizeToTrayOnClose,
-        });
+        })
+        .then(res => {});
 
+      // TODO: Need to come up with a way to throw errors from error stanzas
+      // TODO: Need to restructure connection to handle promises better
+      // TODO: Need to look into changing the connection so it always connects (so you can view logs, for now will only look at logs to add to channel list for users, not rooms)
+
+      return (state: IState): IState => {
         // handle reconnecting message if already authenticated
         let snackbar = state.notifications.snackbar;
         if (state.connection.hasSavedCredentials) {
@@ -75,12 +82,12 @@ export const connectionActions: any = {
             snackbar,
           },
         };
-      }
-    };
+      };
+    }
   },
   connecting(credentials: ICredentials) {
     return (state: IState): IState => {
-      ipcRenderer.send('xmpp-connect', credentials);
+      promiseIpc.send('xmpp-connect', credentials);
       return {
         ...state,
         connection: {
@@ -133,7 +140,7 @@ export const connectionActions: any = {
       const settings: ISettings = mapSettingsSavedToSettings(settingsSaved);
 
       ipcRenderer.send('xmpp-get-vcard', { from: payload.jid });
-      ipcRenderer.send('xmpp-roster');
+      promiseIpc.send('xmpp-roster').then(res => console.log(res));
 
       // handle reconnected message if already authenticated
       let notifications = { ...state.notifications };
