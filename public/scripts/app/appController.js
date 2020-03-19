@@ -1,16 +1,25 @@
-// App Events
+const { app } = require('electron');
+const promiseIpc = require('electron-promise-ipc');
 
-ipcMain.on('app-check-for-updates', () => {
-  checkForUpdates();
-});
+const { checkForUpdates, quitAndInstall } = require('./autoUpdater');
 
-ipcMain.on('app-update', (event, arg) => {
-  quitAndInstall();
-});
-
-ipcMain.on('app-get-info', event => {
-  event.sender.send('app-set', {
-    version: app.getVersion(),
-    operatingSystem: process.platform,
+const appController = () => {
+  promiseIpc.on('/app/check-for-updates', () => {
+    checkForUpdates();
+    return Promise.resolve();
   });
-});
+
+  promiseIpc.on('/app/update', () => {
+    quitAndInstall();
+    return Promise.resolve();
+  });
+
+  promiseIpc.on('/app/get-info', () => {
+    return Promise.resolve({
+      version: app.getVersion(),
+      operatingSystem: process.platform,
+    });
+  });
+};
+
+module.exports = appController;

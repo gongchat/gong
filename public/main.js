@@ -9,6 +9,7 @@ const { beforeLoad } = require('./scripts/beforeLoad');
 const { createMainWindow } = require('./scripts/mainWindow');
 const { createTray, removeTray } = require('./scripts/tray');
 
+const appController = require('./scripts/logger/appController');
 const loggerController = require('./scripts/logger/loggerController');
 const settingsController = require('./scripts/settings/settingsController');
 const xmppController = require('./scripts/xmpp/xmppController');
@@ -26,6 +27,7 @@ app.whenReady().then(() => {
   initAutoUpdater();
 
   // register controllers
+  appController();
   loggerController();
   settingsController();
   xmppController();

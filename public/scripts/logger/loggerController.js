@@ -4,15 +4,16 @@ const logger = require('./loggerService');
 
 const loggerController = () => {
   promiseIpc.on('/logger/set', arg => {
-    return logger.set(arg);
+    logger.set(arg);
+    return Promise.resolve();
   });
 
-  promiseIpc.on('/logger/get', (arg, event) => {
-    return logger.get(event, arg);
+  promiseIpc.on('/logger/get', arg => {
+    return Promise.resolve(logger.get(arg));
   });
 
-  promiseIpc.on('/logger/search', (arg, event) => {
-    return logger.search(event, arg);
+  promiseIpc.on('/logger/search', arg => {
+    return Promise.resolve(logger.search(arg));
   });
 };
 
