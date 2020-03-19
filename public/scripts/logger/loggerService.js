@@ -36,7 +36,7 @@ class Logger {
     }
   }
 
-  get(event, arg) {
+  get(arg) {
     const { user, date, channel } = arg;
     const maxNumberOfMessages = 25;
 
@@ -102,14 +102,14 @@ class Logger {
     } else {
       hasNoMoreLogs = true;
     }
-    event.sender.send('get-log', {
+    return {
       channelJid: channel.jid,
       hasNoMoreLogs,
       messages,
-    });
+    };
   }
 
-  search(event, arg) {
+  search(arg) {
     const { user, jid, order, text } = arg;
     if (text) {
       const matchedMessages = [];
@@ -147,10 +147,10 @@ class Logger {
           });
         });
       }
-      event.sender.send('search-log', {
+      return {
         jid: arg.jid,
         messages: matchedMessages,
-      });
+      };
     }
   }
 }

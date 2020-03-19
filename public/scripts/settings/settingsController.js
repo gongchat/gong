@@ -5,11 +5,13 @@ const settings = require('./settingsService');
 // Settings
 const settingsController = () => {
   promiseIpc.on('/settings/set', arg => {
-    return settings.set(arg);
+    settings.set(arg);
+    return Promise.resolve();
   });
 
   promiseIpc.on('/settings/flash-frame', arg => {
-    return settings.set(arg);
+    settings.set(arg);
+    return Promise.resolve();
   });
 };
 
