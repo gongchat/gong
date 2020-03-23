@@ -83,8 +83,33 @@ const Message: FC<IProps> = ({
 
   useLayoutEffect(() => {
     let formattedMessageBody = body;
+    let newIsMe = body && body.startsWith('/me ') ? true : false;
 
     if (formattedMessageBody) {
+      // replace any string emojis
+      const matches = formattedMessageBody.match(/:([^:]*):/g);
+      if (matches) {
+        matches.forEach(element => {
+          const emoji = EMOJIS[element.substring(1, element.length - 1)];
+          if (emoji) {
+            formattedMessageBody = formattedMessageBody.replace(element, emoji);
+          }
+        });
+      }
+
+      // replace characters with emojis
+      ASCII_EMOJI_MAP.forEach(item => {
+        formattedMessageBody = formattedMessageBody.replace(
+          new RegExp(
+            '(?<=^|\\s)' +
+              item.key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') +
+              '(?=$|\\s)',
+            'g'
+          ),
+          item.emoji
+        );
+      });
+
       formattedMessageBody = makeMarked(formattedMessageBody);
 
       // replace users
@@ -112,33 +137,14 @@ const Message: FC<IProps> = ({
         });
       }
 
-      // replace any string emojis
-      const matches = formattedMessageBody.match(/:([^:]*):/g);
-      if (matches) {
-        matches.forEach(element => {
-          const emoji = EMOJIS[element.substring(1, element.length - 1)];
-          if (emoji) {
-            formattedMessageBody = formattedMessageBody.replace(element, emoji);
-          }
-        });
+      // if isMe
+      if (isMe) {
+        formattedMessageBody = formattedMessageBody.replace('me', '');
       }
-
-      // replace characters with emojis
-      ASCII_EMOJI_MAP.forEach(item => {
-        formattedMessageBody = formattedMessageBody.replace(
-          new RegExp(
-            '(?<=^|\\s)' +
-              item.key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') +
-              '(?=$|\\s)',
-            'g'
-          ),
-          item.emoji
-        );
-      });
     }
 
     setMessageBody(formattedMessageBody);
-    setIsMe(body && body.startsWith('/me ') ? true : false);
+    setIsMe(newIsMe);
     setIsBodyLoaded(true);
   }, [
     body,
