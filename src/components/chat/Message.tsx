@@ -86,6 +86,11 @@ const Message: FC<IProps> = ({
     let newIsMe = body && body.startsWith('/me ') ? true : false;
 
     if (formattedMessageBody) {
+      // if isMe
+      if (isMe) {
+        formattedMessageBody = formattedMessageBody.replace('/me', '');
+      }
+
       // replace any string emojis
       const matches = formattedMessageBody.match(/:([^:]*):/g);
       if (matches) {
@@ -135,11 +140,6 @@ const Message: FC<IProps> = ({
             getHtmlWithoutAt(isMentioningMe, mention)
           );
         });
-      }
-
-      // if isMe
-      if (isMe) {
-        formattedMessageBody = formattedMessageBody.replace('me', '');
       }
     }
 
