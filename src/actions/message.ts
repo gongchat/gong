@@ -119,9 +119,11 @@ export const messageActions: any = {
             // update session jid
             if (channel.sessionJid !== messageReceive.from) {
               channel.sessionJid = messageReceive.from;
-              const session = channel.connections.find(
-                connection => connection.jid === messageReceive.from
-              );
+              const session =
+                channel.connections &&
+                channel.connections.find(
+                  connection => connection.jid === messageReceive.from
+                );
               if (session) {
                 channel.status = session.status;
               }
@@ -336,7 +338,10 @@ const updateChannel = (
 
   state.channels = [
     ...state.channels.map((channel: IChannel | IUser | IRoom) => {
-      if (channel.jid === message.channelName && channel.type === type) {
+      if (
+        channel.jid === message.channelName &&
+        (channel.type === type || channel.jid === state.settings.domain)
+      ) {
         channelUpdated = true;
 
         const isCurrent = !!(
