@@ -211,7 +211,7 @@ const Message: FC<IProps> = ({
                 .join(' ')
                 .trim()}
               dangerouslySetInnerHTML={{
-                __html: isMe ? `*${messageBody.substring(4)}*` : messageBody,
+                __html: isMe ? `*${messageBody}*` : messageBody,
               }}
             />
           </span>
