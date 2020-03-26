@@ -16,6 +16,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircleOutlined';
 import CodeIcon from '@material-ui/icons/Code';
 import CloseIcon from '@material-ui/icons/Close';
 import DashboardIcon from '@material-ui/icons/Dashboard';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import FontDownloadIcon from '@material-ui/icons/FontDownloadOutlined';
 import HorizontalSplitIcon from '@material-ui/icons/HorizontalSplit';
 import NotificationsIcon from '@material-ui/icons/Notifications';
@@ -43,6 +44,7 @@ const TABS = [
   { name: 'Layout', icon: <DashboardIcon /> },
   { name: 'Messages', icon: <HorizontalSplitIcon /> },
   { name: 'Notifications', icon: <NotificationsIcon /> },
+  { name: 'Status', icon: <FiberManualRecordIcon /> },
   { name: 'System', icon: <SettingsApplicationsIcon /> },
   null,
   { name: 'Developer', icon: <CodeIcon /> },
@@ -102,6 +104,8 @@ const Settings: FC = () => {
           return <Messages />;
         case 'Notifications':
           return <Notifications />;
+        case 'Status':
+          return '';
         case 'System':
           return <System />;
         case 'Theme':
