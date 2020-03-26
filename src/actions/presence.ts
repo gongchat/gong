@@ -3,12 +3,15 @@ import IChannelUser from '../interfaces/IChannelUser';
 import IPresence from '../interfaces/IPresence';
 import IRoom from '../interfaces/IRoom';
 import IRoomJoin from '../interfaces/IRoomJoin';
+import ISettingsSaved from '../interfaces/ISettingsSaved';
 import IState from '../interfaces/IState';
 import IUser from '../interfaces/IUser';
 import IUserConnection from '../interfaces/IUserConnection';
 
 import { stringToHexColor } from '../utils/colorUtils';
 
+const ElectronStore = window.require('electron-store');
+const electronStore = new ElectronStore();
 const { ipcRenderer } = window.require('electron');
 
 export const presenceActions: any = {
@@ -27,6 +30,13 @@ export const presenceActions: any = {
 };
 
 const setMe = (state: IState, presence: IPresence): IState => {
+  let savedSettings: ISettingsSaved = electronStore.get('settings');
+  savedSettings = {
+    ...savedSettings,
+    previousStatus: presence.status,
+    previousStatusText: presence.statusText,
+  };
+  electronStore.set('settings', savedSettings);
   return {
     ...state,
     profile: {

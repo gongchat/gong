@@ -34,6 +34,8 @@ export const DEFAULT: ISettings = {
   flashMenuBarOnMentionMeFrequency: 'once',
   flashMenuBarOnChat: 'unread',
   flashMenuBarOnChatFrequency: 'once',
+  previousStatus: 'online',
+  previousStatusText: '',
 };
 
 export const settingsActions: any = {
@@ -137,6 +139,14 @@ export const mapSettingsSavedToSettings = (
     flashMenuBarOnMentionMeFrequency: settings.flashMenuBarOnMentionMeFrequency,
     flashMenuBarOnChat: settings.flashMenuBarOnChat,
     flashMenuBarOnChatFrequency: settings.flashMenuBarOnChatFrequency,
+    previousStatus:
+      settings.previousStatus === undefined
+        ? DEFAULT.previousStatus
+        : settings.previousStatus,
+    previousStatusText:
+      settings.previousStatusText === undefined
+        ? DEFAULT.previousStatusText
+        : settings.previousStatusText,
   };
   return mappedSettings;
 };

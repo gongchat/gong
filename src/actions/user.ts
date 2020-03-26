@@ -102,11 +102,18 @@ export const userActions: any = {
 
       // Need to send after getting roster as the XMPP server will return
       // the status for each user.
-      ipcRenderer.send('xmpp-my-status', { status: 'online', statusText: '' });
+      ipcRenderer.send('xmpp-my-status', {
+        status: state.settings.previousStatus,
+        statusText: state.settings.previousStatusText,
+      });
 
       return {
         ...state,
-        profile: { ...state.profile, status: 'online' },
+        profile: {
+          ...state.profile,
+          status: state.settings.previousStatus,
+          statusText: state.settings.previousStatusText,
+        },
         channels: [
           ...state.channels.filter(
             (channel: IChannel) => channel.type === 'groupchat'

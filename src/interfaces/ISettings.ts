@@ -33,4 +33,7 @@ export default interface ISettings {
   flashMenuBarOnMentionMeFrequency: 'once' | 'repeat' | 'never';
   flashMenuBarOnChat: 'always' | 'unread' | 'never';
   flashMenuBarOnChatFrequency: 'once' | 'repeat' | 'never';
+
+  previousStatus: 'online' | 'chat' | 'away' | 'xa' | 'dnd' | 'offline' | '';
+  previousStatusText: string;
 }
