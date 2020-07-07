@@ -64,7 +64,7 @@
     "@types/webfontloader": "1.6.29",
     "concurrently": "5.1.0",
     "cross-env": "7.0.2",
-    "electron": "7.1.9",
+    "electron": "7.2.4",
     "electron-builder": "22.2.0",
     "electron-rebuild": "1.10.1",
     "node-sass": "4.13.1",
