@@ -40,7 +40,7 @@
     "notistack": "0.9.9",
     "nspell": "2.1.2",
     "react": "16.13.0",
-    "react-dev-utils": "10.2.0",
+    "react-dev-utils": "11.0.4",
     "react-dom": "16.13.0",
     "react-json-view": "1.19.1",
     "react-material-ui-form-validator": "2.0.10",
