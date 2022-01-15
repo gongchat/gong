@@ -35,7 +35,7 @@
     "electron-store": "5.1.1",
     "electron-updater": "4.2.0",
     "keytar": "5.4.0",
-    "marked": "0.8.0",
+    "marked": "4.0.10",
     "moment": "2.24.0",
     "notistack": "0.9.9",
     "nspell": "2.1.2",
